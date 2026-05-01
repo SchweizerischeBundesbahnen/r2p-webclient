@@ -8,8 +8,14 @@ Thumbs.db
 *.swp
 *.swo
 
+# Node
+/node_modules
+npm-debug.log
+yarn-error.log
+
 # Environment
 .env
 .env.*
 
-# Build (add project-specific rules below)
+# Miscellaneous
+/.angular/cache

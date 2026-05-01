@@ -1,0 +1,24 @@
+{
+  "locale": "de-CH",
+  "translations": {
+    "header.title": "R2P Web Client",
+    "header.trafficOverview": "Verkehrsübersicht",
+    "header.settings": "Einstellungen",
+    "header.language": "Sprache",
+    "header.language.aria": "Sprache wechseln",
+    "header.pocWarning": "Dies ist eine PoC-Implementierung und nicht für den Produktionseinsatz geeignet",
+    "header.loggedInAs": "Angemeldet als:",
+    "settings.clientTitle": "R2P Web Client",
+    "settings.clientSubtitle": "Kommunikation mit EVU-Partnern",
+    "settings.serverUrl": "Server-URL *",
+    "settings.serverUrl.aria": "Server-URL",
+    "settings.serverUrlHint": "Basis-URL des R2P-Backend-Servers (ohne abschliessenden Schrägstrich).",
+    "settings.partner": "Ihr Partner *",
+    "settings.partner.aria": "Ihr Partner",
+    "settings.partnerHint": "Alle Anfragen werden im Namen dieses Partners gesendet.",
+    "settings.saveContinue": "{$START_TAG_MAT_ICON}flag{$CLOSE_TAG_MAT_ICON} Speichern & Fortfahren",
+    "settings.alreadyConfigured": "Bereits konfiguriert?",
+    "settings.goToTrafficOverview": "Zur Verkehrsübersicht ->"
+  }
+}
+

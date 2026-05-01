@@ -1,0 +1,17 @@
+// R2P Material M3 theme configuration map.
+// IMPORTANT: `mat.theme()` (the system-variable mixin) expects a raw config
+// map, NOT the output of `mat.define-theme()`. Passing the latter makes
+// `mat.theme()` skip emitting color/typography system variables.
+
+@use '@angular/material' as mat;
+@use './palettes' as palettes;
+
+$r2p-theme: (
+  color: (
+    theme-type: light,
+    primary:   palettes.$r2p-primary,
+    tertiary:  palettes.$r2p-tertiary,
+  ),
+  typography: Roboto,
+  density: 0,
+);

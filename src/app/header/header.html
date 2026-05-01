@@ -1,0 +1,39 @@
+<div class="app-header-shell">
+  <div class="app-header-banner" i18n="@@header.pocWarning">This is a PoC implementation not suitable to run in production</div>
+
+  <mat-toolbar color="primary" class="app-header">
+  <div class="app-header__left">
+    <div class="app-header__brand">
+      <span class="app-header__version">{{ version }}</span>
+      <mat-icon aria-hidden="true">train</mat-icon>
+      <span class="app-header__title" i18n="@@header.title">R2P Web Client</span>
+    </div>
+  </div>
+
+  <div class="app-header__center">
+    <button mat-button class="app-header__nav-btn app-header__nav-btn--active" (click)="goToOverview()" i18n="@@header.trafficOverview">
+      Traffic Overview
+    </button>
+
+    <button mat-button class="app-header__nav-btn" (click)="openSettings()" i18n="@@header.settings">Settings</button>
+  </div>
+
+  <div class="app-header__right">
+
+    <span i18n="@@header.loggedInAs">Logged in as:</span>
+    <span class="app-header__partner-badge" [style.background-color]="loggedInPartner().color">{{ loggedInPartner().shortName }}</span>
+    <button
+      mat-icon-button
+      type="button"
+      (click)="openLanguageModal()"
+      class="app-header__icon-btn"
+      aria-label="Change language"
+      i18n-aria-label="@@header.language.aria"
+    >
+      <mat-icon>language</mat-icon>
+    </button>
+
+  </div>
+  </mat-toolbar>
+</div>
+

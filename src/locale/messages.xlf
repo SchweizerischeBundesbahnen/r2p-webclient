@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en-US" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="header.pocWarning" datatype="html">
+        <source>This is a PoC implementation not suitable to run in production</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/header/header.html</context>
+          <context context-type="linenumber">2,4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="header.title" datatype="html">
+        <source>R2P Web Client</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/header/header.html</context>
+          <context context-type="linenumber">8,10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="header.trafficOverview" datatype="html">
+        <source> Traffic Overview </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/header/header.html</context>
+          <context context-type="linenumber">14,17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="header.settings" datatype="html">
+        <source>Settings</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/header/header.html</context>
+          <context context-type="linenumber">17,20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="header.language.aria" datatype="html">
+        <source>Change language</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/header/header.html</context>
+          <context context-type="linenumber">26,27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="header.loggedInAs" datatype="html">
+        <source>Logged in as:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/header/header.html</context>
+          <context context-type="linenumber">32,33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="header.language" datatype="html">
+        <source>Language</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/header/language-modal.ts</context>
+          <context context-type="linenumber">14,15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.clientTitle" datatype="html">
+        <source>R2P Web Client</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
+          <context context-type="linenumber">7,8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.clientSubtitle" datatype="html">
+        <source>Railway Undertaking Partner Communication</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
+          <context context-type="linenumber">8,10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.serverUrl" datatype="html">
+        <source>Server URL *</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
+          <context context-type="linenumber">11,12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.serverUrl.aria" datatype="html">
+        <source>Server URL</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
+          <context context-type="linenumber">18,19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.serverUrlHint" datatype="html">
+        <source> Base URL of the R2P backend server (without trailing slash). </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
+          <context context-type="linenumber">23,27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.partner" datatype="html">
+        <source>Your Partner *</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
+          <context context-type="linenumber">28,29</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.partner.aria" datatype="html">
+        <source>Your Partner</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.partnerHint" datatype="html">
+        <source>All requests will be sent on behalf of this partner.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
+          <context context-type="linenumber">36,39</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.saveContinue" datatype="html">
+        <source><x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon aria-hidden=&quot;true&quot;&gt;"/>flag<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/> Save &amp; Continue </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
+          <context context-type="linenumber">40,42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.alreadyConfigured" datatype="html">
+        <source>Already configured?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
+          <context context-type="linenumber">45,46</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.goToTrafficOverview" datatype="html">
+        <source>Go to Traffic Overview -&gt;</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
+          <context context-type="linenumber">46,48</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

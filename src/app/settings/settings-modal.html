@@ -1,0 +1,51 @@
+<div class="settings-modal">
+  <mat-dialog-content class="settings-modal__content">
+    <div class="settings-modal__logo" aria-hidden="true">
+      <mat-icon>train</mat-icon>
+    </div>
+
+    <h2 class="settings-modal__title" i18n="@@settings.clientTitle">R2P Web Client</h2>
+    <p class="settings-modal__subtitle" i18n="@@settings.clientSubtitle">Railway Undertaking Partner Communication</p>
+
+    <div class="settings-modal__field-group">
+      <label class="settings-modal__field-label" for="server-url" i18n="@@settings.serverUrl">Server URL *</label>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="settings-modal__field">
+        <input
+          id="server-url"
+          matInput
+          [value]="serverUrl()"
+          (input)="onServerUrlInput($any($event.target).value)"
+          aria-label="Server URL"
+          i18n-aria-label="@@settings.serverUrl.aria"
+        />
+      </mat-form-field>
+      <p class="settings-modal__hint" i18n="@@settings.serverUrlHint">
+        Base URL of the R2P backend server (without trailing slash).
+      </p>
+    </div>
+
+    <div class="settings-modal__field-group">
+      <label class="settings-modal__field-label" for="partner" i18n="@@settings.partner">Your Partner *</label>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="settings-modal__field">
+        <mat-select id="partner" [value]="partner()" (valueChange)="partner.set($event)" aria-label="Your Partner" i18n-aria-label="@@settings.partner.aria">
+          @for (option of partners; track option.name) {
+            <mat-option [value]="option.name">{{ option.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <p class="settings-modal__hint" i18n="@@settings.partnerHint">All requests will be sent on behalf of this partner.</p>
+    </div>
+
+    <button mat-flat-button color="primary" class="settings-modal__save" (click)="onClose()" i18n="@@settings.saveContinue">
+      <mat-icon aria-hidden="true">flag</mat-icon>
+      Save & Continue
+    </button>
+
+    <p class="settings-modal__footer">
+      <span i18n="@@settings.alreadyConfigured">Already configured?</span>
+      <a href="#" (click)="onOverviewClick($event)" i18n="@@settings.goToTrafficOverview">Go to Traffic Overview -&gt;</a>
+    </p>
+  </mat-dialog-content>
+</div>
+
+
