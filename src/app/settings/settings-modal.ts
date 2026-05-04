@@ -1,14 +1,15 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { PARTNER_OPTIONS, SettingsService } from './settings.service';
+import { ORGANIZATION_OPTIONS, SettingsService } from './settings.service';
 
 @Component({
   selector: 'app-settings-modal',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatDialogModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule, MatIconModule],
   templateUrl: './settings-modal.html',
   styleUrl: './settings-modal.scss',
@@ -17,21 +18,27 @@ export class SettingsModal {
   private readonly dialogRef = inject(MatDialogRef<SettingsModal>);
   private readonly settingsService = inject(SettingsService);
 
-  readonly partners = PARTNER_OPTIONS;
+  readonly organizations = ORGANIZATION_OPTIONS;
   readonly serverUrl = signal(this.settingsService.settings().serverUrl);
-  readonly partner = signal(this.settingsService.settings().partner);
+  readonly organization = signal(this.settingsService.settings().organization);
+  readonly isFirstTime = computed(() => !this.settingsService.hasConfiguredSettings());
+  readonly canContinue = computed(
+    () => this.serverUrl().trim().length > 0 && this.organizations.some((option) => option.name === this.organization()),
+  );
 
-  onServerUrlInput(value: string): void {
+  constructor() {
+    this.dialogRef.disableClose = true;
+  }
+
+  protected onServerUrlInput(value: string): void {
     this.serverUrl.set(value);
   }
 
-  onClose(): void {
-    this.persist();
-    this.dialogRef.close();
-  }
+  protected onClose(): void {
+    if (!this.canContinue()) {
+      return;
+    }
 
-  onOverviewClick(event: Event): void {
-    event.preventDefault();
     this.persist();
     this.dialogRef.close();
   }
@@ -39,9 +46,8 @@ export class SettingsModal {
   private persist(): void {
     this.settingsService.save({
       serverUrl: this.serverUrl().trim(),
-      partner: this.partner(),
+      organization: this.organization(),
     });
   }
 }
-
 

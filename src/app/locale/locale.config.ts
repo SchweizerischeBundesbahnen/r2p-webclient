@@ -7,3 +7,19 @@ export function isSupportedLocale(value: string | null | undefined): value is Su
   return !!value && (SUPPORTED_LOCALES as readonly string[]).includes(value);
 }
 
+export function normalizeToSupportedLocale(value: string | null | undefined): SupportedLocale | null {
+  if (!value) {
+    return null;
+  }
+  if (isSupportedLocale(value)) {
+    return value;
+  }
+  const language = value.toLowerCase().split('-')[0];
+  if (language === 'de') {
+    return 'de-CH';
+  }
+  if (language === 'en') {
+    return 'en-US';
+  }
+  return null;
+}

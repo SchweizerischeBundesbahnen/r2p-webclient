@@ -1,20 +1,8 @@
 import { loadTranslations } from '@angular/localize';
 import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
-import {
-  DEFAULT_LOCALE,
-  LOCALE_STORAGE_KEY,
-  SupportedLocale,
-  isSupportedLocale,
-} from './app/locale/locale.config';
-
-function resolveLocale(): SupportedLocale {
-  const stored = globalThis.localStorage?.getItem(LOCALE_STORAGE_KEY);
-  if (stored === 'de') {
-    return 'de-CH';
-  }
-  return isSupportedLocale(stored) ? stored : DEFAULT_LOCALE;
-}
+import { SupportedLocale } from './app/locale/locale.config';
+import { resolveInitialLocale } from './app/locale/locale.service';
 
 async function loadLocaleData(locale: SupportedLocale): Promise<void> {
   if (locale === 'en-US') {
@@ -39,7 +27,7 @@ async function loadRuntimeTranslations(locale: SupportedLocale): Promise<void> {
 }
 
 async function main(): Promise<void> {
-  const locale = resolveLocale();
+  const locale = resolveInitialLocale();
   await loadRuntimeTranslations(locale);
   await loadLocaleData(locale);
 

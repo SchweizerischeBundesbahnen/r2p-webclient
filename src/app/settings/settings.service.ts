@@ -2,16 +2,16 @@ import { Injectable, signal } from '@angular/core';
 
 export interface Settings {
   serverUrl: string;
-  partner: string;
+  organization: string;
 }
 
-export interface PartnerOption {
+export interface OrganizationOption {
   name: string;
   shortName: string;
   color: string;
 }
 
-export const PARTNER_OPTIONS: PartnerOption[] = [
+export const ORGANIZATION_OPTIONS: OrganizationOption[] = [
   { name: 'SBB - Schweizerische Bundesbahnen', shortName: 'SBB', color: '#d70810' },
   { name: 'SOB - Schweizerische Südostbahn', shortName: 'SOB', color: '#009b3a' },
   { name: 'BLS', shortName: 'BLS', color: '#00539b' },
@@ -19,9 +19,9 @@ export const PARTNER_OPTIONS: PartnerOption[] = [
 
 const SETTINGS_KEY = 'r2p-settings';
 
-const DEFAULTS: Settings = {
-  serverUrl: 'http://localhost:8080',
-  partner: PARTNER_OPTIONS[0].name,
+const EMPTY_SETTINGS: Settings = {
+  serverUrl: '',
+  organization: '',
 };
 
 @Injectable({ providedIn: 'root' })
@@ -30,34 +30,42 @@ export class SettingsService {
 
   readonly settings = this._settings.asReadonly();
 
-  get partner(): string {
-    return this._settings().partner;
-  }
-
-  get serverUrl(): string {
-    return this._settings().serverUrl;
+  hasConfiguredSettings(): boolean {
+    const settings = this._settings();
+    return settings.serverUrl.trim().length > 0 && this.isKnownOrganization(settings.organization);
   }
 
   save(settings: Settings): void {
-    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
-    this._settings.set(settings);
+    const normalized = this.normalize(settings);
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(normalized));
+    this._settings.set(normalized);
   }
 
   load(): Settings {
     const raw = localStorage.getItem(SETTINGS_KEY);
-    if (raw) {
-      try {
-        const parsed = { ...DEFAULTS, ...JSON.parse(raw) } as Settings;
-        const isKnownPartner = PARTNER_OPTIONS.some((option) => option.name === parsed.partner);
-        return {
-          serverUrl: parsed.serverUrl || DEFAULTS.serverUrl,
-          partner: isKnownPartner ? parsed.partner : DEFAULTS.partner,
-        };
-      } catch {
-        return DEFAULTS;
-      }
+    if (!raw) {
+      return EMPTY_SETTINGS;
     }
-    return DEFAULTS;
+
+    try {
+      const parsed = JSON.parse(raw) as Partial<Settings>;
+      return this.normalize(parsed);
+    } catch {
+      return EMPTY_SETTINGS;
+    }
+  }
+
+  private normalize(settings: Partial<Settings>): Settings {
+    const serverUrl = typeof settings.serverUrl === 'string' ? settings.serverUrl.trim() : '';
+    const organization =
+      typeof settings.organization === 'string' && this.isKnownOrganization(settings.organization)
+        ? settings.organization
+        : '';
+    return { serverUrl, organization };
+  }
+
+  private isKnownOrganization(organization: string): boolean {
+    return ORGANIZATION_OPTIONS.some((option) => option.name === organization);
   }
 }
 

@@ -1,58 +1,52 @@
-import { Component, computed, inject, LOCALE_ID, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { LOCALE_STORAGE_KEY, isSupportedLocale } from '../locale/locale.config';
+import { LocaleService } from '../locale/locale.service';
 import { SettingsModal } from '../settings/settings-modal';
-import { PARTNER_OPTIONS, SettingsService } from '../settings/settings.service';
-import { LanguageModal } from '../language-modal/language-modal';
+import { ORGANIZATION_OPTIONS, SettingsService } from '../settings/settings.service';
 import { version as packageVersion } from '../../../package.json';
-
-interface LocaleOption {
-  code: string;
-  label: string;
-}
 
 @Component({
   selector: 'app-header',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatToolbarModule, MatIconModule, MatButtonModule],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })
-export class Header {
-  private readonly localeId = inject(LOCALE_ID);
+export class Header implements OnInit {
   private readonly dialog = inject(MatDialog);
   private readonly router = inject(Router);
   private readonly settingsService = inject(SettingsService);
+  private readonly localeService = inject(LocaleService);
+
+  private readonly currentUrl = toSignal(
+    this.router.events.pipe(
+      map(() => this.router.url),
+    ),
+  );
 
   protected readonly version = `v${packageVersion}`;
-
-  protected readonly locales: LocaleOption[] = [
-    { code: 'en-US', label: 'English' },
-    { code: 'de-CH', label: 'Deutsch' },
-  ];
-
-  protected readonly currentLocale = signal(this.localeId);
-  protected readonly loggedInPartner = computed(
+  protected readonly locales = this.localeService.locales;
+  protected readonly currentLocale = this.localeService.currentLocale;
+  protected readonly isOverviewActive = computed(() => this.currentUrl() === '/');
+  protected readonly loggedInOrganization = computed(
     () =>
-      PARTNER_OPTIONS.find((option) => option.name === this.settingsService.settings().partner) ?? PARTNER_OPTIONS[0],
+      ORGANIZATION_OPTIONS.find((option) => option.name === this.settingsService.settings().organization) ?? null,
   );
+
+  ngOnInit(): void {
+    if (!this.settingsService.hasConfiguredSettings()) {
+      this.openSettings();
+    }
+  }
 
   protected goToOverview(): void {
     void this.router.navigateByUrl('/');
-  }
-
-  protected onLocaleChange(newLocale: string): void {
-    if (newLocale === this.localeId) {
-      return;
-    }
-    if (!isSupportedLocale(newLocale)) {
-      return;
-    }
-    globalThis.localStorage.setItem(LOCALE_STORAGE_KEY, newLocale);
-    globalThis.location.reload();
   }
 
   protected openSettings(): void {
@@ -63,22 +57,8 @@ export class Header {
     });
   }
 
-  protected openLanguageModal(): void {
-    const dialogRef = this.dialog.open(LanguageModal, {
-      width: '230px',
-      data: {
-        locales: this.locales,
-        currentLocale: this.currentLocale(),
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((newLocale: string | undefined) => {
-      if (!newLocale) {
-        return;
-      }
-      this.onLocaleChange(newLocale);
-    });
+  protected switchLanguage(localeCode: string): void {
+    this.localeService.switchLocale(localeCode);
   }
 }
-
 
