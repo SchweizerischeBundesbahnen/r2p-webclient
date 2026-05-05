@@ -17,12 +17,8 @@ export const ORGANIZATION_OPTIONS: OrganizationOption[] = [
   { name: 'BLS', shortName: 'BLS', color: '#00539b' },
 ];
 
-const SETTINGS_KEY = 'r2p-settings';
-
-const EMPTY_SETTINGS: Settings = {
-  serverUrl: '',
-  organization: '',
-};
+const SERVER_URL_KEY = 'r2p-serverUrl';
+const ORGANIZATION_KEY = 'r2p-organization';
 
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
@@ -37,22 +33,15 @@ export class SettingsService {
 
   save(settings: Settings): void {
     const normalized = this.normalize(settings);
-    localStorage.setItem(SETTINGS_KEY, JSON.stringify(normalized));
+    localStorage.setItem(SERVER_URL_KEY, normalized.serverUrl);
+    localStorage.setItem(ORGANIZATION_KEY, normalized.organization);
     this._settings.set(normalized);
   }
 
   load(): Settings {
-    const raw = localStorage.getItem(SETTINGS_KEY);
-    if (!raw) {
-      return EMPTY_SETTINGS;
-    }
-
-    try {
-      const parsed = JSON.parse(raw) as Partial<Settings>;
-      return this.normalize(parsed);
-    } catch {
-      return EMPTY_SETTINGS;
-    }
+    const serverUrl = localStorage.getItem(SERVER_URL_KEY) ?? '';
+    const organization = localStorage.getItem(ORGANIZATION_KEY) ?? '';
+    return this.normalize({ serverUrl, organization });
   }
 
   private normalize(settings: Partial<Settings>): Settings {

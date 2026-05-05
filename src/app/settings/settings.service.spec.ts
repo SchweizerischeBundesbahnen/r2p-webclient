@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { ORGANIZATION_OPTIONS, SettingsService } from './settings.service';
 
-const SETTINGS_KEY = 'r2p-settings';
+const SERVER_URL_KEY = 'r2p-serverUrl';
+const ORGANIZATION_KEY = 'r2p-organization';
 
 describe('SettingsService', () => {
 
@@ -35,17 +36,16 @@ describe('SettingsService', () => {
     expect(service.settings()).toEqual(next);
     expect(service.settings().serverUrl).toBe(next.serverUrl);
     expect(service.settings().organization).toBe(next.organization);
-    expect(JSON.parse(localStorage.getItem(SETTINGS_KEY) ?? '{}')).toEqual(next);
+    expect(localStorage.getItem(SERVER_URL_KEY)).toBe(next.serverUrl);
+    expect(localStorage.getItem(ORGANIZATION_KEY)).toBe(next.organization);
     expect(service.hasConfiguredSettings()).toBe(true);
   });
 
   it('loads previously persisted settings on construction', () => {
     const serverUrl = 'https://restored.example';
     const organization = ORGANIZATION_OPTIONS[2].name;
-    localStorage.setItem(
-      SETTINGS_KEY,
-      JSON.stringify({ serverUrl, organization }),
-    );
+    localStorage.setItem(SERVER_URL_KEY, serverUrl);
+    localStorage.setItem(ORGANIZATION_KEY, organization);
 
     const service = createService();
 
@@ -57,10 +57,8 @@ describe('SettingsService', () => {
 
   it('clears the organization when the stored organization is unknown', () => {
     const serverUrl = 'https://restored.example';
-    localStorage.setItem(
-      SETTINGS_KEY,
-      JSON.stringify({ serverUrl, organization: 'UNKNOWN' }),
-    );
+    localStorage.setItem(SERVER_URL_KEY, serverUrl);
+    localStorage.setItem(ORGANIZATION_KEY, 'UNKNOWN');
 
     const service = createService();
 
@@ -69,8 +67,9 @@ describe('SettingsService', () => {
     expect(service.hasConfiguredSettings()).toBe(false);
   });
 
-  it('returns empty settings when stored JSON is malformed', () => {
-    localStorage.setItem(SETTINGS_KEY, '{not valid json');
+  it('returns empty settings when stored values are malformed', () => {
+    localStorage.setItem(SERVER_URL_KEY, '  ');
+    localStorage.setItem(ORGANIZATION_KEY, 'UNKNOWN');
 
     const service = createService();
 
