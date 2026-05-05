@@ -2,24 +2,24 @@
 // Components should use var(--app-*) and avoid hard-coded hex values.
 
 :root {
-  // Header
-  --app-header-bg:            var(--mat-sys-primary, #294f81);
-  --app-header-fg:            var(--mat-sys-on-primary, #ffffff);
-  --app-header-icon:          var(--mat-sys-primary-container, #f0f4f9);
-  --app-header-nav-active-bg: var(--mat-sys-primary-fixed-dim, #4f6f99);
-  --app-header-muted:         var(--mat-sys-on-primary-container, #dfe8f2);
+    // Header
+    --app-header-bg: var(--mat-sys-primary, #294f81);
+    --app-header-fg: var(--mat-sys-on-primary, #ffffff);
+    --app-header-icon: var(--mat-sys-primary-container, #f0f4f9);
+    --app-header-nav-active-bg: var(--mat-sys-primary-fixed-dim, #4f6f99);
+    --app-header-muted: var(--mat-sys-on-primary-container, #dfe8f2);
 
-  // Version badge
-  --app-version-bg:           var(--mat-sys-secondary-container, #4f6f99);
-  --app-version-text:         var(--mat-sys-on-secondary-container, #e9eff7);
+    // Version badge
+    --app-version-bg: var(--mat-sys-secondary-container, #4f6f99);
+    --app-version-text: var(--mat-sys-on-secondary-container, #e9eff7);
 
-  // PoC banner
-  --app-banner-bg:            var(--mat-sys-tertiary, #f2c94c);
-  --app-banner-text:          var(--mat-sys-on-tertiary, #2f2a1d);
+    // PoC banner
+    --app-banner-bg: var(--mat-sys-tertiary, #f2c94c);
+    --app-banner-text: var(--mat-sys-on-tertiary, #2f2a1d);
 
-  // Modal / surface
-  --app-surface:              var(--mat-sys-surface-container-low, #f5f6f8);
-  --app-primary-text:         var(--mat-sys-primary, #1f4f87);
-  --app-muted-text:           var(--mat-sys-on-surface-variant, #6b7280);
-  --app-label-text:           var(--mat-sys-on-surface, #364152);
+    // Modal / surface
+    --app-surface: var(--mat-sys-surface-container-low, #f5f6f8);
+    --app-primary-text: var(--mat-sys-primary, #1f4f87);
+    --app-muted-text: var(--mat-sys-on-surface-variant, #6b7280);
+    --app-label-text: var(--mat-sys-on-surface, #364152);
 }

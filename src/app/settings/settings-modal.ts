@@ -8,46 +8,46 @@ import { MatIconModule } from '@angular/material/icon';
 import { ORGANIZATION_OPTIONS, SettingsService } from './settings.service';
 
 @Component({
-  selector: 'app-settings-modal',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatDialogModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule, MatIconModule],
-  templateUrl: './settings-modal.html',
-  styleUrl: './settings-modal.scss',
+    selector: 'app-settings-modal',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [ MatDialogModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule, MatIconModule ],
+    templateUrl: './settings-modal.html',
+    styleUrl: './settings-modal.scss',
 })
 export class SettingsModal {
-  private readonly dialogRef = inject(MatDialogRef<SettingsModal>);
-  private readonly settingsService = inject(SettingsService);
+    private readonly dialogRef = inject(MatDialogRef<SettingsModal>);
+    private readonly settingsService = inject(SettingsService);
 
-  readonly organizations = ORGANIZATION_OPTIONS;
-  readonly serverUrl = signal(this.settingsService.settings().serverUrl);
-  readonly organization = signal(this.settingsService.settings().organization);
-  readonly isFirstTime = computed(() => !this.settingsService.hasConfiguredSettings());
-  readonly canContinue = computed(
-    () => this.serverUrl().trim().length > 0 && this.organizations.some((option) => option.name === this.organization()),
-  );
+    readonly organizations = ORGANIZATION_OPTIONS;
+    readonly serverUrl = signal(this.settingsService.settings().serverUrl);
+    readonly organization = signal(this.settingsService.settings().organization);
+    readonly isFirstTime = computed(() => !this.settingsService.hasConfiguredSettings());
+    readonly canContinue = computed(
+        () => this.serverUrl().trim().length > 0 && this.organizations.some((option) => option.name === this.organization()),
+    );
 
-  constructor() {
-    this.dialogRef.disableClose = true;
-  }
-
-  protected onServerUrlInput(value: string): void {
-    this.serverUrl.set(value);
-  }
-
-  protected onClose(): void {
-    if (!this.canContinue()) {
-      return;
+    constructor() {
+        this.dialogRef.disableClose = true;
     }
 
-    this.persist();
-    this.dialogRef.close();
-  }
+    protected onServerUrlInput(value: string): void {
+        this.serverUrl.set(value);
+    }
 
-  private persist(): void {
-    this.settingsService.save({
-      serverUrl: this.serverUrl().trim(),
-      organization: this.organization(),
-    });
-  }
+    protected onClose(): void {
+        if (!this.canContinue()) {
+            return;
+        }
+
+        this.persist();
+        this.dialogRef.close();
+    }
+
+    private persist(): void {
+        this.settingsService.save({
+            serverUrl: this.serverUrl().trim(),
+            organization: this.organization(),
+        });
+    }
 }
 

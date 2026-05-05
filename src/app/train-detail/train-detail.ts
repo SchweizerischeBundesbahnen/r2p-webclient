@@ -5,18 +5,18 @@ import { map } from 'rxjs';
 import { TRAINS, Train } from '../trains/trains';
 
 @Component({
-  selector: 'app-train-detail',
-  imports: [],
-  templateUrl: './train-detail.html',
-  styleUrl: './train-detail.scss',
+    selector: 'app-train-detail',
+    imports: [],
+    templateUrl: './train-detail.html',
+    styleUrl: './train-detail.scss',
 })
 export class TrainDetail {
-  private readonly route = inject(ActivatedRoute);
+    private readonly route = inject(ActivatedRoute);
 
-  private readonly trainId = toSignal(
-    this.route.paramMap.pipe(map((params) => params.get('id'))),
-  );
+    private readonly trainId = toSignal(
+        this.route.paramMap.pipe(map((params) => params.get('id'))),
+    );
 
-  protected readonly train = (): Train | undefined =>
-    TRAINS.find((t) => t.id === this.trainId());
+    protected readonly train = (): Train | undefined =>
+        TRAINS.find((t) => t.id === this.trainId());
 }

@@ -7,11 +7,11 @@
 @use './palettes' as palettes;
 
 $r2p-theme: (
-  color: (
-    theme-type: light,
-    primary:   palettes.$r2p-primary,
-    tertiary:  palettes.$r2p-tertiary,
-  ),
-  typography: Roboto,
-  density: 0,
+    color: (
+        theme-type: light,
+        primary: palettes.$r2p-primary,
+        tertiary: palettes.$r2p-tertiary,
+    ),
+    typography: Roboto,
+    density: 0,
 );

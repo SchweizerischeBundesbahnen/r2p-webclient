@@ -1,194 +1,194 @@
 .app-header-shell {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    width: 100%;
 }
 
 .app-header-banner {
-  background: var(--app-banner-bg);
-  color: var(--app-banner-text);
-  text-align: center;
-  font: var(--mat-sys-label-large);
-  letter-spacing: 0.01rem;
-  padding: 0.35rem 0.75rem;
+    background: var(--app-banner-bg);
+    color: var(--app-banner-text);
+    text-align: center;
+    font: var(--mat-sys-label-large);
+    letter-spacing: 0.01rem;
+    padding: 0.35rem 0.75rem;
 }
 
 .app-header {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  align-items: center;
-  gap: 0.8rem;
-  padding-block: 0.35rem;
-  padding-inline: 1rem;
-  min-height: 3.25rem;
-  height: auto;
-  width: 100%;
-  box-sizing: border-box;
-  overflow: hidden;
-  white-space: normal;
-  background-color: var(--app-header-bg);
-  color: var(--app-header-fg);
-  box-shadow: var(--mat-sys-level2);
-
-  &__brand {
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: center;
-    gap: 0.5rem;
-
-    mat-icon {
-      color: var(--app-header-icon);
-      width: 1.35rem;
-      height: 1.35rem;
-      font-size: 1.35rem;
-    }
-  }
-
-  &__title {
-    font: var(--mat-sys-headline-medium);
-    color: var(--app-header-fg);
-  }
-
-  &__left {
-    display: flex;
-    justify-content: flex-start;
-    justify-self: start;
+    gap: 0.8rem;
+    padding-block: 0.35rem;
+    padding-inline: 1rem;
+    min-height: 3.25rem;
+    height: auto;
     width: 100%;
-    min-width: 0;
-  }
-
-  &__center {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.45rem;
-    justify-self: stretch;
-    width: 100%;
-    min-width: 0;
-  }
-
-  &__right {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    column-gap: 1.875rem;
-    row-gap: 0.55rem;
-    justify-self: stretch;
-    width: 100%;
-    min-width: 0;
-  }
-
-  &__identity {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.55rem;
-    white-space: nowrap;
-  }
-
-  &__nav-btn {
-    border-radius: 0.35rem;
-    color: var(--app-header-fg) !important;
-    padding: 0.15rem 0.9rem;
-
-    &--active {
-      background: var(--app-header-nav-active-bg);
-    }
-  }
-
-  &__locale-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.2rem;
-    border: 0;
-    padding: 0.15rem;
-    border-radius: 0.5rem;
-    background: color-mix(in srgb, var(--app-header-fg) 12%, transparent);
-  }
-
-  &__locale-btn {
-    border: 0;
-    border-radius: 0.35rem;
-    min-width: 2rem;
-    height: 1.7rem;
-    padding: 0 0.45rem;
-    font: var(--mat-sys-label-medium);
-    letter-spacing: 0.03rem;
-    text-transform: uppercase;
-    color: color-mix(in srgb, var(--app-header-fg) 65%, transparent);
-    background: transparent;
-    cursor: pointer;
-
-    &:hover {
-      background: color-mix(in srgb, var(--app-header-fg) 14%, transparent);
-      color: var(--app-header-fg);
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--app-header-fg);
-      outline-offset: 1px;
-    }
-
-    &--active {
-      background: color-mix(in srgb, #ffffff 85%, transparent);
-      color: var(--app-header-bg);
-    }
-  }
-
-  &__organization-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 2.3rem;
-    height: 1.45rem;
-    padding-inline: 0.4rem;
-    border-radius: 0.35rem;
-    color: #ffffff;
-    font-size: 0.82rem;
-    font-weight: 700;
-    letter-spacing: 0.02rem;
-  }
-
-  &__version {
-    padding: 0.1rem 0.6rem;
-    border-radius: 999px;
-    background: var(--app-version-bg);
-    color: var(--app-version-text);
-    font: var(--mat-sys-label-medium);
-    white-space: nowrap;
-  }
-
-  &__sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
+    box-sizing: border-box;
     overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-  }
+    white-space: normal;
+    background-color: var(--app-header-bg);
+    color: var(--app-header-fg);
+    box-shadow: var(--mat-sys-level2);
+
+    &__brand {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        mat-icon {
+            color: var(--app-header-icon);
+            width: 1.35rem;
+            height: 1.35rem;
+            font-size: 1.35rem;
+        }
+    }
+
+    &__title {
+        font: var(--mat-sys-headline-medium);
+        color: var(--app-header-fg);
+    }
+
+    &__left {
+        display: flex;
+        justify-content: flex-start;
+        justify-self: start;
+        width: 100%;
+        min-width: 0;
+    }
+
+    &__center {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.45rem;
+        justify-self: stretch;
+        width: 100%;
+        min-width: 0;
+    }
+
+    &__right {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        column-gap: 1.875rem;
+        row-gap: 0.55rem;
+        justify-self: stretch;
+        width: 100%;
+        min-width: 0;
+    }
+
+    &__identity {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        white-space: nowrap;
+    }
+
+    &__nav-btn {
+        border-radius: 0.35rem;
+        color: var(--app-header-fg) !important;
+        padding: 0.15rem 0.9rem;
+
+        &--active {
+            background: var(--app-header-nav-active-bg);
+        }
+    }
+
+    &__locale-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.2rem;
+        border: 0;
+        padding: 0.15rem;
+        border-radius: 0.5rem;
+        background: color-mix(in srgb, var(--app-header-fg) 12%, transparent);
+    }
+
+    &__locale-btn {
+        border: 0;
+        border-radius: 0.35rem;
+        min-width: 2rem;
+        height: 1.7rem;
+        padding: 0 0.45rem;
+        font: var(--mat-sys-label-medium);
+        letter-spacing: 0.03rem;
+        text-transform: uppercase;
+        color: color-mix(in srgb, var(--app-header-fg) 65%, transparent);
+        background: transparent;
+        cursor: pointer;
+
+        &:hover {
+            background: color-mix(in srgb, var(--app-header-fg) 14%, transparent);
+            color: var(--app-header-fg);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--app-header-fg);
+            outline-offset: 1px;
+        }
+
+        &--active {
+            background: color-mix(in srgb, #ffffff 85%, transparent);
+            color: var(--app-header-bg);
+        }
+    }
+
+    &__organization-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 2.3rem;
+        height: 1.45rem;
+        padding-inline: 0.4rem;
+        border-radius: 0.35rem;
+        color: #ffffff;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.02rem;
+    }
+
+    &__version {
+        padding: 0.1rem 0.6rem;
+        border-radius: 999px;
+        background: var(--app-version-bg);
+        color: var(--app-version-text);
+        font: var(--mat-sys-label-medium);
+        white-space: nowrap;
+    }
+
+    &__sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
 }
 
 .app-header.mat-toolbar-single-row {
-  height: auto;
-  min-height: 3.25rem;
-  white-space: normal;
+    height: auto;
+    min-height: 3.25rem;
+    white-space: normal;
 }
 
 @media (max-width: 70rem) {
-  .app-header {
-    grid-template-columns: 1fr;
-    row-gap: 0.35rem;
-    padding-block: 0.45rem;
+    .app-header {
+        grid-template-columns: 1fr;
+        row-gap: 0.35rem;
+        padding-block: 0.45rem;
 
-    &__left,
-    &__center,
-    &__right {
-      justify-self: stretch;
-      justify-content: center;
+        &__left,
+        &__center,
+        &__right {
+            justify-self: stretch;
+            justify-content: center;
+        }
     }
-  }
 }

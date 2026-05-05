@@ -1,6 +1,6 @@
 @if (train(); as t) {
-  <h2>{{ t.name }}</h2>
-  <p>ID: {{ t.id }}</p>
+    <h2>{{ t.name }}</h2>
+    <p>ID: {{ t.id }}</p>
 } @else {
-  <p i18n="@@trainDetail.notFound">Train not found.</p>
+    <p i18n="@@trainDetail.notFound">Train not found.</p>
 }

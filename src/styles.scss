@@ -7,20 +7,20 @@
 @import 'material-icons/iconfont/material-icons.css';
 
 html {
-  height: 100%;
-  @include mat.theme(r2p.$r2p-theme);
+    height: 100%;
+    @include mat.theme(r2p.$r2p-theme);
 }
 
 body {
-  color-scheme: light;
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
-  margin: 0;
-  overflow-y: overlay;
+    color-scheme: light;
+    background-color: var(--mat-sys-surface);
+    color: var(--mat-sys-on-surface);
+    font: var(--mat-sys-body-medium);
+    margin: 0;
+    overflow-y: overlay;
 }
 
 .cdk-overlay-container .mat-mdc-dialog-surface {
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
+    background-color: var(--mat-sys-surface);
+    color: var(--mat-sys-on-surface);
 }

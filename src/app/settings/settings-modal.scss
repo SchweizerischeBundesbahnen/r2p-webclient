@@ -1,76 +1,76 @@
 .settings-modal {
-  color: var(--mat-sys-on-surface);
+    color: var(--mat-sys-on-surface);
 }
 
 .settings-modal__content {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1.75rem 2rem 2rem;
-  background: var(--app-surface);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.75rem 2rem 2rem;
+    background: var(--app-surface);
 }
 
 .settings-modal__logo {
-  align-self: center;
-  margin-bottom: 0.25rem;
-  line-height: 1;
+    align-self: center;
+    margin-bottom: 0.25rem;
+    line-height: 1;
 
-  mat-icon {
-    width: 2.4rem;
-    height: 2.4rem;
-    font-size: 2.4rem;
-    color: var(--app-primary-text);
-  }
+    mat-icon {
+        width: 2.4rem;
+        height: 2.4rem;
+        font-size: 2.4rem;
+        color: var(--app-primary-text);
+    }
 }
 
 .settings-modal__title {
-  margin: 0;
-  text-align: center;
-  color: var(--app-primary-text);
-  font: var(--mat-sys-headline-small);
-  font-weight: 700;
+    margin: 0;
+    text-align: center;
+    color: var(--app-primary-text);
+    font: var(--mat-sys-headline-small);
+    font-weight: 700;
 }
 
 .settings-modal__subtitle {
-  margin: -0.4rem 0 0.5rem;
-  text-align: center;
-  color: var(--app-muted-text);
-  font-size: 1rem;
+    margin: -0.4rem 0 0.5rem;
+    text-align: center;
+    color: var(--app-muted-text);
+    font-size: 1rem;
 }
 
 .settings-modal__field-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
 }
 
 .settings-modal__field-label {
-  color: var(--app-label-text);
-  font-size: 1.05rem;
-  font-weight: 600;
+    color: var(--app-label-text);
+    font-size: 1.05rem;
+    font-weight: 600;
 }
 
 .settings-modal__field {
-  width: 100%;
+    width: 100%;
 }
 
 .settings-modal__hint {
-  margin: -0.25rem 0 0;
-  color: var(--app-muted-text);
-  font-size: 0.95rem;
+    margin: -0.25rem 0 0;
+    color: var(--app-muted-text);
+    font-size: 0.95rem;
 }
 
 .settings-modal__save {
-  margin-top: 0.5rem;
-  justify-content: center;
-  min-height: 44px;
-  font-size: 1.05rem;
+    margin-top: 0.5rem;
+    justify-content: center;
+    min-height: 44px;
+    font-size: 1.05rem;
 
-  mat-icon {
-    margin-right: 0.35rem;
-    font-size: 1rem;
-    width: 1rem;
-    height: 1rem;
-  }
+    mat-icon {
+        margin-right: 0.35rem;
+        font-size: 1rem;
+        width: 1rem;
+        height: 1rem;
+    }
 
 }
