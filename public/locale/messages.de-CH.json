@@ -1,0 +1,24 @@
+{
+  "locale": "de-CH",
+  "translations": {
+    "header.title": "R2P Web Client",
+    "header.trafficOverview": "Verkehrsübersicht",
+    "header.settings": "Einstellungen",
+    "header.language": "Sprache",
+    "header.language.aria": "Sprache wechseln",
+    "header.pocWarning": "Dies ist eine PoC-Implementierung und nicht für den Produktionseinsatz geeignet",
+    "header.loggedInAs": "Angemeldet als:",
+    "settings.clientTitle": "R2P Web Client",
+    "settings.clientSubtitle": "Kommunikation mit EVU-Partnern",
+    "settings.serverUrl": "Server-URL *",
+    "settings.serverUrl.aria": "Server-URL",
+    "settings.serverUrlHint": "Basis-URL des R2P-Backend-Servers.",
+    "settings.organization": "Ihr Organization *",
+    "settings.organization.aria": "Ihr Organization",
+    "settings.organizationHint": "Alle Anfragen werden im Namen dieses Organizations gesendet.",
+    "settings.continue": "Fortfahren",
+    "trafficOverview.heading": "Verkehrsübersicht",
+    "trainDetail.notFound": "Zug nicht gefunden."
+  }
+}
+

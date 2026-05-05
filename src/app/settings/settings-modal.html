@@ -1,0 +1,58 @@
+<div class="settings-modal">
+    <mat-dialog-content class="settings-modal__content">
+        @if (isFirstTime()) {
+            <div class="settings-modal__logo" aria-hidden="true">
+                <mat-icon>train</mat-icon>
+            </div>
+            <h2 class="settings-modal__title" i18n="@@settings.clientTitle">R2P Web Client</h2>
+            <p class="settings-modal__subtitle" i18n="@@settings.clientSubtitle">Railway Undertaking
+                Partner Communication</p>
+        }
+
+
+
+        <div class="settings-modal__field-group">
+            <label class="settings-modal__field-label" for="server-url" i18n="@@settings.serverUrl">Server
+                URL *</label>
+            <mat-form-field appearance="outline" subscriptSizing="dynamic"
+                            class="settings-modal__field">
+                <input
+                    id="server-url"
+                    matInput
+                    [value]="serverUrl()"
+                    (input)="onServerUrlInput($any($event.target).value)"
+                    aria-label="Server URL"
+                    i18n-aria-label="@@settings.serverUrl.aria"
+                />
+            </mat-form-field>
+            <p class="settings-modal__hint" i18n="@@settings.serverUrlHint">
+                Base URL of the R2P backend server.
+            </p>
+        </div>
+
+        <div class="settings-modal__field-group">
+            <label class="settings-modal__field-label" for="organization"
+                   i18n="@@settings.organization">Your Organization *</label>
+            <mat-form-field appearance="outline" subscriptSizing="dynamic"
+                            class="settings-modal__field">
+                <mat-select id="organization" [value]="organization()"
+                            (valueChange)="organization.set($event)" aria-label="Your Organization"
+                            i18n-aria-label="@@settings.organization.aria">
+                    @for (option of organizations; track option.name) {
+                        <mat-option [value]="option.name">{{ option.name }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+            <p class="settings-modal__hint" i18n="@@settings.organizationHint">All requests will be
+                sent on behalf of this organization.</p>
+        </div>
+
+        <button mat-flat-button color="primary" class="settings-modal__save"
+                [disabled]="!canContinue()" (click)="onClose()" i18n="@@settings.continue">
+            Continue
+        </button>
+
+    </mat-dialog-content>
+</div>
+
+

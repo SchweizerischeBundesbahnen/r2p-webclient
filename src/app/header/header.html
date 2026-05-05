@@ -1,0 +1,61 @@
+<div class="app-header-shell">
+    <div class="app-header-banner" i18n="@@header.pocWarning">This is a PoC implementation not
+        suitable to run in production
+    </div>
+
+    <mat-toolbar color="primary" class="app-header">
+        <div class="app-header__left">
+            <div class="app-header__brand">
+                <mat-icon aria-hidden="true">train</mat-icon>
+                <span class="app-header__title" i18n="@@header.title">R2P Web Client</span>
+            </div>
+        </div>
+
+        <div class="app-header__center">
+            <button
+                mat-button
+                class="app-header__nav-btn"
+                [class.app-header__nav-btn--active]="isOverviewActive()"
+                (click)="goToOverview()"
+                i18n="@@header.trafficOverview"
+            >
+                Traffic Overview
+            </button>
+
+            <button mat-button class="app-header__nav-btn" (click)="openSettings()"
+                    i18n="@@header.settings">Settings
+            </button>
+        </div>
+
+        <div class="app-header__right">
+
+            @if (loggedInOrganization()) {
+                <div class="app-header__identity">
+                    <span i18n="@@header.loggedInAs">Logged in as:</span>
+                    <span class="app-header__organization-badge"
+                          [style.background-color]="loggedInOrganization()?.color">{{ loggedInOrganization()?.shortName }}</span>
+                </div>
+            }
+
+
+            <fieldset class="app-header__locale-toggle">
+                <legend class="app-header__sr-only" i18n="@@header.language">Language</legend>
+                @for (locale of locales; track locale.code) {
+                    <button
+                        type="button"
+                        class="app-header__locale-btn"
+                        [class.app-header__locale-btn--active]="currentLocale() === locale.code"
+                        [attr.aria-pressed]="currentLocale() === locale.code"
+                        [attr.aria-label]="locale.label"
+                        (click)="switchLanguage(locale.code)"
+                    >
+                        {{ locale.shortLabel }}
+                    </button>
+                }
+            </fieldset>
+            <span class="app-header__version">{{ version }}</span>
+
+        </div>
+    </mat-toolbar>
+</div>
+

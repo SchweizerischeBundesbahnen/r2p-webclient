@@ -1,0 +1,9 @@
+<p i18n="@@trafficOverview.heading">Traffic Overview</p>
+
+<ul>
+    @for (train of trains; track train.id) {
+        <li>
+            <a [routerLink]="['/train', train.id]">{{ train.name }} ({{ train.id }})</a>
+        </li>
+    }
+</ul>
