@@ -1,0 +1,47 @@
+# Build artifacts
+target/
+*.jar
+*.war
+*.ear
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+.github/
+
+# Documentation
+docs/
+*.md
+CHANGELOG.md
+CODE_OF_CONDUCT.md
+CODING_STANDARDS.md
+CONTRIBUTING.md
+RELEASE.md
+README.md
+
+# CI/CD
+commitlint.config.js
+release-please-config.json
+.release-please-manifest.json
+
+# Node
+node_modules/
+package.json
+package-lock.json
+
+# Other
+.husky/
+--version/
+

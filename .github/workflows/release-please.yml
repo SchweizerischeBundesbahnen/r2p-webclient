@@ -1,0 +1,56 @@
+name: Release Please
+
+on:
+  push:
+    branches:
+      - '**'
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+      version: ${{ steps.release.outputs.version }}
+      major: ${{ steps.release.outputs.major }}
+      minor: ${{ steps.release.outputs.minor }}
+      patch: ${{ steps.release.outputs.patch }}
+    steps:
+      - name: Run release-please
+        id: release
+        uses: googleapis/release-please-action@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # Note: Configuration is managed via release-please-config.json
+          # and .release-please-manifest.json files
+
+      - name: Checkout release-please branch
+        if: ${{ steps.release.outputs.pr }}
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ fromJSON(steps.release.outputs.pr).headBranchName }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24.x'
+          cache: npm
+
+      - name: Commit and push THIRD-PARTY.txt if changed
+        if: ${{ steps.release.outputs.pr }}
+        run: |
+          if ! git diff --quiet THIRD-PARTY.txt; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add THIRD-PARTY.txt
+            git commit -m "chore: update THIRD-PARTY.txt"
+            git push
+          else
+            echo "THIRD-PARTY.txt unchanged, skipping commit."
+          fi
