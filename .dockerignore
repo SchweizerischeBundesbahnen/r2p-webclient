@@ -38,8 +38,6 @@ release-please-config.json
 
 # Node
 node_modules/
-package.json
-package-lock.json
 
 # Other
 .husky/
