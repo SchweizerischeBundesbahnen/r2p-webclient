@@ -3,108 +3,108 @@
   <file source-language="en-US" datatype="plaintext" original="ng2.template">
     <body>
       <trans-unit id="header.pocWarning" datatype="html">
-        <source>This is a PoC implementation not suitable to run in production</source>
+        <source>This is a PoC implementation not suitable to run in production </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/header/header.html</context>
-          <context context-type="linenumber">2,4</context>
+          <context context-type="linenumber">2,6</context>
         </context-group>
       </trans-unit>
       <trans-unit id="header.title" datatype="html">
         <source>R2P Web Client</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/header/header.html</context>
-          <context context-type="linenumber">8,10</context>
+          <context context-type="linenumber">10,11</context>
         </context-group>
       </trans-unit>
       <trans-unit id="header.trafficOverview" datatype="html">
         <source> Traffic Overview </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/header/header.html</context>
-          <context context-type="linenumber">20,23</context>
+          <context context-type="linenumber">22,23</context>
         </context-group>
       </trans-unit>
       <trans-unit id="header.settings" datatype="html">
-        <source>Settings</source>
+        <source>Settings </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/header/header.html</context>
-          <context context-type="linenumber">23,26</context>
+          <context context-type="linenumber">26,28</context>
         </context-group>
       </trans-unit>
       <trans-unit id="header.loggedInAs" datatype="html">
         <source>Logged in as:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/header/header.html</context>
-          <context context-type="linenumber">30,31</context>
+          <context context-type="linenumber">34,35</context>
         </context-group>
       </trans-unit>
       <trans-unit id="header.language" datatype="html">
         <source>Language</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/header/header.html</context>
-          <context context-type="linenumber">37,38</context>
+          <context context-type="linenumber">42,43</context>
         </context-group>
       </trans-unit>
       <trans-unit id="settings.clientTitle" datatype="html">
         <source>R2P Web Client</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
-          <context context-type="linenumber">8,9</context>
+          <context context-type="linenumber">7,8</context>
         </context-group>
       </trans-unit>
       <trans-unit id="settings.clientSubtitle" datatype="html">
         <source>Railway Undertaking Partner Communication</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
-          <context context-type="linenumber">9,13</context>
+          <context context-type="linenumber">8,13</context>
         </context-group>
       </trans-unit>
       <trans-unit id="settings.serverUrl" datatype="html">
         <source>Server URL *</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
-          <context context-type="linenumber">14,15</context>
+          <context context-type="linenumber">16,17</context>
         </context-group>
       </trans-unit>
       <trans-unit id="settings.serverUrl.aria" datatype="html">
         <source>Server URL</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
-          <context context-type="linenumber">21,22</context>
+          <context context-type="linenumber">24,25</context>
         </context-group>
       </trans-unit>
       <trans-unit id="settings.serverUrlHint" datatype="html">
         <source> Base URL of the R2P backend server. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
-          <context context-type="linenumber">26,30</context>
+          <context context-type="linenumber">29,31</context>
         </context-group>
       </trans-unit>
       <trans-unit id="settings.organization" datatype="html">
         <source>Your Organization *</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
-          <context context-type="linenumber">31,32</context>
+          <context context-type="linenumber">35,36</context>
         </context-group>
       </trans-unit>
       <trans-unit id="settings.organization.aria" datatype="html">
         <source>Your Organization</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">39,40</context>
         </context-group>
       </trans-unit>
       <trans-unit id="settings.organizationHint" datatype="html">
         <source>All requests will be sent on behalf of this organization.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
-          <context context-type="linenumber">39,42</context>
+          <context context-type="linenumber">46,49</context>
         </context-group>
       </trans-unit>
       <trans-unit id="settings.continue" datatype="html">
         <source> Continue </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
-          <context context-type="linenumber">43,46</context>
+          <context context-type="linenumber">52,53</context>
         </context-group>
       </trans-unit>
       <trans-unit id="trafficOverview.heading" datatype="html">
