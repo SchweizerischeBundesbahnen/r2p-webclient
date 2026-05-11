@@ -6,7 +6,7 @@
 ![CI](https://github.com/SchweizerischeBundesbahnen/{{REPO_NAME}}/actions/workflows/ci.yml/badge.svg)
 ![License](https://img.shields.io/badge/license-{{LICENSE_NAME}}-blue.svg)
 -->
-
+ 
 {{ONE_LINE_DESCRIPTION}}
 
 ## Maintainer Quickstart
