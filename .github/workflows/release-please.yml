@@ -162,7 +162,7 @@ jobs:
           cd ../../..
       - name: Upload to Github release
         env:
-          GITHUB_token: ${{ steps.app-token.outputs.token }}
+          GITHUB_token: ${{ secrets.GITHUB_TOKEN }}
         run: gh release upload --clobber ${{ needs.release-please.outputs.tag_name }} dist-archives/r2p-webclient.tar.gz
 
 
