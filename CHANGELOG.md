@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.9](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.8...r2p-webclient-v0.0.9) (2026-05-12)
+
+
+### Bug Fixes
+
+* build artifact based on release-please ([d4676fa](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/d4676faa4202aa3d455c61b1f155213fe6fbd982))
+
 ## [0.0.8](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.7...r2p-webclient-v0.0.8) (2026-05-12)
 
 
