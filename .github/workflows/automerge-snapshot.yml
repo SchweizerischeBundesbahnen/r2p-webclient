@@ -18,10 +18,17 @@ jobs:
       contents: write
       pull-requests: write
     steps:
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.R2P_APP_ID }}
+          private-key: ${{ secrets.R2P_APP_PRIVATE_KEY }}
+
       - name: Automerge
         uses: "pascalgn/automerge-action@v0.16.4"
         env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: "${{ steps.app-token.outputs.token }}"
           MERGE_LABELS: "autorelease: snapshot"
           MERGE_METHOD: "squash"
           MERGE_DELETE_BRANCH: "true"
