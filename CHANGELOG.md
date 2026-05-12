@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.4](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.3...r2p-webclient-v0.0.4) (2026-05-12)
+
+
+### Bug Fixes
+
+* fix tag uppercase docker repository ([7acf5eb](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/7acf5eb733a4b816c5def7be9b5af5eee278316d))
+
 ## [0.0.3](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.2...r2p-webclient-v0.0.3) (2026-05-12)
 
 
