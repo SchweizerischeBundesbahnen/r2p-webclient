@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.7](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.6...r2p-webclient-v0.0.7) (2026-05-12)
+
+
+### Bug Fixes
+
+* switch github user for pushing to docker repo ([7588a22](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/7588a226f00e95a3d8185b377cd62991aa399530))
+
 ## [0.0.6](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.5...r2p-webclient-v0.0.6) (2026-05-12)
 
 
