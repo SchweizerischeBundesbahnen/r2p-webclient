@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { SubtitleNavigation } from './subtitle-navigation';
+import { RouterLink } from '@angular/router';
 
 @Component({
     selector: 'app-create-train-body',
@@ -9,11 +10,13 @@ import { SubtitleNavigation } from './subtitle-navigation';
                 <div class="sticky-edit-bar-title">
                     <span id="sticky-title">Create New Train</span>
                     <span class="unsaved-indicator hidden" id="unsaved-indicator"
-                    >● Unsaved changes</span
+                        >● Unsaved changes</span
                     >
                 </div>
                 <div class="sticky-edit-bar-actions">
-                    <a href="overview.html" class="btn btn-ghost" id="sticky-cancel-btn">Cancel</a>
+                    <a [routerLink]="'/overview'" class="btn btn-ghost" id="sticky-cancel-btn"
+                        >Cancel</a
+                    >
                     <button class="btn btn-success btn-muted" id="sticky-save-btn">
                         💾 Save Train
                     </button>
@@ -22,7 +25,7 @@ import { SubtitleNavigation } from './subtitle-navigation';
         </div>
         <div class="main-content">
             <div class="container">
-                <a href="overview.html" class="back-link">Traffic Overview</a>
+                <a [routerLink]="'/overview'" class="back-link">Traffic Overview</a>
 
                 <div class="page-header">
                     <div>
@@ -50,7 +53,7 @@ import { SubtitleNavigation } from './subtitle-navigation';
                             </div>
                             <div class="form-group">
                                 <label class="form-label required" for="train-opday"
-                                >Operational Day</label
+                                    >Operational Day</label
                                 >
                                 <input
                                     type="date"
@@ -62,7 +65,7 @@ import { SubtitleNavigation } from './subtitle-navigation';
                         </div>
                         <div class="form-group">
                             <label class="form-label required" for="save-comment"
-                            >Creation Comment</label
+                                >Creation Comment</label
                             >
                             <textarea
                                 id="save-comment"
@@ -97,6 +100,6 @@ import { SubtitleNavigation } from './subtitle-navigation';
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [SubtitleNavigation],
+    imports: [SubtitleNavigation, RouterLink],
 })
 export class Body {}
