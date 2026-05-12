@@ -1,8 +1,15 @@
 import { Routes } from '@angular/router';
-import { TrafficOverview } from './traffic-overview/traffic-overview';
-import { TrainDetail } from './train-detail/train-detail';
+import { OverviewPage } from './pages/overview/overview-page';
+import { Layout } from './pages/layout';
+import { Body } from './pages/create-train/body';
 
 export const routes: Routes = [
-    { path: '', component: TrafficOverview },
-    { path: 'train/:id', component: TrainDetail },
+    {
+        path: '',
+        component: Layout,
+        children: [
+            { path: 'overview', component: OverviewPage },
+            { path: 'create-train', component: Body }
+        ],
+    },
 ];
