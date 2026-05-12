@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.6](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.5...r2p-webclient-v0.0.6) (2026-05-12)
+
+
+### Bug Fixes
+
+* fix permission for publishing docker image ([c1f414e](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/c1f414e004a5e63108469c50415f4cf3b01b360d))
+
 ## [0.0.5](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.4...r2p-webclient-v0.0.5) (2026-05-12)
 
 
