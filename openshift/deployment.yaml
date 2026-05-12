@@ -48,7 +48,7 @@ spec:
           image: ghcr-private.docker.bin.sbb.ch/schweizerischebundesbahnen/r2p-webclient:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 80
+            - containerPort: 8080
               protocol: TCP
               name: http
           resources:
@@ -74,7 +74,7 @@ metadata:
 spec:
   ports:
     - name: http
-      port: 80
+      port: 8080
       protocol: TCP
       targetPort: 8080
   selector:
