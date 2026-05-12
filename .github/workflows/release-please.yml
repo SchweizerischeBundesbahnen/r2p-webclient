@@ -96,11 +96,16 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
 
+      - name: Log username
+        env:
+          USERNAME: ${{ steps.app-token.outputs.app-slug }}
+        run: echo "$USERNAME"
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v4
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
+          username: ${{ steps.app-token.outputs.app-slug }}
           password: ${{ steps.app-token.outputs.token }}
 
       - name: Sanitize repo slug
