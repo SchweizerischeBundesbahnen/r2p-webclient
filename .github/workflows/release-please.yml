@@ -112,7 +112,7 @@ jobs:
           script: return 'ghcr.io/${{ github.repository }}'.toLowerCase()
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         env:
           VERSION: ${{ needs.release-please.outputs.version }}
           MAJOR: ${{ needs.release-please.outputs.major }}
