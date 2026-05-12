@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.8](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.7...r2p-webclient-v0.0.8) (2026-05-12)
+
+
+### Bug Fixes
+
+* update dockerfile and deployment ([907e557](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/907e557b914dbb560a3e52b27928e36e8e93616e))
+
 ## [0.0.7](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.6...r2p-webclient-v0.0.7) (2026-05-12)
 
 

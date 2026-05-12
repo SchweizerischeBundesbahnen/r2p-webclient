@@ -1,6 +1,6 @@
 {
   "name": "r2p-webclient",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
