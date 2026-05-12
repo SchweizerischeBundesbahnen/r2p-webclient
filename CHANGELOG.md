@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.5](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.4...r2p-webclient-v0.0.5) (2026-05-12)
+
+
+### Bug Fixes
+
+* set github username for actions ([4f659a0](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/4f659a0779be125e82387d56f18e169cbccf97a5))
+
 ## [0.0.4](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.3...r2p-webclient-v0.0.4) (2026-05-12)
 
 
