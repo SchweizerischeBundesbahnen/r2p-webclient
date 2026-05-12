@@ -3,23 +3,17 @@ FROM node:24-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files
 COPY package*.json ./
 
-# Install dependencies
 RUN npm ci
 
-# Copy application code
 COPY . .
 
-# Build the Angular application
 RUN npm run build
 
 # Runtime stage
-FROM bitnami/nginx:latest
+FROM nginx:1.29-alpine
 
-# Bitnami Nginx serves static files from /app
-COPY --from=builder /app/dist/r2p-webclient/browser /app
+COPY --from=builder /app/dist/r2p-webclient/browser /usr/share/nginx/html
 
-# Bitnami Nginx runs on 8080 by default
-EXPOSE 8080
+EXPOSE 80
