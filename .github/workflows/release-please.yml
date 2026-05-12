@@ -103,6 +103,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ steps.app-token.outputs.token }}
 
+      - name: Sanitize repo slug
+        uses: actions/github-script@v8
+        id: repo_slug
+        with:
+          result-encoding: string
+          script: return 'ghcr.io/${{ github.repository }}'.toLowerCase()
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         env:
@@ -113,10 +120,10 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:${{ env.VERSION }}
-            ghcr.io/${{ github.repository }}:${{ env.MAJOR }}.${{ env.MINOR }}
-            ghcr.io/${{ github.repository }}:${{ env.MAJOR }}
-            ghcr.io/${{ github.repository }}:latest
+            ${{ steps.repo_slug.outputs.result }}:${{ env.VERSION }}
+            ${{ steps.repo_slug.outputs.result }}:${{ env.MAJOR }}.${{ env.MINOR }}
+            ${{ steps.repo_slug.outputs.result }}:${{ env.MAJOR }}
+            ${{ steps.repo_slug.outputs.result }}:latest
 
 
   build-artifact:
