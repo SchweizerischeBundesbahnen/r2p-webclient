@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
-    selector: 'app-read-view-page',
+    selector: 'app-read-train-page',
     imports: [RouterLink],
     template: `
         <!-- ── Main Content ────────────────────────────────────────────── -->
@@ -125,4 +125,4 @@ import { RouterLink } from '@angular/router';
     styles: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReadViewPage {}
+export class ReadTrainPage {}

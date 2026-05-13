@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
-    selector: 'app-traffic-view-page',
+    selector: 'app-traffic-page',
     imports: [RouterLink],
     template: `
         <!-- ── Main Content ────────────────────────────────────────────── -->
@@ -144,4 +144,4 @@ import { RouterLink } from '@angular/router';
     styles: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TrafficViewPage {}
+export class TrafficPage {}

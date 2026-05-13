@@ -2,8 +2,9 @@ import { Routes } from '@angular/router';
 import { TrafficOverviewPage } from './pages/traffic-overview/traffic-overview-page';
 import { Layout } from './pages/layout';
 import { CreateTrainPage } from './pages/create-train/create-train-page';
-import { TrafficViewPage } from './pages/traffic-view/traffic-view-page';
-import { ReadViewPage } from './pages/read-view/read-view-page';
+import { TrafficPage } from './pages/traffic-view/traffic-page';
+import { ReadTrainPage } from './pages/read-train/read-train-page';
+import { EditTrainPage } from './pages/edit-train/edit-train-page';
 
 export const routes: Routes = [
     {
@@ -12,9 +13,10 @@ export const routes: Routes = [
         children: [
             { path: '', redirectTo: 'traffic-overview', pathMatch: 'full' },
             { path: 'traffic-overview', component: TrafficOverviewPage },
+            { path: 'traffic-view', component: TrafficPage },
             { path: 'create-train', component: CreateTrainPage },
-            { path: 'traffic-view', component: TrafficViewPage },
-            { path: 'read-view', component: ReadViewPage },
+            { path: 'edit-train', component: EditTrainPage },
+            { path: 'read-train', component: ReadTrainPage },
         ],
     },
 ];
