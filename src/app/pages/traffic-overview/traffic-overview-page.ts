@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { rxResource } from '@angular/core/rxjs-interop';
 
 @Component({
     selector: 'app-traffic-overview-page',
@@ -139,4 +140,15 @@ import { RouterLink } from '@angular/router';
     styles: ``,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TrafficOverviewPage {}
+export class TrafficOverviewPage {
+
+    // fahrthinweisResource = rxResource({
+    //     params: () => ({
+    //         lieferungId: this.lieferungUndPaketId.lieferungId(),
+    //         paketId: this.lieferungUndPaketId.paketId(),
+    //     }),
+    //     stream: ({ params: { lieferungId, paketId } }) => {
+    //         return this.paketService.getFahrthinweise(lieferungId, paketId);
+    //     },
+    // });
+}

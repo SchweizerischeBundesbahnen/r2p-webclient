@@ -125,11 +125,11 @@ import { RouterLink } from '@angular/router';
                                 <span class="badge badge-open">● Open</span>
                                 <div class="branch-actions">
                                     <a
-                                        href="edit.html?trainId=tid-2275&amp;branchId=br-ir2275-main"
+                                        [routerLink]="'/edit-train'"
                                         class="btn btn-primary btn-sm"
                                     >✏ Edit</a
                                     ><a
-                                    [routerLink]="'/read-view'"
+                                    [routerLink]="'/read-train'"
                                     class="btn btn-ghost btn-sm"
                                 >👁 View</a
                                 >

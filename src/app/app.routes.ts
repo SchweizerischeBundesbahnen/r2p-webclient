@@ -5,11 +5,14 @@ import { CreateTrainPage } from './pages/create-train/create-train-page';
 import { TrafficPage } from './pages/traffic-view/traffic-page';
 import { ReadTrainPage } from './pages/read-train/read-train-page';
 import { EditTrainPage } from './pages/edit-train/edit-train-page';
+import { autoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
+import { NotFoundPage } from './pages/not-found/not-found-page';
 
 export const routes: Routes = [
     {
         path: '',
         component: Layout,
+        canActivate: [autoLoginPartialRoutesGuard],
         children: [
             { path: '', redirectTo: 'traffic-overview', pathMatch: 'full' },
             { path: 'traffic-overview', component: TrafficOverviewPage },
@@ -19,4 +22,5 @@ export const routes: Routes = [
             { path: 'read-train', component: ReadTrainPage },
         ],
     },
+    { path: '**', component: NotFoundPage },
 ];
