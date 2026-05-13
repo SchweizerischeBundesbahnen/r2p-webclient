@@ -13,7 +13,7 @@ import { RouterLink } from '@angular/router';
                     >
                 </div>
                 <div class="sticky-edit-bar-actions">
-                    <a [routerLink]="'/overview'" class="btn btn-ghost" id="sticky-cancel-btn"
+                    <a [routerLink]="'/traffic-overview'" class="btn btn-ghost" id="sticky-cancel-btn"
                         >Cancel</a
                     >
                     <button class="btn btn-success btn-muted" id="sticky-save-btn">
@@ -24,7 +24,7 @@ import { RouterLink } from '@angular/router';
         </div>
         <div class="main-content">
             <div class="container">
-                <a [routerLink]="'/overview'" class="back-link">Traffic Overview</a>
+                <a [routerLink]="'/traffic-overview'" class="back-link">Traffic Overview</a>
 
                 <div class="page-header">
                     <div>

@@ -94,7 +94,35 @@ import { RouterLink } from '@angular/router';
                             </tr>
                         </thead>
                         <tbody id="trains-tbody">
-                            <!-- Populated by JS -->
+                        <tr class="clickable" [routerLink]="'../traffic-view'">
+                            <td><strong>IR 2275</strong></td>
+                            <td>Zürich HB<br><span class="text-muted" style="font-size:0.75rem;">Dep: 10:03</span></td>
+                            <td>Chur<br><span class="text-muted" style="font-size:0.75rem;">Arr: 11:20</span></td>
+                            <td>2025-06-15</td>
+                            <td><span class="partner-badge partner-badge-SOB">SOB</span></td>
+                            <td>14.04.2025, 09:00<br><span class="text-muted" style="font-size:0.75rem;">v-030</span></td>
+                            <td><span class="traffic-light tl-green"><span class="tl-dot"></span></span></td>
+                        </tr>
+
+                        <tr class="clickable" [routerLink]="'../traffic-view'">
+                            <td><strong>IC 1234</strong></td>
+                            <td>Zürich HB<br><span class="text-muted" style="font-size:0.75rem;">Dep: 08:00</span></td>
+                            <td>Basel SBB<br><span class="text-muted" style="font-size:0.75rem;">Arr: 08:55</span></td>
+                            <td>2025-06-15</td>
+                            <td><span class="partner-badge partner-badge-BLS">BLS</span></td>
+                            <td>10.04.2025, 10:30<br><span class="text-muted" style="font-size:0.75rem;">v-001</span></td>
+                            <td><span class="traffic-light tl-yellow"><span class="tl-dot"></span></span></td>
+                        </tr>
+
+                        <tr class="clickable" onclick="window.location.href='traffic-view.html?trainId=tid-2050'">
+                            <td><strong>S 2050</strong></td>
+                            <td>St. Gallen<br><span class="text-muted" style="font-size:0.75rem;">Dep: 07:05</span></td>
+                            <td>Romanshorn<br><span class="text-muted" style="font-size:0.75rem;">Arr: 07:45</span></td>
+                            <td>2025-06-16</td>
+                            <td><span class="partner-badge partner-badge-BLS">BLS</span> <span class="partner-badge partner-badge-SOB">SOB</span></td>
+                            <td>08.04.2025, 13:00<br><span class="text-muted" style="font-size:0.75rem;">v-020</span></td>
+                            <td><span class="traffic-light tl-red"><span class="tl-dot"></span></span></td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -111,4 +139,4 @@ import { RouterLink } from '@angular/router';
     styles: ``,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OverviewPage {}
+export class TrafficOverviewPage {}
