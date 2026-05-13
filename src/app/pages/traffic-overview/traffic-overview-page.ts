@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
-    selector: 'app-traffic-overview',
+    selector: 'app-traffic-overview-page',
     imports: [RouterLink],
     template: `
         <!-- ── Main Content ────────────────────────────────────────────── -->

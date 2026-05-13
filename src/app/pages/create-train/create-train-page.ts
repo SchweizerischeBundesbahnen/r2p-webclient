@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
-    selector: 'app-create-train-body',
+    selector: 'app-create-train-page',
     template: `
         <div class="sticky-edit-bar" id="sticky-edit-bar">
             <div class="sticky-edit-bar-inner">

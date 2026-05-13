@@ -7,7 +7,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
     imports: [RouterOutlet, RouterLink],
     template: `
         <nav class="top-nav">
-            <a class="top-nav-brand" [routerLink]="'traffic-overview'">
+            <a class="top-nav-brand" [routerLink]="'/traffic-overview'">
                 <span class="logo">🚂</span>
                 R2P Web Client
                 <span class="version-tag" style="margin-left:0.5rem;">v0.0.12</span>

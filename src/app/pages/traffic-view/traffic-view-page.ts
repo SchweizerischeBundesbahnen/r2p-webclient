@@ -59,13 +59,13 @@ import { RouterLink } from '@angular/router';
                                 <div class="detail-label">
                                     Gesamtstatus
                                     <span class="tooltip-anchor" tabindex="0"
-                                        >?<span class="tooltip-box"
-                                            >🟢 Alle Activities sind <em>confirmed</em>.<br />🟡
+                                    >?<span class="tooltip-box"
+                                    >🟢 Alle Activities sind <em>confirmed</em>.<br />🟡
                                             Mindestens eine Activity ist <em>proposed</em> oder
                                             <em>requested</em>, keine abgelehnt.<br />🔴 Mindestens
                                             eine Activity ist <em>refused</em> oder
                                             <em>dropped</em>.</span
-                                        ></span
+                                    ></span
                                     >
                                 </div>
                                 <div class="detail-value" id="detail-status">–</div>
@@ -87,15 +87,15 @@ import { RouterLink } from '@angular/router';
                         <div class="journey-table-wrapper">
                             <table class="journey-table" id="journey-table">
                                 <thead>
-                                    <tr>
-                                        <th style="width:200px;">Stop</th>
-                                        <th>Rolling Stock</th>
-                                        <th>Staff</th>
-                                        <th>Path</th>
-                                    </tr>
+                                <tr>
+                                    <th style="width:200px;">Stop</th>
+                                    <th>Rolling Stock</th>
+                                    <th>Staff</th>
+                                    <th>Path</th>
+                                </tr>
                                 </thead>
                                 <tbody id="journey-tbody">
-                                    <!-- Rendered by JS -->
+                                <!-- Rendered by JS -->
                                 </tbody>
                             </table>
                         </div>
@@ -108,7 +108,34 @@ import { RouterLink } from '@angular/router';
                         <span class="card-title">⎇ Variants</span>
                     </div>
                     <div id="branches-list">
-                        <!-- Rendered by JS -->
+                        <div class="branch-row">
+                            <div class="branch-info">
+                                <div>
+                                    <div class="branch-name">🌿 main</div>
+                                    <div class="branch-meta">
+                                        <span class="partner-badge partner-badge-SBB">SBB</span>
+                                        <span style="margin-left:4px;">14.04.2025, 09:00</span>
+                                        — <em>Initial creation</em>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;"
+                            >
+                                <span class="badge badge-open">● Open</span>
+                                <div class="branch-actions">
+                                    <a
+                                        href="edit.html?trainId=tid-2275&amp;branchId=br-ir2275-main"
+                                        class="btn btn-primary btn-sm"
+                                    >✏ Edit</a
+                                    ><a
+                                    [routerLink]="'/read-view'"
+                                    class="btn btn-ghost btn-sm"
+                                >👁 View</a
+                                >
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

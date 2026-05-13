@@ -3,6 +3,7 @@ import { TrafficOverviewPage } from './pages/traffic-overview/traffic-overview-p
 import { Layout } from './pages/layout';
 import { CreateTrainPage } from './pages/create-train/create-train-page';
 import { TrafficViewPage } from './pages/traffic-view/traffic-view-page';
+import { ReadViewPage } from './pages/read-view/read-view-page';
 
 export const routes: Routes = [
     {
@@ -13,6 +14,7 @@ export const routes: Routes = [
             { path: 'traffic-overview', component: TrafficOverviewPage },
             { path: 'create-train', component: CreateTrainPage },
             { path: 'traffic-view', component: TrafficViewPage },
+            { path: 'read-view', component: ReadViewPage },
         ],
     },
 ];
