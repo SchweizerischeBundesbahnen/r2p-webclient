@@ -7,6 +7,19 @@ updates:
       interval: weekly
       time: "14:00"
     open-pull-requests-limit: 10
+    groups:
+      angular:
+        applies-to: version-updates
+        patterns:
+          - "@angular/*"
+          - "@angular-devkit/*"
+          - "zone.js"
+          - "rxjs"
+          - "tslib"
+        update-types:
+          - "major"
+          - "minor"
+          - "patch"
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
