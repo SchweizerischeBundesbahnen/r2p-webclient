@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { SubtitleNavigation } from './subtitle-navigation';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -87,19 +86,8 @@ import { RouterLink } from '@angular/router';
             </div>
         </div>
     `,
-    styles: `
-        :host {
-            display: block;
-            //position: sticky;
-            //top: 64px;
-            //z-index: 99;
-            //background-color: #ffffff;
-            //border-bottom: 1px solid #e2e8f0;
-            //box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-            //margin: -2rem -2rem 2rem -2rem;
-        }
-    `,
+    styles: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [SubtitleNavigation, RouterLink],
+    imports: [RouterLink],
 })
-export class Body {}
+export class CreateTrainPage {}

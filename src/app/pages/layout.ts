@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
     selector: 'app-layout',
     standalone: true,
-    imports: [RouterOutlet],
+    imports: [RouterOutlet, RouterLink],
     template: `
         <nav class="top-nav">
-            <a class="top-nav-brand" href="overview.html">
+            <a class="top-nav-brand" [routerLink]="'overview'">
                 <span class="logo">🚂</span>
                 R2P Web Client
                 <span class="version-tag" style="margin-left:0.5rem;">v0.0.12</span>
@@ -26,7 +26,7 @@ import { RouterOutlet } from '@angular/router';
                 </button>
             </div>
         </nav>
-        <router-outlet/>
+        <router-outlet />
     `,
 })
 export class Layout {}

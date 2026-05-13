@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
     selector: 'app-traffic-overview',
-    imports: [],
+    imports: [RouterLink],
     template: `
         <!-- ── Main Content ────────────────────────────────────────────── -->
         <div class="main-content">
@@ -12,7 +13,7 @@ import { Component } from '@angular/core';
                     <div>
                         <h1 class="page-title">Traffic Overview</h1>
                     </div>
-                    <a href="create.html" class="btn btn-success"> ＋ New Train </a>
+                    <a [routerLink]="'../create-train'" class="btn btn-success"> ＋ New Train </a>
                 </div>
 
                 <!-- Filter Bar -->
@@ -108,5 +109,6 @@ import { Component } from '@angular/core';
         </div>
     `,
     styles: ``,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OverviewPage {}
