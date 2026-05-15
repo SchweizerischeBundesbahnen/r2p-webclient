@@ -7,7 +7,7 @@ import {
     provideAuth,
     withAppInitializerAuthCheck,
 } from 'angular-auth-oidc-client';
-import { provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { environment } from './environments/environment';
 
 export const appConfig: ApplicationConfig = {
@@ -15,6 +15,6 @@ export const appConfig: ApplicationConfig = {
         provideBrowserGlobalErrorListeners(),
         provideRouter(routes),
         provideAuth(environment.authConfig, withAppInitializerAuthCheck()),
-        provideHttpClient(withInterceptorsFromDi(), withInterceptors([authInterceptor()])),
+        provideHttpClient(withInterceptors([authInterceptor()])),
     ],
 };

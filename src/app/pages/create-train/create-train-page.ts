@@ -1,22 +1,37 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { FormField } from '@angular/forms/signals';
+import { BackendApiService } from '../../backend-api.service';
+import { CreatePageState } from './create-train-state';
 
 @Component({
     selector: 'app-create-train-page',
     template: `
-        <div class="sticky-edit-bar" id="sticky-edit-bar">
+        <div class="sticky-edit-bar" [class.dirty]="createTrainForm().dirty()" id="sticky-edit-bar">
             <div class="sticky-edit-bar-inner">
                 <div class="sticky-edit-bar-title">
                     <span id="sticky-title">Create New Train</span>
-                    <span class="unsaved-indicator hidden" id="unsaved-indicator"
-                        >● Unsaved changes</span
+                    <span
+                        class="unsaved-indicator"
+                        [class.hidden]="!createTrainForm().dirty()"
+                        id="unsaved-indicator"
+                    >● Unsaved changes</span
                     >
                 </div>
                 <div class="sticky-edit-bar-actions">
-                    <a [routerLink]="'/traffic-overview'" class="btn btn-ghost" id="sticky-cancel-btn"
-                        >Cancel</a
+                    <a
+                        [routerLink]="'/traffic-overview'"
+                        class="btn btn-ghost"
+                        id="sticky-cancel-btn"
+                    >Cancel</a
                     >
-                    <button class="btn btn-success btn-muted" id="sticky-save-btn">
+                    <button
+                        class="btn btn-success"
+                        id="sticky-save-btn"
+                        [class.btn-muted]="createTrainForm().invalid()"
+                        [disabled]="createTrainForm().invalid()"
+                        (click)="createTrain()"
+                    >
                         💾 Save Train
                     </button>
                 </div>
@@ -47,30 +62,51 @@ import { RouterLink } from '@angular/router';
                                     id="train-name"
                                     class="form-input"
                                     placeholder="e.g., IC 1234 Zürich–Basel"
-                                    value=""
+                                    [formField]="createTrainForm.name"
                                 />
+                                @if (createTrainForm.name().touched() &&
+                                createTrainForm.name().invalid()) {
+                                    @for (error of createTrainForm.name().errors(); track error) {
+                                        <span class="form-error">{{ error.message }}</span>
+                                    }
+                                }
                             </div>
                             <div class="form-group">
                                 <label class="form-label required" for="train-opday"
-                                    >Operational Day</label
+                                >Operational Day</label
                                 >
                                 <input
                                     type="date"
                                     id="train-opday"
                                     class="form-input"
-                                    value="2025-06-15"
+                                    [formField]="createTrainForm.operationalDay"
                                 />
+                                @if (createTrainForm.operationalDay().touched() &&
+                                createTrainForm.operationalDay().invalid()) {
+                                    @for (error of createTrainForm.operationalDay().errors();
+                                        track error) {
+                                        <span class="form-error">{{ error.message }}</span>
+                                    }
+                                }
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="form-label required" for="save-comment"
-                                >Creation Comment</label
+                            >Creation Comment</label
                             >
                             <textarea
                                 id="save-comment"
                                 class="form-textarea"
                                 placeholder="Describe this train (required for saving)…"
+                                [formField]="createTrainForm.creationComment"
                             ></textarea>
+                            @if (createTrainForm.creationComment().touched() &&
+                            createTrainForm.creationComment().invalid()) {
+                                @for (error of createTrainForm.creationComment().errors();
+                                    track error) {
+                                    <span class="form-error">{{ error.message }}</span>
+                                }
+                            }
                         </div>
                     </div>
                 </div>
@@ -88,6 +124,32 @@ import { RouterLink } from '@angular/router';
     `,
     styles: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [RouterLink],
+    imports: [RouterLink, FormField],
+    providers: [CreatePageState],
 })
-export class CreateTrainPage {}
+export class CreateTrainPage {
+    private apiService = inject(BackendApiService);
+    private router = inject(Router);
+    private state = inject(CreatePageState);
+    protected createTrainForm = inject(CreatePageState).createTrainForm;
+
+    protected createTrain() {
+        if (this.state.createTrainRunning) return;
+        this.state.createTrainRunning = true;
+        const { name, creationComment, operationalDay } = this.state.createTrainForm().value();
+        this.apiService.createTrain(name, operationalDay, creationComment, 'SBB').subscribe({
+            next: () => (this.state.createTrainSuccess = true),
+            error: (err) => {
+                this.state.createTrainSuccess = false;
+                console.warn('Error creating train:', err);
+            },
+            complete: () => {
+                console.log('Create train request done. Success: ', this.state.createTrainSuccess);
+                this.state.createTrainRunning = false;
+                if (this.state.createTrainSuccess) {
+                    this.router.navigate(['/traffic-overview']);
+                }
+            },
+        });
+    }
+}
