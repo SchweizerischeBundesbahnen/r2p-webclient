@@ -1,21 +1,20 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map, Observable, of } from 'rxjs';
-import { TrainListElement, TrainListElementSchema } from './shared/models/api.schemas';
-import { PartnerToken } from './shared/models/api.models';
-import { z } from 'zod';
+import { Observable, tap } from 'rxjs';
+import { PartnerToken, Train, TrainListElement } from './shared/models/api.models';
 
 @Injectable({ providedIn: 'root' })
 export class BackendApiService {
     private readonly httpClient = inject(HttpClient);
 
     public listTrains(): Observable<TrainListElement[]> {
-        const headers = new HttpHeaders();
-        headers.append('Token', 'SBB');
-        console.log('Listing trains with headers:', headers);
+        const headers = new HttpHeaders().set('Token', 'SBB');
         return this.httpClient
-            .get<unknown[]>('http://localhost:8080/v1/trains', { headers })
-            .pipe(map((data) => z.array(TrainListElementSchema).parse(data)));
+            .get<TrainListElement[]>('http://localhost:8080/v1/trains', {
+                headers,
+            })
+            .pipe(tap((data) => console.log('Received train list:', data)));
+        // .pipe(map((data) => z.array(TrainListElementSchema).parse(data)));
     }
 
     public createTrain(
@@ -34,6 +33,22 @@ export class BackendApiService {
             },
         );
         // .pipe(map((data) => TrainListElementSchema.parse(data)));
+    }
+
+    getTrainById(trainId: string) {
+        const headers = new HttpHeaders().set('Token', 'SBB');
+        return this.httpClient.get<TrainListElement>('http://localhost:8080/v1/trains/' + trainId, {
+            headers,
+        });
+    }
+
+    getTrainByVersion(version: string): Observable<Train> {
+        const headers = new HttpHeaders().set('Token', 'SBB');
+        return this.httpClient
+            .get<Train>('http://localhost:8080/v1/trains/versions/' + version, {
+                headers,
+            })
+            .pipe(tap((data) => console.log('Received train by version:', data)));
     }
 }
 

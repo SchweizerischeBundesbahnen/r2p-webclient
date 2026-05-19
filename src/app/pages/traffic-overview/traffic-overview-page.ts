@@ -1,10 +1,12 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { rxResource } from '@angular/core/rxjs-interop';
+import { TableRow } from './table-row';
+import { TrafficOverviewPageState } from './traffic-overview-page-state.service';
+import { TrafficOverviewTableFilterService } from './traffic-overview-table-filter.service';
 
 @Component({
     selector: 'app-traffic-overview-page',
-    imports: [RouterLink],
+    imports: [RouterLink, TableRow],
     template: `
         <!-- ── Main Content ────────────────────────────────────────────── -->
         <div class="main-content">
@@ -26,16 +28,9 @@ import { rxResource } from '@angular/core/rxjs-interop';
                             id="filter-train-number"
                             class="filter-input"
                             placeholder="e.g., IC 1234"
-                            oninput="applyFilters()"
+                            [value]="filterService.trainNumber()"
+                            (input)="this.filterService.trainNumber.set($any($event.target).value)"
                         />
-                    </div>
-                    <div class="filter-group">
-                        <label for="filter-year">Timetable Year</label>
-                        <select id="filter-year" class="filter-select" onchange="applyFilters()">
-                            <option value="">All years</option>
-                            <option value="2025" selected>2025</option>
-                            <option value="2026">2026</option>
-                        </select>
                     </div>
                     <div class="filter-group">
                         <label for="filter-from">Op. Day From</label>
@@ -43,7 +38,10 @@ import { rxResource } from '@angular/core/rxjs-interop';
                             type="date"
                             id="filter-from"
                             class="filter-input"
-                            onchange="applyFilters()"
+                            [value]="filterService.operationalDayFrom()"
+                            (change)="
+                                this.filterService.operationalDayFrom.set($any($event.target).value)
+                            "
                         />
                     </div>
                     <div class="filter-group">
@@ -52,12 +50,17 @@ import { rxResource } from '@angular/core/rxjs-interop';
                             type="date"
                             id="filter-to"
                             class="filter-input"
-                            onchange="applyFilters()"
+                            [value]="filterService.operationalDayTo()"
+                            (change)="filterService.operationalDayTo.set($any($event.target).value)"
                         />
                     </div>
                     <div class="filter-group" style="flex: 0; min-width: 100px;">
                         <label for="clear">&nbsp;</label>
-                        <button id="clear" class="btn btn-ghost" onclick="clearFilters()">
+                        <button
+                            id="clear"
+                            class="btn btn-ghost"
+                            (click)="filterService.clearFilters()"
+                        >
                             Clear
                         </button>
                     </div>
@@ -95,35 +98,48 @@ import { rxResource } from '@angular/core/rxjs-interop';
                             </tr>
                         </thead>
                         <tbody id="trains-tbody">
-                        <tr class="clickable" [routerLink]="'../traffic-view'">
-                            <td><strong>IR 2275</strong></td>
-                            <td>Zürich HB<br><span class="text-muted" style="font-size:0.75rem;">Dep: 10:03</span></td>
-                            <td>Chur<br><span class="text-muted" style="font-size:0.75rem;">Arr: 11:20</span></td>
-                            <td>2025-06-15</td>
-                            <td><span class="partner-badge partner-badge-SOB">SOB</span></td>
-                            <td>14.04.2025, 09:00<br><span class="text-muted" style="font-size:0.75rem;">v-030</span></td>
-                            <td><span class="traffic-light tl-green"><span class="tl-dot"></span></span></td>
-                        </tr>
+                            @for (
+                                train of filterService.applyFilterOn(trainListResource.value());
+                                track train.id
+                            ) {
+                                <tr
+                                    appTrainRow
+                                    [train]="train"
+                                    [routerLink]="'../traffic-view/' + train.id"
+                                ></tr>
+                            }
 
-                        <tr class="clickable" [routerLink]="'../traffic-view'">
-                            <td><strong>IC 1234</strong></td>
-                            <td>Zürich HB<br><span class="text-muted" style="font-size:0.75rem;">Dep: 08:00</span></td>
-                            <td>Basel SBB<br><span class="text-muted" style="font-size:0.75rem;">Arr: 08:55</span></td>
-                            <td>2025-06-15</td>
-                            <td><span class="partner-badge partner-badge-BLS">BLS</span></td>
-                            <td>10.04.2025, 10:30<br><span class="text-muted" style="font-size:0.75rem;">v-001</span></td>
-                            <td><span class="traffic-light tl-yellow"><span class="tl-dot"></span></span></td>
-                        </tr>
-
-                        <tr class="clickable" onclick="window.location.href='traffic-view.html?trainId=tid-2050'">
-                            <td><strong>S 2050</strong></td>
-                            <td>St. Gallen<br><span class="text-muted" style="font-size:0.75rem;">Dep: 07:05</span></td>
-                            <td>Romanshorn<br><span class="text-muted" style="font-size:0.75rem;">Arr: 07:45</span></td>
-                            <td>2025-06-16</td>
-                            <td><span class="partner-badge partner-badge-BLS">BLS</span> <span class="partner-badge partner-badge-SOB">SOB</span></td>
-                            <td>08.04.2025, 13:00<br><span class="text-muted" style="font-size:0.75rem;">v-020</span></td>
-                            <td><span class="traffic-light tl-red"><span class="tl-dot"></span></span></td>
-                        </tr>
+                            <tr class="clickable" [routerLink]="'../traffic-view'">
+                                <td><strong>IC 1234</strong></td>
+                                <td>
+                                    Zürich HB<br /><span
+                                        class="text-muted"
+                                        style="font-size:0.75rem;"
+                                        >Dep: 08:00</span
+                                    >
+                                </td>
+                                <td>
+                                    Basel SBB<br /><span
+                                        class="text-muted"
+                                        style="font-size:0.75rem;"
+                                        >Arr: 08:55</span
+                                    >
+                                </td>
+                                <td>2025-06-15</td>
+                                <td><span class="partner-badge partner-badge-BLS">BLS</span></td>
+                                <td>
+                                    10.04.2025, 10:30<br /><span
+                                        class="text-muted"
+                                        style="font-size:0.75rem;"
+                                        >v-001</span
+                                    >
+                                </td>
+                                <td>
+                                    <span class="traffic-light tl-yellow"
+                                        ><span class="tl-dot"></span
+                                    ></span>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -138,17 +154,12 @@ import { rxResource } from '@angular/core/rxjs-interop';
         </div>
     `,
     styles: ``,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [TrafficOverviewPageState, TrafficOverviewTableFilterService],
 })
 export class TrafficOverviewPage {
+    protected trainListResource = inject(TrafficOverviewPageState).trainListResource;
+    protected filterService = inject(TrafficOverviewTableFilterService);
 
-    // fahrthinweisResource = rxResource({
-    //     params: () => ({
-    //         lieferungId: this.lieferungUndPaketId.lieferungId(),
-    //         paketId: this.lieferungUndPaketId.paketId(),
-    //     }),
-    //     stream: ({ params: { lieferungId, paketId } }) => {
-    //         return this.paketService.getFahrthinweise(lieferungId, paketId);
-    //     },
-    // });
 }
+
