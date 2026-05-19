@@ -16,9 +16,9 @@ export const routes: Routes = [
         children: [
             { path: '', redirectTo: 'traffic-overview', pathMatch: 'full' },
             { path: 'traffic-overview', component: TrafficOverviewPage },
-            { path: 'traffic-view', component: TrafficPage },
+            { path: 'traffic-view/:trainId', component: TrafficPage },
             { path: 'create-train', component: CreateTrainPage },
-            { path: 'edit-train', component: EditTrainPage },
+            { path: 'edit-train/:trainId', component: EditTrainPage },
             { path: 'read-train', component: ReadTrainPage },
         ],
     },
