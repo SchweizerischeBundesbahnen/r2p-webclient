@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { TrafficOverviewTableFilterService } from './traffic-overview-table-filter.service';
+import { TrafficOverviewTableService } from './traffic-overview-table.service';
 import { TrainRow } from './table-row';
 
 const TRAIN_A: TrainRow = {
@@ -42,8 +42,8 @@ const ALL_TRAINS = [TRAIN_A, TRAIN_B, TRAIN_C];
 
 describe('TrafficOverviewTableFilterService', () => {
 
-    function createService(): TrafficOverviewTableFilterService {
-        return TestBed.runInInjectionContext(() => new TrafficOverviewTableFilterService());
+    function createService(): TrafficOverviewTableService {
+        return TestBed.runInInjectionContext(() => new TrafficOverviewTableService());
     }
 
     it('returns all items when no filter is set', () => {

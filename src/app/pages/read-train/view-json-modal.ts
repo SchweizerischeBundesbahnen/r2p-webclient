@@ -1,6 +1,6 @@
 import { Component, inject, input } from '@angular/core';
 import { JsonPipe } from '@angular/common';
-import { Branch } from '../../shared/models/api.models';
+import { Train } from '../../shared/models/api.models';
 import { ReadTrainPageState } from './read-train-page.state';
 
 @Component({
@@ -24,8 +24,8 @@ import { ReadTrainPageState } from './read-train-page.state';
     `,
 })
 export class ViewJsonModal {
-    state = inject(ReadTrainPageState)
-    train = input.required<Branch>();
+    state = inject(ReadTrainPageState);
+    train = input.required<Train>();
 
     close() {
         this.state.toggleIsJsonModalOpen();

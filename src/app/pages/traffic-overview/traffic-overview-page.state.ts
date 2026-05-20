@@ -21,27 +21,23 @@ export class TrafficOverviewPageState {
                                       ({ branches, partners, mainTimestamp, trainId }) => {
                                           const mainBranch = branches.find(
                                               ({ technical: { mainBranch } }) => mainBranch,
-                                          );
-                                          const trainNumber = mainBranch?.business.trainNumber;
+                                          )!;
+                                          const trainNumber = mainBranch.business.trainNumber;
                                           const operationalDay =
-                                              mainBranch?.business.operationalDay;
-                                          const version = mainBranch?.technical.version;
-                                          return this.apiService
-                                              .getTrainByVersion(
-                                                  mainBranch?.technical.version || 'noMainVersion',
-                                              )
-                                              .pipe(
-                                                  map(
-                                                      (train): TrainInfos => ({
-                                                          train: { ...train, id: trainId },
-                                                          partners,
-                                                          trainNumber,
-                                                          operationalDay,
-                                                          mainTimestamp,
-                                                          version,
-                                                      }),
-                                                  ),
-                                              );
+                                              mainBranch.business.operationalDay;
+                                          const version = mainBranch.technical.version;
+                                          return this.apiService.getTrainByVersion(version).pipe(
+                                              map(
+                                                  (train): TrainInfos => ({
+                                                      train: { ...train, id: trainId },
+                                                      partners,
+                                                      trainNumber,
+                                                      operationalDay,
+                                                      mainTimestamp,
+                                                      version,
+                                                  }),
+                                              ),
+                                          );
                                       },
                                   ),
                               ),

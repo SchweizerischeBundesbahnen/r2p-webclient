@@ -20,7 +20,7 @@ import { DatePipe } from '@angular/common';
                     <div>
                         <h1 class="page-title" id="page-title">Read View</h1>
                         <p class="page-subtitle" id="page-subtitle">
-                            Variant: {{ state.train.value()?.branchName }}
+                            Variant: {{ state.trainAndBranch.value()?.branch?.branchName }}
                         </p>
                     </div>
                     <div class="btn-group">
@@ -50,7 +50,7 @@ import { DatePipe } from '@angular/common';
                         <span class="card-title">📋 Train Details</span>
                     </div>
                     <div class="card-body">
-                        @let branch = state.train.value();
+                        @let branch = state.trainAndBranch.value()?.branch;
                         <div class="detail-grid">
                             <div class="detail-item">
                                 <div class="detail-label">Train Number</div>
@@ -157,7 +157,7 @@ import { DatePipe } from '@angular/common';
             </div>
         </div>
         @if (state.isJsonModalOpen) {
-            <app-read-view-json-modal [train]="state.train.value()!" />
+            <app-read-view-json-modal [train]="state.trainAndBranch.value()?.train!" />
         }
     `,
     styles: ``,

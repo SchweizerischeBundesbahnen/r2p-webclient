@@ -15,6 +15,7 @@ export const environment: Environment = {
                 useRefreshToken: true,
                 autoUserInfo: false,
                 maxIdTokenIatOffsetAllowedInSeconds: 600,
+                // TODO: url darf nicht hardcoded sein
                 secureRoutes: ['https://r2p-globos-r2p-test.apps.bps21t.sbb-aws-test.net'],
             },
         ],

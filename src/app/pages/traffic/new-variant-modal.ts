@@ -77,7 +77,15 @@ export class NewVariantModal {
     private apiService = inject(BackendApiService);
     protected state = inject(TrafficPageState);
 
-    createTrainVariant = form(model, (schemaPath) => {
+    private model = signal<{
+        variantName: string;
+        comment: string;
+    }>({
+        variantName: '',
+        comment: '',
+    });
+
+    createTrainVariant = form(this.model, (schemaPath) => {
         required(schemaPath.variantName, { message: 'Variant Name is required' });
         maxLength(schemaPath.variantName, 255, { message: 'Max 255 characters.' });
         required(schemaPath.comment, { message: 'Comment is required' });
@@ -109,11 +117,3 @@ export class NewVariantModal {
         }
     }
 }
-
-export const model = signal<{
-    variantName: string;
-    comment: string;
-}>({
-    variantName: '',
-    comment: '',
-});

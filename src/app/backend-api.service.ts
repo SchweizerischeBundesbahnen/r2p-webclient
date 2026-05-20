@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Branch, PartnerToken, Train, TrainListElement } from './shared/models/api.models';
+import { Branch, Train, TrainListElement } from './shared/models/api.models';
 import { environment } from '../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -64,7 +64,7 @@ export class BackendApiService {
             `${this.baseUrl}/v1/trains/${trainId}/branches/${branchId}`,
             {
                 params: { trainId, branchId },
-                headers
+                headers,
             },
         );
     }
@@ -83,7 +83,7 @@ export class BackendApiService {
             { ...train, name, startdate: operationalDay },
             {
                 params: { comment },
-                headers
+                headers,
             },
         );
     }

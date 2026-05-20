@@ -231,7 +231,6 @@ export class EditTrainPage {
         trainNumber: string;
         branchName: string;
     } {
-        console.log('Getting branch infos for branch:', value);
         const {
             branchName,
             business: { trainNumber },

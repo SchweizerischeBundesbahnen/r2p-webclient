@@ -13,7 +13,17 @@ export class EditTrainPageState {
     editTrainRunning = false;
     readonly apiService = inject(BackendApiService);
 
-    editTrainForm = form(model, (schemaPath) => {
+    model = signal<{
+        name: string;
+        operationalDay: Date;
+        creationComment: string;
+    }>({
+        name: '',
+        operationalDay: null as unknown as Date,
+        creationComment: '',
+    });
+
+    editTrainForm = form(this.model, (schemaPath) => {
         required(schemaPath.name, { message: 'Name is required' });
         required(schemaPath.operationalDay, { message: 'Operational Day is required' });
         required(schemaPath.creationComment, { message: 'Creation Comment is required' });
@@ -46,16 +56,6 @@ export class EditTrainPageState {
             ),
     });
 }
-
-export const model = signal<{
-    name: string;
-    operationalDay: Date;
-    creationComment: string;
-}>({
-    name: '',
-    operationalDay: null as unknown as Date,
-    creationComment: '',
-});
 
 export interface BranchAndTrain {
     branch: Branch;

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TableRow } from './table-row';
 import { TrafficOverviewPageState } from './traffic-overview-page.state';
-import { TrafficOverviewTableFilterService } from './traffic-overview-table-filter.service';
+import { SortColumn, TrafficOverviewTableService } from './traffic-overview-table.service';
 
 @Component({
     selector: 'app-traffic-overview-page',
@@ -28,8 +28,8 @@ import { TrafficOverviewTableFilterService } from './traffic-overview-table-filt
                             id="filter-train-number"
                             class="filter-input"
                             placeholder="e.g., IC 1234"
-                            [value]="filterService.trainNumber()"
-                            (input)="this.filterService.trainNumber.set($any($event.target).value)"
+                            [value]="tableService.trainNumber()"
+                            (input)="this.tableService.trainNumber.set($any($event.target).value)"
                         />
                     </div>
                     <div class="filter-group">
@@ -38,9 +38,9 @@ import { TrafficOverviewTableFilterService } from './traffic-overview-table-filt
                             type="date"
                             id="filter-from"
                             class="filter-input"
-                            [value]="filterService.operationalDayFrom()"
+                            [value]="tableService.operationalDayFrom()"
                             (change)="
-                                this.filterService.operationalDayFrom.set($any($event.target).value)
+                                this.tableService.operationalDayFrom.set($any($event.target).value)
                             "
                         />
                     </div>
@@ -50,8 +50,8 @@ import { TrafficOverviewTableFilterService } from './traffic-overview-table-filt
                             type="date"
                             id="filter-to"
                             class="filter-input"
-                            [value]="filterService.operationalDayTo()"
-                            (change)="filterService.operationalDayTo.set($any($event.target).value)"
+                            [value]="tableService.operationalDayTo()"
+                            (change)="tableService.operationalDayTo.set($any($event.target).value)"
                         />
                     </div>
                     <div class="filter-group" style="flex: 0; min-width: 100px;">
@@ -59,7 +59,7 @@ import { TrafficOverviewTableFilterService } from './traffic-overview-table-filt
                         <button
                             id="clear"
                             class="btn btn-ghost"
-                            (click)="filterService.clearFilters()"
+                            (click)="tableService.clearFilters()"
                         >
                             Clear
                         </button>
@@ -70,36 +70,73 @@ import { TrafficOverviewTableFilterService } from './traffic-overview-table-filt
                 <div class="table-container">
                     <table id="trains-table">
                         <thead>
-                        <tr>
-                            <th class="sort-header" id="th-trainNumber">
-                                Train No. <span class="sort-indicator"></span>
-                            </th>
-                            <th>From</th>
-                            <th>To</th>
-                            <th class="sort-header" id="th-operationalDay">
-                                Op. Day <span class="sort-indicator"></span>
-                            </th>
-                            <th>Partners</th>
-                            <th class="sort-header" id="th-lastChange">
-                                Last Change / Version <span class="sort-indicator"></span>
-                            </th>
-                            <th>
-                                Status
-                                <span class="tooltip-anchor" tabindex="0"
-                                >?<span class="tooltip-box"
-                                >🟢 Circle: All activities are
+                            <tr>
+                                <th
+                                    class="sort-header"
+                                    (click)="tableService.toggleSort('trainNumber')"
+                                    style="cursor:pointer;"
+                                >
+                                    Train No.
+                                    <span class="sort-indicator">{{
+                                        sortIndicator('trainNumber')
+                                    }}</span>
+                                </th>
+                                <th
+                                    class="sort-header"
+                                    (click)="tableService.toggleSort('start')"
+                                    style="cursor:pointer;"
+                                >
+                                    From
+                                    <span class="sort-indicator">{{ sortIndicator('start') }}</span>
+                                </th>
+                                <th
+                                    class="sort-header"
+                                    (click)="tableService.toggleSort('end')"
+                                    style="cursor:pointer;"
+                                >
+                                    To
+                                    <span class="sort-indicator">{{ sortIndicator('end') }}</span>
+                                </th>
+                                <th
+                                    class="sort-header"
+                                    (click)="tableService.toggleSort('operationalDay')"
+                                    style="cursor:pointer;"
+                                >
+                                    Op. Day
+                                    <span class="sort-indicator">{{
+                                        sortIndicator('operationalDay')
+                                    }}</span>
+                                </th>
+                                <th>Partners</th>
+                                <th
+                                    class="sort-header"
+                                    (click)="tableService.toggleSort('lastChange')"
+                                    style="cursor:pointer;"
+                                >
+                                    Last Change / Version
+                                    <span class="sort-indicator">{{
+                                        sortIndicator('lastChange')
+                                    }}</span>
+                                </th>
+                                <th>
+                                    Status
+                                    <span class="tooltip-anchor" tabindex="0"
+                                        >?<span class="tooltip-box"
+                                            >🟢 Circle: All activities are
                                             <em>confirmed</em>.<br />🟧 Square: At least one
                                             activity is <em>proposed</em> or <em>requested</em>,
                                             none refused.<br />🔺 Triangle: At least one activity is
                                             <em>refused</em> or <em>dropped</em>.</span
-                                ></span
-                                >
-                            </th>
-                        </tr>
+                                        ></span
+                                    >
+                                </th>
+                            </tr>
                         </thead>
                         <tbody id="trains-tbody">
-                            @for (train of filterService.applyFilterOn(trainListResource.value());
-                                track train.id) {
+                            @for (
+                                train of tableService.applyFilterOn(trainListResource.value());
+                                track train.id
+                            ) {
                                 <tr
                                     appTrainRow
                                     class="clickable"
@@ -122,11 +159,15 @@ import { TrafficOverviewTableFilterService } from './traffic-overview-table-filt
     `,
     styles: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [TrafficOverviewPageState, TrafficOverviewTableFilterService],
+    providers: [TrafficOverviewPageState, TrafficOverviewTableService],
 })
 export class TrafficOverviewPage {
     protected trainListResource = inject(TrafficOverviewPageState).trainListResource;
-    protected filterService = inject(TrafficOverviewTableFilterService);
+    protected tableService = inject(TrafficOverviewTableService);
 
+    protected sortIndicator(column: SortColumn): string {
+        if (this.tableService.sortColumn() !== column) return '⇅';
+        return this.tableService.sortDirection() === 'asc' ? '↑' : '↓';
+    }
 }
 
