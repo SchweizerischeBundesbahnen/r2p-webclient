@@ -20,25 +20,26 @@ export class BackendApiService {
         name: string,
         operationalDay: Date,
         comment: string,
-        token: PartnerToken,
     ): Observable<TrainListElement> {
+        const headers = new HttpHeaders().set('Token', 'SBB');
         return this.httpClient.post<TrainListElement>(
             `${this.baseUrl}/v1/trains`,
             { ...minimalTrain, id: crypto.randomUUID(), name, startdate: operationalDay },
             {
                 params: { comment },
-                headers: { token },
+                headers,
             },
         );
     }
 
     createBranch(trainId: string, branchName: string, comment: string): Observable<Branch> {
+        const headers = new HttpHeaders().set('Token', 'SBB');
         return this.httpClient.post<Branch>(
             `${this.baseUrl}/v1/trains/${trainId}/branches`,
             { ...minimalTrain, id: crypto.randomUUID() },
             {
                 params: { branchName, comment },
-                headers: new HttpHeaders().set('Token', 'SBB'),
+                headers,
             },
         );
     }
@@ -58,11 +59,12 @@ export class BackendApiService {
     }
 
     getByTrainIdAndBranchId(trainId: string, branchId: string): Observable<Branch> {
+        const headers = new HttpHeaders().set('Token', 'SBB');
         return this.httpClient.get<Branch>(
             `${this.baseUrl}/v1/trains/${trainId}/branches/${branchId}`,
             {
                 params: { trainId, branchId },
-                headers: new HttpHeaders().set('Token', 'SBB'),
+                headers
             },
         );
     }
@@ -75,12 +77,13 @@ export class BackendApiService {
         comment: string,
         operationalDay: Date,
     ): Observable<Train> {
+        const headers = new HttpHeaders().set('Token', 'SBB');
         return this.httpClient.put<Train>(
             `${this.baseUrl}/v1/trains/${trainId}/branches/${branchId}`,
             { ...train, name, startdate: operationalDay },
             {
                 params: { comment },
-                headers: new HttpHeaders().set('Token', 'SBB'),
+                headers
             },
         );
     }

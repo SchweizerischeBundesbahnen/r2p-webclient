@@ -33,8 +33,6 @@ export class TrafficOverviewPageState {
                                               .pipe(
                                                   map(
                                                       (train): TrainInfos => ({
-                                                          // TODO: bug: in Train id is just 'string' instead of UUID
-                                                          // fix: take trainId from TrainListElement
                                                           train: { ...train, id: trainId },
                                                           partners,
                                                           trainNumber,

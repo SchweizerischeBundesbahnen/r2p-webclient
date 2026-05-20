@@ -149,7 +149,7 @@ export class CreateTrainPage {
         this.state.createTrainRunning = true;
         const { name, creationComment, operationalDay } = this.state.createTrainForm().value();
         this.apiService
-            .createTrain(name, operationalDay, creationComment, 'SBB')
+            .createTrain(name, operationalDay, creationComment)
             .pipe(
                 finalize(() => {
                     this.state.createTrainRunning = false;
