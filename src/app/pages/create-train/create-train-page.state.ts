@@ -4,7 +4,6 @@ import { form, required } from '@angular/forms/signals';
 @Injectable()
 export class CreatePageState {
     createTrainRunning = false;
-    createTrainSuccess = false;
 
     createTrainForm = form(model, (schemaPath) => {
         required(schemaPath.name, { message: 'Name is required' });

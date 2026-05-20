@@ -11,7 +11,6 @@ import { Branch, Train } from '../../shared/models/api.models';
 @Injectable()
 export class EditTrainPageState {
     editTrainRunning = false;
-    editTrainSuccess = false;
     readonly apiService = inject(BackendApiService);
 
     editTrainForm = form(model, (schemaPath) => {

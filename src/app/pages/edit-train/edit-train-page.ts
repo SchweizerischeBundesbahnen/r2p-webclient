@@ -4,6 +4,7 @@ import { EditTrainPageState } from './edit-train-page.state';
 import { FormField } from '@angular/forms/signals';
 import { Branch } from '../../shared/models/api.models';
 import { BackendApiService } from '../../backend-api.service';
+import { finalize } from 'rxjs';
 
 @Component({
     selector: 'app-edit-train-page',
@@ -28,7 +29,7 @@ import { BackendApiService } from '../../backend-api.service';
                             class="unsaved-indicator"
                             [class.hidden]="!editTrainForm().dirty()"
                             id="unsaved-indicator"
-                        >● Unsaved changes</span
+                            >● Unsaved changes</span
                         >
                     </div>
                     <div class="sticky-edit-bar-actions">
@@ -36,7 +37,7 @@ import { BackendApiService } from '../../backend-api.service';
                             [routerLink]="'/traffic-view/' + trainId()"
                             class="btn btn-ghost"
                             id="sticky-cancel-btn"
-                        >Cancel</a
+                            >Cancel</a
                         >
                         <button
                             class="btn btn-success"
@@ -58,7 +59,7 @@ import { BackendApiService } from '../../backend-api.service';
                         [routerLink]="'/traffic-view/' + this.trainId()"
                         class="back-link"
                         id="back-link"
-                    >Traffic View</a
+                        >Traffic View</a
                     >
 
                     <!-- Page Header with variant info -->
@@ -95,8 +96,10 @@ import { BackendApiService } from '../../backend-api.service';
                                         class="form-input"
                                         [formField]="editTrainForm.name"
                                     />
-                                    @if (editTrainForm.name().touched() &&
-                                    editTrainForm.name().invalid()) {
+                                    @if (
+                                        editTrainForm.name().touched() &&
+                                        editTrainForm.name().invalid()
+                                    ) {
                                         @for (error of editTrainForm.name().errors(); track error) {
                                             <span class="form-error">{{ error.message }}</span>
                                         }
@@ -104,7 +107,7 @@ import { BackendApiService } from '../../backend-api.service';
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label required" for="train-opday"
-                                    >Operational Day</label
+                                        >Operational Day</label
                                     >
                                     <input
                                         type="date"
@@ -112,10 +115,14 @@ import { BackendApiService } from '../../backend-api.service';
                                         class="form-input"
                                         [formField]="editTrainForm.operationalDay"
                                     />
-                                    @if (editTrainForm.operationalDay().touched() &&
-                                    editTrainForm.operationalDay().invalid()) {
-                                        @for (error of editTrainForm.operationalDay().errors();
-                                            track error) {
+                                    @if (
+                                        editTrainForm.operationalDay().touched() &&
+                                        editTrainForm.operationalDay().invalid()
+                                    ) {
+                                        @for (
+                                            error of editTrainForm.operationalDay().errors();
+                                            track error
+                                        ) {
                                             <span class="form-error">{{ error.message }}</span>
                                         }
                                     }
@@ -123,7 +130,7 @@ import { BackendApiService } from '../../backend-api.service';
                             </div>
                             <div class="form-group">
                                 <label class="form-label required" for="save-comment"
-                                >Change Comment</label
+                                    >Change Comment</label
                                 >
                                 <textarea
                                     id="save-comment"
@@ -131,10 +138,14 @@ import { BackendApiService } from '../../backend-api.service';
                                     placeholder="Describe what you changed…"
                                     [formField]="editTrainForm.creationComment"
                                 ></textarea>
-                                @if (editTrainForm.creationComment().touched() &&
-                                editTrainForm.creationComment().invalid()) {
-                                    @for (error of editTrainForm.creationComment().errors();
-                                        track error) {
+                                @if (
+                                    editTrainForm.creationComment().touched() &&
+                                    editTrainForm.creationComment().invalid()
+                                ) {
+                                    @for (
+                                        error of editTrainForm.creationComment().errors();
+                                        track error
+                                    ) {
                                         <span class="form-error">{{ error.message }}</span>
                                     }
                                 }
@@ -151,15 +162,15 @@ import { BackendApiService } from '../../backend-api.service';
                             <div class="journey-table-wrapper">
                                 <table class="journey-table" id="journey-table">
                                     <thead>
-                                    <tr>
-                                        <th style="width:200px;">Stop</th>
-                                        <th>Rolling Stock</th>
-                                        <th>Staff</th>
-                                        <th>Path</th>
-                                    </tr>
+                                        <tr>
+                                            <th style="width:200px;">Stop</th>
+                                            <th>Rolling Stock</th>
+                                            <th>Staff</th>
+                                            <th>Path</th>
+                                        </tr>
                                     </thead>
                                     <tbody id="journey-tbody">
-                                    <!-- Rendered by JS -->
+                                        <!-- Rendered by JS -->
                                     </tbody>
                                 </table>
                             </div>
@@ -201,22 +212,18 @@ export class EditTrainPage {
                 creationComment,
                 operationalDay,
             )
-            .subscribe({
-                next: () => (this.state.editTrainSuccess = true),
-                error: (err) => {
-                    this.state.editTrainSuccess = false;
-                    console.warn('Error creating train:', err);
-                },
-                complete: () => {
-                    console.log(
-                        'Create train request done. Success: ',
-                        this.state.editTrainSuccess,
-                    );
+            .pipe(
+                finalize(() => {
                     this.state.editTrainRunning = false;
-                    if (this.state.editTrainSuccess) {
-                        this.router.navigate(['/traffic-view/' + this.trainId()]);
-                    }
+                }),
+            )
+            .subscribe({
+                next: () => {
+                    this.router.navigate(['/traffic-view/' + this.trainId()]);
                 },
+                error: (err) => {
+                    console.warn('Error edit train:', err);
+                }
             });
     }
 

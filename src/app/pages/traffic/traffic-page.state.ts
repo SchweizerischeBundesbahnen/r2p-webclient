@@ -7,7 +7,6 @@ import { Train, TrainListElement } from '../../shared/models/api.models';
 @Injectable()
 export class TrafficPageState {
     createNewVariantRunning = false;
-    createNewVariantSuccess = false;
     newVariantModalIsOpen = signal(false);
     readonly apiService = inject(BackendApiService);
     trainId = signal<string | undefined>(undefined);

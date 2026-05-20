@@ -3,6 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { FormField } from '@angular/forms/signals';
 import { BackendApiService } from '../../backend-api.service';
 import { CreatePageState } from './create-train-page.state';
+import { finalize } from 'rxjs';
 
 @Component({
     selector: 'app-create-train-page',
@@ -15,7 +16,7 @@ import { CreatePageState } from './create-train-page.state';
                         class="unsaved-indicator"
                         [class.hidden]="!createTrainForm().dirty()"
                         id="unsaved-indicator"
-                    >● Unsaved changes</span
+                        >● Unsaved changes</span
                     >
                 </div>
                 <div class="sticky-edit-bar-actions">
@@ -23,7 +24,7 @@ import { CreatePageState } from './create-train-page.state';
                         [routerLink]="'/traffic-overview'"
                         class="btn btn-ghost"
                         id="sticky-cancel-btn"
-                    >Cancel</a
+                        >Cancel</a
                     >
                     <button
                         class="btn btn-success"
@@ -64,8 +65,10 @@ import { CreatePageState } from './create-train-page.state';
                                     placeholder="e.g., IC 1234 Zürich–Basel"
                                     [formField]="createTrainForm.name"
                                 />
-                                @if (createTrainForm.name().touched() &&
-                                createTrainForm.name().invalid()) {
+                                @if (
+                                    createTrainForm.name().touched() &&
+                                    createTrainForm.name().invalid()
+                                ) {
                                     @for (error of createTrainForm.name().errors(); track error) {
                                         <span class="form-error">{{ error.message }}</span>
                                     }
@@ -73,7 +76,7 @@ import { CreatePageState } from './create-train-page.state';
                             </div>
                             <div class="form-group">
                                 <label class="form-label required" for="train-opday"
-                                >Operational Day</label
+                                    >Operational Day</label
                                 >
                                 <input
                                     type="date"
@@ -81,10 +84,14 @@ import { CreatePageState } from './create-train-page.state';
                                     class="form-input"
                                     [formField]="createTrainForm.operationalDay"
                                 />
-                                @if (createTrainForm.operationalDay().touched() &&
-                                createTrainForm.operationalDay().invalid()) {
-                                    @for (error of createTrainForm.operationalDay().errors();
-                                        track error) {
+                                @if (
+                                    createTrainForm.operationalDay().touched() &&
+                                    createTrainForm.operationalDay().invalid()
+                                ) {
+                                    @for (
+                                        error of createTrainForm.operationalDay().errors();
+                                        track error
+                                    ) {
                                         <span class="form-error">{{ error.message }}</span>
                                     }
                                 }
@@ -92,7 +99,7 @@ import { CreatePageState } from './create-train-page.state';
                         </div>
                         <div class="form-group">
                             <label class="form-label required" for="save-comment"
-                            >Creation Comment</label
+                                >Creation Comment</label
                             >
                             <textarea
                                 id="save-comment"
@@ -100,10 +107,14 @@ import { CreatePageState } from './create-train-page.state';
                                 placeholder="Describe this train (required for saving)…"
                                 [formField]="createTrainForm.creationComment"
                             ></textarea>
-                            @if (createTrainForm.creationComment().touched() &&
-                            createTrainForm.creationComment().invalid()) {
-                                @for (error of createTrainForm.creationComment().errors();
-                                    track error) {
+                            @if (
+                                createTrainForm.creationComment().touched() &&
+                                createTrainForm.creationComment().invalid()
+                            ) {
+                                @for (
+                                    error of createTrainForm.creationComment().errors();
+                                    track error
+                                ) {
                                     <span class="form-error">{{ error.message }}</span>
                                 }
                             }
@@ -137,19 +148,20 @@ export class CreateTrainPage {
         if (this.state.createTrainRunning) return;
         this.state.createTrainRunning = true;
         const { name, creationComment, operationalDay } = this.state.createTrainForm().value();
-        this.apiService.createTrain(name, operationalDay, creationComment, 'SBB').subscribe({
-            next: () => (this.state.createTrainSuccess = true),
-            error: (err) => {
-                this.state.createTrainSuccess = false;
-                console.warn('Error creating train:', err);
-            },
-            complete: () => {
-                console.log('Create train request done. Success: ', this.state.createTrainSuccess);
-                this.state.createTrainRunning = false;
-                if (this.state.createTrainSuccess) {
+        this.apiService
+            .createTrain(name, operationalDay, creationComment, 'SBB')
+            .pipe(
+                finalize(() => {
+                    this.state.createTrainRunning = false;
+                }),
+            )
+            .subscribe({
+                next: () => {
                     this.router.navigate(['/traffic-overview']);
-                }
-            },
-        });
+                },
+                error: (err) => {
+                    console.warn('Error creating train:', err);
+                },
+            });
     }
 }
