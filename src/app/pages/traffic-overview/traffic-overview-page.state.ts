@@ -62,21 +62,6 @@ export const mapTrainToOverviewRow = ({
     mainTimestamp,
     version,
 }: TrainInfos): TrainRow => {
-    console.log('asdasd', {
-        id: train.id,
-        operationalDay,
-        start: train.journey?.journeylocations?.[0]?.locations?.[0]?.name,
-        startTime: '2026-01-01T10:00:00', // TODO:
-        end: train.journey?.journeylocations?.slice(-1)?.[0]?.locations?.[0]?.name,
-        endTime: '2026-01-01T11:00:00', // TODO:
-        partners,
-        // TODO: fix bug train number
-        trainNumber: 'fix bug',
-        revInfo: {
-            lastChange: mainTimestamp,
-            version,
-        },
-    });
     return {
         id: train.id,
         operationalDay,

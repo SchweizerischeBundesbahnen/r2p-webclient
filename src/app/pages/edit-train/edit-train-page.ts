@@ -183,7 +183,7 @@ export class EditTrainPage {
     protected state = inject(EditTrainPageState);
     protected editTrainForm = this.state.editTrainForm;
 
-    private readonly trainIdEffect = effect(() => {
+    private readonly updateState = effect(() => {
         this.state.trainId.set(this.trainId());
         this.state.branchId.set(this.branchId());
     });

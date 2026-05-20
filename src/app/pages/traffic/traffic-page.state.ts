@@ -34,7 +34,7 @@ export class TrafficPageState {
             ),
     });
 
-    toggleNewVariantModal(): void {
+    toggleIsNewVariantModalOpen() {
         this.newVariantModalIsOpen.set(!this.newVariantModalIsOpen());
     }
 }

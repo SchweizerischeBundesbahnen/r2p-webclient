@@ -1,21 +1,18 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { rxResource } from '@angular/core/rxjs-interop';
-import { Observable } from 'rxjs';
-import { Branch } from '../../shared/models/api.models';
-import { BackendApiService } from '../../backend-api.service';
 import { ReadTrainPageState } from './read-train-page.state';
 import { ViewJsonModal } from './view-json-modal';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'app-read-train-page',
-    imports: [RouterLink, ViewJsonModal],
+    imports: [RouterLink, ViewJsonModal, DatePipe],
     template: `
         <!-- ── Main Content ────────────────────────────────────────────── -->
         <div class="main-content">
             <div class="container">
                 <a [routerLink]="'/traffic-view/' + trainId()" class="back-link" id="back-link"
-                >Traffic View</a
+                    >Traffic View</a
                 >
 
                 <!-- Page Header -->
@@ -23,7 +20,7 @@ import { ViewJsonModal } from './view-json-modal';
                     <div>
                         <h1 class="page-title" id="page-title">Read View</h1>
                         <p class="page-subtitle" id="page-subtitle">
-                            Variant: {{ train.value()?.branchName }}
+                            Variant: {{ state.train.value()?.branchName }}
                         </p>
                     </div>
                     <div class="btn-group">
@@ -33,7 +30,7 @@ import { ViewJsonModal } from './view-json-modal';
                             class="btn btn-primary"
                             id="edit-btn"
                             style="display:none;"
-                        >✏ Edit Variant</a
+                            >✏ Edit Variant</a
                         >
                         <button class="btn btn-outline" (click)="state.toggleIsJsonModalOpen()">
                             &#123; &#125; View JSON
@@ -53,7 +50,7 @@ import { ViewJsonModal } from './view-json-modal';
                         <span class="card-title">📋 Train Details</span>
                     </div>
                     <div class="card-body">
-                        @let branch = train.value();
+                        @let branch = state.train.value();
                         <div class="detail-grid">
                             <div class="detail-item">
                                 <div class="detail-label">Train Number</div>
@@ -80,7 +77,7 @@ import { ViewJsonModal } from './view-json-modal';
                                         class="partner-badge partner-badge-{{
                                             branch?.technical?.owner ?? '-'
                                         }}"
-                                    >{{ branch?.technical?.owner }}</span
+                                        >{{ branch?.technical?.owner }}</span
                                     >
                                 </div>
                             </div>
@@ -91,7 +88,7 @@ import { ViewJsonModal } from './view-json-modal';
                                         class="badge badge-{{
                                             branch?.technical?.branchState ?? ''
                                         }}"
-                                    >{{ branch?.technical?.branchState ?? '–' }}</span
+                                        >{{ branch?.technical?.branchState ?? '–' }}</span
                                     >
                                 </div>
                             </div>
@@ -104,7 +101,7 @@ import { ViewJsonModal } from './view-json-modal';
                             <div class="detail-item">
                                 <div class="detail-label">Version Timestamp</div>
                                 <div class="detail-value" id="detail-timestamp">
-                                    {{ branch?.technical?.timestamp ?? '–' }}
+                                    {{ branch?.technical?.timestamp | date: 'yyyy-mm-dd HH:mm' }}
                                 </div>
                             </div>
                         </div>
@@ -133,15 +130,15 @@ import { ViewJsonModal } from './view-json-modal';
                         <div class="journey-table-wrapper">
                             <table class="journey-table" id="journey-table">
                                 <thead>
-                                <tr>
-                                    <th style="width:200px;">Stop</th>
-                                    <th>Rolling Stock</th>
-                                    <th>Staff</th>
-                                    <th>Path</th>
-                                </tr>
+                                    <tr>
+                                        <th style="width:200px;">Stop</th>
+                                        <th>Rolling Stock</th>
+                                        <th>Staff</th>
+                                        <th>Path</th>
+                                    </tr>
                                 </thead>
                                 <tbody id="journey-tbody">
-                                <!-- Rendered by JS -->
+                                    <!-- Rendered by JS -->
                                 </tbody>
                             </table>
                         </div>
@@ -154,13 +151,13 @@ import { ViewJsonModal } from './view-json-modal';
                         [routerLink]="'/traffic-view/' + trainId()"
                         class="btn btn-ghost"
                         id="back-btn"
-                    >← Back to Traffic View</a
+                        >← Back to Traffic View</a
                     >
                 </div>
             </div>
         </div>
         @if (state.isJsonModalOpen) {
-            <app-read-view-json-modal [train]="train.value()!" />
+            <app-read-view-json-modal [train]="state.train.value()!" />
         }
     `,
     styles: ``,
@@ -169,18 +166,11 @@ import { ViewJsonModal } from './view-json-modal';
 })
 export class ReadTrainPage {
     protected state = inject(ReadTrainPageState);
-    apiService = inject(BackendApiService);
     readonly trainId = input.required<string>();
     readonly branchId = input.required<string>();
 
-    // TODO: in state verschieben
-    readonly train = rxResource({
-        params: () => {
-            const trainId = this.trainId();
-            const branchId = this.branchId();
-            return trainId && branchId ? { trainId, branchId } : undefined;
-        },
-        stream: ({ params: { trainId, branchId } }): Observable<Branch> =>
-            this.apiService.getByTrainIdAndBranchId(trainId, branchId),
+    private readonly updateState = effect(() => {
+        this.state.trainId.set(this.trainId());
+        this.state.branchId.set(this.branchId());
     });
 }

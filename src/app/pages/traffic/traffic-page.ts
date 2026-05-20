@@ -35,7 +35,7 @@ import { NewVariantModal } from './new-variant-modal';
                                 </button>
                                 <button
                                     class="btn btn-primary"
-                                    (click)="trafficPageStateService.toggleNewVariantModal()"
+                                    (click)="trafficPageStateService.toggleIsNewVariantModalOpen()"
                                 >
                                     ⎇ New Variant
                                 </button>
@@ -83,18 +83,18 @@ import { NewVariantModal } from './new-variant-modal';
                                 <div class="detail-label">
                                     Gesamtstatus
                                     <span class="tooltip-anchor" tabindex="0"
-                                        >?<span class="tooltip-box"
-                                            >🟢 Alle Activities sind <em>confirmed</em>.<br />🟡
+                                    >?<span class="tooltip-box"
+                                    >🟢 Alle Activities sind <em>confirmed</em>.<br />🟡
                                             Mindestens eine Activity ist <em>proposed</em> oder
                                             <em>requested</em>, keine abgelehnt.<br />🔴 Mindestens
                                             eine Activity ist <em>refused</em> oder
                                             <em>dropped</em>.</span
-                                        ></span
+                                    ></span
                                     >
                                 </div>
                                 <div class="detail-value" id="detail-status">
                                     <span class="traffic-light tl-green"
-                                        ><span class="tl-dot"></span
+                                    ><span class="tl-dot"></span
                                     ></span>
                                 </div>
                             </div>
@@ -103,8 +103,8 @@ import { NewVariantModal } from './new-variant-modal';
                                 <div class="detail-value" id="detail-partners">
                                     @for (partner of trainHeaderInfo.partners; track partner) {
                                         <span class="partner-badge partner-badge-{{ partner }}">{{
-                                            partner
-                                        }}</span>
+                                                partner
+                                            }}</span>
                                     }
                                 </div>
                             </div>
@@ -121,15 +121,15 @@ import { NewVariantModal } from './new-variant-modal';
                         <div class="journey-table-wrapper">
                             <table class="journey-table" id="journey-table">
                                 <thead>
-                                    <tr>
-                                        <th style="width:200px;">Stop</th>
-                                        <th>Rolling Stock</th>
-                                        <th>Staff</th>
-                                        <th>Path</th>
-                                    </tr>
+                                <tr>
+                                    <th style="width:200px;">Stop</th>
+                                    <th>Rolling Stock</th>
+                                    <th>Staff</th>
+                                    <th>Path</th>
+                                </tr>
                                 </thead>
                                 <tbody id="journey-tbody">
-                                    <!-- Rendered by JS -->
+                                <!-- Rendered by JS -->
                                 </tbody>
                             </table>
                         </div>
@@ -142,10 +142,8 @@ import { NewVariantModal } from './new-variant-modal';
                         <span class="card-title">⎇ Variants</span>
                     </div>
                     <div id="branches-list">
-                        @for (
-                            branch of getVariantInfo(trainMainBranch.value());
-                            track branch.branchName
-                        ) {
+                        @for (branch of getVariantInfo(trainMainBranch.value());
+                            track branch.branchName) {
                             <div class="branch-row">
                                 <div class="branch-info">
                                     <div>
@@ -156,12 +154,12 @@ import { NewVariantModal } from './new-variant-modal';
                                                     class="partner-badge partner-badge-{{
                                                         partner
                                                     }}"
-                                                    >{{ partner }}</span
+                                                >{{ partner }}</span
                                                 >
                                             }
                                             <span style="margin-left:4px;">{{
-                                                branch.lastChange | date: 'dd.MM.yyyy, HH:mm'
-                                            }}</span>
+                                                    branch.lastChange | date: 'dd.MM.yyyy, HH:mm'
+                                                }}</span>
                                             @if (branch.comment) {
                                                 — <em>{{ branch.comment }}</em>
                                             }
@@ -172,7 +170,7 @@ import { NewVariantModal } from './new-variant-modal';
                                     style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;"
                                 >
                                     <span class="badge badge-{{ branch.status }}"
-                                        >● {{ branch.status }}</span
+                                    >● {{ branch.status }}</span
                                     >
                                     <div class="branch-actions">
                                         <a
@@ -182,16 +180,16 @@ import { NewVariantModal } from './new-variant-modal';
                                                 branchId: branch.branchId,
                                             }"
                                             class="btn btn-primary btn-sm"
-                                            >✏ Edit</a
+                                        >✏ Edit</a
                                         ><a
-                                            [routerLink]="'/read-train'"
-                                            [queryParams]="{
+                                        [routerLink]="'/read-train'"
+                                        [queryParams]="{
                                                 trainId: trainId(),
                                                 branchId: branch.branchId,
                                             }"
-                                            class="btn btn-ghost btn-sm"
-                                            >👁 View</a
-                                        >
+                                        class="btn btn-ghost btn-sm"
+                                    >👁 View</a
+                                    >
                                     </div>
                                 </div>
                             </div>

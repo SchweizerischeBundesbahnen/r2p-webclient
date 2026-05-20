@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Branch, PartnerToken, Train, TrainListElement } from './shared/models/api.models';
 
 @Injectable({ providedIn: 'root' })
@@ -9,11 +9,9 @@ export class BackendApiService {
 
     public listTrains(): Observable<TrainListElement[]> {
         const headers = new HttpHeaders().set('Token', 'SBB');
-        return this.httpClient
-            .get<TrainListElement[]>('http://localhost:8080/v1/trains', {
-                headers,
-            })
-            .pipe(tap((data) => console.log('Received train list:', data)));
+        return this.httpClient.get<TrainListElement[]>('http://localhost:8080/v1/trains', {
+            headers,
+        });
     }
 
     public createTrain(
@@ -45,29 +43,26 @@ export class BackendApiService {
 
     getTrainById(trainId: string) {
         const headers = new HttpHeaders().set('Token', 'SBB');
-        return this.httpClient
-            .get<TrainListElement>('http://localhost:8080/v1/trains/' + trainId, {
-                headers,
-            })
-            .pipe(tap((data) => console.log('Received train by id:', data)));
+        return this.httpClient.get<TrainListElement>('http://localhost:8080/v1/trains/' + trainId, {
+            headers,
+        });
     }
 
     getTrainByVersion(version: string): Observable<Train> {
         const headers = new HttpHeaders().set('Token', 'SBB');
-        return this.httpClient
-            .get<Train>('http://localhost:8080/v1/trains/versions/' + version, {
-                headers,
-            })
-            .pipe(tap((data) => console.log('Received train by version:', data)));
+        return this.httpClient.get<Train>('http://localhost:8080/v1/trains/versions/' + version, {
+            headers,
+        });
     }
 
     getByTrainIdAndBranchId(trainId: string, branchId: string): Observable<Branch> {
-        return this.httpClient
-            .get<Branch>('http://localhost:8080/v1/trains/' + trainId + '/branches/' + branchId, {
+        return this.httpClient.get<Branch>(
+            'http://localhost:8080/v1/trains/' + trainId + '/branches/' + branchId,
+            {
                 params: { trainId, branchId },
                 headers: new HttpHeaders().set('Token', 'SBB'),
-            })
-            .pipe(tap((data) => console.log('ReceivedgetByTrainIdAndBranchId:', data)));
+            },
+        );
     }
 
     updateTrain(

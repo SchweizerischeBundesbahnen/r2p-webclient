@@ -1,9 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { form, required } from '@angular/forms/signals';
 
-/**
- * Not provided in root, cause state should be destroyed after switching page.
- */
 @Injectable()
 export class CreatePageState {
     createTrainRunning = false;
