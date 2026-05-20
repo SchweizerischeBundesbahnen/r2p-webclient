@@ -8,7 +8,7 @@ import {
     withAppInitializerAuthCheck,
 } from 'angular-auth-oidc-client';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { environment } from './environments/environment';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
     providers: [

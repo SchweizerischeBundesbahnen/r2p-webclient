@@ -1,7 +1,7 @@
 import { Environment } from './environment.model';
 
 export const environment: Environment = {
-    serviceBaseUrl: '',
+    serviceBaseUrl: 'https://r2p-globos-r2p-test.apps.bps21t.sbb-aws-test.net',
     authConfig: {
         config: [
             {
@@ -15,7 +15,7 @@ export const environment: Environment = {
                 useRefreshToken: true,
                 autoUserInfo: false,
                 maxIdTokenIatOffsetAllowedInSeconds: 600,
-                secureRoutes: ['http://localhost:8080'],
+                secureRoutes: ['https://r2p-globos-r2p-test.apps.bps21t.sbb-aws-test.net'],
             },
         ],
     },

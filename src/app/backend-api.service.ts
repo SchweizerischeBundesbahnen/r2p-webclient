@@ -2,14 +2,16 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Branch, PartnerToken, Train, TrainListElement } from './shared/models/api.models';
+import { environment } from '../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class BackendApiService {
     private readonly httpClient = inject(HttpClient);
+    private readonly baseUrl = environment.serviceBaseUrl;
 
     public listTrains(): Observable<TrainListElement[]> {
         const headers = new HttpHeaders().set('Token', 'SBB');
-        return this.httpClient.get<TrainListElement[]>('http://localhost:8080/v1/trains', {
+        return this.httpClient.get<TrainListElement[]>(`${this.baseUrl}/v1/trains`, {
             headers,
         });
     }
@@ -21,7 +23,7 @@ export class BackendApiService {
         token: PartnerToken,
     ): Observable<TrainListElement> {
         return this.httpClient.post<TrainListElement>(
-            'http://localhost:8080/v1/trains',
+            `${this.baseUrl}/v1/trains`,
             { ...minimalTrain, id: crypto.randomUUID(), name, startdate: operationalDay },
             {
                 params: { comment },
@@ -32,7 +34,7 @@ export class BackendApiService {
 
     createBranch(trainId: string, branchName: string, comment: string): Observable<Branch> {
         return this.httpClient.post<Branch>(
-            'http://localhost:8080/v1/trains/' + trainId + '/branches',
+            `${this.baseUrl}/v1/trains/${trainId}/branches`,
             { ...minimalTrain, id: crypto.randomUUID() },
             {
                 params: { branchName, comment },
@@ -43,21 +45,21 @@ export class BackendApiService {
 
     getTrainById(trainId: string) {
         const headers = new HttpHeaders().set('Token', 'SBB');
-        return this.httpClient.get<TrainListElement>('http://localhost:8080/v1/trains/' + trainId, {
+        return this.httpClient.get<TrainListElement>(`${this.baseUrl}/v1/trains/${trainId}`, {
             headers,
         });
     }
 
     getTrainByVersion(version: string): Observable<Train> {
         const headers = new HttpHeaders().set('Token', 'SBB');
-        return this.httpClient.get<Train>('http://localhost:8080/v1/trains/versions/' + version, {
+        return this.httpClient.get<Train>(`${this.baseUrl}/v1/trains/versions/${version}`, {
             headers,
         });
     }
 
     getByTrainIdAndBranchId(trainId: string, branchId: string): Observable<Branch> {
         return this.httpClient.get<Branch>(
-            'http://localhost:8080/v1/trains/' + trainId + '/branches/' + branchId,
+            `${this.baseUrl}/v1/trains/${trainId}/branches/${branchId}`,
             {
                 params: { trainId, branchId },
                 headers: new HttpHeaders().set('Token', 'SBB'),
@@ -74,7 +76,7 @@ export class BackendApiService {
         operationalDay: Date,
     ): Observable<Train> {
         return this.httpClient.put<Train>(
-            `http://localhost:8080/v1/trains/${trainId}/branches/${branchId}`,
+            `${this.baseUrl}/v1/trains/${trainId}/branches/${branchId}`,
             { ...train, name, startdate: operationalDay },
             {
                 params: { comment },
