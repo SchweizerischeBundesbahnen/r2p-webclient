@@ -1,5 +1,4 @@
-import { Component, inject, input } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, input } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -37,13 +36,7 @@ import { DatePipe } from '@angular/common';
     imports: [DatePipe],
 })
 export class TableRow {
-    private readonly router = inject(Router);
-    private readonly activatedRoute = inject(ActivatedRoute);
     readonly train = input.required<TrainRow>();
-
-    protected async navigateToTrafficView() {
-        await this.router.navigate(['../traffic-view' + this.train().id]);
-    }
 }
 
 export interface TrainRow {
