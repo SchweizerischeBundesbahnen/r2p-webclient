@@ -176,11 +176,19 @@ import { NewVariantModal } from './new-variant-modal';
                                     >
                                     <div class="branch-actions">
                                         <a
-                                            [routerLink]="'/edit-train'"
+                                            routerLink="/edit-train"
+                                            [queryParams]="{
+                                                trainId: trainId(),
+                                                branchId: branch.branchId,
+                                            }"
                                             class="btn btn-primary btn-sm"
                                             >✏ Edit</a
                                         ><a
                                             [routerLink]="'/read-train'"
+                                            [queryParams]="{
+                                                trainId: trainId(),
+                                                branchId: branch.branchId,
+                                            }"
                                             class="btn btn-ghost btn-sm"
                                             >👁 View</a
                                         >
@@ -234,6 +242,7 @@ export class TrafficPage {
 
     protected getVariantInfo(trainWithDetails: TrainWithDetails | undefined): VariantViewModel[] {
         return (trainWithDetails?.listElement?.branches ?? []).map((branch) => ({
+            branchId: branch.branchId,
             branchName: branch.branchName,
             comment: branch.technical.comment,
             partners: branch.technical.owner ? [branch.technical.owner] : [],
@@ -256,6 +265,7 @@ export interface TrainHeaderViewModel {
 }
 
 export interface VariantViewModel {
+    branchId: string;
     comment: string;
     branchName: string;
     partners: string[];

@@ -104,6 +104,7 @@ import { TrafficOverviewTableFilterService } from './traffic-overview-table-filt
                             ) {
                                 <tr
                                     appTrainRow
+                                    class="clickable"
                                     [train]="train"
                                     [routerLink]="'../traffic-view/' + train.id"
                                 ></tr>

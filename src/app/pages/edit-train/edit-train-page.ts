@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { EditPageState } from './edit-train-state';
 import { FormField } from '@angular/forms/signals';
 import { Branch } from '../../shared/models/api.models';
+import { BackendApiService } from '../../backend-api.service';
 
 @Component({
     selector: 'app-edit-train-page',
@@ -19,7 +20,7 @@ import { Branch } from '../../shared/models/api.models';
                 [class.dirty]="editTrainForm().dirty()"
                 id="sticky-edit-bar"
             >
-                @let branchInfos = getBranchInfos(state.branch.value());
+                @let branchInfos = getBranchInfos(state.branch.value()?.branch);
                 <div class="sticky-edit-bar-inner">
                     <div class="sticky-edit-bar-title">
                         <span id="sticky-title">Edit: {{ branchInfos.trainNumber }}</span>
@@ -32,7 +33,7 @@ import { Branch } from '../../shared/models/api.models';
                     </div>
                     <div class="sticky-edit-bar-actions">
                         <a
-                            [routerLink]="'/traffic-overview'"
+                            [routerLink]="'/traffic-view/' + trainId()"
                             class="btn btn-ghost"
                             id="sticky-cancel-btn"
                         >Cancel</a
@@ -53,7 +54,12 @@ import { Branch } from '../../shared/models/api.models';
             <!-- ── Main Content ────────────────────────────────────────────── -->
             <div class="main-content">
                 <div class="container">
-                    <a href="#" class="back-link" id="back-link">Traffic View</a>
+                    <a
+                        [routerLink]="'/traffic-view/' + this.trainId()"
+                        class="back-link"
+                        id="back-link"
+                    >Traffic View</a
+                    >
 
                     <!-- Page Header with variant info -->
                     <div class="page-header">
@@ -172,6 +178,8 @@ import { Branch } from '../../shared/models/api.models';
 export class EditTrainPage {
     readonly trainId = input.required<string>();
     readonly branchId = input.required<string>();
+    private apiService = inject(BackendApiService);
+    private router = inject(Router);
     protected state = inject(EditPageState);
     protected editTrainForm = this.state.editTrainForm;
 
@@ -180,7 +188,37 @@ export class EditTrainPage {
         this.state.branchId.set(this.branchId());
     });
 
-    protected updateTrain() {}
+    protected updateTrain() {
+        if (this.editTrainForm().invalid()) return;
+        const { train, branch } = this.state.branch.value()!;
+        const { name, operationalDay, creationComment } = this.editTrainForm().value();
+        this.apiService
+            .updateTrain(
+                this.trainId(),
+                train,
+                branch.branchId,
+                name,
+                creationComment,
+                operationalDay,
+            )
+            .subscribe({
+                next: () => (this.state.editTrainSuccess = true),
+                error: (err) => {
+                    this.state.editTrainSuccess = false;
+                    console.warn('Error creating train:', err);
+                },
+                complete: () => {
+                    console.log(
+                        'Create train request done. Success: ',
+                        this.state.editTrainSuccess,
+                    );
+                    this.state.editTrainRunning = false;
+                    if (this.state.editTrainSuccess) {
+                        this.router.navigate(['/traffic-view/' + this.trainId()]);
+                    }
+                },
+            });
+    }
 
     protected getBranchInfos(value: Branch | undefined): {
         trainNumber: string;

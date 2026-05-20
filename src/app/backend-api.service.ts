@@ -14,7 +14,6 @@ export class BackendApiService {
                 headers,
             })
             .pipe(tap((data) => console.log('Received train list:', data)));
-        // .pipe(map((data) => z.array(TrainListElementSchema).parse(data)));
     }
 
     public createTrain(
@@ -31,7 +30,6 @@ export class BackendApiService {
                 headers: { token },
             },
         );
-        // .pipe(map((data) => TrainListElementSchema.parse(data)));
     }
 
     createBranch(trainId: string, branchName: string, comment: string): Observable<Branch> {
@@ -63,13 +61,31 @@ export class BackendApiService {
             .pipe(tap((data) => console.log('Received train by version:', data)));
     }
 
-    public getByTrainIdAndBranchId(trainId: string, branchId: string): Observable<Branch> {
+    getByTrainIdAndBranchId(trainId: string, branchId: string): Observable<Branch> {
         return this.httpClient
             .get<Branch>('http://localhost:8080/v1/trains/' + trainId + '/branches/' + branchId, {
                 params: { trainId, branchId },
                 headers: new HttpHeaders().set('Token', 'SBB'),
             })
             .pipe(tap((data) => console.log('ReceivedgetByTrainIdAndBranchId:', data)));
+    }
+
+    updateTrain(
+        trainId: string,
+        train: Train,
+        branchId: string,
+        name: string,
+        comment: string,
+        operationalDay: Date,
+    ): Observable<Train> {
+        return this.httpClient.put<Train>(
+            `http://localhost:8080/v1/trains/${trainId}/branches/${branchId}`,
+            { ...train, name, startdate: operationalDay },
+            {
+                params: { comment },
+                headers: new HttpHeaders().set('Token', 'SBB'),
+            },
+        );
     }
 }
 
