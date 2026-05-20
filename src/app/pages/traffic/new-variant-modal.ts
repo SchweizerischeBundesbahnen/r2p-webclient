@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { TrafficPageStateService } from './traffic-page-state.service';
+import { TrafficPageState } from './traffic-page.state';
 import { form, FormField, maxLength, required } from '@angular/forms/signals';
 import { BackendApiService } from '../../backend-api.service';
 import { Router } from '@angular/router';
@@ -74,7 +74,7 @@ import { Router } from '@angular/router';
 export class NewVariantModal {
     private router = inject(Router);
     private apiService = inject(BackendApiService);
-    protected state = inject(TrafficPageStateService);
+    protected state = inject(TrafficPageState);
 
     createTrainVariant = form(model, (schemaPath) => {
         required(schemaPath.variantName, { message: 'Variant Name is required' });

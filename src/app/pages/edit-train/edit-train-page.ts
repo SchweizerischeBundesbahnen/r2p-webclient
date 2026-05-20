@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { EditPageState } from './edit-train-state';
+import { EditTrainPageState } from './edit-train-page.state';
 import { FormField } from '@angular/forms/signals';
 import { Branch } from '../../shared/models/api.models';
 import { BackendApiService } from '../../backend-api.service';
@@ -173,14 +173,14 @@ import { BackendApiService } from '../../backend-api.service';
     `,
     styles: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [EditPageState],
+    providers: [EditTrainPageState],
 })
 export class EditTrainPage {
     readonly trainId = input.required<string>();
     readonly branchId = input.required<string>();
     private apiService = inject(BackendApiService);
     private router = inject(Router);
-    protected state = inject(EditPageState);
+    protected state = inject(EditTrainPageState);
     protected editTrainForm = this.state.editTrainForm;
 
     private readonly trainIdEffect = effect(() => {

@@ -5,7 +5,7 @@ import { map, Observable, of, switchMap } from 'rxjs';
 import { Train, TrainListElement } from '../../shared/models/api.models';
 
 @Injectable()
-export class TrafficPageStateService {
+export class TrafficPageState {
     createNewVariantRunning = false;
     createNewVariantSuccess = false;
     newVariantModalIsOpen = signal(false);

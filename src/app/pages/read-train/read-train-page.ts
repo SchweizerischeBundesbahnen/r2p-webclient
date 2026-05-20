@@ -173,6 +173,7 @@ export class ReadTrainPage {
     readonly trainId = input.required<string>();
     readonly branchId = input.required<string>();
 
+    // TODO: in state verschieben
     readonly train = rxResource({
         params: () => {
             const trainId = this.trainId();

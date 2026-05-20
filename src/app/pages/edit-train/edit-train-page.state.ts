@@ -9,7 +9,7 @@ import { Branch, Train } from '../../shared/models/api.models';
  * Not provided in root, cause state should be destroyed after switching page.
  */
 @Injectable()
-export class EditPageState {
+export class EditTrainPageState {
     editTrainRunning = false;
     editTrainSuccess = false;
     readonly apiService = inject(BackendApiService);

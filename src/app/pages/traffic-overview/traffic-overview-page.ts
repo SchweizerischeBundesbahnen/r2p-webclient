@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TableRow } from './table-row';
-import { TrafficOverviewPageState } from './traffic-overview-page-state.service';
+import { TrafficOverviewPageState } from './traffic-overview-page.state';
 import { TrafficOverviewTableFilterService } from './traffic-overview-table-filter.service';
 
 @Component({

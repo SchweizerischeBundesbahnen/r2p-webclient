@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormField } from '@angular/forms/signals';
 import { BackendApiService } from '../../backend-api.service';
-import { CreatePageState } from './create-train-state';
+import { CreatePageState } from './create-train-page.state';
 
 @Component({
     selector: 'app-create-train-page',

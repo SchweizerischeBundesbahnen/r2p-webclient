@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { TrafficPageStateService, TrainWithDetails } from './traffic-page-state.service';
+import { TrafficPageState, TrainWithDetails } from './traffic-page.state';
 import { Branch, BranchState } from '../../shared/models/api.models';
 import { DatePipe } from '@angular/common';
 import { NewVariantModal } from './new-variant-modal';
@@ -206,11 +206,11 @@ import { NewVariantModal } from './new-variant-modal';
     `,
     styles: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [TrafficPageStateService],
+    providers: [TrafficPageState],
 })
 export class TrafficPage {
     readonly trainId = input.required<string>();
-    protected readonly trafficPageStateService = inject(TrafficPageStateService);
+    protected readonly trafficPageStateService = inject(TrafficPageState);
 
     private readonly trainIdEffect = effect(() => {
         this.trafficPageStateService.trainId.set(this.trainId());

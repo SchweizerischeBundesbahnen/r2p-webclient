@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
-import { TrafficOverviewPage } from './pages/traffic-overview/traffic-overview-page';
 import { Layout } from './pages/layout';
 import { CreateTrainPage } from './pages/create-train/create-train-page';
-import { TrafficPage } from './pages/traffic-view/traffic-page';
+import { TrafficOverviewPage } from './pages/traffic-overview/traffic-overview-page';
+import { TrafficPage } from './pages/traffic/traffic-page';
 import { ReadTrainPage } from './pages/read-train/read-train-page';
 import { EditTrainPage } from './pages/edit-train/edit-train-page';
 import { autoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
