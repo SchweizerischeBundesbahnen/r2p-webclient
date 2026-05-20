@@ -1,5 +1,49 @@
 # Changelog
 
+## [0.0.12](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.11...r2p-webclient-v0.0.12) (2026-05-20)
+
+
+### Features
+
+* add create train page ([7b4cc50](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/7b4cc50e940a2b0973e09077c805fd9c24136b54))
+* add oauth ([ed76814](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/ed76814596c186296220086335043cacdd8d5b16))
+* add overview page ([62bcdeb](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/62bcdebe0b77a39dba62000ac62bbcf260520d4d))
+* add read train page and improvements ([369d509](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/369d50968d97d20166769b4e1bba4908803e557c))
+* add read view page and improvements ([88a2a3e](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/88a2a3ecfb0f528b486b7936afecc655eefa91d9))
+* add styles ([df8312e](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/df8312e250962ef835a7a23eff226cf03fae1d90))
+* add traffic view page ([fb53780](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/fb53780a3c16abb7e32fe4b4dedadd6441213fa5))
+* apply copilot feedback ([27eb893](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/27eb893c277eb7d0a58bdf3aff7357b3223a165d))
+* apply copilot feedback ([ae9dfbc](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/ae9dfbcafb545f0cdfac76e4e3a7496de3cc7f63))
+* apply copilot feedback ([b7d970f](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/b7d970f2f7b66f902e02e2f8f5344ce527bb2875))
+* apply PR feedback ([006a79c](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/006a79c1dd477447a9abdce87e4047df8efbec74))
+* implement create train ([5f4d2bf](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/5f4d2bff4de0b4dacb20158914935e37410ded4a))
+* implement edit page & variant modal ([34b5c6c](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/34b5c6c68e9892e326085bb0ce446a937673b4d7))
+* implement read view and improvements ([37ae94d](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/37ae94d000811a5c0adb90479d83c7080e4fcf2a))
+* implement traffic overview ([8c8ff13](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/8c8ff135d16c114d6c8c64b3f50fb661c64a93b6))
+* implement traffic page ([24533b9](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/24533b973dff753c26d3976aa05b128916cb01e9))
+* improvements ([0f5771e](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/0f5771eedac8e162777e5e73d0c45e3a63b44c50))
+* refactoring ([9a886e0](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/9a886e025dd2bf6987cacb45183f4cc10731cdbd))
+* remove unhelpful tests ([4561717](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/4561717abedaf1524a6ca675026e97d13ad9bb97))
+* renaming ([0cdb644](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/0cdb6449f5bad9ee0a49cb2cd7f9e21e4e93878e))
+* use prod url ([3bd2d22](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/3bd2d22b4aa22c6fdd9fd6c723d90bb04fc67346))
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump @commitlint/cli from 20.5.3 to 21.0.1 ([d0494c2](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/d0494c20c75add76bfcdd691b87d7321c4ddf543))
+* **deps-dev:** bump @commitlint/config-conventional ([bedd50a](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/bedd50acc5148b7751e7a34209fbfe4ef53e38ba))
+* **deps-dev:** bump jsdom from 28.1.0 to 29.1.1 ([3fdfd5a](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/3fdfd5a8fac83866b1f668194eace730e1fce4ba))
+* **deps-dev:** bump typescript-eslint from 8.56.1 to 8.59.3 ([fede6b0](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/fede6b06d47b050cb157938f7fda8c3a1d6dbcce))
+* **deps-dev:** bump vitest from 4.1.5 to 4.1.6 ([d09cb7c](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/d09cb7c31727eecc6a572a7613899799c75725c8))
+* **deps:** bump actions/github-script from 8 to 9 ([633282f](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/633282f7906ad0c6fe406da3642b7d27ef7aaec9))
+* **deps:** bump docker/build-push-action from 6 to 7 ([b2bb35d](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/b2bb35d5fc5e0dcc5d546ff4882f0778cecedbb6))
+* **deps:** bump the angular group with 13 updates ([a70f2f8](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/a70f2f898d19313ec392933148d337627c3d04de))
+
+
+### Continuous Integration
+
+* group angular updates for dependabot ([67fc0ea](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/67fc0eaa37ade842714fd5fcc71049240297a97f))
+
 ## [0.0.11](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.10...r2p-webclient-v0.0.11) (2026-05-12)
 
 
