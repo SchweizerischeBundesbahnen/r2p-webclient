@@ -1,128 +1,196 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { EditPageState } from './edit-train-state';
+import { FormField } from '@angular/forms/signals';
+import { Branch } from '../../shared/models/api.models';
 
 @Component({
     selector: 'app-edit-train-page',
-    imports: [RouterLink],
+    imports: [RouterLink, FormField],
     template: `
-        <!-- ── Main Content ────────────────────────────────────────────── -->
-        <div class="main-content">
-            <div class="container">
-                <a [routerLink]="'/traffic-view'" class="back-link" id="back-link">Traffic View</a>
-
-                <!-- Page Header -->
-                <div class="page-header">
-                    <div>
-                        <h1 class="page-title" id="page-title">Read View</h1>
-                        <p class="page-subtitle" id="page-subtitle">Variant: –</p>
-                    </div>
-                    <div class="btn-group">
-                        <!-- Edit button: only for own variants -->
-                        <a
-                            [routerLink]="'/traffic-view'"
-                            class="btn btn-primary"
-                            id="edit-btn"
-                            style="display:none;"
-                            >✏ Edit Variant</a
+        @if (state.branch.isLoading()) {
+            <div class="loading-overlay">
+                <div class="spinner"></div>
+                <span>Loading train data...</span>
+            </div>
+        } @else {
+            <div
+                class="sticky-edit-bar"
+                [class.dirty]="editTrainForm().dirty()"
+                id="sticky-edit-bar"
+            >
+                @let branchInfos = getBranchInfos(state.branch.value());
+                <div class="sticky-edit-bar-inner">
+                    <div class="sticky-edit-bar-title">
+                        <span id="sticky-title">Edit: {{ branchInfos.trainNumber }}</span>
+                        <span
+                            class="unsaved-indicator"
+                            [class.hidden]="!editTrainForm().dirty()"
+                            id="unsaved-indicator"
+                        >● Unsaved changes</span
                         >
-                        <button class="btn btn-outline" onclick="openJsonModal()">
-                            &#123; &#125; View JSON
+                    </div>
+                    <div class="sticky-edit-bar-actions">
+                        <a
+                            [routerLink]="'/traffic-overview'"
+                            class="btn btn-ghost"
+                            id="sticky-cancel-btn"
+                        >Cancel</a
+                        >
+                        <button
+                            class="btn btn-success"
+                            id="sticky-save-btn"
+                            [class.btn-muted]="editTrainForm().invalid()"
+                            [disabled]="editTrainForm().invalid()"
+                            (click)="updateTrain()"
+                        >
+                            💾 Save Train
                         </button>
                     </div>
                 </div>
+            </div>
 
-                <!-- Read-only notice -->
-                <div class="alert alert-info">
-                    👁️ This is a <strong>read-only view</strong> of the variant. No changes can be
-                    made here.
-                </div>
+            <!-- ── Main Content ────────────────────────────────────────────── -->
+            <div class="main-content">
+                <div class="container">
+                    <a href="#" class="back-link" id="back-link">Traffic View</a>
 
-                <!-- ── Train Details Card ────────────────────────────────── -->
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">📋 Train Details</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="detail-grid">
-                            <div class="detail-item">
-                                <div class="detail-label">Train Number</div>
-                                <div class="detail-value" id="detail-train-number">–</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">Name</div>
-                                <div class="detail-value" id="detail-name">–</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">Operational Day</div>
-                                <div class="detail-value" id="detail-op-day">–</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">Branch Owner</div>
-                                <div class="detail-value" id="detail-owner">–</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">Variant State</div>
-                                <div class="detail-value" id="detail-state">–</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">Version</div>
-                                <div class="detail-value" id="detail-version">–</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">Version Timestamp</div>
-                                <div class="detail-value" id="detail-timestamp">–</div>
-                            </div>
-                        </div>
-
-                        <!-- Version comment -->
-                        <div
-                            style="margin-top: 0.5rem; background-color: var(--background-color); padding: 0.75rem 1rem; border-radius: 6px; border-left: 3px solid var(--accent-color);"
-                        >
-                            <div class="detail-label">Version Comment</div>
-                            <div
-                                style="font-size:0.875rem; color:var(--text-secondary); margin-top:0.25rem;"
-                                id="detail-comment"
-                            >
-                                –
-                            </div>
+                    <!-- Page Header with variant info -->
+                    <div class="page-header">
+                        <div>
+                            <h1 class="page-title" id="page-title">
+                                Edit: {{ branchInfos.trainNumber }}
+                            </h1>
+                            <p class="page-subtitle" id="page-subtitle">
+                                Variant: {{ branchInfos.branchName }}
+                            </p>
                         </div>
                     </div>
-                </div>
 
-                <!-- ── Journey Card (read-only vertical table) ───────────── -->
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">🗺️ Journey Route</span>
+                    <!-- Variant context info -->
+                    <div class="alert alert-info" id="branch-alert">
+                        ✏️ You are editing variant
+                        <strong id="branch-name-display"> {{ branchInfos.branchName }}</strong
+                        >. Changes will be saved as a new version of this variant.
                     </div>
-                    <div class="card-body" style="padding:0;">
-                        <div class="journey-table-wrapper">
-                            <table class="journey-table" id="journey-table">
-                                <thead>
+
+                    <!-- ── Basic Info Card ──────────────────────────────────── -->
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📋 Train Details</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label required" for="train-name">Name</label>
+                                    <input
+                                        type="text"
+                                        id="train-name"
+                                        class="form-input"
+                                        [formField]="editTrainForm.name"
+                                    />
+                                    @if (editTrainForm.name().touched() &&
+                                    editTrainForm.name().invalid()) {
+                                        @for (error of editTrainForm.name().errors(); track error) {
+                                            <span class="form-error">{{ error.message }}</span>
+                                        }
+                                    }
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label required" for="train-opday"
+                                    >Operational Day</label
+                                    >
+                                    <input
+                                        type="date"
+                                        id="train-opday"
+                                        class="form-input"
+                                        [formField]="editTrainForm.operationalDay"
+                                    />
+                                    @if (editTrainForm.operationalDay().touched() &&
+                                    editTrainForm.operationalDay().invalid()) {
+                                        @for (error of editTrainForm.operationalDay().errors();
+                                            track error) {
+                                            <span class="form-error">{{ error.message }}</span>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label required" for="save-comment"
+                                >Change Comment</label
+                                >
+                                <textarea
+                                    id="save-comment"
+                                    class="form-textarea"
+                                    placeholder="Describe what you changed…"
+                                    [formField]="editTrainForm.creationComment"
+                                ></textarea>
+                                @if (editTrainForm.creationComment().touched() &&
+                                editTrainForm.creationComment().invalid()) {
+                                    @for (error of editTrainForm.creationComment().errors();
+                                        track error) {
+                                        <span class="form-error">{{ error.message }}</span>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ── Journey Card ─────────────────────────────────────── -->
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">🗺️ Journey Route</span>
+                        </div>
+                        <div class="card-body" style="padding:0;">
+                            <div class="journey-table-wrapper">
+                                <table class="journey-table" id="journey-table">
+                                    <thead>
                                     <tr>
                                         <th style="width:200px;">Stop</th>
                                         <th>Rolling Stock</th>
                                         <th>Staff</th>
                                         <th>Path</th>
                                     </tr>
-                                </thead>
-                                <tbody id="journey-tbody">
+                                    </thead>
+                                    <tbody id="journey-tbody">
                                     <!-- Rendered by JS -->
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Back button -->
-                <div class="btn-group" style="margin-bottom:2rem;">
-                    <a [routerLink]="'/traffic-view'" class="btn btn-ghost" id="back-btn"
-                        >← Back to Traffic View</a
-                    >
+                    <!-- ── Action Buttons (removed – use sticky bar above) ──────── -->
                 </div>
             </div>
-        </div>
+        }
     `,
     styles: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [EditPageState],
 })
-export class EditTrainPage {}
+export class EditTrainPage {
+    readonly trainId = input.required<string>();
+    readonly branchId = input.required<string>();
+    protected state = inject(EditPageState);
+    protected editTrainForm = this.state.editTrainForm;
+
+    private readonly trainIdEffect = effect(() => {
+        this.state.trainId.set(this.trainId());
+        this.state.branchId.set(this.branchId());
+    });
+
+    protected updateTrain() {}
+
+    protected getBranchInfos(value: Branch | undefined): {
+        trainNumber: string;
+        branchName: string;
+    } {
+        console.log('Getting branch infos for branch:', value);
+        const {
+            branchName,
+            business: { trainNumber },
+        } = value!;
+        return { branchName, trainNumber };
+    }
+}

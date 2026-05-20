@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
-import { PartnerToken, Train, TrainListElement } from './shared/models/api.models';
+import { Branch, PartnerToken, Train, TrainListElement } from './shared/models/api.models';
 
 @Injectable({ providedIn: 'root' })
 export class BackendApiService {
@@ -23,7 +23,6 @@ export class BackendApiService {
         comment: string,
         token: PartnerToken,
     ): Observable<TrainListElement> {
-        // return of(null as unknown as TrainListElement);
         return this.httpClient.post<TrainListElement>(
             'http://localhost:8080/v1/trains',
             { ...minimalTrain, id: crypto.randomUUID(), name, startdate: operationalDay },
@@ -35,11 +34,24 @@ export class BackendApiService {
         // .pipe(map((data) => TrainListElementSchema.parse(data)));
     }
 
+    createBranch(trainId: string, branchName: string, comment: string): Observable<Branch> {
+        return this.httpClient.post<Branch>(
+            'http://localhost:8080/v1/trains/' + trainId + '/branches',
+            { ...minimalTrain, id: crypto.randomUUID() },
+            {
+                params: { branchName, comment },
+                headers: new HttpHeaders().set('Token', 'SBB'),
+            },
+        );
+    }
+
     getTrainById(trainId: string) {
         const headers = new HttpHeaders().set('Token', 'SBB');
-        return this.httpClient.get<TrainListElement>('http://localhost:8080/v1/trains/' + trainId, {
-            headers,
-        });
+        return this.httpClient
+            .get<TrainListElement>('http://localhost:8080/v1/trains/' + trainId, {
+                headers,
+            })
+            .pipe(tap((data) => console.log('Received train by id:', data)));
     }
 
     getTrainByVersion(version: string): Observable<Train> {
@@ -50,9 +62,18 @@ export class BackendApiService {
             })
             .pipe(tap((data) => console.log('Received train by version:', data)));
     }
+
+    public getByTrainIdAndBranchId(trainId: string, branchId: string): Observable<Branch> {
+        return this.httpClient
+            .get<Branch>('http://localhost:8080/v1/trains/' + trainId + '/branches/' + branchId, {
+                params: { trainId, branchId },
+                headers: new HttpHeaders().set('Token', 'SBB'),
+            })
+            .pipe(tap((data) => console.log('ReceivedgetByTrainIdAndBranchId:', data)));
+    }
 }
 
-export const minimalTrain = {
+export const minimalTrain: Train = {
     id: '72',
     references: [
         {

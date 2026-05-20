@@ -3,10 +3,11 @@ import { RouterLink } from '@angular/router';
 import { TrafficPageStateService, TrainWithDetails } from './traffic-page-state.service';
 import { Branch, BranchState } from '../../shared/models/api.models';
 import { DatePipe } from '@angular/common';
+import { NewVariantModal } from './new-variant-modal';
 
 @Component({
     selector: 'app-traffic-page',
-    imports: [RouterLink, DatePipe],
+    imports: [RouterLink, DatePipe, NewVariantModal],
     template: `
         <!-- ── Main Content ────────────────────────────────────────────── -->
         <div class="main-content">
@@ -15,7 +16,7 @@ import { DatePipe } from '@angular/common';
 
                 <!-- Train Header Card -->
                 <div class="card" id="train-header-card">
-                    @let trainHeaderInfo = getTrainHeaderInfo(train.value());
+                    @let trainHeaderInfo = getTrainHeaderInfo(trainMainBranch.value());
                     <div class="card-body">
                         <div
                             style="display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:1rem;"
@@ -32,7 +33,10 @@ import { DatePipe } from '@angular/common';
                                 <button class="btn btn-outline" onclick="openShareModal()">
                                     🔗 Share Train
                                 </button>
-                                <button class="btn btn-primary" onclick="openCreateBranchModal()">
+                                <button
+                                    class="btn btn-primary"
+                                    (click)="trafficPageStateService.toggleNewVariantModal()"
+                                >
                                     ⎇ New Variant
                                 </button>
                             </div>
@@ -138,16 +142,26 @@ import { DatePipe } from '@angular/common';
                         <span class="card-title">⎇ Variants</span>
                     </div>
                     <div id="branches-list">
-                        @for (branch of getVariantInfo(train.value()); track branch.branchName) {
+                        @for (
+                            branch of getVariantInfo(trainMainBranch.value());
+                            track branch.branchName
+                        ) {
                             <div class="branch-row">
                                 <div class="branch-info">
                                     <div>
                                         <div class="branch-name">🌿 {{ branch.branchName }}</div>
                                         <div class="branch-meta">
                                             @for (partner of branch.partners; track partner) {
-                                                <span class="partner-badge partner-badge-{{ partner }}">{{ partner }}</span>
+                                                <span
+                                                    class="partner-badge partner-badge-{{
+                                                        partner
+                                                    }}"
+                                                    >{{ partner }}</span
+                                                >
                                             }
-                                            <span style="margin-left:4px;">{{ branch.lastChange | date: 'dd.MM.yyyy, HH:mm' }}</span>
+                                            <span style="margin-left:4px;">{{
+                                                branch.lastChange | date: 'dd.MM.yyyy, HH:mm'
+                                            }}</span>
                                             @if (branch.comment) {
                                                 — <em>{{ branch.comment }}</em>
                                             }
@@ -157,7 +171,9 @@ import { DatePipe } from '@angular/common';
                                 <div
                                     style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;"
                                 >
-                                    <span class="badge badge-{{ branch.status }}">● {{ branch.status }}</span>
+                                    <span class="badge badge-{{ branch.status }}"
+                                        >● {{ branch.status }}</span
+                                    >
                                     <div class="branch-actions">
                                         <a
                                             [routerLink]="'/edit-train'"
@@ -176,6 +192,9 @@ import { DatePipe } from '@angular/common';
                 </div>
             </div>
         </div>
+        @if (trafficPageStateService.newVariantModalIsOpen()) {
+            <app-new-variant-modal />
+        }
     `,
     styles: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -183,13 +202,13 @@ import { DatePipe } from '@angular/common';
 })
 export class TrafficPage {
     readonly trainId = input.required<string>();
-    private readonly trafficPageStateService = inject(TrafficPageStateService);
+    protected readonly trafficPageStateService = inject(TrafficPageStateService);
 
     private readonly trainIdEffect = effect(() => {
         this.trafficPageStateService.trainId.set(this.trainId());
     });
 
-    protected readonly train = this.trafficPageStateService.train;
+    protected readonly trainMainBranch = this.trafficPageStateService.trainMainBranch;
 
     protected getTrainHeaderInfo(
         trainWithDetails: TrainWithDetails | undefined,

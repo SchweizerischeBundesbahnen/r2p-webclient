@@ -18,7 +18,7 @@ export const routes: Routes = [
             { path: 'traffic-overview', component: TrafficOverviewPage },
             { path: 'traffic-view/:trainId', component: TrafficPage },
             { path: 'create-train', component: CreateTrainPage },
-            { path: 'edit-train/:trainId', component: EditTrainPage },
+            { path: 'edit-train', component: EditTrainPage },
             { path: 'read-train', component: ReadTrainPage },
         ],
     },
