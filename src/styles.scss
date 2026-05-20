@@ -40,6 +40,7 @@
     --text-primary: #1a202c;
     --text-secondary: #4a5568;
     --text-muted: #718096;
+    --text-warn: #d24e5c;
 
     /* Partner colors */
     --partner-sbb: #eb0000;
@@ -648,6 +649,11 @@ tbody td {
    ======================================== */
 .form-group {
     margin-bottom: var(--spacing-lg);
+}
+
+.form-error {
+    font-size: 0.875rem;
+    color: var(--text-warn);
 }
 
 .form-label {
