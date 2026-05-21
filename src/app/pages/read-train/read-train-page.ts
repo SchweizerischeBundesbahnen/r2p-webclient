@@ -3,10 +3,11 @@ import { RouterLink } from '@angular/router';
 import { ReadTrainPageState } from './read-train-page.state';
 import { ViewJsonModal } from './view-json-modal';
 import { DatePipe } from '@angular/common';
+import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
 
 @Component({
     selector: 'app-read-train-page',
-    imports: [RouterLink, ViewJsonModal, DatePipe],
+    imports: [RouterLink, ViewJsonModal, DatePipe, JourneyRouteCard],
     template: `
         <!-- ── Main Content ────────────────────────────────────────────── -->
         <div class="main-content">
@@ -122,28 +123,7 @@ import { DatePipe } from '@angular/common';
                 </div>
 
                 <!-- ── Journey Card (read-only vertical table) ───────────── -->
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">🗺️ Journey Route</span>
-                    </div>
-                    <div class="card-body" style="padding:0;">
-                        <div class="journey-table-wrapper">
-                            <table class="journey-table" id="journey-table">
-                                <thead>
-                                    <tr>
-                                        <th style="width:200px;">Stop</th>
-                                        <th>Rolling Stock</th>
-                                        <th>Staff</th>
-                                        <th>Path</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="journey-tbody">
-                                    <!-- Rendered by JS -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                <app-journey-route-card [readonly]="true" />
 
                 <!-- Back button -->
                 <div class="btn-group" style="margin-bottom:2rem;">

@@ -4,6 +4,7 @@ import { FormField } from '@angular/forms/signals';
 import { BackendApiService } from '../../backend-api.service';
 import { CreatePageState } from './create-train-page.state';
 import { finalize } from 'rxjs';
+import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
 
 @Component({
     selector: 'app-create-train-page',
@@ -123,11 +124,7 @@ import { finalize } from 'rxjs';
                 </div>
 
                 <!-- ── Journey Card ─────────────────────────────────────── -->
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">🗺️ Journey Route</span>
-                    </div>
-                </div>
+                <app-journey-route-card [readonly]="false" />
 
                 <!-- ── Action Buttons (removed – use sticky bar above) ──────── -->
             </div>
@@ -135,7 +132,7 @@ import { finalize } from 'rxjs';
     `,
     styles: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [RouterLink, FormField],
+    imports: [RouterLink, FormField, JourneyRouteCard],
     providers: [CreatePageState],
 })
 export class CreateTrainPage {
