@@ -5,10 +5,11 @@ import { FormField } from '@angular/forms/signals';
 import { Branch } from '../../shared/models/api.models';
 import { BackendApiService } from '../../backend-api.service';
 import { finalize } from 'rxjs';
+import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
 
 @Component({
     selector: 'app-edit-train-page',
-    imports: [RouterLink, FormField],
+    imports: [RouterLink, FormField, JourneyRouteCard],
     template: `
         @if (state.branch.isLoading()) {
             <div class="loading-overlay">
@@ -154,28 +155,7 @@ import { finalize } from 'rxjs';
                     </div>
 
                     <!-- ── Journey Card ─────────────────────────────────────── -->
-                    <div class="card">
-                        <div class="card-header">
-                            <span class="card-title">🗺️ Journey Route</span>
-                        </div>
-                        <div class="card-body" style="padding:0;">
-                            <div class="journey-table-wrapper">
-                                <table class="journey-table" id="journey-table">
-                                    <thead>
-                                        <tr>
-                                            <th style="width:200px;">Stop</th>
-                                            <th>Rolling Stock</th>
-                                            <th>Staff</th>
-                                            <th>Path</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="journey-tbody">
-                                        <!-- Rendered by JS -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                    <app-journey-route-card [readonly]="false" />
 
                     <!-- ── Action Buttons (removed – use sticky bar above) ──────── -->
                 </div>

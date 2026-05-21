@@ -4,10 +4,11 @@ import { TrafficPageState, TrainWithDetails } from './traffic-page.state';
 import { Branch, BranchState } from '../../shared/models/api.models';
 import { DatePipe } from '@angular/common';
 import { NewVariantModal } from './new-variant-modal';
+import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
 
 @Component({
     selector: 'app-traffic-page',
-    imports: [RouterLink, DatePipe, NewVariantModal],
+    imports: [RouterLink, DatePipe, NewVariantModal, JourneyRouteCard],
     template: `
         <!-- ── Main Content ────────────────────────────────────────────── -->
         <div class="main-content">
@@ -113,28 +114,7 @@ import { NewVariantModal } from './new-variant-modal';
                 </div>
 
                 <!-- Journey (main variant – read-only table) -->
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">🗺️ Journey Route (main variant)</span>
-                    </div>
-                    <div class="card-body" style="padding-top:0.5rem; padding-bottom:0.5rem;">
-                        <div class="journey-table-wrapper">
-                            <table class="journey-table" id="journey-table">
-                                <thead>
-                                <tr>
-                                    <th style="width:200px;">Stop</th>
-                                    <th>Rolling Stock</th>
-                                    <th>Staff</th>
-                                    <th>Path</th>
-                                </tr>
-                                </thead>
-                                <tbody id="journey-tbody">
-                                <!-- Rendered by JS -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                <app-journey-route-card [readonly]="true" />
 
                 <!-- Variants Section -->
                 <div class="card">
