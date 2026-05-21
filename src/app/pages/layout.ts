@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { SettingsModal } from '../settings/settings-modal';
+import { LocaleService } from '../locale/locale.service';
 
 @Component({
     selector: 'app-layout',
@@ -21,8 +22,8 @@ import { SettingsModal } from '../settings/settings-modal';
                     <span class="partner-badge partner-badge-SBB" id="nav-partner">SBB</span>
                 </div>
                 <div class="lang-switcher">
-                    <button class="lang-btn active" onclick="setLang('en', this)">EN</button>
-                    <button class="lang-btn" onclick="setLang('de', this)">DE</button>
+                    <button class="lang-btn" [class.active]="localeService.currentLocale() === 'en-US'" (click)="setLocale('en-US')">EN</button>
+                    <button class="lang-btn" [class.active]="localeService.currentLocale() === 'de-CH'" (click)="setLocale('de-CH')">DE</button>
                 </div>
                 <button class="top-nav-settings-btn" (click)="openSettingsModal()" title="Settings">
                     ⚙️
@@ -34,8 +35,14 @@ import { SettingsModal } from '../settings/settings-modal';
 })
 export class Layout {
     private readonly dialog = inject(MatDialog);
+    protected readonly localeService = inject(LocaleService);
 
     openSettingsModal(): void {
         this.dialog.open(SettingsModal);
     }
+
+    setLocale(locale: string): void {
+        this.localeService.switchLocale(locale);
+    }
 }
+
