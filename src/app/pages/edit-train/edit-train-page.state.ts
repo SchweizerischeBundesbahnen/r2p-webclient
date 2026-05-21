@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { form, required } from '@angular/forms/signals';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { map, Observable, switchMap, tap } from 'rxjs';
@@ -31,6 +31,8 @@ export class EditTrainPageState {
     trainId = signal<string | undefined>(undefined);
 
     branchId = signal<string | undefined>(undefined);
+    readonly hasLoadError = computed(() => this.branch.error() != null);
+
     readonly branch = rxResource({
         params: () => {
             const trainId = this.trainId();

@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { BackendApiService } from '../../backend-api.service';
 import { map, Observable, of, switchMap } from 'rxjs';
@@ -10,6 +10,8 @@ export class TrafficPageState {
     newVariantModalIsOpen = signal(false);
     readonly apiService = inject(BackendApiService);
     trainId = signal<string | undefined>(undefined);
+
+    readonly hasLoadError = computed(() => this.trainMainBranch.error() != null);
 
     readonly trainMainBranch = rxResource({
         params: () => {

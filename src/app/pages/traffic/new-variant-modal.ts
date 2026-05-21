@@ -113,8 +113,8 @@ export class NewVariantModal {
                             queryParams: { trainId, branchId: result.branchId },
                         });
                     },
-                    error: (err) => {
-                        console.warn('Error creating new variant:', err);
+                    error: () => {
+                        // Error already handled by errorInterceptor (toast shown)
                     },
                 });
         }

@@ -19,6 +19,12 @@ import { SortColumn, TrafficOverviewTableService } from './traffic-overview-tabl
                     <a [routerLink]="'../create-train'" class="btn btn-success" i18n="@@trafficOverview.newTrain"> ＋ New Train </a>
                 </div>
 
+                @if (state.hasLoadError()) {
+                    <div class="alert alert-error" i18n="@@trafficOverview.loadError">
+                        ⚠️ Failed to load train list. Please reload the page.
+                    </div>
+                }
+
                 <!-- Filter Bar -->
                 <div class="filter-bar">
                     <div class="filter-group">
@@ -160,7 +166,8 @@ import { SortColumn, TrafficOverviewTableService } from './traffic-overview-tabl
     providers: [TrafficOverviewPageState, TrafficOverviewTableService],
 })
 export class TrafficOverviewPage {
-    protected trainListResource = inject(TrafficOverviewPageState).trainListResource;
+    protected state = inject(TrafficOverviewPageState);
+    protected trainListResource = this.state.trainListResource;
     protected tableService = inject(TrafficOverviewTableService);
 
     protected sortIndicator(column: SortColumn): string {
