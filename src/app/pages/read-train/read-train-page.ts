@@ -16,6 +16,12 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
                     i18n="@@readTrain.breadcrumb.traffic">Traffic View</a
                 >
 
+                @if (state.hasLoadError()) {
+                    <div class="alert alert-error" i18n="@@readTrain.loadError">
+                        ⚠️ Failed to load train data. Please go back and try again.
+                    </div>
+                }
+
                 <!-- Page Header -->
                 <div class="page-header">
                     <div>
@@ -137,7 +143,7 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
             </div>
         </div>
         @if (state.isJsonModalOpen) {
-            <app-read-view-json-modal [train]="state.trainAndBranch.value()?.train!" />
+            <app-read-view-json-modal [train]="state.trainAndBranch.value()!.train" />
         }
     `,
     styles: ``,

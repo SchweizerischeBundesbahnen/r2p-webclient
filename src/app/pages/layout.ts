@@ -3,11 +3,12 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { SettingsModal } from '../settings/settings-modal';
 import { LocaleService } from '../locale/locale.service';
+import { ErrorToastComponent } from '../shared/error/error-toast';
 
 @Component({
     selector: 'app-layout',
     standalone: true,
-    imports: [RouterOutlet, RouterLink],
+    imports: [RouterOutlet, RouterLink, ErrorToastComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <nav class="top-nav">
@@ -31,6 +32,7 @@ import { LocaleService } from '../locale/locale.service';
             </div>
         </nav>
         <router-outlet />
+        <app-error-toast />
     `,
 })
 export class Layout {

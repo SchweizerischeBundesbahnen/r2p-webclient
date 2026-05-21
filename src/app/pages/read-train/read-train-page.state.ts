@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { map, Observable, switchMap } from 'rxjs';
 import { BackendApiService } from '../../backend-api.service';
@@ -11,6 +11,8 @@ export class ReadTrainPageState {
 
     branchId = signal<string | undefined>(undefined);
     isJsonModalOpen = false;
+
+    readonly hasLoadError = computed(() => this.trainAndBranch.error() != null);
 
     readonly trainAndBranch = rxResource({
         params: () => {
