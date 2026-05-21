@@ -20,6 +20,15 @@
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
+      "i18n": {
+        "sourceLocale": "en-US",
+        "locales": {
+          "de-CH": {
+            "translation": "public/locale/messages.de-CH.json",
+            "baseHref": "/de-CH/"
+          }
+        }
+      },
       "architect": {
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n",

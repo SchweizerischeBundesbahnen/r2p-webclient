@@ -10,12 +10,12 @@ import { DatePipe } from '@angular/common';
         </td>
         <td>
             {{ train().start }}<br /><span class="text-muted" style="font-size:0.75rem;"
-                >Dep: {{ train().startTime | date: 'HH:mm' }}</span
+                ><ng-container i18n="@@tableRow.dep">Dep:</ng-container> {{ train().startTime | date: 'HH:mm' }}</span
             >
         </td>
         <td>
             {{ train().end }}<br /><span class="text-muted" style="font-size:0.75rem;"
-                >Arr: {{ train().endTime | date: 'HH:mm' }}</span
+                ><ng-container i18n="@@tableRow.arr">Arr:</ng-container> {{ train().endTime | date: 'HH:mm' }}</span
             >
         </td>
         <td>{{ train().operationalDay }}</td>

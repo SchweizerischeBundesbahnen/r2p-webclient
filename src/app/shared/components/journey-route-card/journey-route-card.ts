@@ -5,19 +5,19 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
     template: `
         <div class="card">
             <div class="card-header">
-                <span class="card-title">🗺️ Journey Route</span>
+                <span class="card-title" i18n="@@journeyRouteCard.title">🗺️ Journey Route</span>
             </div>
             <div class="card-body" style="padding-top:0.5rem; padding-bottom:0.5rem;">
                 <div class="journey-table-wrapper">
                     <table class="journey-table" id="journey-table">
                         <thead>
                             <tr>
-                                <th style="width:200px;">Stop</th>
-                                <th>Rolling Stock</th>
-                                <th>Staff</th>
-                                <th>Path</th>
+                                <th style="width:200px;" i18n="@@journeyRouteCard.col.stop">Stop</th>
+                                <th i18n="@@journeyRouteCard.col.rollingStock">Rolling Stock</th>
+                                <th i18n="@@journeyRouteCard.col.staff">Staff</th>
+                                <th i18n="@@journeyRouteCard.col.path">Path</th>
                                 @if (!readonly()) {
-                                    <th>Actions</th>
+                                    <th i18n="@@journeyRouteCard.col.actions">Actions</th>
                                 }
                             </tr>
                         </thead>

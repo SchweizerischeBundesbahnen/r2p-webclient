@@ -14,7 +14,7 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
         @if (state.branch.isLoading()) {
             <div class="loading-overlay">
                 <div class="spinner"></div>
-                <span>Loading train data...</span>
+                <span i18n="@@editTrain.loading">Loading train data...</span>
             </div>
         } @else {
             <div
@@ -30,6 +30,7 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
                             class="unsaved-indicator"
                             [class.hidden]="!editTrainForm().dirty()"
                             id="unsaved-indicator"
+                            i18n="@@editTrain.unsavedChanges"
                             >● Unsaved changes</span
                         >
                     </div>
@@ -38,6 +39,7 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
                             [routerLink]="'/traffic-view/' + trainId()"
                             class="btn btn-ghost"
                             id="sticky-cancel-btn"
+                            i18n="@@editTrain.cancel"
                             >Cancel</a
                         >
                         <button
@@ -46,6 +48,7 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
                             [class.btn-muted]="editTrainForm().invalid()"
                             [disabled]="editTrainForm().invalid()"
                             (click)="updateTrain()"
+                            i18n="@@editTrain.save"
                         >
                             💾 Save Train
                         </button>
@@ -60,6 +63,7 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
                         [routerLink]="'/traffic-view/' + this.trainId()"
                         class="back-link"
                         id="back-link"
+                        i18n="@@editTrain.breadcrumb.traffic"
                         >Traffic View</a
                     >
 
@@ -77,20 +81,20 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
 
                     <!-- Variant context info -->
                     <div class="alert alert-info" id="branch-alert">
-                        ✏️ You are editing variant
+                        <ng-container i18n="@@editTrain.editingInfo">✏️ You are editing variant</ng-container>
                         <strong id="branch-name-display"> {{ branchInfos.branchName }}</strong
-                        >. Changes will be saved as a new version of this variant.
+                        >. <ng-container i18n="@@editTrain.editingInfoSub">Changes will be saved as a new version of this variant.</ng-container>
                     </div>
 
                     <!-- ── Basic Info Card ──────────────────────────────────── -->
                     <div class="card">
                         <div class="card-header">
-                            <span class="card-title">📋 Train Details</span>
+                            <span class="card-title" i18n="@@editTrain.section.trainDetails">📋 Train Details</span>
                         </div>
                         <div class="card-body">
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label class="form-label required" for="train-name">Name</label>
+                                    <label class="form-label required" for="train-name" i18n="@@editTrain.field.name">Name</label>
                                     <input
                                         type="text"
                                         id="train-name"
@@ -107,7 +111,7 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
                                     }
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label required" for="train-opday"
+                                    <label class="form-label required" for="train-opday" i18n="@@editTrain.field.opDay"
                                         >Operational Day</label
                                     >
                                     <input
@@ -130,13 +134,14 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="form-label required" for="save-comment"
+                                <label class="form-label required" for="save-comment" i18n="@@editTrain.field.comment"
                                     >Change Comment</label
                                 >
                                 <textarea
                                     id="save-comment"
                                     class="form-textarea"
                                     placeholder="Describe what you changed…"
+                                    i18n-placeholder="@@editTrain.field.commentPlaceholder"
                                     [formField]="editTrainForm.creationComment"
                                 ></textarea>
                                 @if (

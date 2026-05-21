@@ -2,125 +2,357 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en-US" datatype="plaintext" original="ng2.template">
     <body>
-      <trans-unit id="header.pocWarning" datatype="html">
-        <source>This is a PoC implementation not suitable to run in production </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/header/header.html</context>
-          <context context-type="linenumber">2,6</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="header.title" datatype="html">
+
+      <!-- ── Layout ── -->
+      <trans-unit id="layout.title" datatype="html">
         <source>R2P Web Client</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/header/header.html</context>
-          <context context-type="linenumber">10,11</context>
-        </context-group>
       </trans-unit>
-      <trans-unit id="header.trafficOverview" datatype="html">
-        <source> Traffic Overview </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/header/header.html</context>
-          <context context-type="linenumber">22,23</context>
-        </context-group>
+      <trans-unit id="layout.organization" datatype="html">
+        <source>Organization:</source>
       </trans-unit>
-      <trans-unit id="header.settings" datatype="html">
-        <source>Settings </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/header/header.html</context>
-          <context context-type="linenumber">26,28</context>
-        </context-group>
+      <trans-unit id="layout.settings.title" datatype="html">
+        <source>Settings</source>
       </trans-unit>
-      <trans-unit id="header.loggedInAs" datatype="html">
-        <source>Logged in as:</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/header/header.html</context>
-          <context context-type="linenumber">34,35</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="header.language" datatype="html">
-        <source>Language</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/header/header.html</context>
-          <context context-type="linenumber">42,43</context>
-        </context-group>
-      </trans-unit>
+      <!-- ── Settings Modal ── -->
       <trans-unit id="settings.clientTitle" datatype="html">
         <source>R2P Web Client</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
-          <context context-type="linenumber">7,8</context>
-        </context-group>
       </trans-unit>
       <trans-unit id="settings.clientSubtitle" datatype="html">
         <source>Railway Undertaking Partner Communication</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
-          <context context-type="linenumber">8,13</context>
-        </context-group>
       </trans-unit>
       <trans-unit id="settings.serverUrl" datatype="html">
         <source>Server URL *</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
-          <context context-type="linenumber">16,17</context>
-        </context-group>
       </trans-unit>
       <trans-unit id="settings.serverUrl.aria" datatype="html">
         <source>Server URL</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
-          <context context-type="linenumber">24,25</context>
-        </context-group>
       </trans-unit>
       <trans-unit id="settings.serverUrlHint" datatype="html">
         <source> Base URL of the R2P backend server. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
-          <context context-type="linenumber">29,31</context>
-        </context-group>
       </trans-unit>
       <trans-unit id="settings.organization" datatype="html">
         <source>Your Organization *</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
-          <context context-type="linenumber">35,36</context>
-        </context-group>
       </trans-unit>
       <trans-unit id="settings.organization.aria" datatype="html">
         <source>Your Organization</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
-          <context context-type="linenumber">39,40</context>
-        </context-group>
       </trans-unit>
       <trans-unit id="settings.organizationHint" datatype="html">
         <source>All requests will be sent on behalf of this organization.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
-          <context context-type="linenumber">46,49</context>
-        </context-group>
       </trans-unit>
       <trans-unit id="settings.continue" datatype="html">
         <source> Continue </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/settings/settings-modal.html</context>
-          <context context-type="linenumber">52,53</context>
-        </context-group>
       </trans-unit>
+
+      <!-- ── Traffic Overview ── -->
       <trans-unit id="trafficOverview.heading" datatype="html">
         <source>Traffic Overview</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/traffic-overview/traffic-overview.html</context>
-          <context context-type="linenumber">1,4</context>
-        </context-group>
       </trans-unit>
-      <trans-unit id="trainDetail.notFound" datatype="html">
-        <source>Train not found.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/train-detail/train-detail.html</context>
-          <context context-type="linenumber">5,7</context>
-        </context-group>
+      <trans-unit id="trafficOverview.newTrain" datatype="html">
+        <source> ＋ New Train </source>
       </trans-unit>
+      <trans-unit id="trafficOverview.filter.trainNumber" datatype="html">
+        <source>Train Number</source>
+      </trans-unit>
+      <trans-unit id="trafficOverview.filter.trainNumberPlaceholder" datatype="html">
+        <source>e.g., IC 1234</source>
+      </trans-unit>
+      <trans-unit id="trafficOverview.filter.opDayFrom" datatype="html">
+        <source>Op. Day From</source>
+      </trans-unit>
+      <trans-unit id="trafficOverview.filter.opDayTo" datatype="html">
+        <source>Op. Day To</source>
+      </trans-unit>
+      <trans-unit id="trafficOverview.filter.clear" datatype="html">
+        <source>Clear</source>
+      </trans-unit>
+      <trans-unit id="trafficOverview.table.trainNo" datatype="html">
+        <source>Train No.</source>
+      </trans-unit>
+      <trans-unit id="trafficOverview.table.from" datatype="html">
+        <source>From</source>
+      </trans-unit>
+      <trans-unit id="trafficOverview.table.to" datatype="html">
+        <source>To</source>
+      </trans-unit>
+      <trans-unit id="trafficOverview.table.opDay" datatype="html">
+        <source>Op. Day</source>
+      </trans-unit>
+      <trans-unit id="trafficOverview.table.partners" datatype="html">
+        <source>Partners</source>
+      </trans-unit>
+      <trans-unit id="trafficOverview.table.lastChange" datatype="html">
+        <source>Last Change / Version</source>
+      </trans-unit>
+      <trans-unit id="trafficOverview.table.status" datatype="html">
+        <source>Status</source>
+      </trans-unit>
+      <trans-unit id="trafficOverview.status.allConfirmed" datatype="html">
+        <source>🟢 Circle: All activities are confirmed.</source>
+      </trans-unit>
+      <trans-unit id="trafficOverview.status.someProposed" datatype="html">
+        <source>🟧 Square: At least one activity is proposed or requested, none refused.</source>
+      </trans-unit>
+      <trans-unit id="trafficOverview.status.someRefused" datatype="html">
+        <source>🔺 Triangle: At least one activity is refused or dropped.</source>
+      </trans-unit>
+      <trans-unit id="trafficOverview.empty.noTrains" datatype="html">
+        <source>No trains found</source>
+      </trans-unit>
+      <trans-unit id="trafficOverview.empty.hint" datatype="html">
+        <source>Try adjusting your filters or create a new train.</source>
+      </trans-unit>
+
+      <!-- ── Table Row ── -->
+      <trans-unit id="tableRow.dep" datatype="html">
+        <source>Dep:</source>
+      </trans-unit>
+      <trans-unit id="tableRow.arr" datatype="html">
+        <source>Arr:</source>
+      </trans-unit>
+
+      <!-- ── Create Train ── -->
+      <trans-unit id="createTrain.title" datatype="html">
+        <source>Create New Train</source>
+      </trans-unit>
+      <trans-unit id="createTrain.unsavedChanges" datatype="html">
+        <source>● Unsaved changes</source>
+      </trans-unit>
+      <trans-unit id="createTrain.cancel" datatype="html">
+        <source>Cancel</source>
+      </trans-unit>
+      <trans-unit id="createTrain.save" datatype="html">
+        <source>💾 Save Train</source>
+      </trans-unit>
+      <trans-unit id="createTrain.breadcrumb.overview" datatype="html">
+        <source>Traffic Overview</source>
+      </trans-unit>
+      <trans-unit id="createTrain.subtitle" datatype="html">
+        <source>Define the train details and journey route</source>
+      </trans-unit>
+      <trans-unit id="createTrain.section.trainDetails" datatype="html">
+        <source>📋 Train Details</source>
+      </trans-unit>
+      <trans-unit id="createTrain.field.name" datatype="html">
+        <source>Name</source>
+      </trans-unit>
+      <trans-unit id="createTrain.field.namePlaceholder" datatype="html">
+        <source>e.g., IC 1234 Zürich–Basel</source>
+      </trans-unit>
+      <trans-unit id="createTrain.field.opDay" datatype="html">
+        <source>Operational Day</source>
+      </trans-unit>
+      <trans-unit id="createTrain.field.comment" datatype="html">
+        <source>Creation Comment</source>
+      </trans-unit>
+      <trans-unit id="createTrain.field.commentPlaceholder" datatype="html">
+        <source>Describe this train (required for saving)…</source>
+      </trans-unit>
+
+      <!-- ── Edit Train ── -->
+      <trans-unit id="editTrain.loading" datatype="html">
+        <source>Loading train data...</source>
+      </trans-unit>
+      <trans-unit id="editTrain.unsavedChanges" datatype="html">
+        <source>● Unsaved changes</source>
+      </trans-unit>
+      <trans-unit id="editTrain.cancel" datatype="html">
+        <source>Cancel</source>
+      </trans-unit>
+      <trans-unit id="editTrain.save" datatype="html">
+        <source>💾 Save Train</source>
+      </trans-unit>
+      <trans-unit id="editTrain.breadcrumb.traffic" datatype="html">
+        <source>Traffic View</source>
+      </trans-unit>
+      <trans-unit id="editTrain.editingInfo" datatype="html">
+        <source>✏️ You are editing variant</source>
+      </trans-unit>
+      <trans-unit id="editTrain.editingInfoSub" datatype="html">
+        <source>Changes will be saved as a new version of this variant.</source>
+      </trans-unit>
+      <trans-unit id="editTrain.section.trainDetails" datatype="html">
+        <source>📋 Train Details</source>
+      </trans-unit>
+      <trans-unit id="editTrain.field.name" datatype="html">
+        <source>Name</source>
+      </trans-unit>
+      <trans-unit id="editTrain.field.opDay" datatype="html">
+        <source>Operational Day</source>
+      </trans-unit>
+      <trans-unit id="editTrain.field.comment" datatype="html">
+        <source>Change Comment</source>
+      </trans-unit>
+      <trans-unit id="editTrain.field.commentPlaceholder" datatype="html">
+        <source>Describe what you changed…</source>
+      </trans-unit>
+
+      <!-- ── Read Train ── -->
+      <trans-unit id="readTrain.breadcrumb.traffic" datatype="html">
+        <source>Traffic View</source>
+      </trans-unit>
+      <trans-unit id="readTrain.breadcrumb.read" datatype="html">
+        <source>Read View</source>
+      </trans-unit>
+      <trans-unit id="readTrain.editVariant" datatype="html">
+        <source>✏ Edit Variant</source>
+      </trans-unit>
+      <trans-unit id="readTrain.viewJson" datatype="html">
+        <source>{ } View JSON</source>
+      </trans-unit>
+      <trans-unit id="readTrain.readonlyNotice" datatype="html">
+        <source>👁️ This is a read-only view of the variant. No changes can be made here.</source>
+      </trans-unit>
+      <trans-unit id="readTrain.section.trainDetails" datatype="html">
+        <source>📋 Train Details</source>
+      </trans-unit>
+      <trans-unit id="readTrain.field.trainNumber" datatype="html">
+        <source>Train Number</source>
+      </trans-unit>
+      <trans-unit id="readTrain.field.name" datatype="html">
+        <source>Name</source>
+      </trans-unit>
+      <trans-unit id="readTrain.field.opDay" datatype="html">
+        <source>Operational Day</source>
+      </trans-unit>
+      <trans-unit id="readTrain.field.branchOwner" datatype="html">
+        <source>Branch Owner</source>
+      </trans-unit>
+      <trans-unit id="readTrain.field.variantState" datatype="html">
+        <source>Variant State</source>
+      </trans-unit>
+      <trans-unit id="readTrain.field.version" datatype="html">
+        <source>Version</source>
+      </trans-unit>
+      <trans-unit id="readTrain.field.versionTimestamp" datatype="html">
+        <source>Version Timestamp</source>
+      </trans-unit>
+      <trans-unit id="readTrain.field.versionComment" datatype="html">
+        <source>Version Comment</source>
+      </trans-unit>
+      <trans-unit id="readTrain.backToTraffic" datatype="html">
+        <source>← Back to Traffic View</source>
+      </trans-unit>
+
+      <!-- ── View JSON Modal ── -->
+      <trans-unit id="viewJsonModal.title" datatype="html">
+        <source>{ } JSON – Train Payload</source>
+      </trans-unit>
+      <trans-unit id="viewJsonModal.close" datatype="html">
+        <source>Close</source>
+      </trans-unit>
+
+      <!-- ── Traffic Page ── -->
+      <trans-unit id="traffic.breadcrumb.overview" datatype="html">
+        <source>Traffic Overview</source>
+      </trans-unit>
+      <trans-unit id="traffic.shareTrain" datatype="html">
+        <source>🔗 Share Train</source>
+      </trans-unit>
+      <trans-unit id="traffic.newVariant" datatype="html">
+        <source>⎇ New Variant</source>
+      </trans-unit>
+      <trans-unit id="traffic.field.trainNumber" datatype="html">
+        <source>Train Number</source>
+      </trans-unit>
+      <trans-unit id="traffic.field.from" datatype="html">
+        <source>From</source>
+      </trans-unit>
+      <trans-unit id="traffic.field.departure" datatype="html">
+        <source>Departure</source>
+      </trans-unit>
+      <trans-unit id="traffic.field.to" datatype="html">
+        <source>To</source>
+      </trans-unit>
+      <trans-unit id="traffic.field.arrival" datatype="html">
+        <source>Arrival</source>
+      </trans-unit>
+      <trans-unit id="traffic.field.opDay" datatype="html">
+        <source>Operational Day</source>
+      </trans-unit>
+      <trans-unit id="traffic.field.overallStatus" datatype="html">
+        <source>Overall Status</source>
+      </trans-unit>
+      <trans-unit id="traffic.status.allConfirmed" datatype="html">
+        <source>🟢 All activities are confirmed.</source>
+      </trans-unit>
+      <trans-unit id="traffic.status.someProposed" datatype="html">
+        <source>🟡 At least one activity is proposed or requested, none refused.</source>
+      </trans-unit>
+      <trans-unit id="traffic.status.someRefused" datatype="html">
+        <source>🔴 At least one activity is refused or dropped.</source>
+      </trans-unit>
+      <trans-unit id="traffic.field.partners" datatype="html">
+        <source>Partners</source>
+      </trans-unit>
+      <trans-unit id="traffic.variants" datatype="html">
+        <source>⎇ Variants</source>
+      </trans-unit>
+      <trans-unit id="traffic.edit" datatype="html">
+        <source>✏ Edit</source>
+      </trans-unit>
+      <trans-unit id="traffic.view" datatype="html">
+        <source>👁 View</source>
+      </trans-unit>
+
+      <!-- ── New Variant Modal ── -->
+      <trans-unit id="newVariantModal.title" datatype="html">
+        <source>⎇ Create New Variant</source>
+      </trans-unit>
+      <trans-unit id="newVariantModal.field.name" datatype="html">
+        <source>Variant Name</source>
+      </trans-unit>
+      <trans-unit id="newVariantModal.field.namePlaceholder" datatype="html">
+        <source>e.g., sbb/rolling-stock-update</source>
+      </trans-unit>
+      <trans-unit id="newVariantModal.field.nameHint" datatype="html">
+        <source>Lowercase, hyphens and slashes allowed. Max 255 characters.</source>
+      </trans-unit>
+      <trans-unit id="newVariantModal.field.comment" datatype="html">
+        <source>Comment</source>
+      </trans-unit>
+      <trans-unit id="newVariantModal.field.commentPlaceholder" datatype="html">
+        <source>Describe the purpose of this variant…</source>
+      </trans-unit>
+      <trans-unit id="newVariantModal.cancel" datatype="html">
+        <source>Cancel</source>
+      </trans-unit>
+      <trans-unit id="newVariantModal.createAndEdit" datatype="html">
+        <source>⎇ Create &amp; Edit</source>
+      </trans-unit>
+
+      <!-- ── Not Found ── -->
+      <trans-unit id="notFound.code" datatype="html">
+        <source>404</source>
+      </trans-unit>
+      <trans-unit id="notFound.title" datatype="html">
+        <source>Page not found</source>
+      </trans-unit>
+      <trans-unit id="notFound.message" datatype="html">
+        <source>The page you are looking for does not exist.</source>
+      </trans-unit>
+      <trans-unit id="notFound.backToOverview" datatype="html">
+        <source>Back to Overview</source>
+      </trans-unit>
+
+      <!-- ── Journey Route Card ── -->
+      <trans-unit id="journeyRouteCard.title" datatype="html">
+        <source>🗺️ Journey Route</source>
+      </trans-unit>
+      <trans-unit id="journeyRouteCard.col.stop" datatype="html">
+        <source>Stop</source>
+      </trans-unit>
+      <trans-unit id="journeyRouteCard.col.rollingStock" datatype="html">
+        <source>Rolling Stock</source>
+      </trans-unit>
+      <trans-unit id="journeyRouteCard.col.staff" datatype="html">
+        <source>Staff</source>
+      </trans-unit>
+      <trans-unit id="journeyRouteCard.col.path" datatype="html">
+        <source>Path</source>
+      </trans-unit>
+      <trans-unit id="journeyRouteCard.col.actions" datatype="html">
+        <source>Actions</source>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>
