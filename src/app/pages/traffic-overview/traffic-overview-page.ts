@@ -14,26 +14,27 @@ import { SortColumn, TrafficOverviewTableService } from './traffic-overview-tabl
                 <!-- Page Header -->
                 <div class="page-header">
                     <div>
-                        <h1 class="page-title">Traffic Overview</h1>
+                        <h1 class="page-title" i18n="@@trafficOverview.heading">Traffic Overview</h1>
                     </div>
-                    <a [routerLink]="'../create-train'" class="btn btn-success"> ＋ New Train </a>
+                    <a [routerLink]="'../create-train'" class="btn btn-success" i18n="@@trafficOverview.newTrain"> ＋ New Train </a>
                 </div>
 
                 <!-- Filter Bar -->
                 <div class="filter-bar">
                     <div class="filter-group">
-                        <label for="filter-train-number">Train Number</label>
+                        <label for="filter-train-number" i18n="@@trafficOverview.filter.trainNumber">Train Number</label>
                         <input
                             type="text"
                             id="filter-train-number"
                             class="filter-input"
                             placeholder="e.g., IC 1234"
+                            i18n-placeholder="@@trafficOverview.filter.trainNumberPlaceholder"
                             [value]="tableService.trainNumber()"
                             (input)="this.tableService.trainNumber.set($any($event.target).value)"
                         />
                     </div>
                     <div class="filter-group">
-                        <label for="filter-from">Op. Day From</label>
+                        <label for="filter-from" i18n="@@trafficOverview.filter.opDayFrom">Op. Day From</label>
                         <input
                             type="date"
                             id="filter-from"
@@ -45,7 +46,7 @@ import { SortColumn, TrafficOverviewTableService } from './traffic-overview-tabl
                         />
                     </div>
                     <div class="filter-group">
-                        <label for="filter-to">Op. Day To</label>
+                        <label for="filter-to" i18n="@@trafficOverview.filter.opDayTo">Op. Day To</label>
                         <input
                             type="date"
                             id="filter-to"
@@ -60,6 +61,7 @@ import { SortColumn, TrafficOverviewTableService } from './traffic-overview-tabl
                             id="clear"
                             class="btn btn-ghost"
                             (click)="tableService.clearFilters()"
+                            i18n="@@trafficOverview.filter.clear"
                         >
                             Clear
                         </button>
@@ -76,7 +78,7 @@ import { SortColumn, TrafficOverviewTableService } from './traffic-overview-tabl
                                     (click)="tableService.toggleSort('trainNumber')"
                                     style="cursor:pointer;"
                                 >
-                                    Train No.
+                                    <ng-container i18n="@@trafficOverview.table.trainNo">Train No.</ng-container>
                                     <span class="sort-indicator">{{
                                         sortIndicator('trainNumber')
                                     }}</span>
@@ -86,7 +88,7 @@ import { SortColumn, TrafficOverviewTableService } from './traffic-overview-tabl
                                     (click)="tableService.toggleSort('start')"
                                     style="cursor:pointer;"
                                 >
-                                    From
+                                    <ng-container i18n="@@trafficOverview.table.from">From</ng-container>
                                     <span class="sort-indicator">{{ sortIndicator('start') }}</span>
                                 </th>
                                 <th
@@ -94,7 +96,7 @@ import { SortColumn, TrafficOverviewTableService } from './traffic-overview-tabl
                                     (click)="tableService.toggleSort('end')"
                                     style="cursor:pointer;"
                                 >
-                                    To
+                                    <ng-container i18n="@@trafficOverview.table.to">To</ng-container>
                                     <span class="sort-indicator">{{ sortIndicator('end') }}</span>
                                 </th>
                                 <th
@@ -102,31 +104,27 @@ import { SortColumn, TrafficOverviewTableService } from './traffic-overview-tabl
                                     (click)="tableService.toggleSort('operationalDay')"
                                     style="cursor:pointer;"
                                 >
-                                    Op. Day
+                                    <ng-container i18n="@@trafficOverview.table.opDay">Op. Day</ng-container>
                                     <span class="sort-indicator">{{
                                         sortIndicator('operationalDay')
                                     }}</span>
                                 </th>
-                                <th>Partners</th>
+                                <th i18n="@@trafficOverview.table.partners">Partners</th>
                                 <th
                                     class="sort-header"
                                     (click)="tableService.toggleSort('lastChange')"
                                     style="cursor:pointer;"
                                 >
-                                    Last Change / Version
+                                    <ng-container i18n="@@trafficOverview.table.lastChange">Last Change / Version</ng-container>
                                     <span class="sort-indicator">{{
                                         sortIndicator('lastChange')
                                     }}</span>
                                 </th>
                                 <th>
-                                    Status
+                                    <ng-container i18n="@@trafficOverview.table.status">Status</ng-container>
                                     <span class="tooltip-anchor" tabindex="0"
                                         >?<span class="tooltip-box"
-                                            >🟢 Circle: All activities are
-                                            <em>confirmed</em>.<br />🟧 Square: At least one
-                                            activity is <em>proposed</em> or <em>requested</em>,
-                                            none refused.<br />🔺 Triangle: At least one activity is
-                                            <em>refused</em> or <em>dropped</em>.</span
+                                            ><ng-container i18n="@@trafficOverview.status.allConfirmed">🟢 Circle: All activities are <em>confirmed</em>.</ng-container><br /><ng-container i18n="@@trafficOverview.status.someProposed">🟧 Square: At least one activity is <em>proposed</em> or <em>requested</em>, none refused.</ng-container><br /><ng-container i18n="@@trafficOverview.status.someRefused">🔺 Triangle: At least one activity is <em>refused</em> or <em>dropped</em>.</ng-container></span
                                         ></span
                                     >
                                 </th>
@@ -149,8 +147,8 @@ import { SortColumn, TrafficOverviewTableService } from './traffic-overview-tabl
                 </div>
                 <div id="empty-state" class="empty-state" style="display:none;">
                     <div class="empty-state-icon">🚆</div>
-                    <p class="empty-state-text">No trains found</p>
-                    <p class="text-muted" style="font-size:0.875rem;">
+                    <p class="empty-state-text" i18n="@@trafficOverview.empty.noTrains">No trains found</p>
+                    <p class="text-muted" style="font-size:0.875rem;" i18n="@@trafficOverview.empty.hint">
                         Try adjusting your filters or create a new train.
                     </p>
                 </div>
@@ -170,4 +168,3 @@ export class TrafficOverviewPage {
         return this.tableService.sortDirection() === 'asc' ? '↑' : '↓';
     }
 }
-
