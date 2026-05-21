@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { SettingsModal } from '../settings/settings-modal';
 
 @Component({
     selector: 'app-layout',
@@ -22,7 +24,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
                     <button class="lang-btn active" onclick="setLang('en', this)">EN</button>
                     <button class="lang-btn" onclick="setLang('de', this)">DE</button>
                 </div>
-                <button class="top-nav-settings-btn" onclick="openSettingsModal()" title="Settings">
+                <button class="top-nav-settings-btn" (click)="openSettingsModal()" title="Settings">
                     ⚙️
                 </button>
             </div>
@@ -30,4 +32,10 @@ import { RouterLink, RouterOutlet } from '@angular/router';
         <router-outlet />
     `,
 })
-export class Layout {}
+export class Layout {
+    private readonly dialog = inject(MatDialog);
+
+    openSettingsModal(): void {
+        this.dialog.open(SettingsModal);
+    }
+}
