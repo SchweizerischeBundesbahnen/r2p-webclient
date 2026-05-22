@@ -19,12 +19,6 @@ import { SortColumn, TrafficOverviewTableService } from './traffic-overview-tabl
                     <a [routerLink]="'../create-train'" class="btn btn-success" i18n="@@trafficOverview.newTrain"> ＋ New Train </a>
                 </div>
 
-                @if (state.trainListResource.error()) {
-                    <div class="alert alert-error" i18n="@@trafficOverview.loadError">
-                        ⚠️ Failed to load train list. Please reload the page.
-                    </div>
-                }
-
                 <!-- Filter Bar -->
                 <div class="filter-bar">
                     <div class="filter-group">
@@ -138,7 +132,7 @@ import { SortColumn, TrafficOverviewTableService } from './traffic-overview-tabl
                         </thead>
                         <tbody id="trains-tbody">
                             @for (
-                                train of tableService.applyFilterOn(trainListResource.value());
+                                train of tableService.applyFilterOn(trainListResource.hasValue() ? trainListResource.value() : []);
                                 track train.id
                             ) {
                                 <tr
