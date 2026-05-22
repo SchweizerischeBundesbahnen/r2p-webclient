@@ -135,7 +135,7 @@ import { Spinner } from '../../shared/components/spinner/spinner';
                 </div>
 
                 <!-- ── Journey Card (read-only vertical table) ───────────── -->
-                <app-journey-route-card [readonly]="true" />
+                <app-journey-route-card [readonly]="true" [journey]="state.trainAndBranch.value()?.train?.journey" />
 
                 <!-- Back button -->
                 <div class="btn-group" style="margin-bottom:2rem;">

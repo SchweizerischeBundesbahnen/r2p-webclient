@@ -17,7 +17,112 @@
                     </tr>
                 </thead>
                 <tbody id="journey-tbody">
-                    <!-- Rendered by JS -->
+                    @for (stop of stops(); track stop.stopName + $index) {
+                        <tr>
+                            <td class="jt-stop-cell">
+                                <div class="jt-stop-indicator">
+                                    <div class="jt-stop-line-col">
+                                        <div class="jt-line-seg" [class.jt-line-invisible]="stop.isFirst"></div>
+                                        <div class="jt-stop-dot"></div>
+                                        <div class="jt-line-seg" [class.jt-line-invisible]="stop.isLast"></div>
+                                    </div>
+                                    <div class="jt-stop-info">
+                                        <div class="jt-stop-name">{{ stop.stopName }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="jt-act-cell jt-rs-cell" [attr.data-rs-span]="stop.spanRole">
+                                <div class="jt-rs-cell-inner">
+                                    @if (stop.rsActs.length > 0) {
+                                        <div class="jt-act-list jt-rs-own-acts">
+                                            @for (act of stop.rsActs; track $index) {
+                                                <div class="jt-act-item act-rs">
+                                                    <div class="jt-act-header">
+                                                        <span style="flex:1;">
+                                                            <span class="partner-badge partner-badge-{{ act.responsibility?.id ?? '' }}">{{ act.responsibility?.id }}</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="jt-act-resp">
+                                                        {{ act.responsibility?.type }}
+                                                        · <span class="badge badge-{{ act.responsibility?.status ?? '' }}" style="font-size:0.6rem;">{{ act.responsibility?.status }}</span>
+                                                    </div>
+                                                    @if (getArrival(act) || getDeparture(act)) {
+                                                        <div class="jt-act-times">
+                                                            @if (getArrival(act)) { Arr: {{ getArrival(act) }} }
+                                                            @if (getArrival(act) && getDeparture(act)) { / }
+                                                            @if (getDeparture(act)) { Dep: {{ getDeparture(act) }} }
+                                                        </div>
+                                                    }
+                                                    @if (act.capability?.capabilityFeatures?.length) {
+                                                        <div class="jt-act-features">
+                                                            @for (cf of act.capability!.capabilityFeatures!; track $index) {
+                                                                <span class="jt-feature-tag" [title]="cf.feature.offeredservice ?? ''">{{ cf.feature.type }}{{ cf.feature.offeredservice ? ': ' + cf.feature.offeredservice : '' }}</span>
+                                                            }
+                                                        </div>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                    @if (stop.inheritedOriginName) {
+                                        <div class="rs-span-end-label">ends here · started at {{ stop.inheritedOriginName }}</div>
+                                    }
+                                </div>
+                            </td>
+                            <td class="jt-act-cell">
+                                <div class="jt-act-list">
+                                    @for (act of stop.staffActs; track $index) {
+                                        <div class="jt-act-item act-staff">
+                                            <div class="jt-act-header">
+                                                <span style="flex:1;">
+                                                    <span class="partner-badge partner-badge-{{ act.responsibility?.id ?? '' }}">{{ act.responsibility?.id }}</span>
+                                                </span>
+                                            </div>
+                                            <div class="jt-act-resp">
+                                                {{ act.responsibility?.type }}
+                                                · <span class="badge badge-{{ act.responsibility?.status ?? '' }}" style="font-size:0.6rem;">{{ act.responsibility?.status }}</span>
+                                            </div>
+                                            @if (getArrival(act) || getDeparture(act)) {
+                                                <div class="jt-act-times">
+                                                    @if (getArrival(act)) { Arr: {{ getArrival(act) }} }
+                                                    @if (getArrival(act) && getDeparture(act)) { / }
+                                                    @if (getDeparture(act)) { Dep: {{ getDeparture(act) }} }
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            </td>
+                            <td class="jt-act-cell">
+                                <div class="jt-act-list">
+                                    @for (act of stop.planActs; track $index) {
+                                        <div class="jt-act-item act-plan">
+                                            <div class="jt-act-header">
+                                                <span style="flex:1;">
+                                                    <span class="partner-badge partner-badge-{{ act.responsibility?.id ?? '' }}">{{ act.responsibility?.id }}</span>
+                                                </span>
+                                            </div>
+                                            <div class="jt-act-resp">
+                                                {{ act.responsibility?.type }}
+                                                · <span class="badge badge-{{ act.responsibility?.status ?? '' }}" style="font-size:0.6rem;">{{ act.responsibility?.status }}</span>
+                                            </div>
+                                            @if (getArrival(act) || getDeparture(act)) {
+                                                <div class="jt-act-times">
+                                                    @if (getArrival(act)) { Arr: {{ getArrival(act) }} }
+                                                    @if (getArrival(act) && getDeparture(act)) { / }
+                                                    @if (getDeparture(act)) { Dep: {{ getDeparture(act) }} }
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    } @empty {
+                        <tr>
+                            <td colspan="4" class="text-muted text-center" style="padding:2rem;" i18n="@@journeyRouteCard.empty">No journey stops defined.</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
