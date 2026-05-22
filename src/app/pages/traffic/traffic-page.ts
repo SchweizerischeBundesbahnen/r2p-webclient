@@ -123,7 +123,7 @@ import { Spinner } from '../../shared/components/spinner/spinner';
                 </div>
 
                 <!-- Journey (main variant – read-only table) -->
-                <app-journey-route-card [readonly]="true" />
+                <app-journey-route-card [readonly]="true" [journey]="trainMainBranch.value()?.details?.journey" />
 
                 <!-- Variants Section -->
                 <div class="card">

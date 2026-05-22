@@ -169,7 +169,7 @@ import { Spinner } from '../../shared/components/spinner/spinner';
                     </div>
 
                     <!-- ── Journey Card ─────────────────────────────────────── -->
-                    <app-journey-route-card [readonly]="false" />
+                    <app-journey-route-card [readonly]="false" [journey]="state.branch.value()?.train?.journey" />
 
                     <!-- ── Action Buttons (removed – use sticky bar above) ──────── -->
                 </div>
