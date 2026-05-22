@@ -54,6 +54,26 @@ This template recommends [Conventional Commits](https://www.conventionalcommits.
 - Approval does not guarantee merge if new risks are discovered later in review.
 - Rebase or merge from the default branch when requested by maintainers.
 
+## Translations (i18n)
+
+All user-facing strings are externalised via Angular's built-in i18n.
+
+| File | Purpose |
+|---|---|
+| `src/locale/messages.json` | Auto-generated source of truth (English, `en-US`) – **do not edit manually** |
+| `public/locale/messages.de-CH.json` | German (Switzerland) translations – edit here |
+
+### Workflow: adding or changing a string
+
+1. Use `$localize` / `i18n` attribute in the template as usual.
+2. Run `npm run extract-i18n` – this re-generates `src/locale/messages.json` **and** automatically merges new keys into every locale file, marking them as `TODO: <English source>`.
+3. Search for `TODO:` in `public/locale/messages.de-CH.json`, translate the marked strings, and remove the `TODO:` prefix.
+4. Commit both `messages.json` and the updated locale file(s) together.
+
+### CI check
+
+`npm run check-translations` exits with code 1 if any locale file is missing keys or contains obsolete ones. This is intended for use in CI pipelines.
+
 ## Maintainer Notes
 
 Replace this section with repository-specific contribution details if the project needs additional guidance, such as development commands, local tooling, CLA requirements, or architecture review expectations.

@@ -35,7 +35,8 @@
           "options": {
             "buildTarget": "r2p-webclient:build",
             "outputPath": "src/locale",
-            "outFile": "messages.xlf"
+            "outFile": "messages.json",
+            "format": "json"
           }
         },
         "build": {
