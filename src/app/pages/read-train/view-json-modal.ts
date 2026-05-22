@@ -10,7 +10,7 @@ import { ReadTrainPageState } from './read-train-page.state';
         <div class="modal-overlay" id="modal-json">
             <div class="modal-card modal-xl">
                 <div class="modal-header">
-                    <span class="modal-title" i18n="@@viewJsonModal.title">&#123; &#125; JSON – Train Payload</span>
+                    <span class="modal-title" i18n="@@viewJsonModal.title">JSON – Train Payload</span>
                     <button class="modal-close" (click)="close()">✕</button>
                 </div>
                 <div class="modal-body" style="padding:1rem;">

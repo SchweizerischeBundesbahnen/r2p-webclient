@@ -5,7 +5,6 @@ import { BackendApiService } from '../../backend-api.service';
 import { CreatePageState } from './create-train-page.state';
 import { finalize } from 'rxjs';
 import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
-import { ErrorNotificationService } from '../../shared/error/error-notification.service';
 
 @Component({
     selector: 'app-create-train-page',
@@ -145,7 +144,6 @@ export class CreateTrainPage {
     private apiService = inject(BackendApiService);
     private router = inject(Router);
     private state = inject(CreatePageState);
-    private errorService = inject(ErrorNotificationService);
     protected createTrainForm = inject(CreatePageState).createTrainForm;
 
     protected createTrain() {

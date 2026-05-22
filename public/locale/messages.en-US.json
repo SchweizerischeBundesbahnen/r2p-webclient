@@ -67,7 +67,7 @@
     "readTrain.breadcrumb.traffic": "Traffic View",
     "readTrain.breadcrumb.read": "Read View",
     "readTrain.editVariant": "✏ Edit Variant",
-    "readTrain.viewJson": "{ } View JSON",
+    "readTrain.viewJson": "View JSON",
     "readTrain.readonlyNotice": "👁️ This is a read-only view of the variant. No changes can be made here.",
     "readTrain.section.trainDetails": "📋 Train Details",
     "readTrain.field.trainNumber": "Train Number",
@@ -80,7 +80,7 @@
     "readTrain.field.versionComment": "Version Comment",
     "readTrain.backToTraffic": "← Back to Traffic View",
 
-    "viewJsonModal.title": "{ } JSON – Train Payload",
+    "viewJsonModal.title": "JSON – Train Payload",
     "viewJsonModal.close": "Close",
 
     "traffic.breadcrumb.overview": "Traffic Overview",

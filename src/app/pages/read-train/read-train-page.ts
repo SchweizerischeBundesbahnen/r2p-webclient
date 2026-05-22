@@ -40,7 +40,7 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
                             i18n="@@readTrain.editVariant">✏ Edit Variant</a
                         >
                         <button class="btn btn-outline" (click)="state.toggleIsJsonModalOpen()" i18n="@@readTrain.viewJson">
-                            &#123; &#125; View JSON
+                            View JSON
                         </button>
                     </div>
                 </div>
@@ -108,7 +108,7 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
                             <div class="detail-item">
                                 <div class="detail-label" i18n="@@readTrain.field.versionTimestamp">Version Timestamp</div>
                                 <div class="detail-value" id="detail-timestamp">
-                                    {{ branch?.technical?.timestamp | date: 'yyyy-mm-dd HH:mm' }}
+                                    {{ branch?.technical?.timestamp | date: 'yyyy-MM-dd HH:mm' }}
                                 </div>
                             </div>
                         </div>
