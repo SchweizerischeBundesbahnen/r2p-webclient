@@ -24,8 +24,7 @@
         "sourceLocale": "en-US",
         "locales": {
           "de-CH": {
-            "translation": "public/locale/messages.de-CH.json",
-            "baseHref": "/de-CH/"
+            "translation": "public/locale/messages.de-CH.json"
           }
         }
       },
