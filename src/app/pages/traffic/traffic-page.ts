@@ -15,7 +15,7 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
             <div class="container">
                 <a [routerLink]="'/traffic-overview'" class="back-link" i18n="@@traffic.breadcrumb.overview">Traffic Overview</a>
 
-                @if (trafficPageStateService.hasLoadError()) {
+                @if (trafficPageStateService.trainMainBranch.error()) {
                     <div class="alert alert-error" i18n="@@traffic.loadError">
                         ⚠️ Failed to load train data. Please go back and try again.
                     </div>

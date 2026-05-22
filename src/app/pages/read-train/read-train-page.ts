@@ -16,7 +16,7 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
                     i18n="@@readTrain.breadcrumb.traffic">Traffic View</a
                 >
 
-                @if (state.hasLoadError()) {
+                @if (state.trainAndBranch.error()) {
                     <div class="alert alert-error" i18n="@@readTrain.loadError">
                         ⚠️ Failed to load train data. Please go back and try again.
                     </div>

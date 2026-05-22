@@ -16,7 +16,7 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
                 <div class="spinner"></div>
                 <span i18n="@@editTrain.loading">Loading train data...</span>
             </div>
-        } @else if (state.hasLoadError()) {
+        } @else if (state.branch.error()) {
             <div class="alert alert-error" i18n="@@editTrain.loadError">
                 ⚠️ Failed to load train data. Please go back and try again.
             </div>
