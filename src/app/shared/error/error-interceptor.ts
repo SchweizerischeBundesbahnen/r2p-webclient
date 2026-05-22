@@ -3,6 +3,11 @@ import { inject } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
 import { ErrorNotificationService } from './error-notification.service';
 
+/**
+ * Catches all HTTP errors and forwards them to {@link ErrorNotificationService} as toasts.
+ * Business-logic / validation errors that belong inline on a page must be handled
+ * separately at the call-site and should NOT go through this interceptor.
+ */
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
     const errorService = inject(ErrorNotificationService);
     return next(req).pipe(
