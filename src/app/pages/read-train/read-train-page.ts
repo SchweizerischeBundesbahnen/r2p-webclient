@@ -43,9 +43,7 @@ import { Spinner } from '../../shared/components/spinner/spinner';
                             style="display:none;"
                             i18n="@@readTrain.editVariant">✏ Edit Variant</a
                         >
-                        <button class="btn btn-outline" (click)="state.toggleIsJsonModalOpen()" i18n="@@readTrain.viewJson">
-                            View JSON
-                        </button>
+                        <button class="btn btn-outline" (click)="state.toggleIsJsonModalOpen()" i18n="@@readTrain.viewJson">View JSON</button>
                     </div>
                 </div>
 
