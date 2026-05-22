@@ -1,4 +1,4 @@
-import { computed, inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BackendApiService } from '../../backend-api.service';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { forkJoin, map, of, switchMap } from 'rxjs';
@@ -8,7 +8,6 @@ import { Train } from '../../shared/models/api.models';
 @Injectable()
 export class TrafficOverviewPageState {
     private apiService = inject(BackendApiService);
-    readonly hasLoadError = computed(() => this.trainListResource.error() != null);
 
     trainListResource = rxResource({
         stream: () => {

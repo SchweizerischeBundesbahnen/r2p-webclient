@@ -19,7 +19,7 @@ import { SortColumn, TrafficOverviewTableService } from './traffic-overview-tabl
                     <a [routerLink]="'../create-train'" class="btn btn-success" i18n="@@trafficOverview.newTrain"> ＋ New Train </a>
                 </div>
 
-                @if (state.hasLoadError()) {
+                @if (state.trainListResource.error()) {
                     <div class="alert alert-error" i18n="@@trafficOverview.loadError">
                         ⚠️ Failed to load train list. Please reload the page.
                     </div>
