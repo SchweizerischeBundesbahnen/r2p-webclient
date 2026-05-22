@@ -28,11 +28,41 @@ Document the required tools, runtimes, and accounts needed to work with the proj
 
 ### Installation
 
-Replace this section with the commands or steps needed to install dependencies and prepare a local environment.
+```bash
+npm install
+```
 
 ### Usage
 
-Describe the most common workflows for users and contributors. Include links to additional documentation if the project is larger than a single README.
+#### Development server
+
+```bash
+npm start
+```
+
+The app is available at `http://localhost:4200`.
+
+#### Run tests
+
+```bash
+npm test
+```
+
+#### Docker
+
+**Build the image:**
+
+```bash
+docker build -t r2p-webclient .
+```
+
+**Run the container:**
+
+```bash
+docker run -p 8080:8080 r2p-webclient
+```
+
+The app is then available at `http://localhost:8080`.
 
 ## Repository Bootstrap
 
