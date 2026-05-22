@@ -16,7 +16,15 @@ export const appConfig: ApplicationConfig = {
     providers: [
         provideBrowserGlobalErrorListeners(),
         provideRouter(routes, withComponentInputBinding()),
-        provideAuth(environment.authConfig, withAppInitializerAuthCheck()),
+        provideAuth(
+            {
+                config: (Array.isArray(environment.authConfig.config)
+                    ? environment.authConfig.config
+                    : [environment.authConfig.config]
+                ).map((c) => ({ ...c, secureRoutes: [environment.serviceBaseUrl] })),
+            },
+            withAppInitializerAuthCheck(),
+        ),
         provideHttpClient(withInterceptors([authInterceptor(), errorInterceptor])),
         { provide: LOCALE_ID, useValue: resolveInitialLocale() },
     ],
