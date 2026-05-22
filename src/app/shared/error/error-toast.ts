@@ -5,20 +5,22 @@ import { ErrorNotificationService } from './error-notification.service';
     selector: 'app-error-toast',
     standalone: true,
     template: `
-        <div class="error-toast-container" aria-live="assertive" aria-atomic="false">
-            @for (error of errorService.errors(); track error.id) {
-                <div class="error-toast" role="alert">
-                    <span class="error-toast-icon">⚠</span>
-                    <span class="error-toast-message">{{ error.message }}</span>
-                    <button
-                        class="error-toast-close"
-                        (click)="errorService.dismiss(error.id)"
-                        aria-label="Dismiss"
-                        i18n-aria-label="@@error.toast.dismissLabel"
-                    >✕</button>
-                </div>
-            }
-        </div>
+        @if (errorService.errors().length) {
+            <div class="error-toast-container" aria-live="assertive" aria-atomic="false">
+                @for (error of errorService.errors(); track error.id) {
+                    <div class="error-toast" role="alert">
+                        <span class="error-toast-icon">⚠</span>
+                        <span class="error-toast-message">{{ error.message }}</span>
+                        <button
+                            class="error-toast-close"
+                            (click)="errorService.dismiss(error.id)"
+                            aria-label="Dismiss"
+                            i18n-aria-label="@@error.toast.dismissLabel"
+                        >✕</button>
+                    </div>
+                }
+            </div>
+        }
     `,
     styles: `
         .error-toast-container {
