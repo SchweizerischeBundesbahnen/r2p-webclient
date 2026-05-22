@@ -2,34 +2,8 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
     selector: 'app-journey-route-card',
-    template: `
-        <div class="card">
-            <div class="card-header">
-                <span class="card-title" i18n="@@journeyRouteCard.title">🗺️ Journey Route</span>
-            </div>
-            <div class="card-body" style="padding-top:0.5rem; padding-bottom:0.5rem;">
-                <div class="journey-table-wrapper">
-                    <table class="journey-table" id="journey-table">
-                        <thead>
-                            <tr>
-                                <th style="width:200px;" i18n="@@journeyRouteCard.col.stop">Stop</th>
-                                <th i18n="@@journeyRouteCard.col.rollingStock">Rolling Stock</th>
-                                <th i18n="@@journeyRouteCard.col.staff">Staff</th>
-                                <th i18n="@@journeyRouteCard.col.path">Path</th>
-                                @if (!readonly()) {
-                                    <th i18n="@@journeyRouteCard.col.actions">Actions</th>
-                                }
-                            </tr>
-                        </thead>
-                        <tbody id="journey-tbody">
-                            <!-- Rendered by JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    `,
-    styles: ``,
+    templateUrl: './journey-route-card.html',
+    styleUrl: './journey-route-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JourneyRouteCard {
