@@ -70,6 +70,16 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "local": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.local.ts"
+                }
+              ],
+              "optimization": false,
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "production"
@@ -82,6 +92,9 @@
             },
             "development": {
               "buildTarget": "r2p-webclient:build:development"
+            },
+            "local": {
+              "buildTarget": "r2p-webclient:build:local"
             }
           },
           "defaultConfiguration": "development"
