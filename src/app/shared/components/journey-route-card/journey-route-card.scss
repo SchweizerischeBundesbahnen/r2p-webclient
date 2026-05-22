@@ -37,9 +37,9 @@
 
 /* No stripe on add-stop rows or span rows (let the band color dominate) */
 .journey-table tbody tr.jt-add-stop-row,
-.journey-table tbody tr.jt-row-rs-start,
-.journey-table tbody tr.jt-row-rs-mid,
-.journey-table tbody tr.jt-row-rs-end {
+.journey-table tbody tr.jt-row-rolling-stock-start,
+.journey-table tbody tr.jt-row-rolling-stock-mid,
+.journey-table tbody tr.jt-row-rolling-stock-end {
     background-color: transparent !important;
 }
 
@@ -132,21 +132,21 @@
 }
 
 /* Activity cell */
-.jt-act-cell {
+.jt-activity-cell {
     min-width: 180px;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
     height: 1px;
 }
 
-.jt-act-list {
+.jt-activity-list {
     display: flex;
     flex-direction: column;
     gap: 6px;
     padding: 10px 0;
 }
 
-.jt-act-item {
+.jt-activity-item {
     background-color: var(--background-color);
     border: 1px solid var(--border-color);
     border-radius: 6px;
@@ -154,11 +154,11 @@
     font-size: 0.75rem;
 }
 
-.jt-act-item.act-rs    { border-left: 3px solid var(--secondary-color); }
-.jt-act-item.act-staff { border-left: 3px solid var(--secondary-color); }
-.jt-act-item.act-plan  { border-left: 3px solid var(--secondary-color); }
+.jt-activity-item.activity-rolling-stock    { border-left: 3px solid var(--secondary-color); }
+.jt-activity-item.activity-staff { border-left: 3px solid var(--secondary-color); }
+.jt-activity-item.activity-plan  { border-left: 3px solid var(--secondary-color); }
 
-.jt-act-header {
+.jt-activity-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -166,19 +166,19 @@
     margin-bottom: 3px;
 }
 
-.jt-act-resp {
+.jt-activity-responsibility {
     font-size: 0.7rem;
     color: var(--text-muted);
     margin-top: 2px;
 }
 
-.jt-act-times {
+.jt-activity-times {
     font-size: 0.7rem;
     color: var(--text-muted);
     margin-top: 2px;
 }
 
-.jt-act-features {
+.jt-activity-features {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
@@ -200,9 +200,9 @@
 }
 
 /* ── Rolling Stock span / local-only badges ──────────────────── */
-.rs-local-badge,
-.rs-span-badge,
-.rs-continues-badge {
+.rolling-stock-local-badge,
+.rolling-stock-span-badge,
+.rolling-stock-continues-badge {
     display: inline-block;
     font-size: 0.6rem;
     border-radius: 4px;
@@ -212,19 +212,19 @@
     vertical-align: middle;
 }
 
-.rs-local-badge {
+.rolling-stock-local-badge {
     background: #fff3cd;
     color: #856404;
     border: 1px solid #ffc107;
 }
 
-.rs-span-badge {
+.rolling-stock-span-badge {
     background: #d1ecf1;
     color: #0c5460;
     border: 1px solid #bee5eb;
 }
 
-.rs-continues-badge {
+.rolling-stock-continues-badge {
     background: #e2e3e5;
     color: #383d41;
     border: 1px solid #d6d8db;
@@ -234,14 +234,14 @@
 /* ── Rolling Stock column: continuous vertical span block ────── */
 
 /* The RS cell must be position:relative so ::before can fill it */
-.jt-rs-cell {
+.jt-rolling-stock-cell {
     position: relative;
     overflow: visible;
     /* padding is kept for content; the pseudo fills behind it */
 }
 
 /* Inner wrapper kept above the pseudo-element background */
-.jt-rs-cell-inner {
+.jt-rolling-stock-cell-inner {
     position: relative;
     z-index: 1;
 }
@@ -253,9 +253,9 @@
  * For mid/end rows the top edge bleeds fully from the row border.
  * This creates a seamless merge across rows.
  */
-.jt-rs-cell[data-rs-span="start"]::before,
-.jt-rs-cell[data-rs-span="mid"]::before,
-.jt-rs-cell[data-rs-span="end"]::before {
+.jt-rolling-stock-cell[data-rolling-stock-span="start"]::before,
+.jt-rolling-stock-cell[data-rolling-stock-span="mid"]::before,
+.jt-rolling-stock-cell[data-rolling-stock-span="end"]::before {
     content: '';
     position: absolute;
     left: 0;
@@ -267,49 +267,49 @@
 }
 
 /* start: band begins at horizontal center of the cell, extends to the bottom */
-.jt-rs-cell[data-rs-span="start"]::before {
+.jt-rolling-stock-cell[data-rolling-stock-span="start"]::before {
     top: 50%;
     bottom: -1px; /* overlap the row border by 1px */
 }
 
 /* mid: band fills the entire cell top to bottom, bleeding past both borders */
-.jt-rs-cell[data-rs-span="mid"]::before {
+.jt-rolling-stock-cell[data-rolling-stock-span="mid"]::before {
     top: -1px;
     bottom: -1px;
 }
 
 /* end: band starts at the top, ends at horizontal center */
-.jt-rs-cell[data-rs-span="end"]::before {
+.jt-rolling-stock-cell[data-rolling-stock-span="end"]::before {
     top: -1px;
     bottom: 50%;
 }
 
 /* Suppress the row bottom border on the RS cell for seamless visual join */
-.jt-row-rs-start .jt-rs-cell,
-.jt-row-rs-mid .jt-rs-cell {
+.jt-row-rolling-stock-start .jt-rolling-stock-cell,
+.jt-row-rolling-stock-mid .jt-rolling-stock-cell {
     border-bottom: none !important;
 }
 /* Also suppress on the <tr> itself so cell doesn't get a gap */
-tr.jt-row-rs-start,
-tr.jt-row-rs-mid {
+tr.jt-row-rolling-stock-start,
+tr.jt-row-rolling-stock-mid {
     border-bottom: none !important;
 }
 
 /* "Add activity" button wrapper – sits on top of the band, aligned left */
-.jt-rs-add-btn-wrap {
+.jt-rolling-stock-add-btn-wrap {
     position: relative;
     z-index: 2;
     padding-top: 4px;
 }
 
 /* Own RS activity list inside the band */
-.jt-rs-own-acts {
+.jt-rolling-stock-own-activities {
     position: relative;
     z-index: 2;
 }
 
 /* Small label at the end of a span */
-.rs-span-end-label {
+.rolling-stock-span-end-label {
     position: relative;
     z-index: 2;
     font-size: 0.65rem;
@@ -322,12 +322,12 @@ tr.jt-row-rs-mid {
 }
 
 /* Pass-through band on jt-add-stop-row rows between spanning stops */
-.jt-rs-cell-passthrough {
+.jt-rolling-stock-cell-passthrough {
     position: relative;
-    min-width: 180px; /* same as jt-act-cell */
+    min-width: 180px; /* same as jt-activity-cell */
 }
 
-.jt-rs-cell-passthrough[data-rs-passthrough="through"]::before {
+.jt-rolling-stock-cell-passthrough[data-rolling-stock-passthrough="through"]::before {
     content: '';
     position: absolute;
     left: 0;
@@ -340,7 +340,7 @@ tr.jt-row-rs-mid {
     z-index: 0;
 }
 
-.jt-act-actions {
+.jt-activity-actions {
     display: flex;
     gap: 4px;
     align-items: center;
