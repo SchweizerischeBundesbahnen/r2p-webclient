@@ -55,7 +55,7 @@ import { SortColumn, TrafficOverviewTableService } from './traffic-overview-tabl
                             (change)="tableService.operationalDayTo.set($any($event.target).value)"
                         />
                     </div>
-                    <div class="filter-group" style="flex: 0; min-width: 100px;">
+                    <div class="filter-group" style="flex: 0; min-width: max-content;">
                         <label for="clear">&nbsp;</label>
                         <button
                             id="clear"
