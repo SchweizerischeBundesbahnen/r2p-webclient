@@ -17,7 +17,7 @@ const TRAIN_ROW: TrainRow = {
     start: 'Zürich HB',
     end: 'Basel SBB',
     partners: ['SBB'],
-    revInfo: { lastChange: '2026-05-26T10:30:00Z', version: 'v-001' },
+    revInfo: { lastChange: '2026-05-26T10:30:00', version: 'v-001' },
 };
 
 // TableRow uses selector tr[appTrainRow], so it must be placed inside a table.
@@ -43,6 +43,7 @@ describe('TableRow – date formatting', () => {
 
     it('formats operationalDay with mediumDate for en-US', () => {
         const el = createHost('en-US');
+        // 'UTC' is passed to DatePipe in production code, so the date is stable regardless of local timezone
         expect(el.querySelectorAll('td')[3].textContent?.trim()).toBe('May 26, 2026');
     });
 

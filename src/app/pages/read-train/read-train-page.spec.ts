@@ -19,7 +19,7 @@ const BRANCH: Branch = {
     technical: {
         version: 'v-001',
         branchState: 'open',
-        timestamp: '2026-05-26T10:30:00Z',
+        timestamp: '2026-05-26T10:30:00',
         comment: 'initial version',
         mainBranch: true,
         owner: 'SBB',
@@ -47,12 +47,8 @@ function createComponent(locale: string, branch?: Branch) {
         providers: [
             provideRouter([]),
             { provide: LOCALE_ID, useValue: locale },
+            { provide: ReadTrainPageState, useValue: fakeState },
         ],
-    });
-    // ReadTrainPageState is declared in the component's own providers array,
-    // so it must be overridden at the component level, not at the module level.
-    TestBed.overrideComponent(ReadTrainPage, {
-        set: { providers: [{ provide: ReadTrainPageState, useValue: fakeState }] },
     });
     const fixture = TestBed.createComponent(ReadTrainPage);
     fixture.componentRef.setInput('trainId', 'train-1');

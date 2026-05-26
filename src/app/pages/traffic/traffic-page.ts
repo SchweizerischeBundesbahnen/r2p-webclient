@@ -34,7 +34,7 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
                                 </h1>
                                 <p class="page-subtitle" id="train-name">
                                     @let opDay = trainHeaderInfo.operationalDay;
-                                    {{ opDay ? (opDay | date: 'mediumDate') : '–' }}
+                                    {{ opDay ? (opDay | date: 'mediumDate' : 'UTC') : '–' }}
                                 </p>
                             </div>
                             <div class="btn-group">
@@ -86,7 +86,7 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
                                 <div class="detail-label" i18n="@@traffic.field.opDay">Operational Day</div>
                                 <div class="detail-value" id="detail-op-day">
                                     @let opDayDetail = trainHeaderInfo.operationalDay;
-                                    {{ opDayDetail ? (opDayDetail | date: 'mediumDate') : '–' }}
+                                    {{ opDayDetail ? (opDayDetail | date: 'mediumDate' : 'UTC') : '–' }}
                                 </div>
                             </div>
                             <div class="detail-item">
@@ -189,7 +189,6 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
     `,
     styles: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [TrafficPageState],
 })
 export class TrafficPage {
     readonly trainId = input.required<string>();

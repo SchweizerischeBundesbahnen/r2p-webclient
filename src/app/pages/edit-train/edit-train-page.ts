@@ -173,7 +173,6 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
     `,
     styles: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [EditTrainPageState],
 })
 export class EditTrainPage {
     readonly trainId = input.required<string>();
