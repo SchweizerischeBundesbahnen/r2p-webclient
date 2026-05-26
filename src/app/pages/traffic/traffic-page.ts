@@ -33,7 +33,8 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
                                     {{ trainHeaderInfo.trainNumber }}
                                 </h1>
                                 <p class="page-subtitle" id="train-name">
-                                    {{ trainHeaderInfo.operationalDay }}
+                                    @let opDay = trainHeaderInfo.operationalDay;
+                                    {{ opDay ? (opDay | date: 'mediumDate') : '–' }}
                                 </p>
                             </div>
                             <div class="btn-group">
@@ -66,7 +67,7 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
                             <div class="detail-item">
                                 <div class="detail-label" i18n="@@traffic.field.departure">Departure</div>
                                 <div class="detail-value" id="detail-dep-time">
-                                    {{ trainHeaderInfo.departureTime | date: 'HH:mm' }}
+                                    {{ trainHeaderInfo.departureTime | date: 'shortTime' }}
                                 </div>
                             </div>
                             <div class="detail-item">
@@ -78,13 +79,14 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
                             <div class="detail-item">
                                 <div class="detail-label" i18n="@@traffic.field.arrival">Arrival</div>
                                 <div class="detail-value" id="detail-arr-time">
-                                    {{ trainHeaderInfo.arrivalTime | date: 'HH:mm' }}
+                                    {{ trainHeaderInfo.arrivalTime | date: 'shortTime' }}
                                 </div>
                             </div>
                             <div class="detail-item">
                                 <div class="detail-label" i18n="@@traffic.field.opDay">Operational Day</div>
                                 <div class="detail-value" id="detail-op-day">
-                                    {{ trainHeaderInfo.operationalDay }}
+                                    @let opDayDetail = trainHeaderInfo.operationalDay;
+                                    {{ opDayDetail ? (opDayDetail | date: 'mediumDate') : '–' }}
                                 </div>
                             </div>
                             <div class="detail-item">
@@ -141,7 +143,7 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
                                                 >
                                             }
                                             <span style="margin-left:4px;">{{
-                                                    branch.lastChange | date: 'dd.MM.yyyy, HH:mm'
+                                                    branch.lastChange | date: 'short'
                                                 }}</span>
                                             @if (branch.comment) {
                                                 — <em>{{ branch.comment }}</em>
@@ -210,7 +212,7 @@ export class TrafficPage {
 
         return {
             trainNumber: mainBranch?.business.trainNumber ?? '–',
-            operationalDay: mainBranch?.business.operationalDay ?? '–',
+            operationalDay: mainBranch?.business.operationalDay ?? null,
             partners: listElement?.partners ?? [],
             lastChange: mainBranch?.technical.timestamp ?? '–',
             branches: listElement?.branches ?? [],
@@ -235,7 +237,7 @@ export class TrafficPage {
 
 export interface TrainHeaderViewModel {
     trainNumber: string;
-    operationalDay: string;
+    operationalDay: string | null;
     partners: string[];
     lastChange: string;
     branches: Branch[];
