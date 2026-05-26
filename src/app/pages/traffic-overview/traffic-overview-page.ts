@@ -69,6 +69,7 @@ import { SortColumn, TrafficOverviewTableService } from './traffic-overview-tabl
                 </div>
 
                 <!-- Train Table -->
+                @if ((tableService.applyFilterOn(trainListResource.value()) ?? []).length > 0) {
                 <div class="table-container">
                     <table id="trains-table">
                         <thead>
@@ -145,13 +146,15 @@ import { SortColumn, TrafficOverviewTableService } from './traffic-overview-tabl
                         </tbody>
                     </table>
                 </div>
-                <div id="empty-state" class="empty-state" style="display:none;">
+                } @else {
+                <div id="empty-state" class="empty-state">
                     <div class="empty-state-icon">🚆</div>
                     <p class="empty-state-text" i18n="@@trafficOverview.empty.noTrains">No trains found</p>
                     <p class="text-muted" style="font-size:0.875rem;" i18n="@@trafficOverview.empty.hint">
                         Try adjusting your filters or create a new train.
                     </p>
                 </div>
+                }
             </div>
         </div>
     `,
