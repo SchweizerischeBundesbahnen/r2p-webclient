@@ -74,7 +74,8 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
                             <div class="detail-item">
                                 <div class="detail-label" i18n="@@readTrain.field.opDay">Operational Day</div>
                                 <div class="detail-value" id="detail-op-day">
-                                    {{ branch?.business?.operationalDay ?? '–' }}
+                                    @let opDay = branch?.business?.operationalDay;
+                                    {{ opDay ? (opDay | date: 'mediumDate') : '–' }}
                                 </div>
                             </div>
                             <div class="detail-item">
@@ -108,7 +109,7 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
                             <div class="detail-item">
                                 <div class="detail-label" i18n="@@readTrain.field.versionTimestamp">Version Timestamp</div>
                                 <div class="detail-value" id="detail-timestamp">
-                                    {{ branch?.technical?.timestamp | date: 'yyyy-MM-dd HH:mm' }}
+                                    {{ branch?.technical?.timestamp | date: 'short' }}
                                 </div>
                             </div>
                         </div>

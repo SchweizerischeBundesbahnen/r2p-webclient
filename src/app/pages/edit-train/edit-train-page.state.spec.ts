@@ -1,0 +1,112 @@
+import { TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { EditTrainPageState } from './edit-train-page.state';
+import { Branch } from '../../shared/models/api.models';
+
+const VALID_BRANCH: Branch = {
+    branchId: 'branch-1',
+    branchName: 'SBB-main',
+    business: {
+        trainNumber: 'IC 1234',
+        operationalDay: '2026-05-26',
+    },
+    technical: {
+        version: 'version-1',
+        branchState: 'open',
+        timestamp: '2026-05-26T10:00:00Z',
+        comment: 'initial',
+        mainBranch: true,
+    },
+};
+
+describe('EditTrainPageState', () => {
+    let state: EditTrainPageState;
+    let httpController: HttpTestingController;
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [
+                provideHttpClient(),
+                provideHttpClientTesting(),
+                EditTrainPageState,
+            ],
+        });
+        state = TestBed.runInInjectionContext(() => TestBed.inject(EditTrainPageState));
+        httpController = TestBed.inject(HttpTestingController);
+    });
+
+    afterEach(() => httpController.verify());
+
+    it('populates the form when the API returns a valid operationalDay', async () => {
+        state.trainId.set('train-1');
+        state.branchId.set('branch-1');
+        // tick() flushes pending effects so that rxResource reacts to the signal changes
+        // and issues the HTTP request, which can then be intercepted below.
+        TestBed.tick();
+
+        httpController
+            .expectOne((r) => r.url.includes('/branches/branch-1'))
+            .flush(VALID_BRANCH);
+        httpController
+            .expectOne((r) => r.url.includes('/versions/version-1'))
+            .flush({});
+
+        await TestBed.inject(() => state.branch.isLoading(), { optional: true });
+
+        expect(state.editTrainForm.operationalDay().value()).toBe('2026-05-26');
+        expect(state.editTrainForm.name().value()).toBe('IC 1234');
+    });
+
+    it('sets the resource into error state when the API returns an invalid operationalDay', async () => {
+        const invalidBranch: Branch = {
+            ...VALID_BRANCH,
+            business: { ...VALID_BRANCH.business, operationalDay: '2026-02-30' },
+        };
+
+        state.trainId.set('train-1');
+        state.branchId.set('branch-1');
+        // First tick: rxResource reacts to the signal changes and issues the HTTP request.
+        TestBed.tick();
+
+        httpController
+            .expectOne((r) => r.url.includes('/branches/branch-1'))
+            .flush(invalidBranch);
+
+        // Allow microtasks to settle (rxResource processes the error asynchronously),
+        // then tick again so Angular propagates it into branch.error().
+        await Promise.resolve();
+        TestBed.tick();
+
+        expect(state.branch.error()).toBeInstanceOf(Error);
+        expect((state.branch.error() as Error).message).toBe('Invalid ISO date "2026-02-30"');
+    });
+
+    it('sets the resource into error state when operationalDay is a date-time string', async () => {
+        const invalidBranch: Branch = {
+            ...VALID_BRANCH,
+            business: { ...VALID_BRANCH.business, operationalDay: '2026-05-26T10:00:00Z' },
+        };
+
+        state.trainId.set('train-1');
+        state.branchId.set('branch-1');
+        // First tick: rxResource reacts to the signal changes and issues the HTTP request.
+        TestBed.tick();
+
+        httpController
+            .expectOne((r) => r.url.includes('/branches/branch-1'))
+            .flush(invalidBranch);
+
+        // Allow microtasks to settle, then tick so Angular propagates the error.
+        await Promise.resolve();
+        TestBed.tick();
+
+        expect(state.branch.error()).toBeInstanceOf(Error);
+        expect((state.branch.error() as Error).message).toBe(
+            'Invalid ISO date "2026-05-26T10:00:00Z"',
+        );
+    });
+});
+
+
+

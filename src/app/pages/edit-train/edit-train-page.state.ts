@@ -4,6 +4,7 @@ import { rxResource } from '@angular/core/rxjs-interop';
 import { map, Observable, switchMap, tap } from 'rxjs';
 import { BackendApiService } from '../../backend-api.service';
 import { Branch, Train } from '../../shared/models/api.models';
+import { assertIsoDate } from '../../shared/utils/date.utils';
 
 /**
  * Not provided in root, cause state should be destroyed after switching page.
@@ -15,11 +16,11 @@ export class EditTrainPageState {
 
     model = signal<{
         name: string;
-        operationalDay: Date;
+        operationalDay: string;
         creationComment: string;
     }>({
         name: '',
-        operationalDay: null as unknown as Date,
+        operationalDay: '',
         creationComment: '',
     });
 
@@ -46,7 +47,8 @@ export class EditTrainPageState {
                         technical: { comment },
                     } = branch;
                     this.editTrainForm.name().value.set(trainNumber);
-                    this.editTrainForm.operationalDay().value.set(new Date(operationalDay));
+                    assertIsoDate(operationalDay);
+                    this.editTrainForm.operationalDay().value.set(operationalDay);
                     this.editTrainForm.creationComment().value.set(comment);
                 }),
                 switchMap((branch) =>
