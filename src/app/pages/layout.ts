@@ -4,13 +4,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { SettingsModal } from '../settings/settings-modal';
 import { LocaleService } from '../locale/locale.service';
 import { ErrorToastComponent } from '../shared/error/error-toast';
+import { PrototypeBannerComponent } from '../shared/components/prototype-banner/prototype-banner';
 
 @Component({
     selector: 'app-layout',
     standalone: true,
-    imports: [RouterOutlet, RouterLink, ErrorToastComponent],
+    imports: [RouterOutlet, RouterLink, ErrorToastComponent, PrototypeBannerComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
+        <app-prototype-banner />
         <nav class="top-nav">
             <a class="top-nav-brand" routerLink="/traffic-overview">
                 <span class="logo">🚂</span>
