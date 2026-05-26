@@ -18,7 +18,7 @@ import { DatePipe } from '@angular/common';
                 ><ng-container i18n="@@tableRow.arr">Arr:</ng-container> {{ train().endTime | date: 'shortTime' }}</span
             >
         </td>
-        <td>{{ train().operationalDay | date: 'mediumDate' }}</td>
+        <td>{{ train().operationalDay | date: 'mediumDate' : 'UTC' }}</td>
         <td>
             @for (partner of train().partners ?? []; track partner) {
                 <span class="partner-badge partner-badge-{{ partner }}">{{ partner }}</span>

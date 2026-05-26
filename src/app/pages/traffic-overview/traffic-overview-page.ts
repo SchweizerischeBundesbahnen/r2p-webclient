@@ -69,7 +69,8 @@ import { SortColumn, TrafficOverviewTableService } from './traffic-overview-tabl
                 </div>
 
                 <!-- Train Table -->
-                @if ((tableService.applyFilterOn(trainListResource.value()) ?? []).length > 0) {
+                @let filteredTrains = tableService.applyFilterOn(trainListResource.value());
+                @if (filteredTrains.length > 0) {
                 <div class="table-container">
                     <table id="trains-table">
                         <thead>
@@ -133,7 +134,7 @@ import { SortColumn, TrafficOverviewTableService } from './traffic-overview-tabl
                         </thead>
                         <tbody id="trains-tbody">
                             @for (
-                                train of tableService.applyFilterOn(trainListResource.hasValue() ? trainListResource.value() : []);
+                                train of filteredTrains;
                                 track train.id
                             ) {
                                 <tr

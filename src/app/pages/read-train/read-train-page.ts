@@ -75,7 +75,7 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
                                 <div class="detail-label" i18n="@@readTrain.field.opDay">Operational Day</div>
                                 <div class="detail-value" id="detail-op-day">
                                     @let opDay = branch?.business?.operationalDay;
-                                    {{ opDay ? (opDay | date: 'mediumDate') : '–' }}
+                                    {{ opDay ? (opDay | date: 'mediumDate' : 'UTC') : '–' }}
                                 </div>
                             </div>
                             <div class="detail-item">
@@ -149,7 +149,6 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
     `,
     styles: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [ReadTrainPageState],
 })
 export class ReadTrainPage {
     protected state = inject(ReadTrainPageState);

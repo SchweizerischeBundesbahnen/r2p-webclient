@@ -11,7 +11,7 @@ registerLocaleData(localeDeCh, 'de-CH');
 
 const TRAIN_LIST_ELEMENT: TrainListElement = {
     trainId: 'train-1',
-    mainTimestamp: '2026-05-26T10:30:00Z',
+    mainTimestamp: '2026-05-26T10:30:00',
     partners: ['SBB', 'BLS'],
     branches: [
         {
@@ -21,7 +21,7 @@ const TRAIN_LIST_ELEMENT: TrainListElement = {
             technical: {
                 version: 'v-001',
                 branchState: 'open',
-                timestamp: '2026-05-26T10:30:00Z',
+                timestamp: '2026-05-26T10:30:00',
                 comment: 'initial',
                 mainBranch: true,
                 owner: 'SBB',
@@ -34,7 +34,7 @@ const TRAIN_LIST_ELEMENT: TrainListElement = {
             technical: {
                 version: 'v-002',
                 branchState: 'merge_requested',
-                timestamp: '2026-05-26T14:00:00Z',
+                timestamp: '2026-05-26T14:00:00',
                 comment: 'proposed change',
                 mainBranch: false,
                 owner: 'BLS',
@@ -67,10 +67,8 @@ function createComponent(locale: string, value?: TrainWithDetails) {
         providers: [
             provideRouter([]),
             { provide: LOCALE_ID, useValue: locale },
+            { provide: TrafficPageState, useValue: fakeState },
         ],
-    });
-    TestBed.overrideComponent(TrafficPage, {
-        set: { providers: [{ provide: TrafficPageState, useValue: fakeState }] },
     });
     const fixture = TestBed.createComponent(TrafficPage);
     fixture.componentRef.setInput('trainId', 'train-1');
@@ -128,4 +126,8 @@ describe('TrafficPage – date formatting', () => {
         });
     });
 });
+
+
+
+
 
