@@ -33,8 +33,8 @@ Replace this section with the commands or steps needed to install dependencies a
 ### Usage
 
 Client for an [R2P Server](https://github.com/SchweizerischeBundesbahnen/r2p). The start:local script is intended
-to be used if you are running the R2P Server with the profile local and allows testing the server and client
-without dependency to an external OAuth Provider.
+to be used when you are running the R2P Server with the profile local and allows testing the server and client
+without dependency on an external OAuth provider.
 
 Describe the most common workflows for users and contributors. Include links to additional documentation if the project is larger than a single README.
 
