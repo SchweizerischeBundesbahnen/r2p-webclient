@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { SettingsModal } from '../settings/settings-modal';
 import { LocaleService } from '../locale/locale.service';
 import { ErrorToastComponent } from '../shared/error/error-toast';
 import { PrototypeBannerComponent } from '../shared/components/prototype-banner/prototype-banner';
+import { ORGANIZATION_OPTIONS, SettingsService } from '../settings/settings.service';
 
 @Component({
     selector: 'app-layout',
@@ -22,7 +23,13 @@ import { PrototypeBannerComponent } from '../shared/components/prototype-banner/
             <div class="top-nav-right">
                 <div class="top-nav-partner">
                     <span class="top-nav-partner-label" i18n="@@layout.organization">Organization:</span>
-                    <span class="partner-badge partner-badge-SBB" id="nav-partner">SBB</span>
+                    @if (currentOrg()) {
+                        <span [class]="'partner-badge partner-badge-' + currentOrg()!.name" id="nav-partner">
+                            {{ currentOrg()!.name }}
+                        </span>
+                    } @else {
+                        <span class="partner-badge" id="nav-partner">–</span>
+                    }
                 </div>
                 <div class="lang-switcher">
                     <button class="lang-btn" [class.active]="localeService.currentLocale() === 'en-US'" (click)="setLocale('en-US')">EN</button>
@@ -39,7 +46,13 @@ import { PrototypeBannerComponent } from '../shared/components/prototype-banner/
 })
 export class Layout {
     private readonly dialog = inject(MatDialog);
+    private readonly settingsService = inject(SettingsService);
     protected readonly localeService = inject(LocaleService);
+
+    protected readonly currentOrg = computed(() => {
+        const name = this.settingsService.settings().organization;
+        return ORGANIZATION_OPTIONS.find((o) => o.name === name) ?? null;
+    });
 
     openSettingsModal(): void {
         this.dialog.open(SettingsModal);

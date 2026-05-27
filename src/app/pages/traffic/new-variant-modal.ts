@@ -109,6 +109,7 @@ export class NewVariantModal {
                 )
                 .subscribe({
                     next: (result) => {
+                        this.state.toggleIsNewVariantModalOpen();
                         this.router.navigate(['/edit-train'], {
                             queryParams: { trainId, branchId: result.branchId },
                         });

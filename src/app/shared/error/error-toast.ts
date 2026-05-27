@@ -8,8 +8,8 @@ import { ErrorNotificationService } from './error-notification.service';
         @if (errorService.errors().length) {
             <div class="error-toast-container" aria-live="assertive" aria-atomic="false">
                 @for (error of errorService.errors(); track error.id) {
-                    <div class="error-toast" role="alert">
-                        <span class="error-toast-icon">⚠</span>
+                    <div class="error-toast" [class.error-toast--success]="error.type === 'success'" role="alert">
+                        <span class="error-toast-icon">{{ error.type === 'success' ? '✓' : '⚠' }}</span>
                         <span class="error-toast-message">{{ error.message }}</span>
                         <button
                             class="error-toast-close"
@@ -45,6 +45,10 @@ import { ErrorNotificationService } from './error-notification.service';
             color: #fff;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
             animation: slideIn 0.2s ease-out;
+        }
+
+        .error-toast--success {
+            background: #15803d;
         }
 
         @keyframes slideIn {

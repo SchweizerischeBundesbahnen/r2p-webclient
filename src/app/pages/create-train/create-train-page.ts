@@ -5,6 +5,7 @@ import { BackendApiService } from '../../backend-api.service';
 import { CreatePageState } from './create-train-page.state';
 import { finalize } from 'rxjs';
 import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
+import { ErrorNotificationService } from '../../shared/error/error-notification.service';
 
 @Component({
     selector: 'app-create-train-page',
@@ -144,6 +145,7 @@ export class CreateTrainPage {
     private apiService = inject(BackendApiService);
     private router = inject(Router);
     private state = inject(CreatePageState);
+    private notifications = inject(ErrorNotificationService);
     protected createTrainForm = inject(CreatePageState).createTrainForm;
 
     protected createTrain() {
@@ -159,6 +161,7 @@ export class CreateTrainPage {
             )
             .subscribe({
                 next: () => {
+                    this.notifications.showSuccess($localize`:@@createTrain.saveSuccess:Train saved successfully.`);
                     this.router.navigate(['/traffic-overview']);
                 },
                 error: () => {

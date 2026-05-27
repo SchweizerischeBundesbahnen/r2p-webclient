@@ -6,6 +6,7 @@ import { Branch } from '../../shared/models/api.models';
 import { BackendApiService } from '../../backend-api.service';
 import { finalize } from 'rxjs';
 import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
+import { ErrorNotificationService } from '../../shared/error/error-notification.service';
 
 @Component({
     selector: 'app-edit-train-page',
@@ -179,6 +180,7 @@ export class EditTrainPage {
     readonly branchId = input.required<string>();
     private apiService = inject(BackendApiService);
     private router = inject(Router);
+    private notifications = inject(ErrorNotificationService);
     protected state = inject(EditTrainPageState);
     protected editTrainForm = this.state.editTrainForm;
 
@@ -207,6 +209,7 @@ export class EditTrainPage {
             )
             .subscribe({
                 next: () => {
+                    this.notifications.showSuccess($localize`:@@editTrain.saveSuccess:Train saved successfully.`);
                     this.router.navigate(['/traffic-view/' + this.trainId()]);
                 },
                 error: () => {

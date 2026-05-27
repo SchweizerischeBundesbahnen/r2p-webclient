@@ -3,6 +3,7 @@ import { Injectable, signal } from '@angular/core';
 export interface ErrorMessage {
     id: string;
     message: string;
+    type: 'error' | 'success';
 }
 
 /**
@@ -19,14 +20,22 @@ export interface ErrorMessage {
 export class ErrorNotificationService {
     readonly errors = signal<ErrorMessage[]>([]);
 
-    show(message: string): void {
-        const id = crypto.randomUUID();
-        this.errors.update((list) => [...list, { id, message }]);
-        setTimeout(() => this.dismiss(id), 8000);
+    showError(message: string): void {
+        this.addToast(message, 'error', 8000);
+    }
+
+    showSuccess(message: string): void {
+        this.addToast(message, 'success', 4000);
     }
 
     dismiss(id: string): void {
         this.errors.update((list) => list.filter((e) => e.id !== id));
+    }
+
+    private addToast(message: string, type: 'error' | 'success', duration: number): void {
+        const id = crypto.randomUUID();
+        this.errors.update((list) => [...list, { id, message, type }]);
+        setTimeout(() => this.dismiss(id), duration);
     }
 }
 

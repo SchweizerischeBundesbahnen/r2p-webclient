@@ -69,6 +69,16 @@ import { SortColumn, TrafficOverviewTableService } from './traffic-overview-tabl
                 </div>
 
                 <!-- Train Table -->
+                @if (trainListResource.isLoading()) {
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⏳</div>
+                        <p class="empty-state-text" i18n="@@trafficOverview.loading">Loading trains…</p>
+                    </div>
+                } @else if (trainListResource.error()) {
+                    <div class="alert alert-error" i18n="@@trafficOverview.loadError">
+                        ⚠️ Failed to load trains. Please check your server URL in the settings.
+                    </div>
+                } @else {
                 @let filteredTrains = tableService.applyFilterOn(trainListResource.value());
                 @if (filteredTrains.length > 0) {
                 <div class="table-container">
@@ -156,6 +166,7 @@ import { SortColumn, TrafficOverviewTableService } from './traffic-overview-tabl
                     </p>
                 </div>
                 }
+                } <!-- end @else if error -->
             </div>
         </div>
     `,
