@@ -1,7 +1,9 @@
 import { Environment } from './environment.model';
 
+const serviceBaseUrl = 'http://localhost:8080';
+
 export const environment: Environment = {
-    serviceBaseUrl: 'http://localhost:8080',
+    serviceBaseUrl,
     authConfig: {
         config: [
             {
@@ -18,7 +20,7 @@ export const environment: Environment = {
                 useRefreshToken: false,
                 autoUserInfo: false,
                 maxIdTokenIatOffsetAllowedInSeconds: 600,
-                secureRoutes: ['http://localhost:8080'],
+                secureRoutes: [serviceBaseUrl],
             },
         ],
     },
