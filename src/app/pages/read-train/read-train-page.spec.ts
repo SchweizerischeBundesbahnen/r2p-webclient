@@ -32,7 +32,7 @@ function createFakeState(branch?: Branch) {
         trainId: signal<string | undefined>(undefined),
         branchId: signal<string | undefined>(undefined),
         isJsonModalOpen: false,
-        toggleIsJsonModalOpen: () => {},
+        toggleIsJsonModalOpen: () => { /* noop for testing */ },
         trainAndBranch: {
             value: signal(value),
             error: signal(undefined),
@@ -73,11 +73,11 @@ describe('ReadTrainPage – date formatting', () => {
             expect(text).toBe('26.05.2026');
         });
 
-        it('shows "–" as fallback when branch is not loaded', () => {
+        it('shows "-" as fallback when branch is not loaded', () => {
             const fixture = createComponent('en-US');
-            // operationalDay is undefined → DatePipe returns null → fallback '–' is shown
+            // operationalDay is undefined → DatePipe returns null → fallback '-' is shown
             const text = fixture.nativeElement.querySelector('#detail-op-day').textContent.trim();
-            expect(text).toBe('–');
+            expect(text).toBe('-');
         });
     });
 
@@ -98,12 +98,12 @@ describe('ReadTrainPage – date formatting', () => {
             expect(text).toMatch(/26\.05\.26/);
         });
 
-        it('shows empty when branch is not loaded', () => {
+        it('shows "-" when branch is not loaded', () => {
             const fixture = createComponent('en-US');
             const text = fixture.nativeElement
                 .querySelector('#detail-timestamp')
                 .textContent.trim();
-            expect(text).toBe('');
+            expect(text).toBe('-');
         });
     });
 });

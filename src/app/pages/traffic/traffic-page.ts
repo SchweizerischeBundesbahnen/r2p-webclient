@@ -5,6 +5,7 @@ import { Branch, BranchState } from '../../shared/models/api.models';
 import { DatePipe } from '@angular/common';
 import { NewVariantModal } from './new-variant-modal';
 import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
+import { isoDateToUtc } from '../../shared/utils/date.utils';
 
 @Component({
     selector: 'app-traffic-page',
@@ -34,7 +35,7 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
                                 </h1>
                                 <p class="page-subtitle" id="train-name">
                                     @let opDay = trainHeaderInfo.operationalDay;
-                                    {{ opDay ? (opDay | date: 'mediumDate' : 'UTC') : '–' }}
+                                    {{ opDay ? (isoDateToUtc(opDay) | date: 'mediumDate' : 'UTC') : '-' }}
                                 </p>
                             </div>
                             <div class="btn-group">
@@ -86,7 +87,7 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
                                 <div class="detail-label" i18n="@@traffic.field.opDay">Operational Day</div>
                                 <div class="detail-value" id="detail-op-day">
                                     @let opDayDetail = trainHeaderInfo.operationalDay;
-                                    {{ opDayDetail ? (opDayDetail | date: 'mediumDate' : 'UTC') : '–' }}
+                                    {{ opDayDetail ? (isoDateToUtc(opDayDetail) | date: 'mediumDate' : 'UTC') : '-' }}
                                 </div>
                             </div>
                             <div class="detail-item">
@@ -193,6 +194,7 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
 export class TrafficPage {
     readonly trainId = input.required<string>();
     protected readonly trafficPageStateService = inject(TrafficPageState);
+    protected readonly isoDateToUtc = isoDateToUtc;
 
     private readonly trainIdEffect = effect(() => {
         this.trafficPageStateService.trainId.set(this.trainId());
@@ -204,21 +206,21 @@ export class TrafficPage {
         trainWithDetails: TrainWithDetails | undefined,
     ): TrainHeaderViewModel {
         const listElement = trainWithDetails?.listElement;
-        const mainBranch = listElement?.branches?.find((b) => b.technical.mainBranch);
+        const mainBranch = listElement?.branches.find((b) => b.technical.mainBranch);
         const journeyLocations = trainWithDetails?.details?.journey?.journeylocations ?? [];
         const firstLocation = journeyLocations[0]?.locations?.[0];
         const lastLocation = journeyLocations.at(-1)?.locations?.[0];
 
         return {
-            trainNumber: mainBranch?.business.trainNumber ?? '–',
+            trainNumber: mainBranch?.business.trainNumber ?? '-',
             operationalDay: mainBranch?.business.operationalDay ?? null,
             partners: listElement?.partners ?? [],
-            lastChange: mainBranch?.technical.timestamp ?? '–',
+            lastChange: mainBranch?.technical.timestamp ?? null,
             branches: listElement?.branches ?? [],
-            from: firstLocation?.name ?? '–',
-            to: lastLocation?.name ?? '–',
-            departureTime: '2026-01-01T10:00:00', // TODO:
-            arrivalTime: '2026-01-01T11:00:00', // TODO:
+            from: firstLocation?.name ?? '-',
+            to: lastLocation?.name ?? '-',
+            departureTime: '2026-01-01T10:00:00', // TODO: still needs to be implemented - with the JourneyRoutes Story
+            arrivalTime: '2026-01-01T11:00:00', // TODO: still needs to be implemented - with the JourneyRoutes Story
         };
     }
 
@@ -238,7 +240,7 @@ export interface TrainHeaderViewModel {
     trainNumber: string;
     operationalDay: string | null;
     partners: string[];
-    lastChange: string;
+    lastChange: string | null;
     branches: Branch[];
     from: string;
     to: string;

@@ -4,6 +4,7 @@ import { ReadTrainPageState } from './read-train-page.state';
 import { ViewJsonModal } from './view-json-modal';
 import { DatePipe } from '@angular/common';
 import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
+import { isoDateToUtc } from '../../shared/utils/date.utils';
 
 @Component({
     selector: 'app-read-train-page',
@@ -62,20 +63,20 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
                             <div class="detail-item">
                                 <div class="detail-label" i18n="@@readTrain.field.trainNumber">Train Number</div>
                                 <div class="detail-value" id="detail-train-number">
-                                    {{ branch?.business?.trainNumber ?? '–' }}
+                                    {{ branch?.business?.trainNumber ?? '-' }}
                                 </div>
                             </div>
                             <div class="detail-item">
                                 <div class="detail-label" i18n="@@readTrain.field.name">Name</div>
                                 <div class="detail-value" id="detail-name">
-                                    {{ branch?.branchName ?? '–' }}
+                                    {{ branch?.branchName ?? '-' }}
                                 </div>
                             </div>
                             <div class="detail-item">
                                 <div class="detail-label" i18n="@@readTrain.field.opDay">Operational Day</div>
                                 <div class="detail-value" id="detail-op-day">
                                     @let opDay = branch?.business?.operationalDay;
-                                    {{ opDay ? (opDay | date: 'mediumDate' : 'UTC') : '–' }}
+                                    {{ opDay ? (isoDateToUtc(opDay) | date: 'mediumDate' : 'UTC') : '-' }}
                                 </div>
                             </div>
                             <div class="detail-item">
@@ -96,20 +97,21 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
                                         class="badge badge-{{
                                             branch?.technical?.branchState ?? ''
                                         }}"
-                                        >{{ branch?.technical?.branchState ?? '–' }}</span
+                                        >{{ branch?.technical?.branchState ?? '-' }}</span
                                     >
                                 </div>
                             </div>
                             <div class="detail-item">
                                 <div class="detail-label" i18n="@@readTrain.field.version">Version</div>
                                 <div class="detail-value" id="detail-version">
-                                    {{ branch?.technical?.version ?? '–' }}
+                                    {{ branch?.technical?.version ?? '-' }}
                                 </div>
                             </div>
                             <div class="detail-item">
                                 <div class="detail-label" i18n="@@readTrain.field.versionTimestamp">Version Timestamp</div>
                                 <div class="detail-value" id="detail-timestamp">
-                                    {{ branch?.technical?.timestamp | date: 'short' }}
+                                    @let ts = branch?.technical?.timestamp;
+                                    {{ ts ? (ts | date: 'short') : '-' }}
                                 </div>
                             </div>
                         </div>
@@ -123,7 +125,7 @@ import { JourneyRouteCard } from '../../shared/components/journey-route-card/jou
                                 style="font-size:0.875rem; color:var(--text-secondary); margin-top:0.25rem;"
                                 id="detail-comment"
                             >
-                                {{ branch?.technical?.comment ?? '–' }}
+                                {{ branch?.technical?.comment ?? '-' }}
                             </div>
                         </div>
                     </div>
@@ -154,6 +156,7 @@ export class ReadTrainPage {
     protected state = inject(ReadTrainPageState);
     readonly trainId = input.required<string>();
     readonly branchId = input.required<string>();
+    protected readonly isoDateToUtc = isoDateToUtc;
 
     private readonly updateState = effect(() => {
         this.state.trainId.set(this.trainId());

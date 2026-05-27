@@ -1,4 +1,18 @@
-import { assertIsoDate } from './date.utils';
+import { assertIsoDate, isoDateToUtc } from './date.utils';
+
+describe('isoDateToUtc', () => {
+    it('returns a Date at UTC midnight for a given ISO date string', () => {
+        const result = isoDateToUtc('2026-05-26');
+        expect(result.toISOString()).toBe('2026-05-26T00:00:00.000Z');
+    });
+
+    it('is stable across different local timezones (date does not shift)', () => {
+        const result = isoDateToUtc('2026-01-01');
+        expect(result.getUTCFullYear()).toBe(2026);
+        expect(result.getUTCMonth()).toBe(0);
+        expect(result.getUTCDate()).toBe(1);
+    });
+});
 
 describe('assertIsoDate', () => {
     describe('valid dates', () => {

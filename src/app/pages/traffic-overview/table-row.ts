@@ -1,5 +1,6 @@
 import { Component, input } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { isoDateToUtc } from '../../shared/utils/date.utils';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
@@ -9,16 +10,16 @@ import { DatePipe } from '@angular/common';
             <strong>{{ train().trainNumber }}</strong>
         </td>
         <td>
-            {{ train().start }}<br /><span class="text-muted" style="font-size:0.75rem;"
+            {{ train().start ?? '-' }}<br /><span class="text-muted" style="font-size:0.75rem;"
                 ><ng-container i18n="@@tableRow.dep">Dep:</ng-container> {{ train().startTime | date: 'shortTime' }}</span
             >
         </td>
         <td>
-            {{ train().end }}<br /><span class="text-muted" style="font-size:0.75rem;"
+            {{ train().end ?? '-' }}<br /><span class="text-muted" style="font-size:0.75rem;"
                 ><ng-container i18n="@@tableRow.arr">Arr:</ng-container> {{ train().endTime | date: 'shortTime' }}</span
             >
         </td>
-        <td>{{ train().operationalDay | date: 'mediumDate' : 'UTC' }}</td>
+        <td>{{ isoDateToUtc(train().operationalDay) | date: 'mediumDate' : 'UTC' }}</td>
         <td>
             @for (partner of train().partners ?? []; track partner) {
                 <span class="partner-badge partner-badge-{{ partner }}">{{ partner }}</span>
@@ -37,19 +38,24 @@ import { DatePipe } from '@angular/common';
 })
 export class TableRow {
     readonly train = input.required<TrainRow>();
+    protected readonly isoDateToUtc = isoDateToUtc;
 }
 
 export interface TrainRow {
+    /** Optional: comes from Train.id which is optional in OpenAPI */
     id: string | undefined;
-    trainNumber: string | undefined;
-    operationalDay: string | undefined;
+    trainNumber: string;
+    operationalDay: string;
+    /** Optional: partners not required in TrainListElement */
     partners: string[] | undefined;
+    /** Optional: derived from Journey locations which are optional */
     start: string | undefined;
-    startTime: string | undefined;
+    startTime: string;
+    /** Optional: derived from Journey locations which are optional */
     end: string | undefined;
-    endTime: string | undefined;
+    endTime: string;
     revInfo: {
-        lastChange: string | undefined;
-        version: string | undefined;
+        lastChange: string;
+        version: string;
     };
 }

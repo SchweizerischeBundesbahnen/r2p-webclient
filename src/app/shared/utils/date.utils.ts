@@ -1,4 +1,19 @@
 /**
+ * Converts an ISO date-only string ("yyyy-MM-dd") to a Date object at UTC midnight.
+ *
+ * Angular's DatePipe interprets plain date strings as local midnight, which causes
+ * the displayed date to shift by one day in timezones east of UTC. By explicitly
+ * appending "T00:00:00Z" the date is pinned to UTC midnight and the pipe's 'UTC'
+ * timezone parameter produces a stable, timezone-independent result.
+ *
+ * @param value - ISO date string in the format "yyyy-MM-dd".
+ * @returns A Date at 00:00:00 UTC on the given day.
+ */
+export function isoDateToUtc(value: string): Date {
+    return new Date(`${value}T00:00:00Z`);
+}
+
+/**
  * Asserts that a string is a valid ISO date string in the format "yyyy-MM-dd".
  *
  * Validation strategy: parse via {@link Date} and verify that the normalized
