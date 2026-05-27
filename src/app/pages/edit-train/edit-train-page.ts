@@ -5,15 +5,20 @@ import { FormField } from '@angular/forms/signals';
 import { Branch } from '../../shared/models/api.models';
 import { BackendApiService } from '../../backend-api.service';
 import { finalize } from 'rxjs';
+import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
 
 @Component({
     selector: 'app-edit-train-page',
-    imports: [RouterLink, FormField],
+    imports: [RouterLink, FormField, JourneyRouteCard],
     template: `
         @if (state.branch.isLoading()) {
             <div class="loading-overlay">
                 <div class="spinner"></div>
-                <span>Loading train data...</span>
+                <span i18n="@@editTrain.loading">Loading train data...</span>
+            </div>
+        } @else if (state.branch.error()) {
+            <div class="alert alert-error" i18n="@@editTrain.loadError">
+                ⚠️ Failed to load train data. Please go back and try again.
             </div>
         } @else {
             <div
@@ -29,6 +34,7 @@ import { finalize } from 'rxjs';
                             class="unsaved-indicator"
                             [class.hidden]="!editTrainForm().dirty()"
                             id="unsaved-indicator"
+                            i18n="@@editTrain.unsavedChanges"
                             >● Unsaved changes</span
                         >
                     </div>
@@ -37,6 +43,7 @@ import { finalize } from 'rxjs';
                             [routerLink]="'/traffic-view/' + trainId()"
                             class="btn btn-ghost"
                             id="sticky-cancel-btn"
+                            i18n="@@editTrain.cancel"
                             >Cancel</a
                         >
                         <button
@@ -45,6 +52,7 @@ import { finalize } from 'rxjs';
                             [class.btn-muted]="editTrainForm().invalid()"
                             [disabled]="editTrainForm().invalid()"
                             (click)="updateTrain()"
+                            i18n="@@editTrain.save"
                         >
                             💾 Save Train
                         </button>
@@ -59,6 +67,7 @@ import { finalize } from 'rxjs';
                         [routerLink]="'/traffic-view/' + this.trainId()"
                         class="back-link"
                         id="back-link"
+                        i18n="@@editTrain.breadcrumb.traffic"
                         >Traffic View</a
                     >
 
@@ -76,20 +85,20 @@ import { finalize } from 'rxjs';
 
                     <!-- Variant context info -->
                     <div class="alert alert-info" id="branch-alert">
-                        ✏️ You are editing variant
+                        <ng-container i18n="@@editTrain.editingInfo">✏️ You are editing variant</ng-container>
                         <strong id="branch-name-display"> {{ branchInfos.branchName }}</strong
-                        >. Changes will be saved as a new version of this variant.
+                        >. <ng-container i18n="@@editTrain.editingInfoSub">Changes will be saved as a new version of this variant.</ng-container>
                     </div>
 
                     <!-- ── Basic Info Card ──────────────────────────────────── -->
                     <div class="card">
                         <div class="card-header">
-                            <span class="card-title">📋 Train Details</span>
+                            <span class="card-title" i18n="@@editTrain.section.trainDetails">📋 Train Details</span>
                         </div>
                         <div class="card-body">
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label class="form-label required" for="train-name">Name</label>
+                                    <label class="form-label required" for="train-name" i18n="@@editTrain.field.name">Name</label>
                                     <input
                                         type="text"
                                         id="train-name"
@@ -106,7 +115,7 @@ import { finalize } from 'rxjs';
                                     }
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label required" for="train-opday"
+                                    <label class="form-label required" for="train-opday" i18n="@@editTrain.field.opDay"
                                         >Operational Day</label
                                     >
                                     <input
@@ -129,13 +138,14 @@ import { finalize } from 'rxjs';
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="form-label required" for="save-comment"
+                                <label class="form-label required" for="save-comment" i18n="@@editTrain.field.comment"
                                     >Change Comment</label
                                 >
                                 <textarea
                                     id="save-comment"
                                     class="form-textarea"
                                     placeholder="Describe what you changed…"
+                                    i18n-placeholder="@@editTrain.field.commentPlaceholder"
                                     [formField]="editTrainForm.creationComment"
                                 ></textarea>
                                 @if (
@@ -154,28 +164,7 @@ import { finalize } from 'rxjs';
                     </div>
 
                     <!-- ── Journey Card ─────────────────────────────────────── -->
-                    <div class="card">
-                        <div class="card-header">
-                            <span class="card-title">🗺️ Journey Route</span>
-                        </div>
-                        <div class="card-body" style="padding:0;">
-                            <div class="journey-table-wrapper">
-                                <table class="journey-table" id="journey-table">
-                                    <thead>
-                                        <tr>
-                                            <th style="width:200px;">Stop</th>
-                                            <th>Rolling Stock</th>
-                                            <th>Staff</th>
-                                            <th>Path</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="journey-tbody">
-                                        <!-- Rendered by JS -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                    <app-journey-route-card [readonly]="false" />
 
                     <!-- ── Action Buttons (removed – use sticky bar above) ──────── -->
                 </div>
@@ -184,7 +173,6 @@ import { finalize } from 'rxjs';
     `,
     styles: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [EditTrainPageState],
 })
 export class EditTrainPage {
     readonly trainId = input.required<string>();
@@ -221,8 +209,8 @@ export class EditTrainPage {
                 next: () => {
                     this.router.navigate(['/traffic-view/' + this.trainId()]);
                 },
-                error: (err) => {
-                    console.warn('Error edit train:', err);
+                error: () => {
+                    // Error already handled by errorInterceptor (toast shown)
                 }
             });
     }

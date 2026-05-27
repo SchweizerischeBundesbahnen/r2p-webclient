@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Branch, Train, TrainListElement } from './shared/models/api.models';
 import { environment } from '../environments/environment';
+import { assertIsoDate } from './shared/utils/date.utils';
 
 @Injectable({ providedIn: 'root' })
 export class BackendApiService {
@@ -18,9 +19,10 @@ export class BackendApiService {
 
     public createTrain(
         name: string,
-        operationalDay: Date,
+        operationalDay: string,
         comment: string,
     ): Observable<TrainListElement> {
+        assertIsoDate(operationalDay);
         const headers = new HttpHeaders().set('Token', 'SBB');
         return this.httpClient.post<TrainListElement>(
             `${this.baseUrl}/v1/trains`,
@@ -75,8 +77,9 @@ export class BackendApiService {
         branchId: string,
         name: string,
         comment: string,
-        operationalDay: Date,
+        operationalDay: string,
     ): Observable<Train> {
+        assertIsoDate(operationalDay);
         const headers = new HttpHeaders().set('Token', 'SBB');
         return this.httpClient.put<Train>(
             `${this.baseUrl}/v1/trains/${trainId}/branches/${branchId}`,

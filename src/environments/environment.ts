@@ -15,7 +15,6 @@ export const environment: Environment = {
                 useRefreshToken: true,
                 autoUserInfo: false,
                 maxIdTokenIatOffsetAllowedInSeconds: 600,
-                secureRoutes: ['http://localhost:8080'],
             },
         ],
     },

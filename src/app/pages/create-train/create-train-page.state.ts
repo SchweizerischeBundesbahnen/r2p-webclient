@@ -7,11 +7,11 @@ export class CreatePageState {
 
     private model = signal<{
         name: string;
-        operationalDay: Date;
+        operationalDay: string;
         creationComment: string;
     }>({
         name: '',
-        operationalDay: null as unknown as Date,
+        operationalDay: '',
         creationComment: '',
     });
 

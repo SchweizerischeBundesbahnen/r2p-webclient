@@ -6,7 +6,9 @@
         "start": "ng serve",
         "start:local": "ng serve --configuration local",
         "build": "ng build",
-        "extract-i18n": "ng extract-i18n",
+        "extract-i18n": "ng extract-i18n && node scripts/sync-translations.mjs",
+        "sync-translations": "node scripts/sync-translations.mjs",
+        "check-translations": "node scripts/sync-translations.mjs --check",
         "test": "ng test",
         "lint": "ng lint"
     },
@@ -42,7 +44,7 @@
         "jsdom": "^29.1.1",
         "prettier": "^3.8.1",
         "typescript": "~5.9.2",
-        "typescript-eslint": "8.59.4",
-        "vitest": "^4.1.6"
+        "typescript-eslint": "8.60.0",
+        "vitest": "^4.1.7"
     }
 }

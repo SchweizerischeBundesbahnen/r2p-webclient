@@ -10,20 +10,21 @@ import { finalize } from 'rxjs';
     template: ` <div class="modal-overlay" id="modal-create-branch">
         <div class="modal-card">
             <div class="modal-header">
-                <span class="modal-title">⎇ Create New Variant</span>
+                <span class="modal-title" i18n="@@newVariantModal.title">⎇ Create New Variant</span>
                 <button class="modal-close" (click)="state.toggleIsNewVariantModalOpen()">✕</button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label class="form-label required" for="branch-name-input">Variant Name</label>
+                    <label class="form-label required" for="branch-name-input" i18n="@@newVariantModal.field.name">Variant Name</label>
                     <input
                         type="text"
                         id="branch-name-input"
                         class="form-input"
                         placeholder="e.g., sbb/rolling-stock-update"
+                        i18n-placeholder="@@newVariantModal.field.namePlaceholder"
                         [formField]="createTrainVariant.variantName"
                     />
-                    <p class="form-hint">
+                    <p class="form-hint" i18n="@@newVariantModal.field.nameHint">
                         Lowercase, hyphens and slashes allowed. Max 255 characters.
                     </p>
                     @if (
@@ -36,11 +37,12 @@ import { finalize } from 'rxjs';
                     }
                 </div>
                 <div class="form-group">
-                    <label class="form-label required" for="branch-comment-input">Comment</label>
+                    <label class="form-label required" for="branch-comment-input" i18n="@@newVariantModal.field.comment">Comment</label>
                     <textarea
                         id="branch-comment-input"
                         class="form-textarea"
                         placeholder="Describe the purpose of this variant…"
+                        i18n-placeholder="@@newVariantModal.field.commentPlaceholder"
                         [formField]="createTrainVariant.comment"
                     ></textarea>
                     @if (
@@ -54,7 +56,7 @@ import { finalize } from 'rxjs';
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-ghost" (click)="state.toggleIsNewVariantModalOpen()">
+                <button class="btn btn-ghost" (click)="state.toggleIsNewVariantModalOpen()" i18n="@@newVariantModal.cancel">
                     Cancel
                 </button>
                 <button
@@ -62,6 +64,7 @@ import { finalize } from 'rxjs';
                     [disabled]="createTrainVariant().invalid()"
                     class="btn btn-primary"
                     (click)="createNewVariant()"
+                    i18n="@@newVariantModal.createAndEdit"
                 >
                     ⎇ Create &amp; Edit
                 </button>
@@ -110,8 +113,8 @@ export class NewVariantModal {
                             queryParams: { trainId, branchId: result.branchId },
                         });
                     },
-                    error: (err) => {
-                        console.warn('Error creating new variant:', err);
+                    error: () => {
+                        // Error already handled by errorInterceptor (toast shown)
                     },
                 });
         }

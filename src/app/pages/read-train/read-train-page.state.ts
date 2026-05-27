@@ -12,6 +12,7 @@ export class ReadTrainPageState {
     branchId = signal<string | undefined>(undefined);
     isJsonModalOpen = false;
 
+
     readonly trainAndBranch = rxResource({
         params: () => {
             const trainId = this.trainId();

@@ -4,15 +4,23 @@ import { TrafficPageState, TrainWithDetails } from './traffic-page.state';
 import { Branch, BranchState } from '../../shared/models/api.models';
 import { DatePipe } from '@angular/common';
 import { NewVariantModal } from './new-variant-modal';
+import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
+import { isoDateToUtc } from '../../shared/utils/date.utils';
 
 @Component({
     selector: 'app-traffic-page',
-    imports: [RouterLink, DatePipe, NewVariantModal],
+    imports: [RouterLink, DatePipe, NewVariantModal, JourneyRouteCard],
     template: `
         <!-- ── Main Content ────────────────────────────────────────────── -->
         <div class="main-content">
             <div class="container">
-                <a [routerLink]="'/traffic-overview'" class="back-link">Traffic Overview</a>
+                <a [routerLink]="'/traffic-overview'" class="back-link" i18n="@@traffic.breadcrumb.overview">Traffic Overview</a>
+
+                @if (trafficPageStateService.trainMainBranch.error()) {
+                    <div class="alert alert-error" i18n="@@traffic.loadError">
+                        ⚠️ Failed to load train data. Please go back and try again.
+                    </div>
+                }
 
                 <!-- Train Header Card -->
                 <div class="card" id="train-header-card">
@@ -26,16 +34,18 @@ import { NewVariantModal } from './new-variant-modal';
                                     {{ trainHeaderInfo.trainNumber }}
                                 </h1>
                                 <p class="page-subtitle" id="train-name">
-                                    {{ trainHeaderInfo.operationalDay }}
+                                    @let opDay = trainHeaderInfo.operationalDay;
+                                    {{ opDay ? (isoDateToUtc(opDay) | date: 'mediumDate' : 'UTC') : '-' }}
                                 </p>
                             </div>
                             <div class="btn-group">
-                                <button class="btn btn-outline" onclick="openShareModal()">
+                                <button class="btn btn-outline" onclick="openShareModal()" i18n="@@traffic.shareTrain">
                                     🔗 Share Train
                                 </button>
                                 <button
                                     class="btn btn-primary"
                                     (click)="trafficPageStateService.toggleIsNewVariantModalOpen()"
+                                    i18n="@@traffic.newVariant"
                                 >
                                     ⎇ New Variant
                                 </button>
@@ -44,51 +54,48 @@ import { NewVariantModal } from './new-variant-modal';
 
                         <div class="detail-grid" style="margin-top:1rem;">
                             <div class="detail-item">
-                                <div class="detail-label">Train Number</div>
+                                <div class="detail-label" i18n="@@traffic.field.trainNumber">Train Number</div>
                                 <div class="detail-value" id="detail-train-number">
                                     {{ trainHeaderInfo.trainNumber }}
                                 </div>
                             </div>
                             <div class="detail-item">
-                                <div class="detail-label">From</div>
+                                <div class="detail-label" i18n="@@traffic.field.from">From</div>
                                 <div class="detail-value" id="detail-from">
                                     {{ trainHeaderInfo.from }}
                                 </div>
                             </div>
                             <div class="detail-item">
-                                <div class="detail-label">Departure</div>
+                                <div class="detail-label" i18n="@@traffic.field.departure">Departure</div>
                                 <div class="detail-value" id="detail-dep-time">
-                                    {{ trainHeaderInfo.departureTime | date: 'HH:mm' }}
+                                    {{ trainHeaderInfo.departureTime | date: 'shortTime' }}
                                 </div>
                             </div>
                             <div class="detail-item">
-                                <div class="detail-label">To</div>
+                                <div class="detail-label" i18n="@@traffic.field.to">To</div>
                                 <div class="detail-value" id="detail-to">
                                     {{ trainHeaderInfo.to }}
                                 </div>
                             </div>
                             <div class="detail-item">
-                                <div class="detail-label">Arrival</div>
+                                <div class="detail-label" i18n="@@traffic.field.arrival">Arrival</div>
                                 <div class="detail-value" id="detail-arr-time">
-                                    {{ trainHeaderInfo.arrivalTime | date: 'HH:mm' }}
+                                    {{ trainHeaderInfo.arrivalTime | date: 'shortTime' }}
                                 </div>
                             </div>
                             <div class="detail-item">
-                                <div class="detail-label">Operational Day</div>
+                                <div class="detail-label" i18n="@@traffic.field.opDay">Operational Day</div>
                                 <div class="detail-value" id="detail-op-day">
-                                    {{ trainHeaderInfo.operationalDay }}
+                                    @let opDayDetail = trainHeaderInfo.operationalDay;
+                                    {{ opDayDetail ? (isoDateToUtc(opDayDetail) | date: 'mediumDate' : 'UTC') : '-' }}
                                 </div>
                             </div>
                             <div class="detail-item">
                                 <div class="detail-label">
-                                    Gesamtstatus
+                                    <ng-container i18n="@@traffic.field.overallStatus">Overall Status</ng-container>
                                     <span class="tooltip-anchor" tabindex="0"
                                     >?<span class="tooltip-box"
-                                    >🟢 Alle Activities sind <em>confirmed</em>.<br />🟡
-                                            Mindestens eine Activity ist <em>proposed</em> oder
-                                            <em>requested</em>, keine abgelehnt.<br />🔴 Mindestens
-                                            eine Activity ist <em>refused</em> oder
-                                            <em>dropped</em>.</span
+                                    ><ng-container i18n="@@traffic.status.allConfirmed">🟢 All activities are <em>confirmed</em>.</ng-container><br /><ng-container i18n="@@traffic.status.someProposed">🟡 At least one activity is <em>proposed</em> or <em>requested</em>, none refused.</ng-container><br /><ng-container i18n="@@traffic.status.someRefused">🔴 At least one activity is <em>refused</em> or <em>dropped</em>.</ng-container></span
                                     ></span
                                     >
                                 </div>
@@ -99,7 +106,7 @@ import { NewVariantModal } from './new-variant-modal';
                                 </div>
                             </div>
                             <div class="detail-item">
-                                <div class="detail-label">Partners</div>
+                                <div class="detail-label" i18n="@@traffic.field.partners">Partners</div>
                                 <div class="detail-value" id="detail-partners">
                                     @for (partner of trainHeaderInfo.partners; track partner) {
                                         <span class="partner-badge partner-badge-{{ partner }}">{{
@@ -113,33 +120,12 @@ import { NewVariantModal } from './new-variant-modal';
                 </div>
 
                 <!-- Journey (main variant – read-only table) -->
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">🗺️ Journey Route (main variant)</span>
-                    </div>
-                    <div class="card-body" style="padding-top:0.5rem; padding-bottom:0.5rem;">
-                        <div class="journey-table-wrapper">
-                            <table class="journey-table" id="journey-table">
-                                <thead>
-                                <tr>
-                                    <th style="width:200px;">Stop</th>
-                                    <th>Rolling Stock</th>
-                                    <th>Staff</th>
-                                    <th>Path</th>
-                                </tr>
-                                </thead>
-                                <tbody id="journey-tbody">
-                                <!-- Rendered by JS -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                <app-journey-route-card [readonly]="true" />
 
                 <!-- Variants Section -->
                 <div class="card">
                     <div class="card-header">
-                        <span class="card-title">⎇ Variants</span>
+                        <span class="card-title" i18n="@@traffic.variants">⎇ Variants</span>
                     </div>
                     <div id="branches-list">
                         @for (branch of getVariantInfo(trainMainBranch.value());
@@ -158,7 +144,7 @@ import { NewVariantModal } from './new-variant-modal';
                                                 >
                                             }
                                             <span style="margin-left:4px;">{{
-                                                    branch.lastChange | date: 'dd.MM.yyyy, HH:mm'
+                                                    branch.lastChange | date: 'short'
                                                 }}</span>
                                             @if (branch.comment) {
                                                 — <em>{{ branch.comment }}</em>
@@ -180,7 +166,7 @@ import { NewVariantModal } from './new-variant-modal';
                                                 branchId: branch.branchId,
                                             }"
                                             class="btn btn-primary btn-sm"
-                                        >✏ Edit</a
+                                            i18n="@@traffic.edit">✏ Edit</a
                                         ><a
                                         [routerLink]="'/read-train'"
                                         [queryParams]="{
@@ -188,8 +174,8 @@ import { NewVariantModal } from './new-variant-modal';
                                                 branchId: branch.branchId,
                                             }"
                                         class="btn btn-ghost btn-sm"
-                                    >👁 View</a
-                                    >
+                                        i18n="@@traffic.view">👁 View</a
+                                        >
                                     </div>
                                 </div>
                             </div>
@@ -204,11 +190,11 @@ import { NewVariantModal } from './new-variant-modal';
     `,
     styles: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [TrafficPageState],
 })
 export class TrafficPage {
     readonly trainId = input.required<string>();
     protected readonly trafficPageStateService = inject(TrafficPageState);
+    protected readonly isoDateToUtc = isoDateToUtc;
 
     private readonly trainIdEffect = effect(() => {
         this.trafficPageStateService.trainId.set(this.trainId());
@@ -220,21 +206,21 @@ export class TrafficPage {
         trainWithDetails: TrainWithDetails | undefined,
     ): TrainHeaderViewModel {
         const listElement = trainWithDetails?.listElement;
-        const mainBranch = listElement?.branches?.find((b) => b.technical.mainBranch);
+        const mainBranch = listElement?.branches.find((b) => b.technical.mainBranch);
         const journeyLocations = trainWithDetails?.details?.journey?.journeylocations ?? [];
         const firstLocation = journeyLocations[0]?.locations?.[0];
         const lastLocation = journeyLocations.at(-1)?.locations?.[0];
 
         return {
-            trainNumber: mainBranch?.business.trainNumber ?? '–',
-            operationalDay: mainBranch?.business.operationalDay ?? '–',
+            trainNumber: mainBranch?.business.trainNumber ?? '-',
+            operationalDay: mainBranch?.business.operationalDay ?? null,
             partners: listElement?.partners ?? [],
-            lastChange: mainBranch?.technical.timestamp ?? '–',
+            lastChange: mainBranch?.technical.timestamp ?? null,
             branches: listElement?.branches ?? [],
-            from: firstLocation?.name ?? '–',
-            to: lastLocation?.name ?? '–',
-            departureTime: '2026-01-01T10:00:00', // TODO:
-            arrivalTime: '2026-01-01T11:00:00', // TODO:
+            from: firstLocation?.name ?? '-',
+            to: lastLocation?.name ?? '-',
+            departureTime: '2026-01-01T10:00:00', // TODO: still needs to be implemented - with the JourneyRoutes Story
+            arrivalTime: '2026-01-01T11:00:00', // TODO: still needs to be implemented - with the JourneyRoutes Story
         };
     }
 
@@ -252,9 +238,9 @@ export class TrafficPage {
 
 export interface TrainHeaderViewModel {
     trainNumber: string;
-    operationalDay: string;
+    operationalDay: string | null;
     partners: string[];
-    lastChange: string;
+    lastChange: string | null;
     branches: Branch[];
     from: string;
     to: string;

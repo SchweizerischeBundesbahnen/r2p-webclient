@@ -1,3 +1,13 @@
+@use '@angular/material' as mat;
+@use './styles/theme' as theme;
+@use './styles/tokens';
+
+@include mat.core();
+
+html {
+    @include mat.theme(theme.$r2p-theme);
+}
+
 /* R2P Web Client - Design Mockup Stylesheet */
 
 /* ========================================

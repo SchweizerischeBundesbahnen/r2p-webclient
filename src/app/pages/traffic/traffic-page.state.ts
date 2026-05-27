@@ -11,6 +11,7 @@ export class TrafficPageState {
     readonly apiService = inject(BackendApiService);
     trainId = signal<string | undefined>(undefined);
 
+
     readonly trainMainBranch = rxResource({
         params: () => {
             const trainId = this.trainId();
