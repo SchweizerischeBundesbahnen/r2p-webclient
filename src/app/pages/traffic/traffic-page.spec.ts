@@ -52,7 +52,7 @@ function createFakeState(value?: TrainWithDetails) {
     return {
         trainId: signal<string | undefined>(undefined),
         newVariantModalIsOpen: signal(false),
-        toggleIsNewVariantModalOpen: () => {},
+        toggleIsNewVariantModalOpen: () => { /* noop for testing */ },
         trainMainBranch: {
             value: signal(value),
             error: signal(undefined),
@@ -90,9 +90,9 @@ describe('TrafficPage – date formatting', () => {
             expect(el.querySelector('#detail-op-day')!.textContent!.trim()).toBe('26.05.2026');
         });
 
-        it('shows "–" when no data is loaded', () => {
+        it('shows "-" when no data is loaded', () => {
             const el = createComponent('en-US');
-            expect(el.querySelector('#detail-op-day')!.textContent!.trim()).toBe('–');
+            expect(el.querySelector('#detail-op-day')!.textContent!.trim()).toBe('-');
         });
     });
 

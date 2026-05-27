@@ -61,9 +61,9 @@ export const mapTrainToOverviewRow = ({
         id: train.id,
         operationalDay,
         start: train.journey?.journeylocations?.[0]?.locations?.[0]?.name,
-        startTime: '2026-01-01T10:00:00', // TODO:
+        startTime: '2026-01-01T10:00:00', // TODO: still needs to be implemented - with the JourneyRoutes Story
         end: train.journey?.journeylocations?.slice(-1)?.[0]?.locations?.[0]?.name,
-        endTime: '2026-01-01T11:00:00', // TODO:
+        endTime: '2026-01-01T11:00:00', // TODO: still needs to be implemented - with the JourneyRoutes Story
         partners,
         trainNumber,
         revInfo: {
@@ -75,9 +75,10 @@ export const mapTrainToOverviewRow = ({
 
 export interface TrainInfos {
     train: Train;
+    /** Optional in OpenAPI (TrainListElement.partners not required) */
     partners: string[] | undefined;
-    mainTimestamp: string | undefined;
-    version: string | undefined;
-    trainNumber: string | undefined;
-    operationalDay: string | undefined;
+    mainTimestamp: string;
+    version: string;
+    trainNumber: string;
+    operationalDay: string;
 }
