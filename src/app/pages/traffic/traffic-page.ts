@@ -160,28 +160,30 @@ import { LoadingSpinner } from '../../shared/components/loading-spinner/loading-
                                         </div>
                                     </div>
                                 </div>
-                                <div
-                                    style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;"
-                                >
-                                    <app-branch-status-badge [state]="branch.status" />
-                                     <div class="branch-actions">
-                                         <a
-                                             routerLink="/edit-train"
-                                             [queryParams]="{
-                                                 trainId: trainId(),
-                                                 branchId: branch.branchId,
-                                             }"
-                                             class="btn btn-primary btn-sm"
-                                             i18n="@@traffic.edit">✏ Edit</a
-                                         ><a
-                                         [routerLink]="'/read-train'"
-                                         [queryParams]="{
-                                                 trainId: trainId(),
-                                                 branchId: branch.branchId,
-                                             }"
-                                         class="btn btn-ghost btn-sm"
-                                         i18n="@@traffic.view">👁 View</a
-                                         >
+                                 <div
+                                     style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;"
+                                 >
+                                     <app-branch-status-badge [state]="branch.status" />
+                                      <div class="branch-actions">
+                                          @if (branch.showEdit) {
+                                              <a
+                                                  routerLink="/edit-train"
+                                                  [queryParams]="{
+                                                      trainId: trainId(),
+                                                      branchId: branch.branchId,
+                                                  }"
+                                                  class="btn btn-primary btn-sm"
+                                                  i18n="@@traffic.edit">✏ Edit</a>
+                                          }
+                                          <a
+                                              [routerLink]="'/read-train'"
+                                              [queryParams]="{
+                                                  trainId: trainId(),
+                                                  branchId: branch.branchId,
+                                              }"
+                                              class="btn btn-ghost btn-sm"
+                                              i18n="@@traffic.view">👁 View</a
+                                          >
                                          @if (branch.showMergeRequest) {
                                              <button
                                                  class="btn btn-outline btn-sm"
@@ -330,7 +332,13 @@ export class TrafficPage {
         const mainBranch = branches.find((b) => b.technical.mainBranch);
         const isLeadRU = mainBranch?.technical.owner === currentOrg;
 
-        return branches.map((branch) => {
+        const sorted = [...branches].sort((a, b) => {
+            if (a.technical.mainBranch && !b.technical.mainBranch) return -1;
+            if (!a.technical.mainBranch && b.technical.mainBranch) return 1;
+            return b.technical.timestamp.localeCompare(a.technical.timestamp);
+        });
+
+        return sorted.map((branch) => {
             const isOwn = branch.technical.owner === currentOrg;
             const state = branch.technical.branchState;
             const isMain = branch.technical.mainBranch;
@@ -342,6 +350,7 @@ export class TrafficPage {
                 lastChange: branch.technical.timestamp,
                 status: state,
                 version: branch.technical.version,
+                showEdit: isOwn,
                 showMergeRequest: isOwn && state === 'open' && !isMain,
                 showAcceptReject: isLeadRU && state === 'merge_requested' && !isMain,
             };
@@ -371,4 +380,5 @@ export interface VariantViewModel {
     version: string;
     showMergeRequest: boolean;
     showAcceptReject: boolean;
+    showEdit: boolean;
 }
