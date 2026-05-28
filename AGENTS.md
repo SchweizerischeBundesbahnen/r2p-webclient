@@ -22,8 +22,15 @@
 - Run tests with: `npm test -- --watch=false` · lint: `npm run lint` · fix all issues (also prexisting ones!) before finishing.
 - After adding async operations to a component constructor (e.g. reachability checks), reset affected signals to `'idle'` in `beforeEach` when testing computed properties that depend on them.
 - `SettingsService.load()` normalizes values – specs that test normalization must **not** bypass it by calling `loadSettingsRaw()` directly.
-- ESLint rules to watch: `@typescript-eslint/no-explicit-any` (use typed casts), `@typescript-eslint/array-type` (use `T[]` not `Array<T>`), `@typescript-eslint/no-empty-function` (add `void e` body), `@typescript-eslint/no-unsafe-function-type` (use explicit signatures instead of `Function`).
 - Components that use `OidcSecurityService` need `{ provide: OidcSecurityService, useValue: { ... } }` in the TestBed providers (the real service requires `StsConfigLoader`).
+
+## ESLint
+- Run lint with: `npm run lint` · fix all issues (also preexisting ones!) before finishing.
+- `@typescript-eslint/no-explicit-any` – use typed casts instead of `any`.
+- `@typescript-eslint/array-type` – use `T[]` not `Array<T>`.
+- `@typescript-eslint/no-empty-function` – add `void e` body to empty functions.
+- `@typescript-eslint/no-unsafe-function-type` – use explicit signatures instead of `Function`.
+- `@typescript-eslint/prefer-function-type` – **Type literal call signatures:** use function type syntax `(() => ReturnType)` instead of `{ (): ReturnType }` in type casts.
 
 ## Code Style
 - See `CODING_STANDARDS.md`. Use Angular signals (`signal`, `computed`), standalone components, `inject()`.
