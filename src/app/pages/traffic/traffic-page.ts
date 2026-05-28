@@ -1,17 +1,22 @@
-import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TrafficPageState, TrainWithDetails } from './traffic-page.state';
 import { Branch, BranchState } from '../../shared/models/api.models';
 import { DatePipe } from '@angular/common';
 import { NewVariantModal } from './new-variant-modal';
 import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
+import { BranchStatusBadgeComponent } from './branch-status-badge';
 import { isoDateToUtc } from '../../shared/utils/date.utils';
 import { MatDialog } from '@angular/material/dialog';
 import { ShareTrainModalComponent, ShareTrainDialogData } from './share-train-modal';
+import { RequestMergeModalComponent, RequestMergeDialogData } from './request-merge-modal';
+import { AcceptMergeModalComponent, AcceptMergeDialogData } from './accept-merge-modal';
+import { RejectMergeModalComponent, RejectMergeDialogData } from './reject-merge-modal';
+import { SettingsService } from '../../settings/settings.service';
 
 @Component({
     selector: 'app-traffic-page',
-    imports: [RouterLink, DatePipe, NewVariantModal, JourneyRouteCard],
+    imports: [RouterLink, DatePipe, NewVariantModal, JourneyRouteCard, BranchStatusBadgeComponent],
     template: `
         <!-- ── Main Content ────────────────────────────────────────────── -->
         <div class="main-content">
@@ -157,28 +162,45 @@ import { ShareTrainModalComponent, ShareTrainDialogData } from './share-train-mo
                                 <div
                                     style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;"
                                 >
-                                    <span class="badge badge-{{ branch.status }}"
-                                    >● {{ branch.status }}</span
-                                    >
-                                    <div class="branch-actions">
-                                        <a
-                                            routerLink="/edit-train"
-                                            [queryParams]="{
-                                                trainId: trainId(),
-                                                branchId: branch.branchId,
-                                            }"
-                                            class="btn btn-primary btn-sm"
-                                            i18n="@@traffic.edit">✏ Edit</a
-                                        ><a
-                                        [routerLink]="'/read-train'"
-                                        [queryParams]="{
-                                                trainId: trainId(),
-                                                branchId: branch.branchId,
-                                            }"
-                                        class="btn btn-ghost btn-sm"
-                                        i18n="@@traffic.view">👁 View</a
-                                        >
-                                    </div>
+                                    <app-branch-status-badge [state]="branch.status" />
+                                     <div class="branch-actions">
+                                         <a
+                                             routerLink="/edit-train"
+                                             [queryParams]="{
+                                                 trainId: trainId(),
+                                                 branchId: branch.branchId,
+                                             }"
+                                             class="btn btn-primary btn-sm"
+                                             i18n="@@traffic.edit">✏ Edit</a
+                                         ><a
+                                         [routerLink]="'/read-train'"
+                                         [queryParams]="{
+                                                 trainId: trainId(),
+                                                 branchId: branch.branchId,
+                                             }"
+                                         class="btn btn-ghost btn-sm"
+                                         i18n="@@traffic.view">👁 View</a
+                                         >
+                                         @if (branch.showMergeRequest) {
+                                             <button
+                                                 class="btn btn-outline btn-sm"
+                                                 (click)="openRequestMergeModal(branch)"
+                                                 i18n="@@traffic.mergeRequest"
+                                             >Propose Variant</button>
+                                         }
+                                         @if (branch.showAcceptReject) {
+                                             <button
+                                                 class="btn btn-success btn-sm"
+                                                 (click)="openAcceptMergeModal(branch)"
+                                                 i18n="@@traffic.acceptMerge"
+                                             >Accept Variant</button>
+                                             <button
+                                                 class="btn btn-danger btn-sm"
+                                                 (click)="openRejectMergeModal(branch)"
+                                                 i18n="@@traffic.rejectMerge"
+                                             >Reject Variant</button>
+                                         }
+                                     </div>
                                 </div>
                             </div>
                         }
@@ -198,6 +220,9 @@ export class TrafficPage {
     protected readonly trafficPageStateService = inject(TrafficPageState);
     protected readonly isoDateToUtc = isoDateToUtc;
     private readonly dialog = inject(MatDialog);
+    private readonly settingsService = inject(SettingsService);
+
+    private readonly currentOrg = computed(() => this.settingsService.settings().organization);
 
     private readonly trainIdEffect = effect(() => {
         this.trafficPageStateService.trainId.set(this.trainId());
@@ -212,6 +237,59 @@ export class TrafficPage {
         this.dialog
             .open<ShareTrainModalComponent, ShareTrainDialogData>(ShareTrainModalComponent, {
                 data: { trainId, partners },
+                width: '480px',
+            })
+            .afterClosed()
+            .subscribe((result) => {
+                if (result === 'success') {
+                    this.trainMainBranch.reload();
+                }
+            });
+    }
+
+    protected openRequestMergeModal(branch: VariantViewModel): void {
+        const trainId = this.trafficPageStateService.trainId();
+        if (!trainId) return;
+        this.dialog
+            .open<RequestMergeModalComponent, RequestMergeDialogData>(RequestMergeModalComponent, {
+                data: { trainId, branchId: branch.branchId, branchName: branch.branchName },
+                width: '480px',
+            })
+            .afterClosed()
+            .subscribe((result) => {
+                if (result === 'success') {
+                    this.trainMainBranch.reload();
+                }
+            });
+    }
+
+    protected openAcceptMergeModal(branch: VariantViewModel): void {
+        const trainId = this.trafficPageStateService.trainId();
+        if (!trainId) return;
+        this.dialog
+            .open<AcceptMergeModalComponent, AcceptMergeDialogData>(AcceptMergeModalComponent, {
+                data: {
+                    trainId,
+                    branchId: branch.branchId,
+                    branchName: branch.branchName,
+                    reviewedVersion: branch.version,
+                },
+                width: '480px',
+            })
+            .afterClosed()
+            .subscribe((result) => {
+                if (result === 'success') {
+                    this.trainMainBranch.reload();
+                }
+            });
+    }
+
+    protected openRejectMergeModal(branch: VariantViewModel): void {
+        const trainId = this.trafficPageStateService.trainId();
+        if (!trainId) return;
+        this.dialog
+            .open<RejectMergeModalComponent, RejectMergeDialogData>(RejectMergeModalComponent, {
+                data: { trainId, branchId: branch.branchId, branchName: branch.branchName },
                 width: '480px',
             })
             .afterClosed()
@@ -245,14 +323,27 @@ export class TrafficPage {
     }
 
     protected getVariantInfo(trainWithDetails: TrainWithDetails | undefined): VariantViewModel[] {
-        return (trainWithDetails?.listElement?.branches ?? []).map((branch) => ({
-            branchId: branch.branchId,
-            branchName: branch.branchName,
-            comment: branch.technical.comment,
-            partners: branch.technical.owner ? [branch.technical.owner] : [],
-            lastChange: branch.technical.timestamp,
-            status: branch.technical.branchState,
-        }));
+        const branches = trainWithDetails?.listElement?.branches ?? [];
+        const currentOrg = this.currentOrg();
+        const mainBranch = branches.find((b) => b.technical.mainBranch);
+        const isLeadRU = mainBranch?.technical.owner === currentOrg;
+
+        return branches.map((branch) => {
+            const isOwn = branch.technical.owner === currentOrg;
+            const state = branch.technical.branchState;
+            const isMain = branch.technical.mainBranch;
+            return {
+                branchId: branch.branchId,
+                branchName: branch.branchName,
+                comment: branch.technical.comment,
+                partners: branch.technical.owner ? [branch.technical.owner] : [],
+                lastChange: branch.technical.timestamp,
+                status: state,
+                version: branch.technical.version,
+                showMergeRequest: isOwn && state === 'open' && !isMain,
+                showAcceptReject: isLeadRU && state === 'merge_requested' && !isMain,
+            };
+        });
     }
 }
 
@@ -275,4 +366,7 @@ export interface VariantViewModel {
     partners: string[];
     lastChange: string;
     status: BranchState;
+    version: string;
+    showMergeRequest: boolean;
+    showAcceptReject: boolean;
 }
