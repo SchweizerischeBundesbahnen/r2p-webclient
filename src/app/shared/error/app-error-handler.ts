@@ -31,10 +31,9 @@ function isResourceValueError(error: unknown): boolean {
 function isOidcError(error: unknown): boolean {
     if (!(error instanceof Error)) return false;
     const msg = error.message ?? '';
-    // angular-auth-oidc-client throws errors with '[object Object]' when the
+    // angular-auth-oidc-client throws errors when the
     // OIDC discovery endpoint is unreachable or returns an unexpected response.
     return (
-        error.stack?.includes('angular-auth-oidc-client') === true ||
-        msg.includes('[object Object]')
+        error.stack?.includes('angular-auth-oidc-client') === true
     );
 }
