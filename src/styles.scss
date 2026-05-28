@@ -1,6 +1,7 @@
 @use '@angular/material' as mat;
 @use './styles/theme' as theme;
 @use './styles/tokens';
+@import 'material-icons/iconfont/material-icons.css';
 
 @include mat.core();
 

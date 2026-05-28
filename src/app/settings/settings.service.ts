@@ -1,24 +1,58 @@
 import { Injectable, signal } from '@angular/core';
 
+export type ResponseMode = 'fragment' | 'query';
+
 export interface Settings {
     serverUrl: string;
     organization: string;
+    authority: string;
+    clientId: string;
+    scope: string;
+    responseMode: ResponseMode;
 }
 
 export interface OrganizationOption {
     name: string;
-    shortName: string;
+    label: string;
     color: string;
 }
 
 export const ORGANIZATION_OPTIONS: OrganizationOption[] = [
-    { name: 'SBB - Schweizerische Bundesbahnen', shortName: 'SBB', color: '#d70810' },
-    { name: 'SOB - Schweizerische Südostbahn', shortName: 'SOB', color: '#009b3a' },
-    { name: 'BLS', shortName: 'BLS', color: '#00539b' },
+    { name: 'SBB', label: 'SBB - Schweizerische Bundesbahnen', color: '#d70810' },
+    { name: 'SOB', label: 'SOB - Schweizerische Südostbahn', color: '#009b3a' },
+    { name: 'BLS', label: 'BLS - Bern-Lötschberg-Simplon-Bahn', color: '#00539b' },
 ];
 
 const SERVER_URL_KEY = 'r2p-serverUrl';
 const ORGANIZATION_KEY = 'r2p-organization';
+const AUTHORITY_KEY = 'r2p-authority';
+const CLIENT_ID_KEY = 'r2p-clientId';
+const SCOPE_KEY = 'r2p-scope';
+const RESPONSE_MODE_KEY = 'r2p-responseMode';
+
+/** Pure helper – reads settings directly from localStorage without DI (usable in app.config.ts). */
+export function loadSettingsRaw(): Settings {
+    const responseMode = localStorage.getItem(RESPONSE_MODE_KEY);
+    return {
+        serverUrl: localStorage.getItem(SERVER_URL_KEY) ?? '',
+        organization: localStorage.getItem(ORGANIZATION_KEY) ?? '',
+        authority: localStorage.getItem(AUTHORITY_KEY) ?? '',
+        clientId: localStorage.getItem(CLIENT_ID_KEY) ?? '',
+        scope: localStorage.getItem(SCOPE_KEY) ?? '',
+        responseMode: (responseMode === 'fragment' || responseMode === 'query') ? responseMode : 'fragment',
+    };
+}
+
+/** Returns true when all required settings fields are filled in. */
+export function isSettingsComplete(s: Settings): boolean {
+    return (
+        s.serverUrl.trim().length > 0 &&
+        ORGANIZATION_OPTIONS.some((o) => o.name === s.organization) &&
+        s.authority.trim().length > 0 &&
+        s.clientId.trim().length > 0 &&
+        s.scope.trim().length > 0
+    );
+}
 
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
@@ -27,35 +61,46 @@ export class SettingsService {
     readonly settings = this._settings.asReadonly();
 
     hasConfiguredSettings(): boolean {
-        const settings = this._settings();
-        return settings.serverUrl.trim().length > 0 && this.isKnownOrganization(settings.organization);
+        return isSettingsComplete(this._settings());
     }
 
     save(settings: Settings): void {
         const normalized = this.normalize(settings);
         localStorage.setItem(SERVER_URL_KEY, normalized.serverUrl);
         localStorage.setItem(ORGANIZATION_KEY, normalized.organization);
+        localStorage.setItem(AUTHORITY_KEY, normalized.authority);
+        localStorage.setItem(CLIENT_ID_KEY, normalized.clientId);
+        localStorage.setItem(SCOPE_KEY, normalized.scope);
+        this.setOrRemove(RESPONSE_MODE_KEY, normalized.responseMode);
         this._settings.set(normalized);
     }
 
     load(): Settings {
-        const serverUrl = localStorage.getItem(SERVER_URL_KEY) ?? '';
-        const organization = localStorage.getItem(ORGANIZATION_KEY) ?? '';
-        return this.normalize({ serverUrl, organization });
+        return this.normalize(loadSettingsRaw());
+    }
+
+    private setOrRemove(key: string, value: string | undefined): void {
+        if (value) {
+            localStorage.setItem(key, value);
+        } else {
+            localStorage.removeItem(key);
+        }
     }
 
     private normalize(settings: Partial<Settings>): Settings {
         const serverUrl = typeof settings.serverUrl === 'string' ? settings.serverUrl.trim() : '';
-        const organization =
-            typeof settings.organization === 'string' && this.isKnownOrganization(settings.organization)
-                ? settings.organization
-                : '';
-        return { serverUrl, organization };
+        const rawOrg = typeof settings.organization === 'string' ? settings.organization : '';
+        const organization = this.isKnownOrganization(rawOrg) ? rawOrg : '';
+        const authority = typeof settings.authority === 'string' ? settings.authority.trim() : '';
+        const clientId = typeof settings.clientId === 'string' ? settings.clientId.trim() : '';
+        const scope = typeof settings.scope === 'string' ? settings.scope.trim() : '';
+        const responseMode = settings.responseMode === 'fragment' || settings.responseMode === 'query'
+            ? settings.responseMode
+            : 'fragment';
+        return { serverUrl, organization, authority, clientId, scope, responseMode };
     }
 
     private isKnownOrganization(organization: string): boolean {
         return ORGANIZATION_OPTIONS.some((option) => option.name === organization);
     }
 }
-
-

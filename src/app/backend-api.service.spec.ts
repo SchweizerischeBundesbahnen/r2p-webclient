@@ -3,6 +3,17 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { BackendApiService, minimalTrain } from './backend-api.service';
 import { Train } from './shared/models/api.models';
+import { SettingsService, ORGANIZATION_OPTIONS } from './settings/settings.service';
+import { vi } from 'vitest';
+
+function makeSettingsService(serverUrl = 'https://settings.example.com', organization = ORGANIZATION_OPTIONS[0].name): SettingsService {
+    return {
+        settings: vi.fn().mockReturnValue({ serverUrl, organization, authority: '', clientId: '', scope: '' }),
+        hasConfiguredSettings: vi.fn().mockReturnValue(true),
+        save: vi.fn(),
+        load: vi.fn(),
+    } as unknown as SettingsService;
+}
 
 describe('BackendApiService', () => {
     let service: BackendApiService;
@@ -10,7 +21,12 @@ describe('BackendApiService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [provideHttpClient(), provideHttpClientTesting(), BackendApiService],
+            providers: [
+                provideHttpClient(),
+                provideHttpClientTesting(),
+                BackendApiService,
+                { provide: SettingsService, useValue: makeSettingsService() },
+            ],
         });
         service = TestBed.inject(BackendApiService);
         httpController = TestBed.inject(HttpTestingController);
@@ -40,6 +56,24 @@ describe('BackendApiService', () => {
             expect(req.request.method).toBe('POST');
             expect(req.request.body.startdate).toBe('2026-05-26');
             req.flush({});
+        });
+
+        it('sets the Token header and base URL from settings', () => {
+            service.createTrain('IC 1234', '2026-05-26', 'comment').subscribe();
+            const req = httpController.expectOne((r) => r.url.endsWith('/v1/trains'));
+            expect(req.request.headers.get('Token')).toBe(ORGANIZATION_OPTIONS[0].name);
+            expect(req.request.url).toContain('https://settings.example.com');
+            req.flush({});
+        });
+    });
+
+    describe('listTrains', () => {
+        it('sets the Token header from settings organization', () => {
+            service.listTrains().subscribe();
+            const req = httpController.expectOne((r) => r.url.endsWith('/v1/trains'));
+            expect(req.request.method).toBe('GET');
+            expect(req.request.headers.get('Token')).toBe(ORGANIZATION_OPTIONS[0].name);
+            req.flush([]);
         });
     });
 
@@ -83,4 +117,3 @@ describe('BackendApiService', () => {
         });
     });
 });
-

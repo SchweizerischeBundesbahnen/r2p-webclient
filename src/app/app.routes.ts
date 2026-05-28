@@ -8,14 +8,15 @@ import { ReadTrainPage } from './pages/read-train/read-train-page';
 import { ReadTrainPageState } from './pages/read-train/read-train-page.state';
 import { EditTrainPage } from './pages/edit-train/edit-train-page';
 import { EditTrainPageState } from './pages/edit-train/edit-train-page.state';
-import { autoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
 import { NotFoundPage } from './pages/not-found/not-found-page';
+import { settingsGuard } from './shared/guards/settings.guard';
+import { oidcGuard } from './shared/guards/oidc.guard';
 
 export const routes: Routes = [
     {
         path: '',
         component: Layout,
-        canActivate: [autoLoginPartialRoutesGuard],
+        canActivate: [settingsGuard, oidcGuard],
         children: [
             { path: '', redirectTo: 'traffic-overview', pathMatch: 'full' },
             { path: 'traffic-overview', component: TrafficOverviewPage },
