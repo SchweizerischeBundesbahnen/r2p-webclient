@@ -3,7 +3,7 @@ import { form, required } from '@angular/forms/signals';
 
 @Injectable()
 export class CreatePageState {
-    createTrainRunning = false;
+    createTrainRunning = signal(false);
 
     private model = signal<{
         name: string;

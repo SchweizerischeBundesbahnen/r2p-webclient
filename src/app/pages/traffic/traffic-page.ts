@@ -13,23 +13,24 @@ import { RequestMergeModalComponent, RequestMergeDialogData } from './request-me
 import { AcceptMergeModalComponent, AcceptMergeDialogData } from './accept-merge-modal';
 import { RejectMergeModalComponent, RejectMergeDialogData } from './reject-merge-modal';
 import { SettingsService } from '../../settings/settings.service';
+import { LoadingSpinner } from '../../shared/components/loading-spinner/loading-spinner';
 
 @Component({
     selector: 'app-traffic-page',
-    imports: [RouterLink, DatePipe, NewVariantModal, JourneyRouteCard, BranchStatusBadgeComponent],
+    imports: [RouterLink, DatePipe, NewVariantModal, JourneyRouteCard, BranchStatusBadgeComponent, LoadingSpinner],
     template: `
         <!-- ── Main Content ────────────────────────────────────────────── -->
         <div class="main-content">
             <div class="container">
                 <a [routerLink]="'/traffic-overview'" class="back-link" i18n="@@traffic.breadcrumb.overview">Traffic Overview</a>
 
-                @if (trafficPageStateService.trainMainBranch.error()) {
+                @if (trainMainBranch.isLoading()) {
+                    <app-loading-spinner i18n-label="@@traffic.loading" label="Loading train data…" />
+                } @else if (trafficPageStateService.trainMainBranch.error()) {
                     <div class="alert alert-error" i18n="@@traffic.loadError">
                         ⚠️ Failed to load train data. Please go back and try again.
                     </div>
-                }
-
-                <!-- Train Header Card -->
+                } @else {
                 <div class="card" id="train-header-card">
                     @let trainHeaderInfo = getTrainHeaderInfo(trainMainBranch.value());
                     <div class="card-body">
@@ -206,6 +207,7 @@ import { SettingsService } from '../../settings/settings.service';
                         }
                     </div>
                 </div>
+                }
             </div>
         </div>
         @if (trafficPageStateService.newVariantModalIsOpen()) {

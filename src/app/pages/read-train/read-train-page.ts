@@ -5,10 +5,11 @@ import { ViewJsonModal } from './view-json-modal';
 import { DatePipe } from '@angular/common';
 import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
 import { isoDateToUtc } from '../../shared/utils/date.utils';
+import { LoadingSpinner } from '../../shared/components/loading-spinner/loading-spinner';
 
 @Component({
     selector: 'app-read-train-page',
-    imports: [RouterLink, ViewJsonModal, DatePipe, JourneyRouteCard],
+    imports: [RouterLink, ViewJsonModal, DatePipe, JourneyRouteCard, LoadingSpinner],
     template: `
         <!-- ── Main Content ────────────────────────────────────────────── -->
         <div class="main-content">
@@ -17,11 +18,13 @@ import { isoDateToUtc } from '../../shared/utils/date.utils';
                     i18n="@@readTrain.breadcrumb.traffic">Traffic View</a
                 >
 
-                @if (state.trainAndBranch.error()) {
+                @if (state.trainAndBranch.isLoading()) {
+                    <app-loading-spinner i18n-label="@@readTrain.loading" label="Loading train data…" />
+                } @else if (state.trainAndBranch.error()) {
                     <div class="alert alert-error" i18n="@@readTrain.loadError">
                         ⚠️ Failed to load train data. Please go back and try again.
                     </div>
-                }
+                } @else {
 
                 <!-- Page Header -->
                 <div class="page-header">
@@ -143,6 +146,7 @@ import { isoDateToUtc } from '../../shared/utils/date.utils';
                         i18n="@@readTrain.backToTraffic">← Back to Traffic View</a
                     >
                 </div>
+                }
             </div>
         </div>
         @if (state.isJsonModalOpen) {

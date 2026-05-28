@@ -7,15 +7,18 @@ import { BackendApiService } from '../../backend-api.service';
 import { finalize } from 'rxjs';
 import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
 import { ErrorNotificationService } from '../../shared/error/error-notification.service';
+import { LoadingSpinner } from '../../shared/components/loading-spinner/loading-spinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'app-edit-train-page',
-    imports: [RouterLink, FormField, JourneyRouteCard],
+    imports: [RouterLink, FormField, JourneyRouteCard, LoadingSpinner, MatProgressSpinnerModule],
     template: `
         @if (state.branch.isLoading()) {
-            <div class="loading-overlay">
-                <div class="spinner"></div>
-                <span i18n="@@editTrain.loading">Loading train data...</span>
+            <div class="main-content">
+                <div class="container">
+                    <app-loading-spinner i18n-label="@@editTrain.loading" label="Loading train data..." />
+                </div>
             </div>
         } @else if (state.branch.error()) {
             <div class="alert alert-error" i18n="@@editTrain.loadError">
@@ -50,12 +53,14 @@ import { ErrorNotificationService } from '../../shared/error/error-notification.
                         <button
                             class="btn btn-success"
                             id="sticky-save-btn"
-                            [class.btn-muted]="editTrainForm().invalid()"
-                            [disabled]="editTrainForm().invalid()"
+                            [class.btn-muted]="editTrainForm().invalid() || state.editTrainRunning()"
+                            [disabled]="editTrainForm().invalid() || state.editTrainRunning()"
                             (click)="updateTrain()"
-                            i18n="@@editTrain.save"
                         >
-                            💾 Save Train
+                            @if (state.editTrainRunning()) {
+                                <mat-spinner [diameter]="16" />
+                            }
+                            <ng-container i18n="@@editTrain.save">💾 Save Train</ng-container>
                         </button>
                     </div>
                 </div>
@@ -193,6 +198,7 @@ export class EditTrainPage {
         if (this.editTrainForm().invalid()) return;
         const { train, branch } = this.state.branch.value()!;
         const { name, operationalDay, creationComment } = this.editTrainForm().value();
+        this.state.editTrainRunning.set(true);
         this.apiService
             .updateTrain(
                 this.trainId(),
@@ -204,7 +210,7 @@ export class EditTrainPage {
             )
             .pipe(
                 finalize(() => {
-                    this.state.editTrainRunning = false;
+                    this.state.editTrainRunning.set(false);
                 }),
             )
             .subscribe({
