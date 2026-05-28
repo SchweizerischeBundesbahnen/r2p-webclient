@@ -30,7 +30,6 @@ function isResourceValueError(error: unknown): boolean {
 
 function isOidcError(error: unknown): boolean {
     if (!(error instanceof Error)) return false;
-    const msg = error.message ?? '';
     // angular-auth-oidc-client throws errors when the
     // OIDC discovery endpoint is unreachable or returns an unexpected response.
     return (
