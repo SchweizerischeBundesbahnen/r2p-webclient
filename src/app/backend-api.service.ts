@@ -80,6 +80,14 @@ export class BackendApiService {
         );
     }
 
+    shareTrain(trainId: string, shareWith: string, comment: string): Observable<TrainListElement> {
+        return this.httpClient.post<TrainListElement>(
+            `${this.baseUrl}/v1/trains/${trainId}/share`,
+            null,
+            { params: { shareWith, comment }, headers: this.tokenHeaders },
+        );
+    }
+
     updateTrain(
         trainId: string,
         train: Train,

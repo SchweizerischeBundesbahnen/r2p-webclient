@@ -6,6 +6,8 @@ import { DatePipe } from '@angular/common';
 import { NewVariantModal } from './new-variant-modal';
 import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
 import { isoDateToUtc } from '../../shared/utils/date.utils';
+import { MatDialog } from '@angular/material/dialog';
+import { ShareTrainModalComponent, ShareTrainDialogData } from './share-train-modal';
 
 @Component({
     selector: 'app-traffic-page',
@@ -39,7 +41,7 @@ import { isoDateToUtc } from '../../shared/utils/date.utils';
                                 </p>
                             </div>
                             <div class="btn-group">
-                                <button class="btn btn-outline" onclick="openShareModal()" i18n="@@traffic.shareTrain">
+                                <button class="btn btn-outline" (click)="openShareModal()" i18n="@@traffic.shareTrain">
                                     🔗 Share Train
                                 </button>
                                 <button
@@ -195,12 +197,30 @@ export class TrafficPage {
     readonly trainId = input.required<string>();
     protected readonly trafficPageStateService = inject(TrafficPageState);
     protected readonly isoDateToUtc = isoDateToUtc;
+    private readonly dialog = inject(MatDialog);
 
     private readonly trainIdEffect = effect(() => {
         this.trafficPageStateService.trainId.set(this.trainId());
     });
 
     protected readonly trainMainBranch = this.trafficPageStateService.trainMainBranch;
+
+    protected openShareModal(): void {
+        const trainId = this.trafficPageStateService.trainId();
+        if (!trainId) return;
+        const partners = this.trainMainBranch.value()?.listElement?.partners ?? [];
+        this.dialog
+            .open<ShareTrainModalComponent, ShareTrainDialogData>(ShareTrainModalComponent, {
+                data: { trainId, partners },
+                width: '480px',
+            })
+            .afterClosed()
+            .subscribe((result) => {
+                if (result === 'success') {
+                    this.trainMainBranch.reload();
+                }
+            });
+    }
 
     protected getTrainHeaderInfo(
         trainWithDetails: TrainWithDetails | undefined,
