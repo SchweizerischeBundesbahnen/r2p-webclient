@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
+import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
 import { form, FormField, required, submit } from '@angular/forms/signals';
 import { firstValueFrom } from 'rxjs';
 import { BackendApiService } from '../../backend-api.service';
@@ -16,7 +16,7 @@ export interface RequestMergeDialogData {
 @Component({
     selector: 'app-request-merge-modal',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MatDialogModule, MatFormFieldModule, MatInputModule, MatButtonModule, FormField],
+    imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose, MatFormField, MatLabel, MatError, MatInput, MatButton, FormField],
     template: `
         <h2 mat-dialog-title i18n="@@requestMergeModal.title">Propose Variant</h2>
 

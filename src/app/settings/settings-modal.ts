@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
+import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { ORGANIZATION_OPTIONS, Settings, SettingsService } from './settings.service';
 
@@ -19,7 +19,7 @@ export interface SettingsModalData {
 @Component({
     selector: 'app-settings-modal',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MatDialogModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule, MatIconModule],
+    imports: [MatDialogActions, MatDialogClose, MatDialogContent, MatFormField, MatInput, MatSelect, MatOption, MatButton, MatIconButton, MatIcon],
     templateUrl: './settings-modal.html',
     styleUrl: './settings-modal.scss',
 })

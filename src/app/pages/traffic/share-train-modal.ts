@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
+import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatError, MatFormField, MatHint, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
+import { MatOption, MatSelect } from '@angular/material/select';
 import { form, FormField, maxLength, required, submit } from '@angular/forms/signals';
 import { firstValueFrom } from 'rxjs';
 import { BackendApiService } from '../../backend-api.service';
@@ -18,11 +18,9 @@ export interface ShareTrainDialogData {
     selector: 'app-share-train-modal',
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        MatDialogModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatSelectModule,
+        MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose,
+        MatFormField, MatLabel, MatError, MatHint,
+        MatInput, MatButton, MatSelect, MatOption,
         FormField,
     ],
     template: `
