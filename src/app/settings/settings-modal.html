@@ -117,6 +117,12 @@
             @if (authority().trim() && !isAuthorityValid()) {
                 <p class="settings-modal__hint settings-modal__hint--error" i18n="@@settings.authorityInvalid">Must be a valid URL.</p>
             }
+            @if (isAzureV1Authority()) {
+                <p class="settings-modal__hint settings-modal__hint--error" i18n="@@settings.authorityAzureV1Error">
+                    Azure AD v1 endpoint is not supported. Please use the v2.0 endpoint:
+                    <code>https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code>
+                </p>
+            }
         </div>
 
         <!-- Client ID -->

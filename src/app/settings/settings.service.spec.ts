@@ -138,4 +138,17 @@ describe('SettingsService', () => {
         });
         expect(service.hasConfiguredSettings()).toBe(false);
     });
+
+    it('removes trailing slash from serverUrl', () => {
+        const service = createService();
+        service.save({
+            serverUrl: 'https://api.example.com/',
+            organization: ORGANIZATION_OPTIONS[0].name,
+            authority: 'https://idp.example.com',
+            clientId: 'client',
+            scope: 'openid',
+            responseMode: 'fragment',
+        });
+        expect(service.settings().serverUrl).toBe('https://api.example.com');
+    });
 });

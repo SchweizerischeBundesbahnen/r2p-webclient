@@ -88,7 +88,7 @@ export class SettingsService {
     }
 
     private normalize(settings: Partial<Settings>): Settings {
-        const serverUrl = typeof settings.serverUrl === 'string' ? settings.serverUrl.trim() : '';
+        const serverUrl = typeof settings.serverUrl === 'string' ? settings.serverUrl.trim().replace(/\/$/, '') : '';
         const rawOrg = typeof settings.organization === 'string' ? settings.organization : '';
         const organization = this.isKnownOrganization(rawOrg) ? rawOrg : '';
         const authority = typeof settings.authority === 'string' ? settings.authority.trim() : '';

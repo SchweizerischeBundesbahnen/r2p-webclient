@@ -167,6 +167,7 @@
     "settings.oauthHelpLink": " View configuration guide ↗",
     "settings.authority": "Authority (OIDC Issuer URL) *",
     "settings.authorityInvalid": "Must be a valid URL.",
+    "settings.authorityAzureV1Error": " Azure AD v1 endpoint is not supported. Please use the v2.0 endpoint: {$START_TAG_CODE}https://login.microsoftonline.com/<tenant-id>/v2.0{$CLOSE_TAG_CODE}",
     "settings.clientId": "Client ID *",
     "settings.scope": "Scope *",
     "settings.responseMode": "Response Mode",

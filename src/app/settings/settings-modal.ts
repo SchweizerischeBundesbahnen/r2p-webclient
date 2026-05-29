@@ -8,6 +8,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { ORGANIZATION_OPTIONS, ResponseMode, Settings, SettingsService } from './settings.service';
 
+const AZURE_V1_RE = /^https:\/\/login\.microsoftonline\.com\/[^/]+\/?$/;
+
 export interface SettingsModalData {
     unreachableUrl?: string;
     oidcError?: string;
@@ -52,6 +54,8 @@ export class SettingsModal {
         try { new URL(val); return true; } catch { return false; }
     });
 
+    readonly isAzureV1Authority = computed(() => AZURE_V1_RE.test(this.authority().trim()));
+
     readonly isServerUrlValid = computed(() => {
         const val = this.serverUrl().trim();
         if (!val) return false;
@@ -63,6 +67,7 @@ export class SettingsModal {
             this.isServerUrlValid() &&
             this.organizations.some((option) => option.name === this.organization()) &&
             this.isAuthorityValid() &&
+            !this.isAzureV1Authority() &&
             this.clientId().trim().length > 0 &&
             this.scope().trim().length > 0,
     );
