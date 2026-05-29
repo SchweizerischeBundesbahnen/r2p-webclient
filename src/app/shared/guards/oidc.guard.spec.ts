@@ -13,7 +13,6 @@ const CONFIGURED_SETTINGS = {
     organization: 'SBB',
     clientId: 'r2p-sp',
     scope: 'openid profile',
-    responseMode: 'fragment' as const,
 };
 
 function makeSettingsService(configured = true) {

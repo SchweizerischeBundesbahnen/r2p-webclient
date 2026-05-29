@@ -57,7 +57,6 @@ function makeSettingsService(organization: string): SettingsService {
             authority: '',
             clientId: '',
             scope: '',
-            responseMode: 'fragment',
         }),
     } as unknown as SettingsService;
 }

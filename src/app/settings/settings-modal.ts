@@ -6,7 +6,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
-import { ORGANIZATION_OPTIONS, ResponseMode, Settings, SettingsService } from './settings.service';
+import { ORGANIZATION_OPTIONS, Settings, SettingsService } from './settings.service';
 
 const AZURE_V1_RE = /^https:\/\/login\.microsoftonline\.com\/[^/]+\/?$/;
 
@@ -34,17 +34,12 @@ export class SettingsModal {
     readonly failedRedirectUri = this.dialogData?.failedRedirectUri ?? null;
 
     readonly organizations = ORGANIZATION_OPTIONS;
-    readonly responseModes: { value: ResponseMode; label: string }[] = [
-        { value: 'fragment', label: 'fragment' },
-        { value: 'query', label: 'query' },
-    ];
 
     readonly serverUrl = signal(this.settingsService.settings().serverUrl);
     readonly organization = signal(this.settingsService.settings().organization);
     readonly authority = signal(this.settingsService.settings().authority);
     readonly clientId = signal(this.settingsService.settings().clientId);
     readonly scope = signal(this.settingsService.settings().scope);
-    readonly responseMode = signal<ResponseMode>(this.settingsService.settings().responseMode);
 
     readonly isFirstTime = computed(() => !this.settingsService.hasConfiguredSettings());
 
@@ -94,7 +89,6 @@ export class SettingsModal {
             authority: this.authority().trim(),
             clientId: this.clientId().trim(),
             scope: this.scope().trim(),
-            responseMode: this.responseMode(),
         };
         this.settingsService.save(settings);
     }

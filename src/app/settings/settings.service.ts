@@ -1,14 +1,11 @@
 import { Injectable, signal } from '@angular/core';
 
-export type ResponseMode = 'fragment' | 'query';
-
 export interface Settings {
     serverUrl: string;
     organization: string;
     authority: string;
     clientId: string;
     scope: string;
-    responseMode: ResponseMode;
 }
 
 export interface OrganizationOption {
@@ -28,18 +25,15 @@ const ORGANIZATION_KEY = 'r2p-organization';
 const AUTHORITY_KEY = 'r2p-authority';
 const CLIENT_ID_KEY = 'r2p-clientId';
 const SCOPE_KEY = 'r2p-scope';
-const RESPONSE_MODE_KEY = 'r2p-responseMode';
 
 /** Pure helper – reads settings directly from localStorage without DI (usable in app.config.ts). */
 export function loadSettingsRaw(): Settings {
-    const responseMode = localStorage.getItem(RESPONSE_MODE_KEY);
     return {
         serverUrl: localStorage.getItem(SERVER_URL_KEY) ?? '',
         organization: localStorage.getItem(ORGANIZATION_KEY) ?? '',
         authority: localStorage.getItem(AUTHORITY_KEY) ?? '',
         clientId: localStorage.getItem(CLIENT_ID_KEY) ?? '',
         scope: localStorage.getItem(SCOPE_KEY) ?? '',
-        responseMode: (responseMode === 'fragment' || responseMode === 'query') ? responseMode : 'fragment',
     };
 }
 
@@ -71,20 +65,11 @@ export class SettingsService {
         localStorage.setItem(AUTHORITY_KEY, normalized.authority);
         localStorage.setItem(CLIENT_ID_KEY, normalized.clientId);
         localStorage.setItem(SCOPE_KEY, normalized.scope);
-        this.setOrRemove(RESPONSE_MODE_KEY, normalized.responseMode);
         this._settings.set(normalized);
     }
 
     load(): Settings {
         return this.normalize(loadSettingsRaw());
-    }
-
-    private setOrRemove(key: string, value: string | undefined): void {
-        if (value) {
-            localStorage.setItem(key, value);
-        } else {
-            localStorage.removeItem(key);
-        }
     }
 
     private normalize(settings: Partial<Settings>): Settings {
@@ -94,10 +79,7 @@ export class SettingsService {
         const authority = typeof settings.authority === 'string' ? settings.authority.trim() : '';
         const clientId = typeof settings.clientId === 'string' ? settings.clientId.trim() : '';
         const scope = typeof settings.scope === 'string' ? settings.scope.trim() : '';
-        const responseMode = settings.responseMode === 'fragment' || settings.responseMode === 'query'
-            ? settings.responseMode
-            : 'fragment';
-        return { serverUrl, organization, authority, clientId, scope, responseMode };
+        return { serverUrl, organization, authority, clientId, scope };
     }
 
     private isKnownOrganization(organization: string): boolean {

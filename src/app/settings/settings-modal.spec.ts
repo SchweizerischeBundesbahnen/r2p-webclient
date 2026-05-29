@@ -11,7 +11,6 @@ const VALID_SETTINGS = {
     authority: 'https://login.microsoftonline.com/tenant/v2.0',
     clientId: 'my-client',
     scope: 'openid profile email',
-    responseMode: 'fragment' as const,
 };
 
 function makeSettingsService(overrides: Partial<typeof VALID_SETTINGS> = {}): SettingsService {

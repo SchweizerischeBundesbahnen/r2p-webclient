@@ -170,7 +170,6 @@
     "settings.authorityAzureV1Error": "Azure AD v1 endpoint is not supported. Please use the v2.0 endpoint: https://login.microsoftonline.com/<tenant-id>/v2.0",
     "settings.clientId": "Client ID *",
     "settings.scope": "Scope *",
-    "settings.responseMode": "Response Mode",
     "settings.save": "Save",
     "journeyRouteCard.title": "🗺️ Journey Route",
     "journeyRouteCard.col.stop": "Stop",

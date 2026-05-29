@@ -26,7 +26,6 @@ describe('SettingsService', () => {
             authority: '',
             clientId: '',
             scope: '',
-            responseMode: 'fragment',
         });
         expect(service.hasConfiguredSettings()).toBe(false);
     });
@@ -39,7 +38,6 @@ describe('SettingsService', () => {
             authority: 'https://login.microsoftonline.com/tenant/v2.0',
             clientId: 'my-client-id',
             scope: 'openid profile email',
-            responseMode: 'query' as const,
         };
 
         service.save(next);
@@ -67,7 +65,7 @@ describe('SettingsService', () => {
 
         const service = createService();
 
-        expect(service.settings()).toEqual({ serverUrl, organization, authority, clientId, scope, responseMode: 'fragment' });
+        expect(service.settings()).toEqual({ serverUrl, organization, authority, clientId, scope });
     });
 
     it('clears the organization when the stored organization is unknown', () => {
@@ -83,45 +81,6 @@ describe('SettingsService', () => {
         expect(service.hasConfiguredSettings()).toBe(false);
     });
 
-    it('persists and restores responseMode fragment', () => {
-        const service = createService();
-        service.save({
-            serverUrl: 'https://api.example.com',
-            organization: ORGANIZATION_OPTIONS[0].name,
-            authority: 'https://idp.example.com',
-            clientId: 'client',
-            scope: 'openid',
-            responseMode: 'fragment',
-        });
-        expect(service.settings().responseMode).toBe('fragment');
-        expect(localStorage.getItem('r2p-responseMode')).toBe('fragment');
-
-        const restored = createService();
-        expect(restored.settings().responseMode).toBe('fragment');
-    });
-
-    it('persists and restores responseMode query', () => {
-        const service = createService();
-        service.save({
-            serverUrl: 'https://api.example.com',
-            organization: ORGANIZATION_OPTIONS[0].name,
-            authority: 'https://idp.example.com',
-            clientId: 'client',
-            scope: 'openid',
-            responseMode: 'query',
-        });
-        expect(service.settings().responseMode).toBe('query');
-
-        const restored = createService();
-        expect(restored.settings().responseMode).toBe('query');
-    });
-
-    it('falls back to "fragment" responseMode when an invalid value is stored in localStorage', () => {
-        localStorage.setItem('r2p-responseMode', 'invalid-value');
-        const service = createService();
-        expect(service.settings().responseMode).toBe('fragment');
-    });
-
     it('returns empty settings when stored values are malformed', () => {
         localStorage.setItem(SERVER_URL_KEY, '  ');
         localStorage.setItem(ORGANIZATION_KEY, 'UNKNOWN');
@@ -134,7 +93,6 @@ describe('SettingsService', () => {
             authority: '',
             clientId: '',
             scope: '',
-            responseMode: 'fragment',
         });
         expect(service.hasConfiguredSettings()).toBe(false);
     });
@@ -147,7 +105,6 @@ describe('SettingsService', () => {
             authority: 'https://idp.example.com',
             clientId: 'client',
             scope: 'openid',
-            responseMode: 'fragment',
         });
         expect(service.settings().serverUrl).toBe('https://api.example.com');
     });
