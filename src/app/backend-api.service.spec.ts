@@ -77,7 +77,21 @@ describe('BackendApiService', () => {
         });
     });
 
+    describe('shareTrain', () => {
+        it('POST /v1/trains/{trainId}/share with correct query params', () => {
+            service.shareTrain('train-uuid', 'BLS', 'Sharing reason').subscribe();
+
+            const req = httpController.expectOne(r =>
+                r.url.includes('/v1/trains/train-uuid/share') && r.method === 'POST'
+            );
+            expect(req.request.params.get('shareWith')).toBe('BLS');
+            expect(req.request.params.get('comment')).toBe('Sharing reason');
+            req.flush({ trainId: 'train-uuid', branches: [], mainTimestamp: '' });
+        });
+    });
+
     describe('updateTrain', () => {
+
         const trainId = 'train-1';
         const branchId = 'branch-1';
         const train: Train = { ...minimalTrain };
