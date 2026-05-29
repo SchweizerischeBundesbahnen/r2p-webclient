@@ -1,5 +1,58 @@
 # Changelog
 
+## [0.0.13](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.12...r2p-webclient-v0.0.13) (2026-05-29)
+
+
+### Features
+
+* banner don't use for production ([4a79d10](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/4a79d10b608b502f76e2fa74f8cb85624ba90497))
+* bpsglo-14510 support locale for date/time ([97a3796](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/97a3796b436a2ac8cab3ca4238fbf04b09695b92))
+* enable language switching ([a18da16](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/a18da16fae9cb48d12ee861f4144dfb173222c47))
+* enable settings dialog and material theme ([bf192c7](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/bf192c7391c7cb605bb4f0aafed0638ed78c7026))
+* i18n and german translation ([f771549](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/f771549d055501b0be3d39c3e700b80670f35bd2))
+* locale support for traffic-page.ts date ([093c238](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/093c23888abaa9f0013554c9d09559e148c569bf))
+* migrate translation mechanism fully to json ([e539154](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/e53915444c561a5d82bc2668a067d45bdaa9bfe7))
+* settings-driven OIDC config, robust error handling, multi-tenant support ([de45049](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/de4504911e466eb7e2ae39ac2ca957572de8e13c))
+* settings-driven OIDC config, robust error handling, multi-tenant support ([f64a5f9](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/f64a5f9ebfc6877bf26b57b32abad97df8f88d08))
+* show empty train section ([731c4b3](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/731c4b3029ed211840a98a8127357e8c929ccb91))
+* show error message to user when api calls fail ([bede14f](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/bede14f1724f704fdced318e1078646549664e3d))
+* **traffic:** add share train modal with partner selection ([6e8d0b1](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/6e8d0b1b1b3fcfebdc0a5ff01f267cd55d02e92a))
+* **traffic:** add share train modal with partner selection ([8e0da95](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/8e0da95f4866f4f5472eb06fb7aaca6cf5a57793))
+
+
+### Bug Fixes
+
+* alert not displayed on traffic-overview page ([560eebb](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/560eebbd9fe811544aa3cbe5c444986958182c1e))
+* allow deeplinks in the docker image ([e254bb9](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/e254bb9d879a089bfb433259712efad6a4968e6f))
+* reset button not wide enough ([7f830d5](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/7f830d589090776d6eb633bf36a5222d983ca9a2))
+
+
+### Documentation
+
+* explain the error concept ([f1280f9](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/f1280f91f54622f517890e65587f6bf8d795cb21))
+* update the readme to contain the most important commands ([f23d31e](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/f23d31ed544ddb4e4ed9ce08fb7af6b3bd9e85b5))
+
+
+### Miscellaneous Chores
+
+* address review comments ([704eb87](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/704eb8765fb2f6efb13530d736390234a87550e9))
+* avoid dom entries when there are no errors ([cc807d6](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/cc807d6bfbd705e874c1821b18403a6f93b39c04))
+* **deps-dev:** bump angular-eslint from 21.3.1 to 21.4.0 ([9b95880](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/9b958800da039af90880d2f42a598f4a64ea984c))
+* **deps-dev:** bump eslint from 10.3.0 to 10.4.0 ([4b38294](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/4b3829410d766d14bdaa012a37c6f62cfa0f7e46))
+* **deps-dev:** bump typescript-eslint from 8.59.3 to 8.59.4 ([de9038a](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/de9038ab74b6c02fde1c5dcf3eaa864fc3ba0086))
+* **deps-dev:** bump typescript-eslint from 8.59.4 to 8.60.0 ([7623ed5](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/7623ed5ef7208946a6ecbb3a6922aa40f112bba0))
+* **deps-dev:** bump vitest from 4.1.6 to 4.1.7 ([afa2f48](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/afa2f489db8fbfc6c7862cd5a7eece0281ed5c22))
+* **deps:** bump the angular group across 1 directory with 13 updates ([93daa31](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/93daa31e5a7231925290db20456d93109cbb2bea))
+* extract a dedicated journey route component ([d4a7a69](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/d4a7a699640376507ed8ac01f507007d406a1710))
+* make isOidcError more specific ([d6d9893](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/d6d9893597cddfcc3c11ddb6be835be300f3c99c))
+* remove not needed i18n block ([da76a7f](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/da76a7f4285449c61a60a15909fb5d31a2f2f7f1))
+* remove unneded baseHref as the locales are directly integrated and switched dynamically ([21c5474](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/21c5474ac154fb3a5264913fdf13c85b5531b849))
+* remove unused variable ([9cedcbc](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/9cedcbc3e3547f4f3c5d680265477da680aa7b8e))
+* restructure eslint ([951bd18](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/951bd1870b7bc35acefb390686e6516bdb717354))
+* simplify test code a bit and address copilot findings ([68ba9ea](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/68ba9ea77c2475c9357d1a209be495460183a6c5))
+* unify fallback behavior ([117ce4e](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/117ce4eff06a2fc3d486db98573ca902c619e961))
+* use rxResource directly in the template instead of a computed ([fbeca2c](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/fbeca2c8ed29b93150f42cb32c3c5c7b489ed571))
+
 ## [0.0.12](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.11...r2p-webclient-v0.0.12) (2026-05-20)
 
 
