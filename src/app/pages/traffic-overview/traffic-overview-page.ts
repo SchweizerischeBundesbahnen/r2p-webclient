@@ -3,11 +3,11 @@ import { RouterLink } from '@angular/router';
 import { TableRow } from './table-row';
 import { TrafficOverviewPageState } from './traffic-overview-page.state';
 import { SortColumn, TrafficOverviewTableService } from './traffic-overview-table.service';
-import { LoadingSpinner } from '../../shared/components/loading-spinner/loading-spinner';
+import { Spinner } from '../../shared/components/loading-spinner/spinner';
 
 @Component({
     selector: 'app-traffic-overview-page',
-    imports: [RouterLink, TableRow, LoadingSpinner],
+    imports: [RouterLink, TableRow, Spinner],
     template: `
         <!-- ── Main Content ────────────────────────────────────────────── -->
         <div class="main-content">
@@ -71,7 +71,7 @@ import { LoadingSpinner } from '../../shared/components/loading-spinner/loading-
 
                 <!-- Train Table -->
                 @if (trainListResource.isLoading()) {
-                    <app-loading-spinner i18n-label="@@trafficOverview.loading" label="Loading trains…" />
+                    <app-spinner />
                 } @else if (trainListResource.error()) {
                     <div class="alert alert-error" i18n="@@trafficOverview.loadError">
                         ⚠️ Failed to load trains. Please check your server URL in the settings.

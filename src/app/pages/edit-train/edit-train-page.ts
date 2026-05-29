@@ -7,17 +7,16 @@ import { BackendApiService } from '../../backend-api.service';
 import { finalize } from 'rxjs';
 import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
 import { ErrorNotificationService } from '../../shared/error/error-notification.service';
-import { LoadingSpinner } from '../../shared/components/loading-spinner/loading-spinner';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Spinner } from '../../shared/components/loading-spinner/spinner';
 
 @Component({
     selector: 'app-edit-train-page',
-    imports: [RouterLink, FormField, JourneyRouteCard, LoadingSpinner, MatProgressSpinnerModule],
+    imports: [RouterLink, FormField, JourneyRouteCard, Spinner],
     template: `
         @if (state.branch.isLoading()) {
             <div class="main-content">
                 <div class="container">
-                    <app-loading-spinner i18n-label="@@editTrain.loading" label="Loading train data..." />
+                    <app-spinner />
                 </div>
             </div>
         } @else if (state.branch.error()) {
@@ -58,7 +57,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
                             (click)="updateTrain()"
                         >
                             @if (state.editTrainRunning()) {
-                                <mat-spinner [diameter]="16" />
+                                <app-spinner variant="inline" />
                             }
                             <ng-container i18n="@@editTrain.save">💾 Save Train</ng-container>
                         </button>

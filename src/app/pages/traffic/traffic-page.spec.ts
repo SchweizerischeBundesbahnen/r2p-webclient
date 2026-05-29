@@ -106,9 +106,9 @@ describe('TrafficPage – date formatting', () => {
             expect(el.querySelector('#detail-op-day')!.textContent!.trim()).toBe('26.05.2026');
         });
 
-        it('shows "-" when no data is loaded', () => {
+        it('shows no train header card when no data is loaded', () => {
             const el = createComponent('en-US');
-            expect(el.querySelector('#detail-op-day')!.textContent!.trim()).toBe('-');
+            expect(el.querySelector('#train-header-card')).toBeNull();
         });
     });
 

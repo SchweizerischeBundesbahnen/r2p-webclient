@@ -13,26 +13,21 @@ import { RequestMergeModalComponent, RequestMergeDialogData } from './request-me
 import { AcceptMergeModalComponent, AcceptMergeDialogData } from './accept-merge-modal';
 import { RejectMergeModalComponent, RejectMergeDialogData } from './reject-merge-modal';
 import { SettingsService } from '../../settings/settings.service';
-import { LoadingSpinner } from '../../shared/components/loading-spinner/loading-spinner';
+import { Spinner } from '../../shared/components/loading-spinner/spinner';
 
 @Component({
     selector: 'app-traffic-page',
-    imports: [RouterLink, DatePipe, NewVariantModal, JourneyRouteCard, BranchStatusBadgeComponent, LoadingSpinner],
+    imports: [RouterLink, DatePipe, NewVariantModal, JourneyRouteCard, BranchStatusBadgeComponent, Spinner],
     template: `
         <!-- ── Main Content ────────────────────────────────────────────── -->
         <div class="main-content">
             <div class="container">
                 <a [routerLink]="'/traffic-overview'" class="back-link" i18n="@@traffic.breadcrumb.overview">Traffic Overview</a>
 
-                @if (trainMainBranch.isLoading()) {
-                    <app-loading-spinner i18n-label="@@traffic.loading" label="Loading train data…" />
-                } @else if (trafficPageStateService.trainMainBranch.error()) {
-                    <div class="alert alert-error" i18n="@@traffic.loadError">
-                        ⚠️ Failed to load train data. Please go back and try again.
-                    </div>
-                } @else {
+                @if (trainMainBranch.value(); as trainData) {
+                @let trainHeaderInfo = getTrainHeaderInfo(trainData);
+                @let variants = getVariantInfo(trainData);
                 <div class="card" id="train-header-card">
-                    @let trainHeaderInfo = getTrainHeaderInfo(trainMainBranch.value());
                     <div class="card-body">
                         <div
                             style="display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:1rem;"
@@ -136,8 +131,7 @@ import { LoadingSpinner } from '../../shared/components/loading-spinner/loading-
                         <span class="card-title" i18n="@@traffic.variants">⎇ Variants</span>
                     </div>
                     <div id="branches-list">
-                        @for (branch of getVariantInfo(trainMainBranch.value());
-                            track branch.branchName) {
+                        @for (branch of variants; track branch.branchName) {
                             <div class="branch-row">
                                 <div class="branch-info">
                                     <div>
@@ -209,6 +203,12 @@ import { LoadingSpinner } from '../../shared/components/loading-spinner/loading-
                         }
                     </div>
                 </div>
+                } @else if (trainMainBranch.error()) {
+                    <div class="alert alert-error" i18n="@@traffic.loadError">
+                        ⚠️ Failed to load train data. Please go back and try again.
+                    </div>
+                } @else if (trainMainBranch.isLoading()) {
+                    <app-spinner />
                 }
             </div>
         </div>

@@ -5,11 +5,11 @@ import { ViewJsonModal } from './view-json-modal';
 import { DatePipe } from '@angular/common';
 import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
 import { isoDateToUtc } from '../../shared/utils/date.utils';
-import { LoadingSpinner } from '../../shared/components/loading-spinner/loading-spinner';
+import { Spinner } from '../../shared/components/loading-spinner/spinner';
 
 @Component({
     selector: 'app-read-train-page',
-    imports: [RouterLink, ViewJsonModal, DatePipe, JourneyRouteCard, LoadingSpinner],
+    imports: [RouterLink, ViewJsonModal, DatePipe, JourneyRouteCard, Spinner],
     template: `
         <!-- ── Main Content ────────────────────────────────────────────── -->
         <div class="main-content">
@@ -19,7 +19,7 @@ import { LoadingSpinner } from '../../shared/components/loading-spinner/loading-
                 >
 
                 @if (state.trainAndBranch.isLoading()) {
-                    <app-loading-spinner i18n-label="@@readTrain.loading" label="Loading train data…" />
+                    <app-spinner />
                 } @else if (state.trainAndBranch.error()) {
                     <div class="alert alert-error" i18n="@@readTrain.loadError">
                         ⚠️ Failed to load train data. Please go back and try again.

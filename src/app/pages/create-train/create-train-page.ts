@@ -6,7 +6,7 @@ import { CreatePageState } from './create-train-page.state';
 import { finalize } from 'rxjs';
 import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
 import { ErrorNotificationService } from '../../shared/error/error-notification.service';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Spinner } from '../../shared/components/loading-spinner/spinner';
 
 @Component({
     selector: 'app-create-train-page',
@@ -39,7 +39,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
                         (click)="createTrain()"
                     >
                         @if (state.createTrainRunning()) {
-                            <mat-spinner [diameter]="16" />
+                            <app-spinner variant="inline" />
                         }
                         <ng-container i18n="@@createTrain.save">💾 Save Train</ng-container>
                     </button>
@@ -141,7 +141,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     `,
     styles: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [RouterLink, FormField, JourneyRouteCard, MatProgressSpinnerModule],
+    imports: [RouterLink, FormField, JourneyRouteCard, Spinner],
     providers: [CreatePageState],
 })
 export class CreateTrainPage {

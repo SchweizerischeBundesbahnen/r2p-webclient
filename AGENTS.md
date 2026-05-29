@@ -10,6 +10,7 @@
 
 ## Angular 21
 - Be aware that you have limited knowledge about Angular 21. Use the docs/forms-reference.md, docs/signal-reference.md and docs/testing-reference.md to get up to date information when working with signals, forms or testing.
+- Avoid importing Modules, import the standalone components instead (e.g. Angular Material provides standalone components)
 
 ## i18n
 - Update **both** `public/locale/messages.de-CH.json` and `messages.en-US.json` whenever you add, change or remove any `i18n="@@key"` or `$localize` string.
