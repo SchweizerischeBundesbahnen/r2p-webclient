@@ -5,7 +5,7 @@ import { ViewJsonModal } from './view-json-modal';
 import { DatePipe } from '@angular/common';
 import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
 import { isoDateToUtc } from '../../shared/utils/date.utils';
-import { Spinner } from '../../shared/components/loading-spinner/spinner';
+import { Spinner } from '../../shared/components/spinner/spinner';
 
 @Component({
     selector: 'app-read-train-page',

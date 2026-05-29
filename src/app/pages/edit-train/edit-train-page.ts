@@ -7,7 +7,7 @@ import { BackendApiService } from '../../backend-api.service';
 import { finalize } from 'rxjs';
 import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
 import { ErrorNotificationService } from '../../shared/error/error-notification.service';
-import { Spinner } from '../../shared/components/loading-spinner/spinner';
+import { Spinner } from '../../shared/components/spinner/spinner';
 
 @Component({
     selector: 'app-edit-train-page',

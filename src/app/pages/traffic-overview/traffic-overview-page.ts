@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import { TableRow } from './table-row';
 import { TrafficOverviewPageState } from './traffic-overview-page.state';
 import { SortColumn, TrafficOverviewTableService } from './traffic-overview-table.service';
-import { Spinner } from '../../shared/components/loading-spinner/spinner';
+import { Spinner } from '../../shared/components/spinner/spinner';
 
 @Component({
     selector: 'app-traffic-overview-page',

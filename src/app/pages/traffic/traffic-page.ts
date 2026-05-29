@@ -13,7 +13,7 @@ import { RequestMergeModalComponent, RequestMergeDialogData } from './request-me
 import { AcceptMergeModalComponent, AcceptMergeDialogData } from './accept-merge-modal';
 import { RejectMergeModalComponent, RejectMergeDialogData } from './reject-merge-modal';
 import { SettingsService } from '../../settings/settings.service';
-import { Spinner } from '../../shared/components/loading-spinner/spinner';
+import { Spinner } from '../../shared/components/spinner/spinner';
 
 @Component({
     selector: 'app-traffic-page',
