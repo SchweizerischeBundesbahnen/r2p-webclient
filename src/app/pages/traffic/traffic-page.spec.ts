@@ -6,6 +6,7 @@ import localeDeCh from '@angular/common/locales/de';
 import { TrafficPage } from './traffic-page';
 import { TrafficPageState, TrainWithDetails } from './traffic-page.state';
 import { TrainListElement } from '../../shared/models/api.models';
+import { SettingsService } from '../../settings/settings.service';
 
 registerLocaleData(localeDeCh, 'de-CH');
 
@@ -48,26 +49,42 @@ const TRAIN_WITH_DETAILS: TrainWithDetails = {
     details: null,
 };
 
+function makeSettingsService(organization: string): SettingsService {
+    return {
+        settings: signal({
+            serverUrl: 'http://localhost:8080',
+            organization,
+            authority: '',
+            clientId: '',
+            scope: '',
+            responseMode: 'fragment',
+        }),
+    } as unknown as SettingsService;
+}
+
 function createFakeState(value?: TrainWithDetails) {
     return {
         trainId: signal<string | undefined>(undefined),
         newVariantModalIsOpen: signal(false),
-        toggleIsNewVariantModalOpen: () => { /* noop for testing */ },
+        toggleIsNewVariantModalOpen: () => { void 0; },
         trainMainBranch: {
             value: signal(value),
             error: signal(undefined),
             isLoading: signal(false),
+            reload: () => { void 0; },
         },
     };
 }
 
-function createComponent(locale: string, value?: TrainWithDetails) {
+function createComponent(locale: string, value?: TrainWithDetails, organization = 'SBB') {
     const fakeState = createFakeState(value);
+    const settingsService = makeSettingsService(organization);
     TestBed.configureTestingModule({
         providers: [
             provideRouter([]),
             { provide: LOCALE_ID, useValue: locale },
             { provide: TrafficPageState, useValue: fakeState },
+            { provide: SettingsService, useValue: settingsService },
         ],
     });
     const fixture = TestBed.createComponent(TrafficPage);
@@ -127,7 +144,65 @@ describe('TrafficPage – date formatting', () => {
     });
 });
 
+describe('TrafficPage – merge action buttons', () => {
+    afterEach(() => TestBed.resetTestingModule());
 
+    it('shows Merge Request button for own open non-main branch', () => {
+        const trainWithOpenBranch: TrainWithDetails = {
+            listElement: {
+                ...TRAIN_LIST_ELEMENT,
+                branches: [
+                    TRAIN_LIST_ELEMENT.branches[0],
+                    {
+                        ...TRAIN_LIST_ELEMENT.branches[1],
+                        technical: { ...TRAIN_LIST_ELEMENT.branches[1].technical, branchState: 'open' },
+                    },
+                ],
+            },
+            details: null,
+        };
+        const el = createComponent('en-US', trainWithOpenBranch, 'BLS');
+        const branchActions = el.querySelectorAll('.branch-actions');
+        expect(branchActions[1].textContent).toContain('Propose Variant');
+    });
 
+    it('does not show Merge Request button for other partner branches', () => {
+        const trainWithOpenBranch: TrainWithDetails = {
+            listElement: {
+                ...TRAIN_LIST_ELEMENT,
+                branches: [
+                    TRAIN_LIST_ELEMENT.branches[0],
+                    {
+                        ...TRAIN_LIST_ELEMENT.branches[1],
+                        technical: { ...TRAIN_LIST_ELEMENT.branches[1].technical, branchState: 'open' },
+                    },
+                ],
+            },
+            details: null,
+        };
+        const el = createComponent('en-US', trainWithOpenBranch, 'SBB');
+        const branchActions = el.querySelectorAll('.branch-actions');
+        expect(branchActions[1].textContent).not.toContain('Propose Variant');
+    });
 
+    it('shows Accept and Reject buttons for Lead RU when branch is merge_requested', () => {
+        const el = createComponent('en-US', TRAIN_WITH_DETAILS, 'SBB');
+        const branchActions = el.querySelectorAll('.branch-actions');
+        expect(branchActions[1].textContent).toContain('Accept Variant');
+        expect(branchActions[1].textContent).toContain('Reject Variant');
+    });
 
+    it('does not show Accept and Reject buttons for non-Lead RU', () => {
+        const el = createComponent('en-US', TRAIN_WITH_DETAILS, 'BLS');
+        const branchActions = el.querySelectorAll('.branch-actions');
+        expect(branchActions[1].textContent).not.toContain('Accept Variant');
+        expect(branchActions[1].textContent).not.toContain('Reject Variant');
+    });
+
+    it('does not show Accept/Reject for main branch even if owned by Lead RU', () => {
+        const el = createComponent('en-US', TRAIN_WITH_DETAILS, 'SBB');
+        const branchActions = el.querySelectorAll('.branch-actions');
+        expect(branchActions[0].textContent).not.toContain('Accept Variant');
+        expect(branchActions[0].textContent).not.toContain('Reject Variant');
+    });
+});

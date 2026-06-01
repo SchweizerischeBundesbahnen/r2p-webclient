@@ -88,6 +88,30 @@ export class BackendApiService {
         );
     }
 
+    requestMerge(trainId: string, branchId: string, comment: string): Observable<Branch> {
+        return this.httpClient.post<Branch>(
+            `${this.baseUrl}/v1/trains/${trainId}/branches/${branchId}/requestMerge`,
+            null,
+            { params: { comment }, headers: this.tokenHeaders },
+        );
+    }
+
+    merge(trainId: string, branchId: string, reviewedVersion: string, comment: string): Observable<TrainListElement> {
+        return this.httpClient.post<TrainListElement>(
+            `${this.baseUrl}/v1/trains/${trainId}/branches/${branchId}/merge`,
+            null,
+            { params: { reviewedVersion, comment }, headers: this.tokenHeaders },
+        );
+    }
+
+    rejectMerge(trainId: string, branchId: string, comment: string): Observable<Branch> {
+        return this.httpClient.post<Branch>(
+            `${this.baseUrl}/v1/trains/${trainId}/branches/${branchId}/rejectMerge`,
+            null,
+            { params: { comment }, headers: this.tokenHeaders },
+        );
+    }
+
     updateTrain(
         trainId: string,
         train: Train,
