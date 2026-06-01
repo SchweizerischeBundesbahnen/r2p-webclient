@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.0.14](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.13...r2p-webclient-v0.0.14) (2026-06-01)
+
+
+### Features
+
+* replace loading fallbacks with Angular Material spinners ([2098709](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/20987092504234790d4a1e890d54bd779bca3893))
+* **traffic:** add variant propose/accept/reject functionality ([085fcec](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/085fceca75141f3a779af3b7185846df95e82253))
+* **traffic:** add variant propose/accept/reject functionality ([085fcec](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/085fceca75141f3a779af3b7185846df95e82253))
+
+
+### Bug Fixes
+
+* **guard:** prevent white screen when SPA dev-server returns 200 for OIDC discovery ([d6236f2](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/d6236f2c9d63f51a1172ab093d73b36db8e05128))
+* **settings:** reject Azure AD v1 authority and normalize serverUrl ([aa3e4fc](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/aa3e4fc9d342dbe62f126e5879f852341fe91f3e))
+
+
+### Miscellaneous Chores
+
+* rename loading-spinner directory ([a2ff7bd](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/a2ff7bdb2c236310db4bf92e7bf0fd199554c867))
+
+
+### Code Refactoring
+
+* address PR [#56](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/issues/56) review – generalise spinner component ([7099b27](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/7099b273609a092b29e2515d67be519e4ebf320d))
+* migrate Angular Material Modules to standalone components ([c85f6bc](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/c85f6bc1b8c8ad59223c08f8a9ab5b949eaf1bc1))
+* **settings:** remove configurable response_mode, fix to query ([a006883](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/a0068838a93148e2e58a4b5cb96144e76de2cc5e))
+
 ## [0.0.13](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.12...r2p-webclient-v0.0.13) (2026-05-29)
 
 
