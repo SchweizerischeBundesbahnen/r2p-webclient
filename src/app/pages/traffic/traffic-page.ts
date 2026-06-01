@@ -13,25 +13,21 @@ import { RequestMergeModalComponent, RequestMergeDialogData } from './request-me
 import { AcceptMergeModalComponent, AcceptMergeDialogData } from './accept-merge-modal';
 import { RejectMergeModalComponent, RejectMergeDialogData } from './reject-merge-modal';
 import { SettingsService } from '../../settings/settings.service';
+import { Spinner } from '../../shared/components/spinner/spinner';
 
 @Component({
     selector: 'app-traffic-page',
-    imports: [RouterLink, DatePipe, NewVariantModal, JourneyRouteCard, BranchStatusBadgeComponent],
+    imports: [RouterLink, DatePipe, NewVariantModal, JourneyRouteCard, BranchStatusBadgeComponent, Spinner],
     template: `
         <!-- ── Main Content ────────────────────────────────────────────── -->
         <div class="main-content">
             <div class="container">
                 <a [routerLink]="'/traffic-overview'" class="back-link" i18n="@@traffic.breadcrumb.overview">Traffic Overview</a>
 
-                @if (trafficPageStateService.trainMainBranch.error()) {
-                    <div class="alert alert-error" i18n="@@traffic.loadError">
-                        ⚠️ Failed to load train data. Please go back and try again.
-                    </div>
-                }
-
-                <!-- Train Header Card -->
+                @if (trainMainBranch.value(); as trainData) {
+                @let trainHeaderInfo = getTrainHeaderInfo(trainData);
+                @let variants = getVariantInfo(trainData);
                 <div class="card" id="train-header-card">
-                    @let trainHeaderInfo = getTrainHeaderInfo(trainMainBranch.value());
                     <div class="card-body">
                         <div
                             style="display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:1rem;"
@@ -135,8 +131,7 @@ import { SettingsService } from '../../settings/settings.service';
                         <span class="card-title" i18n="@@traffic.variants">⎇ Variants</span>
                     </div>
                     <div id="branches-list">
-                        @for (branch of getVariantInfo(trainMainBranch.value());
-                            track branch.branchName) {
+                        @for (branch of variants; track branch.branchName) {
                             <div class="branch-row">
                                 <div class="branch-info">
                                     <div>
@@ -159,28 +154,30 @@ import { SettingsService } from '../../settings/settings.service';
                                         </div>
                                     </div>
                                 </div>
-                                <div
-                                    style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;"
-                                >
-                                    <app-branch-status-badge [state]="branch.status" />
-                                     <div class="branch-actions">
-                                         <a
-                                             routerLink="/edit-train"
-                                             [queryParams]="{
-                                                 trainId: trainId(),
-                                                 branchId: branch.branchId,
-                                             }"
-                                             class="btn btn-primary btn-sm"
-                                             i18n="@@traffic.edit">✏ Edit</a
-                                         ><a
-                                         [routerLink]="'/read-train'"
-                                         [queryParams]="{
-                                                 trainId: trainId(),
-                                                 branchId: branch.branchId,
-                                             }"
-                                         class="btn btn-ghost btn-sm"
-                                         i18n="@@traffic.view">👁 View</a
-                                         >
+                                 <div
+                                     style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;"
+                                 >
+                                     <app-branch-status-badge [state]="branch.status" />
+                                      <div class="branch-actions">
+                                          @if (branch.showEdit) {
+                                              <a
+                                                  routerLink="/edit-train"
+                                                  [queryParams]="{
+                                                      trainId: trainId(),
+                                                      branchId: branch.branchId,
+                                                  }"
+                                                  class="btn btn-primary btn-sm"
+                                                  i18n="@@traffic.edit">✏ Edit</a>
+                                          }
+                                          <a
+                                              [routerLink]="'/read-train'"
+                                              [queryParams]="{
+                                                  trainId: trainId(),
+                                                  branchId: branch.branchId,
+                                              }"
+                                              class="btn btn-ghost btn-sm"
+                                              i18n="@@traffic.view">👁 View</a
+                                          >
                                          @if (branch.showMergeRequest) {
                                              <button
                                                  class="btn btn-outline btn-sm"
@@ -206,6 +203,13 @@ import { SettingsService } from '../../settings/settings.service';
                         }
                     </div>
                 </div>
+                } @else if (trainMainBranch.error()) {
+                    <div class="alert alert-error" i18n="@@traffic.loadError">
+                        ⚠️ Failed to load train data. Please go back and try again.
+                    </div>
+                } @else if (trainMainBranch.isLoading()) {
+                    <app-spinner />
+                }
             </div>
         </div>
         @if (trafficPageStateService.newVariantModalIsOpen()) {
@@ -328,7 +332,13 @@ export class TrafficPage {
         const mainBranch = branches.find((b) => b.technical.mainBranch);
         const isLeadRU = mainBranch?.technical.owner === currentOrg;
 
-        return branches.map((branch) => {
+        const sorted = [...branches].sort((a, b) => {
+            if (a.technical.mainBranch && !b.technical.mainBranch) return -1;
+            if (!a.technical.mainBranch && b.technical.mainBranch) return 1;
+            return b.technical.timestamp.localeCompare(a.technical.timestamp);
+        });
+
+        return sorted.map((branch) => {
             const isOwn = branch.technical.owner === currentOrg;
             const state = branch.technical.branchState;
             const isMain = branch.technical.mainBranch;
@@ -340,6 +350,7 @@ export class TrafficPage {
                 lastChange: branch.technical.timestamp,
                 status: state,
                 version: branch.technical.version,
+                showEdit: isOwn,
                 showMergeRequest: isOwn && state === 'open' && !isMain,
                 showAcceptReject: isLeadRU && state === 'merge_requested' && !isMain,
             };
@@ -369,4 +380,5 @@ export interface VariantViewModel {
     version: string;
     showMergeRequest: boolean;
     showAcceptReject: boolean;
+    showEdit: boolean;
 }

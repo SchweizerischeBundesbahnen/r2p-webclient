@@ -6,6 +6,7 @@ import { CreatePageState } from './create-train-page.state';
 import { finalize } from 'rxjs';
 import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
 import { ErrorNotificationService } from '../../shared/error/error-notification.service';
+import { Spinner } from '../../shared/components/spinner/spinner';
 
 @Component({
     selector: 'app-create-train-page',
@@ -33,12 +34,14 @@ import { ErrorNotificationService } from '../../shared/error/error-notification.
                     <button
                         class="btn btn-success"
                         id="sticky-save-btn"
-                        [class.btn-muted]="createTrainForm().invalid()"
-                        [disabled]="createTrainForm().invalid()"
+                        [class.btn-muted]="createTrainForm().invalid() || state.createTrainRunning()"
+                        [disabled]="createTrainForm().invalid() || state.createTrainRunning()"
                         (click)="createTrain()"
-                        i18n="@@createTrain.save"
                     >
-                        💾 Save Train
+                        @if (state.createTrainRunning()) {
+                            <app-spinner variant="inline" />
+                        }
+                        <ng-container i18n="@@createTrain.save">💾 Save Train</ng-container>
                     </button>
                 </div>
             </div>
@@ -138,25 +141,25 @@ import { ErrorNotificationService } from '../../shared/error/error-notification.
     `,
     styles: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [RouterLink, FormField, JourneyRouteCard],
+    imports: [RouterLink, FormField, JourneyRouteCard, Spinner],
     providers: [CreatePageState],
 })
 export class CreateTrainPage {
     private apiService = inject(BackendApiService);
     private router = inject(Router);
-    private state = inject(CreatePageState);
+    protected state = inject(CreatePageState);
     private notifications = inject(ErrorNotificationService);
     protected createTrainForm = inject(CreatePageState).createTrainForm;
 
     protected createTrain() {
-        if (this.state.createTrainRunning) return;
-        this.state.createTrainRunning = true;
+        if (this.state.createTrainRunning()) return;
+        this.state.createTrainRunning.set(true);
         const { name, creationComment, operationalDay } = this.state.createTrainForm().value();
         this.apiService
             .createTrain(name, operationalDay, creationComment)
             .pipe(
                 finalize(() => {
-                    this.state.createTrainRunning = false;
+                    this.state.createTrainRunning.set(false);
                 }),
             )
             .subscribe({

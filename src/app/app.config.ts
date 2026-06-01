@@ -27,7 +27,7 @@ function provideAppAuth() {
             clientId: s.clientId,
             scope: s.scope,
             responseType: 'code',
-            customParamsAuthRequest: { response_mode: s.responseMode },
+            customParamsAuthRequest: { response_mode: 'query' },
             silentRenew: true,
             useRefreshToken: true,
             autoUserInfo: false,

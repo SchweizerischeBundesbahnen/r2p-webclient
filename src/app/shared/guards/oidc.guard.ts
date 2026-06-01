@@ -57,7 +57,18 @@ export const oidcGuard: CanActivateFn = () => {
 
     return from(
         fetch(discoveryUrl, { method: 'GET', signal: AbortSignal.timeout(5000) })
-            .then((res) => res.ok)
+            .then(async (res) => {
+                if (!res.ok) return false;
+                // Validate that the response is an actual OIDC discovery document.
+                const contentType = res.headers.get('content-type') ?? '';
+                if (!contentType.includes('application/json')) return false;
+                try {
+                    const json = await res.json() as Record<string, unknown>;
+                    return typeof json['issuer'] === 'string';
+                } catch {
+                    return false;
+                }
+            })
             .catch(() => false),
     ).pipe(
         take(1),

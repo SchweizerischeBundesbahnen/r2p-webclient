@@ -11,7 +11,7 @@ import { assertIsoDate } from '../../shared/utils/date.utils';
  */
 @Injectable()
 export class EditTrainPageState {
-    editTrainRunning = false;
+    editTrainRunning = signal(false);
     readonly apiService = inject(BackendApiService);
 
     model = signal<{

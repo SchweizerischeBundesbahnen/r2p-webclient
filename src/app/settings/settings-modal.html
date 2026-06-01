@@ -117,6 +117,12 @@
             @if (authority().trim() && !isAuthorityValid()) {
                 <p class="settings-modal__hint settings-modal__hint--error" i18n="@@settings.authorityInvalid">Must be a valid URL.</p>
             }
+            @if (isAzureV1Authority()) {
+                <p class="settings-modal__hint settings-modal__hint--error" i18n="@@settings.authorityAzureV1Error">
+                    Azure AD v1 endpoint is not supported. Please use the v2.0 endpoint:
+                    <code>https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code>
+                </p>
+            }
         </div>
 
         <!-- Client ID -->
@@ -149,18 +155,6 @@
             </mat-form-field>
         </div>
 
-        <!-- Response Mode -->
-        <div class="settings-modal__field-group">
-            <label class="settings-modal__field-label" for="response-mode" i18n="@@settings.responseMode">Response Mode</label>
-            <mat-form-field appearance="outline" subscriptSizing="dynamic" class="settings-modal__field">
-                <mat-select id="response-mode" [value]="responseMode()"
-                            (valueChange)="responseMode.set($event)" aria-label="Response Mode">
-                    @for (mode of responseModes; track mode.value) {
-                        <mat-option [value]="mode.value">{{ mode.label }}</mat-option>
-                    }
-                </mat-select>
-            </mat-form-field>
-        </div>
 
 
         <button mat-flat-button color="primary" class="settings-modal__save"

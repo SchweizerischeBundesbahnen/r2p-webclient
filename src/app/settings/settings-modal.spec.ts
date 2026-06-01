@@ -11,7 +11,6 @@ const VALID_SETTINGS = {
     authority: 'https://login.microsoftonline.com/tenant/v2.0',
     clientId: 'my-client',
     scope: 'openid profile email',
-    responseMode: 'fragment' as const,
 };
 
 function makeSettingsService(overrides: Partial<typeof VALID_SETTINGS> = {}): SettingsService {
@@ -136,6 +135,34 @@ describe('SettingsModal', () => {
             ci.clientId.set(VALID_SETTINGS.clientId);
 
             ci.scope.set(''); expect(ci.canContinue()).toBe(false);
+        });
+
+        it('isAzureV1Authority is true for bare login.microsoftonline.com URL and blocks canContinue', () => {
+            const ci = fixture.componentInstance;
+            ci.authority.set('https://login.microsoftonline.com/2cda5d11-f0ac-46b3-967d-af1b2e1bd01a');
+            expect(ci.isAzureV1Authority()).toBe(true);
+            expect(ci.canContinue()).toBe(false);
+        });
+
+        it('isAzureV1Authority is true for bare URL with trailing slash and blocks canContinue', () => {
+            const ci = fixture.componentInstance;
+            ci.authority.set('https://login.microsoftonline.com/2cda5d11-f0ac-46b3-967d-af1b2e1bd01a/');
+            expect(ci.isAzureV1Authority()).toBe(true);
+            expect(ci.canContinue()).toBe(false);
+        });
+
+        it('isAzureV1Authority is false for v2.0 URL and does not block canContinue', () => {
+            const ci = fixture.componentInstance;
+            ci.authority.set('https://login.microsoftonline.com/2cda5d11-f0ac-46b3-967d-af1b2e1bd01a/v2.0');
+            expect(ci.isAzureV1Authority()).toBe(false);
+            expect(ci.canContinue()).toBe(true);
+        });
+
+        it('isAzureV1Authority is false for non-Azure URLs', () => {
+            const ci = fixture.componentInstance;
+            ci.authority.set('http://localhost:8180/realms/r2p');
+            expect(ci.isAzureV1Authority()).toBe(false);
+            expect(ci.canContinue()).toBe(true);
         });
     });
 

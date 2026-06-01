@@ -57,7 +57,6 @@ function makeSettingsService(organization: string): SettingsService {
             authority: '',
             clientId: '',
             scope: '',
-            responseMode: 'fragment',
         }),
     } as unknown as SettingsService;
 }
@@ -107,9 +106,9 @@ describe('TrafficPage – date formatting', () => {
             expect(el.querySelector('#detail-op-day')!.textContent!.trim()).toBe('26.05.2026');
         });
 
-        it('shows "-" when no data is loaded', () => {
+        it('shows no train header card when no data is loaded', () => {
             const el = createComponent('en-US');
-            expect(el.querySelector('#detail-op-day')!.textContent!.trim()).toBe('-');
+            expect(el.querySelector('#train-header-card')).toBeNull();
         });
     });
 
@@ -206,3 +205,60 @@ describe('TrafficPage – merge action buttons', () => {
         expect(branchActions[0].textContent).not.toContain('Reject Variant');
     });
 });
+
+describe('TrafficPage – variant sort order', () => {
+    afterEach(() => TestBed.resetTestingModule());
+
+    it('shows main branch first, then other branches descending by timestamp', () => {
+        const trainWithMultipleBranches: TrainWithDetails = {
+            listElement: {
+                ...TRAIN_LIST_ELEMENT,
+                branches: [
+                    {
+                        branchId: 'branch-3',
+                        branchName: 'SOB-variant',
+                        business: { trainNumber: 'IC 1234', operationalDay: '2026-05-26' },
+                        technical: {
+                            version: 'v-003',
+                            branchState: 'open',
+                            timestamp: '2026-05-26T16:00:00',
+                            comment: '',
+                            mainBranch: false,
+                            owner: 'SOB',
+                        },
+                    },
+                    TRAIN_LIST_ELEMENT.branches[1], // BLS, 14:00
+                    TRAIN_LIST_ELEMENT.branches[0], // SBB main, 10:30
+                ],
+            },
+            details: null,
+        };
+        const el = createComponent('en-US', trainWithMultipleBranches, 'SBB');
+        const branchNames = Array.from(el.querySelectorAll('.branch-name')).map(
+            (e) => e.textContent?.trim(),
+        );
+        expect(branchNames[0]).toContain('SBB-main');    // main first
+        expect(branchNames[1]).toContain('SOB-variant'); // 16:00 > 14:00
+        expect(branchNames[2]).toContain('BLS-variant'); // 14:00
+    });
+});
+
+describe('TrafficPage – edit button visibility', () => {
+    afterEach(() => TestBed.resetTestingModule());
+
+    it('shows Edit button only for own branches', () => {
+        // SBB is logged in → only SBB-main branch should show Edit
+        const el = createComponent('en-US', TRAIN_WITH_DETAILS, 'SBB');
+        const branchActions = el.querySelectorAll('.branch-actions');
+        expect(branchActions[0].textContent).toContain('Edit');
+        expect(branchActions[1].textContent).not.toContain('Edit');
+    });
+
+    it('shows Edit button for BLS branch when logged in as BLS', () => {
+        const el = createComponent('en-US', TRAIN_WITH_DETAILS, 'BLS');
+        const branchActions = el.querySelectorAll('.branch-actions');
+        expect(branchActions[0].textContent).not.toContain('Edit');
+        expect(branchActions[1].textContent).toContain('Edit');
+    });
+});
+

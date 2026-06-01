@@ -13,7 +13,6 @@ const CONFIGURED_SETTINGS = {
     organization: 'SBB',
     clientId: 'r2p-sp',
     scope: 'openid profile',
-    responseMode: 'fragment' as const,
 };
 
 function makeSettingsService(configured = true) {
@@ -45,8 +44,12 @@ describe('oidcGuard', () => {
         authorizeSpy = vi.fn();
         originalFetch = globalThis.fetch;
 
-        // Default: discovery endpoint reachable
-        fetchSpy = vi.fn().mockResolvedValue({ ok: true });
+        // Default: discovery endpoint reachable with a valid OIDC discovery document
+        fetchSpy = vi.fn().mockResolvedValue({
+            ok: true,
+            headers: { get: () => 'application/json' },
+            json: () => Promise.resolve({ issuer: 'https://login.example.com/realms/r2p' }),
+        });
         globalThis.fetch = fetchSpy as unknown as typeof fetch;
 
         // Clear sessionStorage before each test
