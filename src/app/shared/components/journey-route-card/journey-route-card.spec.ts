@@ -78,6 +78,9 @@ describe('JourneyRouteCard', () => {
                                 { type: 'arrival', duration: '07:00' },
                                 { type: 'departure', duration: '07:05' },
                             ],
+                            capability: {
+                                type: 'path'
+                            }
                         },
                     ],
                 },
@@ -92,15 +95,26 @@ describe('JourneyRouteCard', () => {
         expect(el.textContent).toContain('07:05');
     });
 
-    it('should categorize rolling stock activities correctly', () => {
+    it('should hide actions column when readonly', () => {
+        fixture.componentRef.setInput('readonly', true);
+        fixture.detectChanges();
+
+        const el: HTMLElement = fixture.nativeElement;
+        const headers = el.querySelectorAll('th');
+        const headerTexts = Array.from(headers).map((h: Element) => h.textContent?.trim());
+        expect(headerTexts).not.toContain('Actions');
+    });
+
+    it('should list activity with capability type rollingStock in rollingStockActivities column', () => {
         const journey: Journey = {
             journeylocations: [
                 {
-                    locations: [{ name: 'Olten' }],
+                    locations: [{ name: 'Bern' }],
                     activities: [
-                        { type: 'formation', responsibility: { type: 'provider', id: 'BLS' } },
-                        { type: 'journey', responsibility: { type: 'carrier', id: 'SBB' } },
-                        { type: 'other', responsibility: { type: 'planner', id: 'SOB' } },
+                        {
+                            type: 'formation',
+                            capability: { type: 'rollingStock' },
+                        },
                     ],
                 },
             ],
@@ -112,19 +126,58 @@ describe('JourneyRouteCard', () => {
         const stops = component.stops();
         expect(stops[0].rollingStockActivities.length).toBe(1);
         expect(stops[0].rollingStockActivities[0].type).toBe('formation');
-        expect(stops[0].staffActivities.length).toBe(1);
-        expect(stops[0].staffActivities[0].type).toBe('journey');
-        expect(stops[0].planActivities.length).toBe(1);
-        expect(stops[0].planActivities[0].type).toBe('other');
+        expect(stops[0].staffActivities.length).toBe(0);
+        expect(stops[0].pathActivities.length).toBe(0);
     });
 
-    it('should hide actions column when readonly', () => {
-        fixture.componentRef.setInput('readonly', true);
+    it('should list activity with capability type staff in staffActivities column', () => {
+        const journey: Journey = {
+            journeylocations: [
+                {
+                    locations: [{ name: 'Zürich HB' }],
+                    activities: [
+                        {
+                            type: 'crewing',
+                            capability: { type: 'staff' },
+                        },
+                    ],
+                },
+            ],
+        };
+
+        fixture.componentRef.setInput('journey', journey);
         fixture.detectChanges();
 
-        const headers = fixture.nativeElement.querySelectorAll('th');
-        const headerTexts = Array.from(headers).map((h: any) => h.textContent.trim());
-        expect(headerTexts).not.toContain('Actions');
+        const stops = component.stops();
+        expect(stops[0].staffActivities.length).toBe(1);
+        expect(stops[0].staffActivities[0].type).toBe('crewing');
+        expect(stops[0].rollingStockActivities.length).toBe(0);
+        expect(stops[0].pathActivities.length).toBe(0);
+    });
+
+    it('should list activity with capability type path in pathActivities column', () => {
+        const journey: Journey = {
+            journeylocations: [
+                {
+                    locations: [{ name: 'Basel SBB' }],
+                    activities: [
+                        {
+                            type: 'routing',
+                            capability: { type: 'path' },
+                        },
+                    ],
+                },
+            ],
+        };
+
+        fixture.componentRef.setInput('journey', journey);
+        fixture.detectChanges();
+
+        const stops = component.stops();
+        expect(stops[0].pathActivities.length).toBe(1);
+        expect(stops[0].pathActivities[0].type).toBe('routing');
+        expect(stops[0].rollingStockActivities.length).toBe(0);
+        expect(stops[0].staffActivities.length).toBe(0);
     });
 });
 
