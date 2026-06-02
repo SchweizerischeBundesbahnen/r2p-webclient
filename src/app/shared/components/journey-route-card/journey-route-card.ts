@@ -1,13 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { Activity, Journey } from '../../models/api.models';
 
-type ColumnType = 'rollingStock' | 'staff' | 'plan';
-
-function activityColumnType(activityType: string | undefined): ColumnType {
-    if (activityType === 'rollingStock' || activityType === 'wagons' || activityType === 'formation' || activityType === 'traction') return 'rollingStock';
-    if (activityType === 'journey' || activityType === 'train.runthrough' || activityType === 'commercial' || activityType?.startsWith('train.halt')) return 'staff';
-    return 'plan';
-}
+/** Capability Types for grouping Columns */
+const CAPABILITY_TYPE_ROLLING_STOCK = 'rollingStock' as const;
+const CAPABILITY_TYPE_STAFF = 'staff' as const;
+const CAPABILITY_TYPE_PATH = 'path' as const;
 
 export interface JourneyStop {
     stopName: string;
@@ -15,7 +12,7 @@ export interface JourneyStop {
     isLast: boolean;
     rollingStockActivities: Activity[];
     staffActivities: Activity[];
-    planActivities: Activity[];
+    pathActivities: Activity[];
     spanRole: 'none' | 'start' | 'mid' | 'end' | 'solo';
     inheritedOriginName?: string;
 }
@@ -32,17 +29,17 @@ export class JourneyRouteCard {
 
     readonly stops = computed<JourneyStop[]>(() => {
         const j = this.journey();
-        const locs = j?.journeylocations;
-        if (!locs?.length) return [];
+        const locations = j?.journeylocations;
+        if (!locations?.length) return [];
 
         // Pre-compute spanning rolling stock state
-        const spanningRollingStock: (Activity | null)[] = new Array(locs.length).fill(null);
-        const spanningRollingStockOrigin: (number | null)[] = new Array(locs.length).fill(null);
+        const spanningRollingStock: (Activity | null)[] = new Array(locations.length).fill(null);
+        const spanningRollingStockOrigin: (number | null)[] = new Array(locations.length).fill(null);
         let activeRollingStockActivity: Activity | null = null;
         let activeRollingStockOrigin: number | null = null;
 
-        for (let i = 0; i < locs.length; i++) {
-            const ownRollingStockActivities = (locs[i].activities ?? []).filter(a => activityColumnType(a.type) === 'rollingStock');
+        for (let i = 0; i < locations.length; i++) {
+            const ownRollingStockActivities = (locations[i].activities ?? []).filter(a => a.capability?.type === CAPABILITY_TYPE_ROLLING_STOCK);
             if (ownRollingStockActivities.length > 0) {
                 activeRollingStockActivity = ownRollingStockActivities.at(-1)!;
                 activeRollingStockOrigin = i;
@@ -54,31 +51,39 @@ export class JourneyRouteCard {
         }
 
         // Compute span roles
-        const spanRole: JourneyStop['spanRole'][] = new Array(locs.length).fill('none');
-        for (let i = 0; i < locs.length; i++) {
-            const ownRollingStockActivities = (locs[i].activities ?? []).filter(a => activityColumnType(a.type) === 'rollingStock');
+        const spanRole: JourneyStop['spanRole'][] = new Array(locations.length).fill('none');
+        for (let i = 0; i < locations.length; i++) {
+            const ownRollingStockActivities = (locations[i].activities ?? []).filter(a => a.capability?.type === CAPABILITY_TYPE_ROLLING_STOCK);
             if (ownRollingStockActivities.length > 0) {
-                const spansOnward = i + 1 < locs.length && spanningRollingStock[i + 1] !== null;
+                const spansOnward = i + 1 < locations.length && spanningRollingStock[i + 1] !== null;
                 spanRole[i] = spansOnward ? 'start' : 'solo';
             } else if (spanningRollingStock[i]) {
-                const continuesNext = i + 1 < locs.length && spanningRollingStock[i + 1] !== null;
+                const continuesNext = i + 1 < locations.length && spanningRollingStock[i + 1] !== null;
                 spanRole[i] = continuesNext ? 'mid' : 'end';
             }
         }
 
-        return locs.map((jl, idx) => {
+        return locations.map((jl, idx) => {
             const activities = jl.activities ?? [];
-            const inheritedOriginName = spanRole[idx] === 'end' && spanningRollingStockOrigin[idx] != null
-                ? locs[spanningRollingStockOrigin[idx]!]?.locations?.[0]?.name ?? `Stop ${spanningRollingStockOrigin[idx]! + 1}`
-                : undefined;
+            const inheritedOriginName =
+                spanRole[idx] === 'end' && spanningRollingStockOrigin[idx] != null
+                    ? (locations[spanningRollingStockOrigin[idx]]?.locations?.[0]?.name ??
+                      `Stop ${spanningRollingStockOrigin[idx] + 1}`)
+                    : undefined;
 
             return {
                 stopName: jl.locations?.[0]?.name ?? '?',
                 isFirst: idx === 0,
-                isLast: idx === locs.length - 1,
-                rollingStockActivities: activities.filter(a => activityColumnType(a.type) === 'rollingStock'),
-                staffActivities: activities.filter(a => activityColumnType(a.type) === 'staff'),
-                planActivities: activities.filter(a => activityColumnType(a.type) === 'plan'),
+                isLast: idx === locations.length - 1,
+                rollingStockActivities: activities.filter(
+                    (a) => a.capability?.type === CAPABILITY_TYPE_ROLLING_STOCK,
+                ),
+                staffActivities: activities.filter(
+                    (a) => a.capability?.type === CAPABILITY_TYPE_STAFF,
+                ),
+                pathActivities: activities.filter(
+                    (a) => a.capability?.type === CAPABILITY_TYPE_PATH,
+                ),
                 spanRole: spanRole[idx],
                 inheritedOriginName,
             };

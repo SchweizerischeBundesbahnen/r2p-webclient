@@ -95,8 +95,8 @@
                             </td>
                             <td class="jt-activity-cell">
                                 <div class="jt-activity-list">
-                                    @for (activity of stop.planActivities; track $index) {
-                                         <div class="jt-activity-item activity-plan">
+                                    @for (activity of stop.pathActivities; track $index) {
+                                         <div class="jt-activity-item activity-path">
                                             <div class="jt-activity-header">
                                                 <span style="flex:1;">
                                                     <span class="partner-badge partner-badge-{{ activity.responsibility?.id ?? '' }}">{{ activity.responsibility?.id }}</span>
