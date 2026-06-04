@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { JourneyRouteCard } from './journey-route-card';
-import { Journey } from '../../models/api.models';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { JourneyRouteCard, parseDurationToHHMM } from './journey-route-card';
+import { Journey, TimingType } from '../../models/api.models';
 
 describe('JourneyRouteCard', () => {
     let fixture: ComponentFixture<JourneyRouteCard>;
@@ -31,7 +32,7 @@ describe('JourneyRouteCard', () => {
                         {
                             type: 'journey',
                             responsibility: { type: 'carrier', id: 'SBB', status: 'accepted' },
-                            timings: [{ type: 'departure', duration: '08:30' }],
+                            timings: [{ type: TimingType.Departure, duration: 'PT8H30M' }],
                         },
                     ],
                 },
@@ -41,7 +42,7 @@ describe('JourneyRouteCard', () => {
                         {
                             type: 'journey',
                             responsibility: { type: 'carrier', id: 'SBB', status: 'accepted' },
-                            timings: [{ type: 'arrival', duration: '09:30' }],
+                            timings: [{ type: TimingType.Arrival, duration: 'PT9H30M' }],
                         },
                     ],
                 },
@@ -75,12 +76,101 @@ describe('JourneyRouteCard', () => {
                         {
                             type: 'journey',
                             timings: [
-                                { type: 'arrival', duration: '07:00' },
-                                { type: 'departure', duration: '07:05' },
+                                { type: TimingType.Arrival, duration: 'PT7H00M' },
+                                { type: TimingType.Departure, duration: 'PT7H05M' },
                             ],
                             capability: {
-                                type: 'path'
-                            }
+                                type: 'path',
+                            },
+                        },
+                    ],
+                },
+            ],
+        };
+
+        fixture.componentRef.setInput('journey', journey);
+        fixture.detectChanges();
+
+        const el: HTMLElement = fixture.nativeElement;
+        expect(el.textContent).toContain('07:00');
+        expect(el.textContent).toContain('07:05');
+    });
+
+    it('should display earliest arrival and departure times', () => {
+        const journey: Journey = {
+            journeylocations: [
+                {
+                    locations: [{ name: 'Bern' }],
+                    activities: [
+                        {
+                            type: 'journey',
+                            timings: [
+                                { type: TimingType.EarliestArrival, duration: 'PT7H00M' },
+                                { type: TimingType.EarliestDeparture, duration: 'PT7H05M' },
+                            ],
+                            capability: {
+                                type: 'path',
+                            },
+                        },
+                    ],
+                },
+            ],
+        };
+
+        fixture.componentRef.setInput('journey', journey);
+        fixture.detectChanges();
+
+        const el: HTMLElement = fixture.nativeElement;
+        expect(el.textContent).toContain('07:00');
+        expect(el.textContent).toContain('07:05');
+    });
+
+    it('should display latest arrival and departure times', () => {
+        const journey: Journey = {
+            journeylocations: [
+                {
+                    locations: [{ name: 'Bern' }],
+                    activities: [
+                        {
+                            type: 'journey',
+                            timings: [
+                                { type: TimingType.LatestArrival, duration: 'PT7H00M' },
+                                { type: TimingType.LatestDeparture, duration: 'PT7H05M' },
+                            ],
+                            capability: {
+                                type: 'path',
+                            },
+                        },
+                    ],
+                },
+            ],
+        };
+
+        fixture.componentRef.setInput('journey', journey);
+        fixture.detectChanges();
+
+        const el: HTMLElement = fixture.nativeElement;
+        expect(el.textContent).toContain('07:00');
+        expect(el.textContent).toContain('07:05');
+    });
+
+    it('should display first arrival and departure times', () => {
+        const journey: Journey = {
+            journeylocations: [
+                {
+                    locations: [{ name: 'Bern' }],
+                    activities: [
+                        {
+                            type: 'journey',
+                            timings: [
+                                { type: TimingType.Arrival, duration: 'PT7H00M' },
+                                { type: TimingType.LatestArrival, duration: 'PT7H03M' },
+                                { type: TimingType.Departure, duration: 'PT7H05M' },
+                                { type: TimingType.LatestDeparture, duration: 'PT7H07M' },
+                            ],
+                            capability: {
+                                type: 'path',
+                            },
                         },
                     ],
                 },
@@ -178,6 +268,32 @@ describe('JourneyRouteCard', () => {
         expect(stops[0].pathActivities[0].type).toBe('routing');
         expect(stops[0].rollingStockActivities.length).toBe(0);
         expect(stops[0].staffActivities.length).toBe(0);
+    });
+});
+
+describe('parseDurationToHHMM', () => {
+    it('parses hours and minutes without days', () => {
+        expect(parseDurationToHHMM('PT8H12M')).toBe('08:12');
+    });
+
+    it('parses hours only', () => {
+        expect(parseDurationToHHMM('PT10H')).toBe('10:00');
+    });
+
+    it('parses minutes only', () => {
+        expect(parseDurationToHHMM('PT45M')).toBe('00:45');
+    });
+
+    it('converts days to hours', () => {
+        expect(parseDurationToHHMM('P1DT14H35M')).toBe('38:35');
+    });
+
+    it('pads single-digit hours and minutes', () => {
+        expect(parseDurationToHHMM('PT7H5M')).toBe('07:05');
+    });
+
+    it('returns undefined for invalid input', () => {
+        expect(parseDurationToHHMM('invalid')).toBeUndefined();
     });
 });
 

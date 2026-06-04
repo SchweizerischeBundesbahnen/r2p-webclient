@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { Activity, Journey } from '../../models/api.models';
+import { Activity, Journey, TimingType } from '../../models/api.models';
 
 /** Capability Types for grouping Columns */
 const CAPABILITY_TYPE_ROLLING_STOCK = 'rollingStock' as const;
@@ -90,11 +90,44 @@ export class JourneyRouteCard {
         });
     });
 
+    private static readonly ARRIVAL_TYPES = [
+        TimingType.Arrival,
+        TimingType.EarliestArrival,
+        TimingType.LatestArrival,
+    ];
+
+    private static readonly DEPARTURE_TYPES = [
+        TimingType.Departure,
+        TimingType.EarliestDeparture,
+        TimingType.LatestDeparture,
+    ];
+
     getArrival(activity: Activity): string | undefined {
-        return activity.timings?.find(t => t.type === 'arrival')?.duration?.slice(0, 5);
+        const duration = activity.timings?.find(
+            t => JourneyRouteCard.ARRIVAL_TYPES.includes(t.type),
+        )?.duration;
+        return duration ? parseDurationToHHMM(duration) : undefined;
     }
 
     getDeparture(activity: Activity): string | undefined {
-        return activity.timings?.find(t => t.type === 'departure')?.duration?.slice(0, 5);
+        const duration = activity.timings?.find(
+            t => JourneyRouteCard.DEPARTURE_TYPES.includes(t.type),
+        )?.duration;
+        return duration ? parseDurationToHHMM(duration) : undefined;
     }
+}
+
+/**
+ * Parses an ISO-8601 duration string (e.g. "PT8H12M", "P1DT14H35M") into a
+ * zero-padded "HH:MM" clock string. Days are converted to hours so that
+ * e.g. "P1DT14H35M" yields "38:35".
+ */
+export function parseDurationToHHMM(duration: string): string | undefined {
+    const match = /^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?/.exec(duration);
+    if (!match) return undefined;
+    const days = parseInt(match[1] ?? '0', 10);
+    const hours = parseInt(match[2] ?? '0', 10);
+    const minutes = parseInt(match[3] ?? '0', 10);
+    const totalHours = days * 24 + hours;
+    return `${String(totalHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
 }

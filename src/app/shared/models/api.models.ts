@@ -136,8 +136,19 @@ export interface Featureset {
     features?: Feature[];
 }
 
+export enum TimingType {
+    EarliestArrival = 'earliestarrival',
+    LatestArrival = 'latestarrival',
+    EarliestDeparture = 'earliestdeparture',
+    LatestDeparture = 'latestdeparture',
+    RunThrough = 'runthrough',
+    DwellTime = 'dwelltime',
+    Departure = 'departure',
+    Arrival = 'arrival',
+}
+
 export interface Timing {
-    type: string;
+    type: TimingType;
     duration?: string;
     focus?: string;
     source?: string;

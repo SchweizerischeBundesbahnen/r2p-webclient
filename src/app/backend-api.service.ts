@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Branch, Train, TrainListElement } from './shared/models/api.models';
+import { Branch, TimingType, Train, TrainListElement } from './shared/models/api.models';
 import { assertIsoDate } from './shared/utils/date.utils';
 import { SettingsService } from './settings/settings.service';
 
@@ -162,7 +162,7 @@ export const minimalTrain: Train = {
                         type: 'path.halt.11',
                         timings: [
                             {
-                                type: 'departure',
+                                type: TimingType.Departure,
                                 duration: 'PT8H12M',
                                 focus: 'planning',
                             },
@@ -253,7 +253,7 @@ export const minimalTrain: Train = {
                         type: 'rollingStock.traction',
                         timings: [
                             {
-                                type: 'departure',
+                                type: TimingType.Departure,
                                 duration: 'PT8H12M',
                                 focus: 'planning',
                             },
@@ -291,12 +291,12 @@ export const minimalTrain: Train = {
                         type: 'path.halt.11',
                         timings: [
                             {
-                                type: 'arrival',
+                                type: TimingType.Arrival,
                                 duration: 'PT8H25M',
                                 focus: 'planning',
                             },
                             {
-                                type: 'departure',
+                                type: TimingType.Departure,
                                 duration: 'PT8H27M',
                                 focus: 'planning',
                             },
@@ -334,12 +334,12 @@ export const minimalTrain: Train = {
                         type: 'path.halt.11',
                         timings: [
                             {
-                                type: 'arrival',
+                                type: TimingType.Arrival,
                                 duration: 'PT8H35M',
                                 focus: 'planning',
                             },
                             {
-                                type: 'earliestdeparture',
+                                type: TimingType.EarliestDeparture,
                                 duration: 'PT8H37M',
                                 focus: 'planning',
                             },
@@ -427,12 +427,12 @@ export const minimalTrain: Train = {
                         type: 'path.halt.11',
                         timings: [
                             {
-                                type: 'arrival',
+                                type: TimingType.Arrival,
                                 duration: 'PT8H48M',
                                 focus: 'planning',
                             },
                             {
-                                type: 'earliestdeparture',
+                                type: TimingType.EarliestDeparture,
                                 duration: 'PT8H50M',
                                 focus: 'planning',
                             },
@@ -470,7 +470,7 @@ export const minimalTrain: Train = {
                         type: 'path.halt.11',
                         timings: [
                             {
-                                type: 'arrival',
+                                type: TimingType.Arrival,
                                 duration: 'PT9H16M',
                                 focus: 'planning',
                             },
@@ -497,7 +497,7 @@ export const minimalTrain: Train = {
                         type: 'rollingStock.traction',
                         timings: [
                             {
-                                type: 'arrival',
+                                type: TimingType.Arrival,
                                 duration: 'PT9H16M',
                                 focus: 'planning',
                             },
