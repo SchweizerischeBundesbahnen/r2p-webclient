@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { describe, it, expect, beforeEach } from 'vitest';
-import { JourneyRouteCard, parseDurationToHHMM } from './journey-route-card';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { JourneyRouteCard } from './journey-route-card';
 import { Journey, TimingType } from '../../models/api.models';
 
 describe('JourneyRouteCard', () => {
@@ -270,30 +270,3 @@ describe('JourneyRouteCard', () => {
         expect(stops[0].staffActivities.length).toBe(0);
     });
 });
-
-describe('parseDurationToHHMM', () => {
-    it('parses hours and minutes without days', () => {
-        expect(parseDurationToHHMM('PT8H12M')).toBe('08:12');
-    });
-
-    it('parses hours only', () => {
-        expect(parseDurationToHHMM('PT10H')).toBe('10:00');
-    });
-
-    it('parses minutes only', () => {
-        expect(parseDurationToHHMM('PT45M')).toBe('00:45');
-    });
-
-    it('converts days to hours', () => {
-        expect(parseDurationToHHMM('P1DT14H35M')).toBe('38:35');
-    });
-
-    it('pads single-digit hours and minutes', () => {
-        expect(parseDurationToHHMM('PT7H5M')).toBe('07:05');
-    });
-
-    it('returns undefined for invalid input', () => {
-        expect(parseDurationToHHMM('invalid')).toBeUndefined();
-    });
-});
-

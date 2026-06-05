@@ -11,12 +11,14 @@ import { isoDateToUtc } from '../../shared/utils/date.utils';
         </td>
         <td>
             {{ train().start ?? '-' }}<br /><span class="text-muted" style="font-size:0.75rem;"
-                ><ng-container i18n="@@tableRow.dep">Dep:</ng-container> {{ train().startTime | date: 'shortTime' }}</span
+                ><ng-container i18n="@@tableRow.dep">Dep:</ng-container>
+                {{ train().startTime | date: 'shortTime' }}</span
             >
         </td>
         <td>
             {{ train().end ?? '-' }}<br /><span class="text-muted" style="font-size:0.75rem;"
-                ><ng-container i18n="@@tableRow.arr">Arr:</ng-container> {{ train().endTime | date: 'shortTime' }}</span
+                ><ng-container i18n="@@tableRow.arr">Arr:</ng-container>
+                {{ train().endTime | date: 'shortTime' }}</span
             >
         </td>
         <td>{{ isoDateToUtc(train().operationalDay) | date: 'mediumDate' : 'UTC' }}</td>
@@ -50,10 +52,10 @@ export interface TrainRow {
     partners: string[] | undefined;
     /** Optional: derived from Journey locations which are optional */
     start: string | undefined;
-    startTime: string;
+    startTime: string | undefined;
     /** Optional: derived from Journey locations which are optional */
     end: string | undefined;
-    endTime: string;
+    endTime: string | undefined;
     revInfo: {
         lastChange: string;
         version: string;

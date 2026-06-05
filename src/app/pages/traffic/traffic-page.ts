@@ -6,7 +6,10 @@ import { DatePipe } from '@angular/common';
 import { NewVariantModal } from './new-variant-modal';
 import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
 import { BranchStatusBadgeComponent } from './branch-status-badge';
-import { isoDateToUtc } from '../../shared/utils/date.utils';
+import {
+    isoDateToUtc,
+    parseDurationToDate,
+} from '../../shared/utils/date.utils';
 import { MatDialog } from '@angular/material/dialog';
 import { ShareTrainModalComponent, ShareTrainDialogData } from './share-train-modal';
 import { RequestMergeModalComponent, RequestMergeDialogData } from './request-merge-modal';
@@ -14,6 +17,12 @@ import { AcceptMergeModalComponent, AcceptMergeDialogData } from './accept-merge
 import { RejectMergeModalComponent, RejectMergeDialogData } from './reject-merge-modal';
 import { SettingsService } from '../../settings/settings.service';
 import { Spinner } from '../../shared/components/spinner/spinner';
+import {
+    getEarliestJourneyLocationDeparture,
+    getFirstJourneyLocationName,
+    getLastJourneyLocationName,
+    getLatestJourneyLocationArrival,
+} from '../../shared/utils/journeyLocation.utils';
 
 @Component({
     selector: 'app-traffic-page',
@@ -309,20 +318,24 @@ export class TrafficPage {
     ): TrainHeaderViewModel {
         const listElement = trainWithDetails?.listElement;
         const mainBranch = listElement?.branches.find((b) => b.technical.mainBranch);
-        const journeyLocations = trainWithDetails?.details?.journey?.journeylocations ?? [];
-        const firstLocation = journeyLocations[0]?.locations?.[0];
-        const lastLocation = journeyLocations.at(-1)?.locations?.[0];
+        const operationalDay = mainBranch?.business.operationalDay;
 
         return {
             trainNumber: mainBranch?.business.trainNumber ?? '-',
-            operationalDay: mainBranch?.business.operationalDay ?? null,
+            operationalDay: operationalDay ?? null,
             partners: listElement?.partners ?? [],
             lastChange: mainBranch?.technical.timestamp ?? null,
             branches: listElement?.branches ?? [],
-            from: firstLocation?.name ?? '-',
-            to: lastLocation?.name ?? '-',
-            departureTime: '2026-01-01T10:00:00', // TODO: still needs to be implemented - with the JourneyRoutes Story
-            arrivalTime: '2026-01-01T11:00:00', // TODO: still needs to be implemented - with the JourneyRoutes Story
+            from: getFirstJourneyLocationName(trainWithDetails?.details) ?? '-',
+            to: getLastJourneyLocationName(trainWithDetails?.details) ?? '-',
+            departureTime: parseDurationToDate(
+                operationalDay,
+                getEarliestJourneyLocationDeparture(trainWithDetails?.details),
+            ),
+            arrivalTime: parseDurationToDate(
+                operationalDay,
+                getLatestJourneyLocationArrival(trainWithDetails?.details),
+            ),
         };
     }
 
@@ -366,8 +379,8 @@ export interface TrainHeaderViewModel {
     branches: Branch[];
     from: string;
     to: string;
-    departureTime: string;
-    arrivalTime: string;
+    departureTime: string | undefined;
+    arrivalTime: string | undefined;
 }
 
 export interface VariantViewModel {

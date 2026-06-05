@@ -1,11 +1,11 @@
-import { signal, LOCALE_ID } from '@angular/core';
+import { LOCALE_ID, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { registerLocaleData } from '@angular/common';
 import localeDeCh from '@angular/common/locales/de';
 import { TrafficPage } from './traffic-page';
 import { TrafficPageState, TrainWithDetails } from './traffic-page.state';
-import { TrainListElement } from '../../shared/models/api.models';
+import { TimingType, Train, TrainListElement } from '../../shared/models/api.models';
 import { SettingsService } from '../../settings/settings.service';
 
 registerLocaleData(localeDeCh, 'de-CH');
@@ -44,9 +44,138 @@ const TRAIN_LIST_ELEMENT: TrainListElement = {
     ],
 };
 
+const TRAIN_DETAILS: Train = {
+    id: 'train-1-2-3',
+    name: 'IC 1234',
+    startdate: '2026-05-26',
+    journey: {
+        journeylocations: [
+            {
+                locations: [
+                    {
+                        type: 'PLC',
+                        code: 'CH-8503000',
+                        name: 'Zürich HB',
+                    },
+                ],
+                activities: [
+                    {
+                        id: 'a1-01',
+                        type: 'path.halt.11',
+                        timings: [
+                            {
+                                type: TimingType.Departure,
+                                duration: 'PT8H12M',
+                                focus: 'planning',
+                            },
+                        ],
+                        responsibility: {
+                            type: 'rim',
+                            id: '0085',
+                            status: 'confirmed',
+                        },
+                        capability: {
+                            type: 'path',
+                            path: {
+                                id: 'a1-01-002',
+                                length: 1500,
+                                weight: 3500,
+                                maxSpeed: 250,
+                            },
+                            capabilityFeatures: [],
+                        },
+                        relations: [],
+                    },
+                ],
+            },
+            {
+                locations: [
+                    {
+                        type: 'PLC',
+                        code: 'CH-8502204',
+                        name: 'Lenzburg',
+                    },
+                ],
+                activities: [
+                    {
+                        id: 'a2-01',
+                        type: 'path.halt.11',
+                        timings: [
+                            {
+                                type: TimingType.Arrival,
+                                duration: 'PT8H25M',
+                                focus: 'planning',
+                            },
+                            {
+                                type: TimingType.Departure,
+                                duration: 'PT8H27M',
+                                focus: 'planning',
+                            },
+                        ],
+                        responsibility: {
+                            type: 'rim',
+                            id: '0085',
+                            status: 'confirmed',
+                        },
+                        capability: {
+                            type: 'path',
+                            capabilityFeatures: [],
+                            path: {
+                                id: 'a2-01-001',
+                                length: 1500,
+                                weight: 3500,
+                                maxSpeed: 250,
+                            },
+                        },
+                        relations: [],
+                    },
+                ],
+            },
+            {
+                locations: [
+                    {
+                        type: 'PLC',
+                        code: 'CH-8507000',
+                        name: 'Bern',
+                    },
+                ],
+                activities: [
+                    {
+                        id: 'a5-01',
+                        type: 'path.halt.11',
+                        timings: [
+                            {
+                                type: TimingType.Arrival,
+                                duration: 'PT9H16M',
+                                focus: 'planning',
+                            },
+                        ],
+                        responsibility: {
+                            type: 'rim',
+                            id: '0085',
+                            status: 'confirmed',
+                        },
+                        capability: {
+                            type: 'path',
+                            capabilityFeatures: [],
+                            path: {
+                                id: 'a5-01-001',
+                                length: 1500,
+                                weight: 3500,
+                                maxSpeed: 250,
+                            },
+                        },
+                        relations: [],
+                    },
+                ],
+            },
+        ],
+    },
+};
+
 const TRAIN_WITH_DETAILS: TrainWithDetails = {
     listElement: TRAIN_LIST_ELEMENT,
-    details: null,
+    details: TRAIN_DETAILS,
 };
 
 function makeSettingsService(organization: string): SettingsService {
@@ -65,12 +194,16 @@ function createFakeState(value?: TrainWithDetails) {
     return {
         trainId: signal<string | undefined>(undefined),
         newVariantModalIsOpen: signal(false),
-        toggleIsNewVariantModalOpen: () => { void 0; },
+        toggleIsNewVariantModalOpen: () => {
+            void 0;
+        },
         trainMainBranch: {
             value: signal(value),
             error: signal(undefined),
             isLoading: signal(false),
-            reload: () => { void 0; },
+            reload: () => {
+                void 0;
+            },
         },
     };
 }
@@ -115,13 +248,16 @@ describe('TrafficPage – date formatting', () => {
     describe('departureTime and arrivalTime (shortTime)', () => {
         it('formats departure time for en-US', () => {
             const el = createComponent('en-US', TRAIN_WITH_DETAILS);
-            // TODO: departureTime is hardcoded stub – just verify shortTime format (no seconds)
-            expect(el.querySelector('#detail-dep-time')!.textContent!.trim()).toMatch(/\d{1,2}:\d{2}/);
+            expect(el.querySelector('#detail-dep-time')!.textContent!.trim()).toMatch(
+                /\d{1,2}:\d{2}\s?(AM|PM)/i,
+            );
         });
 
         it('formats arrival time for en-US', () => {
             const el = createComponent('en-US', TRAIN_WITH_DETAILS);
-            expect(el.querySelector('#detail-arr-time')!.textContent!.trim()).toMatch(/\d{1,2}:\d{2}/);
+            expect(el.querySelector('#detail-arr-time')!.textContent!.trim()).toMatch(
+                /\d{1,2}:\d{2}\s?(AM|PM)/i,
+            );
         });
     });
 
@@ -154,7 +290,10 @@ describe('TrafficPage – merge action buttons', () => {
                     TRAIN_LIST_ELEMENT.branches[0],
                     {
                         ...TRAIN_LIST_ELEMENT.branches[1],
-                        technical: { ...TRAIN_LIST_ELEMENT.branches[1].technical, branchState: 'open' },
+                        technical: {
+                            ...TRAIN_LIST_ELEMENT.branches[1].technical,
+                            branchState: 'open',
+                        },
                     },
                 ],
             },
@@ -173,7 +312,10 @@ describe('TrafficPage – merge action buttons', () => {
                     TRAIN_LIST_ELEMENT.branches[0],
                     {
                         ...TRAIN_LIST_ELEMENT.branches[1],
-                        technical: { ...TRAIN_LIST_ELEMENT.branches[1].technical, branchState: 'open' },
+                        technical: {
+                            ...TRAIN_LIST_ELEMENT.branches[1].technical,
+                            branchState: 'open',
+                        },
                     },
                 ],
             },
@@ -234,10 +376,10 @@ describe('TrafficPage – variant sort order', () => {
             details: null,
         };
         const el = createComponent('en-US', trainWithMultipleBranches, 'SBB');
-        const branchNames = Array.from(el.querySelectorAll('.branch-name')).map(
-            (e) => e.textContent?.trim(),
+        const branchNames = Array.from(el.querySelectorAll('.branch-name')).map((e) =>
+            e.textContent?.trim(),
         );
-        expect(branchNames[0]).toContain('SBB-main');    // main first
+        expect(branchNames[0]).toContain('SBB-main'); // main first
         expect(branchNames[1]).toContain('SOB-variant'); // 16:00 > 14:00
         expect(branchNames[2]).toContain('BLS-variant'); // 14:00
     });
@@ -261,4 +403,3 @@ describe('TrafficPage – edit button visibility', () => {
         expect(branchActions[1].textContent).toContain('Edit');
     });
 });
-

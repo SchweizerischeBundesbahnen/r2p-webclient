@@ -39,7 +39,7 @@ export interface Branch {
 export interface BranchBusinessData {
     /** e.g. "IC 1234" */
     trainNumber: string;
-    /** date, e.g. "2025-06-15" */
+    /** ISO date string, e.g. "2025-06-15" */
     operationalDay: string;
 }
 
@@ -146,6 +146,18 @@ export enum TimingType {
     Departure = 'departure',
     Arrival = 'arrival',
 }
+
+export const DEPARTURE_TIMING_TYPES = new Set<TimingType>([
+    TimingType.Departure,
+    TimingType.EarliestDeparture,
+    TimingType.LatestDeparture,
+]);
+
+export const ARRIVAL_TIMING_TYPES = new Set<TimingType>([
+    TimingType.Arrival,
+    TimingType.EarliestArrival,
+    TimingType.LatestArrival,
+]);
 
 export interface Timing {
     type: TimingType;

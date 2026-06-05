@@ -1,5 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { Activity, Journey, TimingType } from '../../models/api.models';
+import {
+    Activity,
+    ARRIVAL_TIMING_TYPES,
+    DEPARTURE_TIMING_TYPES,
+    Journey
+} from '../../models/api.models';
+import { parseDurationToHoursAndMinutes } from '../../utils/date.utils';
 
 /** Capability Types for grouping Columns */
 const CAPABILITY_TYPE_ROLLING_STOCK = 'rollingStock' as const;
@@ -34,12 +40,16 @@ export class JourneyRouteCard {
 
         // Pre-compute spanning rolling stock state
         const spanningRollingStock: (Activity | null)[] = new Array(locations.length).fill(null);
-        const spanningRollingStockOrigin: (number | null)[] = new Array(locations.length).fill(null);
+        const spanningRollingStockOrigin: (number | null)[] = new Array(locations.length).fill(
+            null,
+        );
         let activeRollingStockActivity: Activity | null = null;
         let activeRollingStockOrigin: number | null = null;
 
         for (let i = 0; i < locations.length; i++) {
-            const ownRollingStockActivities = (locations[i].activities ?? []).filter(a => a.capability?.type === CAPABILITY_TYPE_ROLLING_STOCK);
+            const ownRollingStockActivities = (locations[i].activities ?? []).filter(
+                (a) => a.capability?.type === CAPABILITY_TYPE_ROLLING_STOCK,
+            );
             if (ownRollingStockActivities.length > 0) {
                 activeRollingStockActivity = ownRollingStockActivities.at(-1)!;
                 activeRollingStockOrigin = i;
@@ -53,12 +63,16 @@ export class JourneyRouteCard {
         // Compute span roles
         const spanRole: JourneyStop['spanRole'][] = new Array(locations.length).fill('none');
         for (let i = 0; i < locations.length; i++) {
-            const ownRollingStockActivities = (locations[i].activities ?? []).filter(a => a.capability?.type === CAPABILITY_TYPE_ROLLING_STOCK);
+            const ownRollingStockActivities = (locations[i].activities ?? []).filter(
+                (a) => a.capability?.type === CAPABILITY_TYPE_ROLLING_STOCK,
+            );
             if (ownRollingStockActivities.length > 0) {
-                const spansOnward = i + 1 < locations.length && spanningRollingStock[i + 1] !== null;
+                const spansOnward =
+                    i + 1 < locations.length && spanningRollingStock[i + 1] !== null;
                 spanRole[i] = spansOnward ? 'start' : 'solo';
             } else if (spanningRollingStock[i]) {
-                const continuesNext = i + 1 < locations.length && spanningRollingStock[i + 1] !== null;
+                const continuesNext =
+                    i + 1 < locations.length && spanningRollingStock[i + 1] !== null;
                 spanRole[i] = continuesNext ? 'mid' : 'end';
             }
         }
@@ -90,44 +104,13 @@ export class JourneyRouteCard {
         });
     });
 
-    private static readonly ARRIVAL_TYPES = [
-        TimingType.Arrival,
-        TimingType.EarliestArrival,
-        TimingType.LatestArrival,
-    ];
-
-    private static readonly DEPARTURE_TYPES = [
-        TimingType.Departure,
-        TimingType.EarliestDeparture,
-        TimingType.LatestDeparture,
-    ];
-
     getArrival(activity: Activity): string | undefined {
-        const duration = activity.timings?.find(
-            t => JourneyRouteCard.ARRIVAL_TYPES.includes(t.type),
-        )?.duration;
-        return duration ? parseDurationToHHMM(duration) : undefined;
+        const duration = activity.timings?.find((t) => ARRIVAL_TIMING_TYPES.has(t.type))?.duration;
+        return duration ? parseDurationToHoursAndMinutes(duration) : undefined;
     }
 
     getDeparture(activity: Activity): string | undefined {
-        const duration = activity.timings?.find(
-            t => JourneyRouteCard.DEPARTURE_TYPES.includes(t.type),
-        )?.duration;
-        return duration ? parseDurationToHHMM(duration) : undefined;
+        const duration = activity.timings?.find((t) => DEPARTURE_TIMING_TYPES.has(t.type))?.duration;
+        return duration ? parseDurationToHoursAndMinutes(duration) : undefined;
     }
-}
-
-/**
- * Parses an ISO-8601 duration string (e.g. "PT8H12M", "P1DT14H35M") into a
- * zero-padded "HH:MM" clock string. Days are converted to hours so that
- * e.g. "P1DT14H35M" yields "38:35".
- */
-export function parseDurationToHHMM(duration: string): string | undefined {
-    const match = /^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?/.exec(duration);
-    if (!match) return undefined;
-    const days = parseInt(match[1] ?? '0', 10);
-    const hours = parseInt(match[2] ?? '0', 10);
-    const minutes = parseInt(match[3] ?? '0', 10);
-    const totalHours = days * 24 + hours;
-    return `${String(totalHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
 }
