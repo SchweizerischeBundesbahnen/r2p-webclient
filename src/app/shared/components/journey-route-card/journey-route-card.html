@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-header">
-        <span class="card-title" i18n="@@journeyRouteCard.title">🗺️ Journey Route</span>
+        <span class="card-title" i18n="@@journeyRouteCard.title">Journey Route</span>
     </div>
     <div class="card-body" style="padding-top:0.5rem; padding-bottom:0.5rem;">
         <div class="journey-table-wrapper">
@@ -11,9 +11,6 @@
                         <th i18n="@@journeyRouteCard.col.rollingStock">Rolling Stock</th>
                         <th i18n="@@journeyRouteCard.col.staff">Staff</th>
                         <th i18n="@@journeyRouteCard.col.path">Path</th>
-                        @if (!readonly()) {
-                            <th i18n="@@journeyRouteCard.col.actions">Actions</th>
-                        }
                     </tr>
                 </thead>
                 <tbody id="journey-tbody">
@@ -28,6 +25,13 @@
                                     </div>
                                     <div class="jt-stop-info">
                                         <div class="jt-stop-name">{{ stop.stopName }}</div>
+                                        @if (!readonly()) {
+                                            <button
+                                                class="btn btn-ghost jt-edit-location-btn"
+                                                (click)="openEditLocation($index)"
+                                                i18n="@@journeyRouteCard.stop.editLocation"
+                                            >Edit</button>
+                                        }
                                     </div>
                                 </div>
                             </td>
@@ -128,3 +132,12 @@
         </div>
     </div>
 </div>
+
+@if (editingStopIndex() !== null && currentEditLocation() !== null) {
+    <app-edit-location-modal
+        [location]="currentEditLocation()!"
+        (locationSaved)="onLocationSaved($event)"
+        (cancelled)="closeEditLocation()"
+    />
+}
+

@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { JourneyRouteCard } from './journey-route-card';
 import { Journey, TimingType } from '../../models/api.models';
 
@@ -185,14 +185,108 @@ describe('JourneyRouteCard', () => {
         expect(el.textContent).toContain('07:05');
     });
 
-    it('should hide actions column when readonly', () => {
+    it('should not show edit button for stops when readonly', () => {
+        const journey: Journey = {
+            journeylocations: [{ locations: [{ name: 'Bern', type: 'UIC', code: '8507000' }] }],
+        };
         fixture.componentRef.setInput('readonly', true);
+        fixture.componentRef.setInput('journey', journey);
         fixture.detectChanges();
 
         const el: HTMLElement = fixture.nativeElement;
-        const headers = el.querySelectorAll('th');
-        const headerTexts = Array.from(headers).map((h: Element) => h.textContent?.trim());
-        expect(headerTexts).not.toContain('Actions');
+        expect(el.querySelector('.jt-edit-location-btn')).toBeNull();
+    });
+
+    it('should show edit button for stops when not readonly', () => {
+        const journey: Journey = {
+            journeylocations: [{ locations: [{ name: 'Bern', type: 'UIC', code: '8507000' }] }],
+        };
+        fixture.componentRef.setInput('readonly', false);
+        fixture.componentRef.setInput('journey', journey);
+        fixture.detectChanges();
+
+        const el: HTMLElement = fixture.nativeElement;
+        expect(el.querySelector('.jt-edit-location-btn')).not.toBeNull();
+    });
+
+    it('should open edit modal when edit button is clicked', () => {
+        const journey: Journey = {
+            journeylocations: [{ locations: [{ name: 'Bern', type: 'UIC', code: '8507000' }] }],
+        };
+        fixture.componentRef.setInput('readonly', false);
+        fixture.componentRef.setInput('journey', journey);
+        fixture.detectChanges();
+
+        const el: HTMLElement = fixture.nativeElement;
+        const editBtn = el.querySelector('.jt-edit-location-btn') as HTMLButtonElement;
+        editBtn.click();
+        fixture.detectChanges();
+
+        expect(el.querySelector('#edit-location-modal')).not.toBeNull();
+    });
+
+    it('should close edit modal on cancel', () => {
+        const journey: Journey = {
+            journeylocations: [{ locations: [{ name: 'Bern', type: 'UIC', code: '8507000' }] }],
+        };
+        fixture.componentRef.setInput('readonly', false);
+        fixture.componentRef.setInput('journey', journey);
+        fixture.detectChanges();
+
+        const el: HTMLElement = fixture.nativeElement;
+        (el.querySelector('.jt-edit-location-btn') as HTMLButtonElement).click();
+        fixture.detectChanges();
+
+        const closeBtn = el.querySelector('.modal-close') as HTMLButtonElement;
+        closeBtn.click();
+        fixture.detectChanges();
+
+        expect(el.querySelector('#edit-location-modal')).toBeNull();
+    });
+
+    it('should emit journeyChange and update stop name when location is saved', () => {
+        const journey: Journey = {
+            journeylocations: [{ locations: [{ name: 'Bern', type: 'UIC', code: '8507000' }] }],
+        };
+        fixture.componentRef.setInput('readonly', false);
+        fixture.componentRef.setInput('journey', journey);
+        fixture.detectChanges();
+
+        const journeyChangeSpy = vi.fn();
+        fixture.componentInstance.journeyChange.subscribe(journeyChangeSpy);
+
+        const el: HTMLElement = fixture.nativeElement;
+        (el.querySelector('.jt-edit-location-btn') as HTMLButtonElement).click();
+        fixture.detectChanges();
+
+        // Change the name field
+        const nameInput = el.querySelector('#loc-name') as HTMLInputElement;
+        nameInput.value = 'Zürich HB';
+        nameInput.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+
+        const saveBtn = el.querySelector('.modal-footer .btn-primary') as HTMLButtonElement;
+        saveBtn.click();
+        fixture.detectChanges();
+
+        expect(el.querySelector('#edit-location-modal')).toBeNull();
+        expect(journeyChangeSpy).toHaveBeenCalledOnce();
+        const emittedJourney = journeyChangeSpy.mock.calls[0][0] as Journey;
+        expect(emittedJourney.journeylocations?.[0].locations?.[0].name).toBe('Zürich HB');
+
+        // Table should reflect the new name
+        expect(el.querySelector('.jt-stop-name')!.textContent).toBe('Zürich HB');
+    });
+
+    it('should expose location on JourneyStop', () => {
+        const journey: Journey = {
+            journeylocations: [{ locations: [{ name: 'Bern', type: 'UIC', code: '8507000' }] }],
+        };
+        fixture.componentRef.setInput('journey', journey);
+        fixture.detectChanges();
+
+        const stops = component.stops();
+        expect(stops[0].location).toEqual({ name: 'Bern', type: 'UIC', code: '8507000' });
     });
 
     it('should list activity with capability type rollingStock in rollingStockActivities column', () => {

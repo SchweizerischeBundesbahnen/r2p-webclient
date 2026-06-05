@@ -272,6 +272,9 @@ export interface Activity {
     relations?: ActivityRelation[];
 }
 
+export type LocationType = 'PLC' | 'SLC' | 'DIUM' | 'UIC';
+export const LOCATION_TYPES: LocationType[] = ['PLC', 'SLC', 'DIUM', 'UIC'];
+
 export interface Location {
     type?: string;
     typeCode?: string;

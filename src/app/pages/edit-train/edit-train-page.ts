@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angu
 import { Router, RouterLink } from '@angular/router';
 import { EditTrainPageState } from './edit-train-page.state';
 import { FormField } from '@angular/forms/signals';
-import { Branch } from '../../shared/models/api.models';
+import { Branch, Journey } from '../../shared/models/api.models';
 import { BackendApiService } from '../../backend-api.service';
 import { finalize } from 'rxjs';
 import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
@@ -169,7 +169,11 @@ import { Spinner } from '../../shared/components/spinner/spinner';
                     </div>
 
                     <!-- ── Journey Card ─────────────────────────────────────── -->
-                    <app-journey-route-card [readonly]="false" [journey]="state.branch.value()?.train?.journey" />
+                    <app-journey-route-card
+                        [readonly]="false"
+                        [journey]="state.branch.value()?.train?.journey"
+                        (journeyChange)="onJourneyChange($event)"
+                    />
 
                     <!-- ── Action Buttons (removed – use sticky bar above) ──────── -->
                 </div>
@@ -221,6 +225,12 @@ export class EditTrainPage {
                     // Error already handled by errorInterceptor (toast shown)
                 }
             });
+    }
+
+    protected onJourneyChange(journey: Journey): void {
+        const current = this.state.branch.value();
+        if (!current) return;
+        this.state.branch.set({ ...current, train: { ...current.train, journey } });
     }
 
     protected getBranchInfos(value: Branch | undefined): {

@@ -1,11 +1,22 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    input,
+    linkedSignal,
+    output,
+    signal
+} from '@angular/core';
 import {
     Activity,
     ARRIVAL_TIMING_TYPES,
     DEPARTURE_TIMING_TYPES,
-    Journey
+    Journey,
+    JourneyLocation,
+    Location
 } from '../../models/api.models';
 import { parseDurationToHoursAndMinutes } from '../../utils/date.utils';
+import { EditLocationModal } from './edit-location-modal';
 
 /** Capability Types for grouping Columns */
 const CAPABILITY_TYPE_ROLLING_STOCK = 'rollingStock' as const;
@@ -14,6 +25,7 @@ const CAPABILITY_TYPE_PATH = 'path' as const;
 
 export interface JourneyStop {
     stopName: string;
+    location: Location | undefined;
     isFirst: boolean;
     isLast: boolean;
     rollingStockActivities: Activity[];
@@ -28,13 +40,52 @@ export interface JourneyStop {
     templateUrl: './journey-route-card.html',
     styleUrl: './journey-route-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [EditLocationModal],
 })
 export class JourneyRouteCard {
     readonly readonly = input<boolean>(false);
     readonly journey = input<Journey | undefined>(undefined);
+    readonly journeyChange = output<Journey>();
+
+    /** Local mutable copy of the journey – resets when the input changes. */
+    protected readonly localJourney = linkedSignal(() => this.journey());
+
+    protected readonly editingStopIndex = signal<number | null>(null);
+
+    protected readonly currentEditLocation = computed<Location | null>(() => {
+        const idx = this.editingStopIndex();
+        if (idx === null) return null;
+        return this.localJourney()?.journeylocations?.[idx]?.locations?.[0] ?? null;
+    });
+
+    protected openEditLocation(stopIndex: number): void {
+        this.editingStopIndex.set(stopIndex);
+    }
+
+    protected closeEditLocation(): void {
+        this.editingStopIndex.set(null);
+    }
+
+    protected onLocationSaved(location: Location): void {
+        const idx = this.editingStopIndex();
+        const j = this.localJourney();
+        if (idx === null || !j?.journeylocations) return;
+
+        const updatedJourneyLocations: JourneyLocation[] = j.journeylocations.map((jl, i) => {
+            if (i !== idx) return jl;
+            const locs = jl.locations ? [...jl.locations] : [];
+            locs[0] = location;
+            return { ...jl, locations: locs };
+        });
+
+        const updatedJourney: Journey = { ...j, journeylocations: updatedJourneyLocations };
+        this.localJourney.set(updatedJourney);
+        this.journeyChange.emit(updatedJourney);
+        this.editingStopIndex.set(null);
+    }
 
     readonly stops = computed<JourneyStop[]>(() => {
-        const j = this.journey();
+        const j = this.localJourney();
         const locations = j?.journeylocations;
         if (!locations?.length) return [];
 
@@ -87,6 +138,7 @@ export class JourneyRouteCard {
 
             return {
                 stopName: jl.locations?.[0]?.name ?? '?',
+                location: jl.locations?.[0],
                 isFirst: idx === 0,
                 isLast: idx === locations.length - 1,
                 rollingStockActivities: activities.filter(
