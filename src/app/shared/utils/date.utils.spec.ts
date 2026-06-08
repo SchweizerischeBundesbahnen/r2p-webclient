@@ -1,4 +1,10 @@
-import { assertIsoDate, durationToMinutes, isoDateToUtc, parseDurationToDate } from './date.utils';
+import {
+    assertIsoDate,
+    durationToMinutes,
+    isoDateToUtc,
+    parseDurationToDate,
+    parseDurationToHoursAndMinutes,
+} from './date.utils';
 
 describe('isoDateToUtc', () => {
     it('returns a Date at UTC midnight for a given ISO date string', () => {
@@ -151,6 +157,32 @@ describe('durationToMinutes', () => {
         it('returns Infinity for an ISO date string', () => {
             expect(durationToMinutes('2026-05-26')).toBe(Infinity);
         });
+    });
+});
+
+describe('parseDurationToHoursAndMinutes', () => {
+    it('parses hours and minutes without days', () => {
+        expect(parseDurationToHoursAndMinutes('PT8H12M')).toBe('08:12');
+    });
+
+    it('parses hours only', () => {
+        expect(parseDurationToHoursAndMinutes('PT10H')).toBe('10:00');
+    });
+
+    it('parses minutes only', () => {
+        expect(parseDurationToHoursAndMinutes('PT45M')).toBe('00:45');
+    });
+
+    it('converts days to hours', () => {
+        expect(parseDurationToHoursAndMinutes('P1DT14H35M')).toBe('38:35');
+    });
+
+    it('pads single-digit hours and minutes', () => {
+        expect(parseDurationToHoursAndMinutes('PT7H5M')).toBe('07:05');
+    });
+
+    it('returns undefined for invalid input', () => {
+        expect(parseDurationToHoursAndMinutes('invalid')).toBeUndefined();
     });
 });
 

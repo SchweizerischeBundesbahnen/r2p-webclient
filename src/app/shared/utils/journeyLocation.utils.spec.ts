@@ -7,7 +7,6 @@ import {
     getLastJourneyLocationName,
     getLatestJourneyLocationArrival,
 } from './journeyLocation.utils';
-import { parseDurationToHoursAndMinutes } from './date.utils';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -394,33 +393,5 @@ describe('getLatestJourneyLocationArrival', () => {
             // PT2H = 120 min > PT90M = 90 min
             expect(getLatestJourneyLocationArrival(train)).toBe('PT2H');
         });
-    });
-});
-
-// ── parseDurationToHoursAndMinutes ───────────────────────────────────────────
-
-describe('parseDurationToHoursAndMinutes', () => {
-    it('parses hours and minutes without days', () => {
-        expect(parseDurationToHoursAndMinutes('PT8H12M')).toBe('08:12');
-    });
-
-    it('parses hours only', () => {
-        expect(parseDurationToHoursAndMinutes('PT10H')).toBe('10:00');
-    });
-
-    it('parses minutes only', () => {
-        expect(parseDurationToHoursAndMinutes('PT45M')).toBe('00:45');
-    });
-
-    it('converts days to hours', () => {
-        expect(parseDurationToHoursAndMinutes('P1DT14H35M')).toBe('38:35');
-    });
-
-    it('pads single-digit hours and minutes', () => {
-        expect(parseDurationToHoursAndMinutes('PT7H5M')).toBe('07:05');
-    });
-
-    it('returns undefined for invalid input', () => {
-        expect(parseDurationToHoursAndMinutes('invalid')).toBeUndefined();
     });
 });
