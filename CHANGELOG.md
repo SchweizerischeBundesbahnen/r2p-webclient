@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.0.15](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.14...r2p-webclient-v0.0.15) (2026-06-09)
+
+
+### Features
+
+* display journey route (read only) in component (BPSGLO-14066) ([#65](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/issues/65)) ([44e0150](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/44e015069cac78c14874f7dcc4dca06ad0398720))
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump @commitlint/cli from 21.0.1 to 21.0.2 ([#60](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/issues/60)) ([6503c6a](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/6503c6acde56c747c505bab334f5f75d6eaec007))
+* **deps-dev:** bump @commitlint/config-conventional ([bfc16a5](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/bfc16a54d8457b593fe89e32616d5a970a7c3f9d))
+* **deps-dev:** bump @commitlint/config-conventional from 21.0.1 to 21.0.2 ([3423f0b](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/3423f0b8b556fd36dd7b9b27b917742851e4877c))
+* **deps-dev:** bump eslint from 10.4.0 to 10.4.1 ([f317127](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/f3171277eeac16ab87cb882f9cd7d1f6dd8ce8d6))
+* **deps-dev:** bump eslint from 10.4.0 to 10.4.1 ([ea69967](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/ea699671923de447cad02244c8c42084525065f9))
+* **deps-dev:** bump typescript-eslint from 8.60.0 to 8.61.0 ([d4dced0](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/d4dced08e5453f0af45816d9f7e47adb689fc7e7))
+* **deps-dev:** bump vitest from 4.1.7 to 4.1.8 ([d57a309](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/d57a30924f7d968d34fa3fe289688e1efa33c78b))
+* **deps-dev:** bump vitest from 4.1.7 to 4.1.8 ([197305d](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/197305dc4fb531cb1c8d53841d13e8bd99fee282))
+
 ## [0.0.14](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.13...r2p-webclient-v0.0.14) (2026-06-01)
 
 
