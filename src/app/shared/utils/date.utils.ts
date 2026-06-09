@@ -18,7 +18,7 @@ export function isoDateToUtc(value: string): Date {
  *
  * Validation strategy: parse via {@link Date} and verify that the normalized
  * ISO string starts with the original input. This catches both format violations
- * and calendar overflow (e.g. "2026-02-30" → Date normalises to "2026-03-02",
+ * and calendar overflow (e.g. "2026-02-30" → Date normalizes to "2026-03-02",
  * which no longer matches the input). The length check rejects date-time strings.
  *
  * @param value - The date string to validate.
@@ -27,11 +27,67 @@ export function isoDateToUtc(value: string): Date {
 export function assertIsoDate(value: string): void {
     const parsed = new Date(value);
     const isValid =
-        value.length === 10 &&
-        !isNaN(parsed.getTime()) &&
-        parsed.toISOString().startsWith(value);
+        value.length === 10 && !Number.isNaN(parsed.getTime()) && parsed.toISOString().startsWith(value);
 
     if (!isValid) {
         throw new Error(`Invalid ISO date "${value}"`);
     }
+}
+
+/**
+ * Converts an ISO-8601 duration string (e.g. "PT8H12M", "P1DT14H35M") to total minutes.
+ * Returns `Infinity` if the string cannot be parsed.
+ */
+export function durationToMinutes(duration: string): number {
+    const match = /^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?/.exec(duration);
+    if (!match) return Infinity;
+    const days = Number.parseInt(match[1] ?? '0', 10);
+    const hours = Number.parseInt(match[2] ?? '0', 10);
+    const minutes = Number.parseInt(match[3] ?? '0', 10);
+    return days * 24 * 60 + hours * 60 + minutes;
+}
+
+/**
+ * Parses an ISO-8601 duration string (e.g. "PT8H12M", "P1DT14H35M") into a
+ * zero-padded "HH:MM" clock string. Days are converted to hours so that
+ * e.g. "P1DT14H35M" yields "38:35".
+ */
+export function parseDurationToHoursAndMinutes(duration: string): string | undefined {
+    const match = /^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?/.exec(duration);
+    if (!match) return undefined;
+    const days = Number.parseInt(match[1] ?? '0', 10);
+    const hours = Number.parseInt(match[2] ?? '0', 10);
+    const minutes = Number.parseInt(match[3] ?? '0', 10);
+    const totalHours = days * 24 + hours;
+    return `${String(totalHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+}
+
+/**
+ * Adds an ISO-8601 duration string (e.g. "PT8H12M", "P1DT14H35M") to a date
+ * string (e.g. "2025-06-15") and returns the result as an ISO-8601 date-time
+ * string (e.g. "2025-06-15T08:12:00.000Z").
+ *
+ * @param date - ISO date string in the format "yyyy-MM-dd".
+ * @param duration - ISO-8601 duration string.
+ * @returns An ISO-8601 date-time string, or `undefined`
+ *          if either argument is missing or cannot be parsed.
+ */
+export function parseDurationToDate(
+    date: string | undefined,
+    duration: string | undefined,
+): string | undefined {
+    if (!date) return undefined;
+    const dateUtc = isoDateToUtc(date);
+    if (Number.isNaN(dateUtc.getTime())) return undefined;
+
+    const match = duration ? /^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?/.exec(duration) : null;
+    if (!match) return undefined;
+
+    const days = Number.parseInt(match[1] ?? '0', 10);
+    const hours = Number.parseInt(match[2] ?? '0', 10);
+    const minutes = Number.parseInt(match[3] ?? '0', 10);
+    const totalMs = (days * 24 * 60 + hours * 60 + minutes) * 60 * 1000;
+    const result = new Date(dateUtc.getTime() + totalMs);
+
+    return result.toISOString();
 }

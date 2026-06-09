@@ -4,10 +4,17 @@ import { rxResource } from '@angular/core/rxjs-interop';
 import { forkJoin, map, of, switchMap } from 'rxjs';
 import { TrainRow } from './table-row';
 import { Train } from '../../shared/models/api.models';
+import {
+    getEarliestJourneyLocationDeparture,
+    getFirstJourneyLocationName,
+    getLastJourneyLocationName,
+    getLatestJourneyLocationArrival,
+} from '../../shared/utils/journeyLocation.utils';
+import { parseDurationToDate } from '../../shared/utils/date.utils';
 
 @Injectable()
 export class TrafficOverviewPageState {
-    private apiService = inject(BackendApiService);
+    private readonly apiService = inject(BackendApiService);
 
     trainListResource = rxResource({
         stream: () => {
@@ -24,8 +31,7 @@ export class TrafficOverviewPageState {
                                               ({ technical: { mainBranch } }) => mainBranch,
                                           )!;
                                           const trainNumber = mainBranch.business.trainNumber;
-                                          const operationalDay =
-                                              mainBranch.business.operationalDay;
+                                          const operationalDay = mainBranch.business.operationalDay;
                                           const version = mainBranch.technical.version;
                                           return this.apiService.getTrainByVersion(version).pipe(
                                               map(
@@ -60,10 +66,10 @@ export const mapTrainToOverviewRow = ({
     return {
         id: train.id,
         operationalDay,
-        start: train.journey?.journeylocations?.[0]?.locations?.[0]?.name,
-        startTime: '2026-01-01T10:00:00', // TODO: still needs to be implemented - with the JourneyRoutes Story
-        end: train.journey?.journeylocations?.slice(-1)?.[0]?.locations?.[0]?.name,
-        endTime: '2026-01-01T11:00:00', // TODO: still needs to be implemented - with the JourneyRoutes Story
+        start: getFirstJourneyLocationName(train),
+        startTime: parseDurationToDate(operationalDay, getEarliestJourneyLocationDeparture(train)),
+        end: getLastJourneyLocationName(train),
+        endTime: parseDurationToDate(operationalDay, getLatestJourneyLocationArrival(train)),
         partners,
         trainNumber,
         revInfo: {

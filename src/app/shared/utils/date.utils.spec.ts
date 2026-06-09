@@ -1,4 +1,10 @@
-import { assertIsoDate, isoDateToUtc } from './date.utils';
+import {
+    assertIsoDate,
+    durationToMinutes,
+    isoDateToUtc,
+    parseDurationToDate,
+    parseDurationToHoursAndMinutes,
+} from './date.utils';
 
 describe('isoDateToUtc', () => {
     it('returns a Date at UTC midnight for a given ISO date string', () => {
@@ -84,3 +90,136 @@ describe('assertIsoDate', () => {
     });
 });
 
+describe('durationToMinutes', () => {
+    describe('hours only', () => {
+        it('converts PTxH to x*60 minutes', () => {
+            expect(durationToMinutes('PT8H')).toBe(480);
+        });
+
+        it('converts PT1H to 60 minutes', () => {
+            expect(durationToMinutes('PT1H')).toBe(60);
+        });
+    });
+
+    describe('minutes only', () => {
+        it('converts PTxM to x minutes', () => {
+            expect(durationToMinutes('PT30M')).toBe(30);
+        });
+
+        it('converts PT1M to 1 minute', () => {
+            expect(durationToMinutes('PT1M')).toBe(1);
+        });
+    });
+
+    describe('hours and minutes', () => {
+        it('converts PT8H12M to 492 minutes', () => {
+            expect(durationToMinutes('PT8H12M')).toBe(492);
+        });
+
+        it('converts PT1H1M to 61 minutes', () => {
+            expect(durationToMinutes('PT1H1M')).toBe(61);
+        });
+    });
+
+    describe('days', () => {
+        it('converts P1D to 1440 minutes', () => {
+            expect(durationToMinutes('P1D')).toBe(1440);
+        });
+
+        it('converts P1DT14H35M to 1*1440 + 14*60 + 35 = 2315 minutes', () => {
+            expect(durationToMinutes('P1DT14H35M')).toBe(2315);
+        });
+
+        it('converts P2DT0H0M to 2880 minutes', () => {
+            expect(durationToMinutes('P2DT0H0M')).toBe(2880);
+        });
+    });
+
+    describe('zero duration', () => {
+        it('converts PT0M to 0 minutes', () => {
+            expect(durationToMinutes('PT0M')).toBe(0);
+        });
+
+        it('converts PT0H0M to 0 minutes', () => {
+            expect(durationToMinutes('PT0H0M')).toBe(0);
+        });
+    });
+
+    describe('invalid input', () => {
+        it('returns Infinity for an empty string', () => {
+            expect(durationToMinutes('')).toBe(Infinity);
+        });
+
+        it('returns Infinity for a free-form string', () => {
+            expect(durationToMinutes('not-a-duration')).toBe(Infinity);
+        });
+
+        it('returns Infinity for an ISO date string', () => {
+            expect(durationToMinutes('2026-05-26')).toBe(Infinity);
+        });
+    });
+});
+
+describe('parseDurationToHoursAndMinutes', () => {
+    it('parses hours and minutes without days', () => {
+        expect(parseDurationToHoursAndMinutes('PT8H12M')).toBe('08:12');
+    });
+
+    it('parses hours only', () => {
+        expect(parseDurationToHoursAndMinutes('PT10H')).toBe('10:00');
+    });
+
+    it('parses minutes only', () => {
+        expect(parseDurationToHoursAndMinutes('PT45M')).toBe('00:45');
+    });
+
+    it('converts days to hours', () => {
+        expect(parseDurationToHoursAndMinutes('P1DT14H35M')).toBe('38:35');
+    });
+
+    it('pads single-digit hours and minutes', () => {
+        expect(parseDurationToHoursAndMinutes('PT7H5M')).toBe('07:05');
+    });
+
+    it('returns undefined for invalid input', () => {
+        expect(parseDurationToHoursAndMinutes('invalid')).toBeUndefined();
+    });
+});
+
+describe('parseDurationToDate', () => {
+    it('adds hours and minutes to a date', () => {
+        expect(parseDurationToDate('2025-06-15', 'PT8H12M')).toBe('2025-06-15T08:12:00.000Z');
+    });
+
+    it('adds days, hours and minutes crossing a day boundary', () => {
+        expect(parseDurationToDate('2025-06-15', 'P1DT14H35M')).toBe('2025-06-16T14:35:00.000Z');
+    });
+
+    it('adds multiple days', () => {
+        expect(parseDurationToDate('2025-06-15', 'P2D')).toBe('2025-06-17T00:00:00.000Z');
+    });
+
+    it('adds zero duration', () => {
+        expect(parseDurationToDate('2025-06-15', 'PT0M')).toBe('2025-06-15T00:00:00.000Z');
+    });
+
+    it('handles minute overflow correctly', () => {
+        expect(parseDurationToDate('2025-12-31', 'PT23H59M')).toBe('2025-12-31T23:59:00.000Z');
+    });
+
+    it('handles gap year correctly', () => {
+        expect(parseDurationToDate('2024-02-28', 'P2DT8H14M')).toBe('2024-03-01T08:14:00.000Z');
+    });
+
+    it('returns undefined when date is undefined', () => {
+        expect(parseDurationToDate(undefined, 'PT8H')).toBeUndefined();
+    });
+
+    it('returns undefined when duration is undefined', () => {
+        expect(parseDurationToDate('2025-06-15', undefined)).toBeUndefined();
+    });
+
+    it('returns undefined when duration is invalid', () => {
+        expect(parseDurationToDate('2025-06-15', 'not-a-duration')).toBeUndefined();
+    });
+});

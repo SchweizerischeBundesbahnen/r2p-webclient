@@ -39,7 +39,7 @@ export interface Branch {
 export interface BranchBusinessData {
     /** e.g. "IC 1234" */
     trainNumber: string;
-    /** date, e.g. "2025-06-15" */
+    /** ISO date string, e.g. "2025-06-15" */
     operationalDay: string;
 }
 
@@ -136,8 +136,31 @@ export interface Featureset {
     features?: Feature[];
 }
 
+export enum TimingType {
+    EarliestArrival = 'earliestarrival',
+    LatestArrival = 'latestarrival',
+    EarliestDeparture = 'earliestdeparture',
+    LatestDeparture = 'latestdeparture',
+    RunThrough = 'runthrough',
+    DwellTime = 'dwelltime',
+    Departure = 'departure',
+    Arrival = 'arrival',
+}
+
+export const DEPARTURE_TIMING_TYPES = new Set<TimingType>([
+    TimingType.Departure,
+    TimingType.EarliestDeparture,
+    TimingType.LatestDeparture,
+]);
+
+export const ARRIVAL_TIMING_TYPES = new Set<TimingType>([
+    TimingType.Arrival,
+    TimingType.EarliestArrival,
+    TimingType.LatestArrival,
+]);
+
 export interface Timing {
-    type: string;
+    type: TimingType;
     duration?: string;
     focus?: string;
     source?: string;
@@ -248,6 +271,9 @@ export interface Activity {
     requirement?: Requirement;
     relations?: ActivityRelation[];
 }
+
+export type LocationType = 'PLC' | 'SLC' | 'DIUM' | 'UIC';
+export const LOCATION_TYPES: LocationType[] = ['PLC', 'SLC', 'DIUM', 'UIC'];
 
 export interface Location {
     type?: string;
