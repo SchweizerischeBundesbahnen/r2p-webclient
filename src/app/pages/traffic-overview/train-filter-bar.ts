@@ -6,6 +6,7 @@ import { TrafficOverviewTableService } from './traffic-overview-table.service';
     selector: 'app-train-filter-bar',
     imports: [MatButton],
     templateUrl: './train-filter-bar.html',
+    styleUrl: './train-filter-bar.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TrainFilterBar {

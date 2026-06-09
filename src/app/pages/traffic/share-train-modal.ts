@@ -8,6 +8,7 @@ import { form, FormField, maxLength, required, submit } from '@angular/forms/sig
 import { firstValueFrom } from 'rxjs';
 import { BackendApiService } from '../../core/api/backend-api.service';
 import { ORGANIZATION_OPTIONS } from '../../core/settings/settings.service';
+import { PartnerBadge } from '../../shared/components/partner-badge/partner-badge';
 
 export interface ShareTrainDialogData {
     trainId: string;
@@ -21,7 +22,7 @@ export interface ShareTrainDialogData {
         MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose,
         MatFormField, MatLabel, MatError, MatHint,
         MatInput, MatButton, MatSelect, MatOption,
-        FormField,
+        FormField, PartnerBadge,
     ],
     templateUrl: './share-train-modal.html',
 })

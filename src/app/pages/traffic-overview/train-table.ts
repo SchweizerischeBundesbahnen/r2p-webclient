@@ -10,6 +10,7 @@ import { AlertBanner } from '../../shared/components/alert-banner/alert-banner';
     selector: 'app-train-table',
     imports: [RouterLink, TableRow, Spinner, AlertBanner],
     templateUrl: './train-table.html',
+    styleUrl: './train-table.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TrainTable {

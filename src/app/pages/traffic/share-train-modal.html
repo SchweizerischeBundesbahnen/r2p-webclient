@@ -6,7 +6,7 @@
             <p i18n="@@shareTrainModal.sharedWith">Already shared with</p>
             <div style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:1rem;">
                 @for (partner of data.partners; track partner) {
-                    <span class="partner-badge partner-badge-{{ partner }}">{{ partner }}</span>
+                    <app-partner-badge [partner]="partner" />
                 }
             </div>
         }
@@ -16,8 +16,7 @@
             <mat-select [formField]="shareForm.shareWith">
                 @for (org of availableOrganizations; track org.name) {
                     <mat-option [value]="org.name">
-                        <span class="partner-badge partner-badge-{{ org.name }}"
-                              style="margin-right:0.5rem;">{{ org.name }}</span>
+                        <app-partner-badge [partner]="org.name" />
                         {{ org.label }}
                     </mat-option>
                 }

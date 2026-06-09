@@ -32,6 +32,7 @@ import {
     selector: 'app-traffic-page',
     imports: [RouterLink, DatePipe, JourneyRouteCard, BranchStatusBadgeComponent, Spinner, MatButton, MatAnchor, DetailGrid, DetailItem, PartnerBadge, AlertBanner],
     templateUrl: './traffic-page.html',
+    styleUrl: './traffic-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TrafficPage {

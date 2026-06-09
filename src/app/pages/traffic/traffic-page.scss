@@ -1,0 +1,76 @@
+.traffic-light {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.tl-dot {
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.tl-green .tl-dot {
+    background-color: var(--tl-green);
+    border-radius: 50%;
+    box-shadow: 0 0 4px rgba(56,161,105,0.5);
+}
+
+.tl-yellow .tl-dot {
+    background-color: var(--tl-yellow);
+    border-radius: 2px;
+    box-shadow: 0 0 4px rgba(214,158,46,0.5);
+}
+
+.tl-red .tl-dot {
+    background-color: var(--tl-red);
+    border-radius: 0;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    box-shadow: none;
+    width: 16px;
+    height: 14px;
+}
+
+.tl-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.branch-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-md) var(--spacing-xl);
+    border-bottom: 1px solid var(--border-color);
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+.branch-row:last-child { border-bottom: none; }
+
+.branch-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    flex: 1;
+    min-width: 200px;
+}
+
+.branch-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.branch-meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.branch-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+}

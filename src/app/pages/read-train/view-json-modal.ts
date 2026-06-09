@@ -27,6 +27,20 @@ export interface ViewJsonDialogData {
             <button mat-button mat-dialog-close i18n="@@viewJsonModal.close">Close</button>
         </mat-dialog-actions>
     `,
+    styles: `
+        .json-viewer {
+            background-color: #1a202c;
+            color: #e2e8f0;
+            padding: var(--spacing-md);
+            border-radius: 6px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            overflow: auto;
+            max-height: 60vh;
+            white-space: pre;
+        }
+    `,
 })
 export class ViewJsonModal {
     protected readonly data = inject<ViewJsonDialogData>(MAT_DIALOG_DATA);

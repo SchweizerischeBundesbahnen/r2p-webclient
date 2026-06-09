@@ -17,6 +17,7 @@ import {
 } from '../../models/api.models';
 import { parseDurationToHoursAndMinutes } from '../../utils/date.utils';
 import { EditLocationModal } from './edit-location-modal';
+import { PartnerBadge } from '../partner-badge/partner-badge';
 
 /** Capability Types for grouping Columns */
 const CAPABILITY_TYPE_ROLLING_STOCK = 'rollingStock' as const;
@@ -40,7 +41,7 @@ export interface JourneyStop {
     templateUrl: './journey-route-card.html',
     styleUrl: './journey-route-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [EditLocationModal],
+    imports: [EditLocationModal, PartnerBadge],
 })
 export class JourneyRouteCard {
     readonly readonly = input<boolean>(false);

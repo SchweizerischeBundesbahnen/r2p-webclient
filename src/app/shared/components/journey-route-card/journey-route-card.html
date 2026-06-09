@@ -43,7 +43,7 @@
                                                 <div class="jt-activity-item activity-rolling-stock">
                                                     <div class="jt-activity-header">
                                                         <span style="flex:1;">
-                                                            <span class="partner-badge partner-badge-{{ activity.responsibility?.id ?? '' }}">{{ activity.responsibility?.id }}</span>
+                                                            <app-partner-badge [partner]="activity.responsibility?.id ?? ''" />
                                                         </span>
                                                     </div>
                                                     <div class="jt-activity-responsibility">

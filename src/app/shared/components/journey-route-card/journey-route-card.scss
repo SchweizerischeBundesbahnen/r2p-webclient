@@ -347,6 +347,13 @@ tr.jt-row-rolling-stock-mid {
     flex-shrink: 0;
 }
 
+/* ── Plan status badges (responsibility.status) ─────────────── */
+.badge-confirmed { background-color: var(--plan-confirmed-bg); color: var(--plan-confirmed-text); }
+.badge-proposed  { background-color: var(--plan-proposed-bg);  color: var(--plan-proposed-text); }
+.badge-requested { background-color: var(--plan-requested-bg); color: var(--plan-requested-text); }
+.badge-refused   { background-color: var(--plan-refused-bg);   color: var(--plan-refused-text); }
+.badge-dropped   { background-color: var(--plan-dropped-bg);   color: var(--plan-dropped-text); }
+
 .jt-add-activity-btn {
     margin-top: 6px;
     width: 100%;

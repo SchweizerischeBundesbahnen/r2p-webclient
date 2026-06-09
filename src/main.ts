@@ -1,8 +1,8 @@
 import { loadTranslations } from '@angular/localize';
 import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
-import { SupportedLocale } from './app/locale/locale.config';
-import { resolveInitialLocale } from './app/locale/locale.service';
+import { SupportedLocale } from './app/core/locale/locale.config';
+import { resolveInitialLocale } from './app/core/locale/locale.service';
 
 async function loadLocaleData(locale: SupportedLocale): Promise<void> {
     if (locale === 'en-US') {
