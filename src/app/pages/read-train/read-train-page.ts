@@ -8,10 +8,13 @@ import { isoDateToUtc } from '../../shared/utils/date.utils';
 import { Spinner } from '../../shared/components/spinner/spinner';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButton, MatAnchor } from '@angular/material/button';
+import { DetailGrid, DetailItem } from '../../shared/components/detail-grid/detail-grid';
+import { PartnerBadge } from '../../shared/components/partner-badge/partner-badge';
+import { AlertBanner } from '../../shared/components/alert-banner/alert-banner';
 
 @Component({
     selector: 'app-read-train-page',
-    imports: [RouterLink, DatePipe, JourneyRouteCard, Spinner, MatButton, MatAnchor],
+    imports: [RouterLink, DatePipe, JourneyRouteCard, Spinner, MatButton, MatAnchor, DetailGrid, DetailItem, PartnerBadge, AlertBanner],
     template: `
         <!-- ── Main Content ────────────────────────────────────────────── -->
         <div class="main-content">
@@ -23,9 +26,9 @@ import { MatButton, MatAnchor } from '@angular/material/button';
                 @if (state.trainAndBranch.isLoading()) {
                     <app-spinner />
                 } @else if (state.trainAndBranch.error()) {
-                    <div class="alert alert-error" i18n="@@readTrain.loadError">
+                    <app-alert-banner type="error" i18n="@@readTrain.loadError">
                         ⚠️ Failed to load train data. Please go back and try again.
-                    </div>
+                    </app-alert-banner>
                 } @else {
 
                 <!-- Page Header -->
@@ -51,10 +54,10 @@ import { MatButton, MatAnchor } from '@angular/material/button';
                 </div>
 
                 <!-- Read-only notice -->
-                <div class="alert alert-info" i18n="@@readTrain.readonlyNotice">
+                <app-alert-banner type="info" i18n="@@readTrain.readonlyNotice">
                     👁️ This is a <strong>read-only view</strong> of the variant. No changes can be
                     made here.
-                </div>
+                </app-alert-banner>
 
                 <!-- ── Train Details Card ────────────────────────────────── -->
                 <div class="card">
@@ -63,62 +66,27 @@ import { MatButton, MatAnchor } from '@angular/material/button';
                     </div>
                     <div class="card-body">
                         @let branch = state.trainAndBranch.value()?.branch;
-                        <div class="detail-grid">
-                            <div class="detail-item">
-                                <div class="detail-label" i18n="@@readTrain.field.trainNumber">Train Number</div>
-                                <div class="detail-value" id="detail-train-number">
-                                    {{ branch?.business?.trainNumber ?? '-' }}
-                                </div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label" i18n="@@readTrain.field.name">Name</div>
-                                <div class="detail-value" id="detail-name">
-                                    {{ branch?.branchName ?? '-' }}
-                                </div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label" i18n="@@readTrain.field.opDay">Operational Day</div>
-                                <div class="detail-value" id="detail-op-day">
-                                    @let opDay = branch?.business?.operationalDay;
-                                    {{ opDay ? (isoDateToUtc(opDay) | date: 'mediumDate' : 'UTC') : '-' }}
-                                </div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label" i18n="@@readTrain.field.branchOwner">Branch Owner</div>
-                                <div class="detail-value" id="detail-owner">
-                                    <span
-                                        class="partner-badge partner-badge-{{
-                                            branch?.technical?.owner ?? '-'
-                                        }}"
-                                        >{{ branch?.technical?.owner }}</span
-                                    >
-                                </div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label" i18n="@@readTrain.field.variantState">Variant State</div>
-                                <div class="detail-value" id="detail-state">
-                                    <span
-                                        class="badge badge-{{
-                                            branch?.technical?.branchState ?? ''
-                                        }}"
-                                        >{{ branch?.technical?.branchState ?? '-' }}</span
-                                    >
-                                </div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label" i18n="@@readTrain.field.version">Version</div>
-                                <div class="detail-value" id="detail-version">
-                                    {{ branch?.technical?.version ?? '-' }}
-                                </div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label" i18n="@@readTrain.field.versionTimestamp">Version Timestamp</div>
-                                <div class="detail-value" id="detail-timestamp">
-                                    @let ts = branch?.technical?.timestamp;
-                                    {{ ts ? (ts | date: 'short') : '-' }}
-                                </div>
-                            </div>
-                        </div>
+                        <app-detail-grid>
+                            <app-detail-item label="Train Number" i18n-label="@@readTrain.field.trainNumber" valueId="detail-train-number">{{ branch?.business?.trainNumber ?? '-' }}</app-detail-item>
+                            <app-detail-item label="Name" i18n-label="@@readTrain.field.name" valueId="detail-name">{{ branch?.branchName ?? '-' }}</app-detail-item>
+                            <app-detail-item label="Operational Day" i18n-label="@@readTrain.field.opDay" valueId="detail-op-day">
+                                @let opDay = branch?.business?.operationalDay;
+                                {{ opDay ? (isoDateToUtc(opDay) | date: 'mediumDate' : 'UTC') : '-' }}
+                            </app-detail-item>
+                            <app-detail-item label="Branch Owner" i18n-label="@@readTrain.field.branchOwner" valueId="detail-owner">
+                                @if (branch?.technical?.owner) {
+                                    <app-partner-badge [partner]="branch!.technical.owner!" />
+                                } @else { - }
+                            </app-detail-item>
+                            <app-detail-item label="Variant State" i18n-label="@@readTrain.field.variantState" valueId="detail-state">
+                                <span [class]="'badge badge-' + (branch?.technical?.branchState ?? '')">{{ branch?.technical?.branchState ?? '-' }}</span>
+                            </app-detail-item>
+                            <app-detail-item label="Version" i18n-label="@@readTrain.field.version" valueId="detail-version">{{ branch?.technical?.version ?? '-' }}</app-detail-item>
+                            <app-detail-item label="Version Timestamp" i18n-label="@@readTrain.field.versionTimestamp" valueId="detail-timestamp">
+                                @let ts = branch?.technical?.timestamp;
+                                {{ ts ? (ts | date: 'short') : '-' }}
+                            </app-detail-item>
+                        </app-detail-grid>
 
                         <!-- Version comment -->
                         <div

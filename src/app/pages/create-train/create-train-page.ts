@@ -10,45 +10,36 @@ import { Spinner } from '../../shared/components/spinner/spinner';
 import { MatFormField, MatLabel, MatError, MatHint } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton, MatAnchor } from '@angular/material/button';
+import { StickyEditBar } from '../../shared/components/sticky-edit-bar/sticky-edit-bar';
 
 @Component({
     selector: 'app-create-train-page',
     template: `
-        <div class="sticky-edit-bar" [class.dirty]="createTrainForm().dirty()" id="sticky-edit-bar">
-            <div class="sticky-edit-bar-inner">
-                <div class="sticky-edit-bar-title">
-                    <span id="sticky-title" i18n="@@createTrain.title">Create New Train</span>
-                    <span
-                        class="unsaved-indicator"
-                        [class.hidden]="!createTrainForm().dirty()"
-                        id="unsaved-indicator"
-                        i18n="@@createTrain.unsavedChanges"
-                        >● Unsaved changes</span
-                    >
-                </div>
-                <div class="sticky-edit-bar-actions">
-                    <a
-                        mat-stroked-button
-                        [routerLink]="'/traffic-overview'"
-                        id="sticky-cancel-btn"
-                        i18n="@@createTrain.cancel"
-                        >Cancel</a
-                    >
-                    <button
-                        mat-raised-button
-                        color="primary"
-                        id="sticky-save-btn"
-                        [disabled]="createTrainForm().invalid() || state.createTrainRunning()"
-                        (click)="createTrain()"
-                    >
-                        @if (state.createTrainRunning()) {
-                            <app-spinner variant="inline" />
-                        }
-                        <ng-container i18n="@@createTrain.save">💾 Save Train</ng-container>
-                    </button>
-                </div>
-            </div>
-        </div>
+        <app-sticky-edit-bar
+            title="Create New Train"
+            i18n-title="@@createTrain.title"
+            [isDirty]="createTrainForm().dirty()"
+        >
+            <a
+                mat-stroked-button
+                [routerLink]="'/traffic-overview'"
+                id="sticky-cancel-btn"
+                i18n="@@createTrain.cancel"
+                >Cancel</a
+            >
+            <button
+                mat-raised-button
+                color="primary"
+                id="sticky-save-btn"
+                [disabled]="createTrainForm().invalid() || state.createTrainRunning()"
+                (click)="createTrain()"
+            >
+                @if (state.createTrainRunning()) {
+                    <app-spinner variant="inline" />
+                }
+                <ng-container i18n="@@createTrain.save">💾 Save Train</ng-container>
+            </button>
+        </app-sticky-edit-bar>
         <div class="main-content">
             <div class="container">
                 <a [routerLink]="'/traffic-overview'" class="back-link" i18n="@@createTrain.breadcrumb.overview">Traffic Overview</a>
@@ -139,7 +130,7 @@ import { MatButton, MatAnchor } from '@angular/material/button';
     `,
     styles: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [RouterLink, FormField, JourneyRouteCard, Spinner, MatFormField, MatLabel, MatError, MatHint, MatInput, MatButton, MatAnchor],
+    imports: [RouterLink, FormField, JourneyRouteCard, Spinner, MatFormField, MatLabel, MatError, MatHint, MatInput, MatButton, MatAnchor, StickyEditBar],
     providers: [CreatePageState],
 })
 export class CreateTrainPage {

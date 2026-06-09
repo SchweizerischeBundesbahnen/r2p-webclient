@@ -12,6 +12,9 @@ import {
 } from '../../shared/utils/date.utils';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButton, MatAnchor } from '@angular/material/button';
+import { DetailGrid, DetailItem } from '../../shared/components/detail-grid/detail-grid';
+import { PartnerBadge } from '../../shared/components/partner-badge/partner-badge';
+import { AlertBanner } from '../../shared/components/alert-banner/alert-banner';
 import { ShareTrainModalComponent, ShareTrainDialogData } from './share-train-modal';
 import { RequestMergeModalComponent, RequestMergeDialogData } from './request-merge-modal';
 import { AcceptMergeModalComponent, AcceptMergeDialogData } from './accept-merge-modal';
@@ -27,7 +30,7 @@ import {
 
 @Component({
     selector: 'app-traffic-page',
-    imports: [RouterLink, DatePipe, JourneyRouteCard, BranchStatusBadgeComponent, Spinner, MatButton, MatAnchor],
+    imports: [RouterLink, DatePipe, JourneyRouteCard, BranchStatusBadgeComponent, Spinner, MatButton, MatAnchor, DetailGrid, DetailItem, PartnerBadge, AlertBanner],
     template: `
         <!-- ── Main Content ────────────────────────────────────────────── -->
         <div class="main-content">
@@ -66,44 +69,17 @@ import {
                             </div>
                         </div>
 
-                        <div class="detail-grid" style="margin-top:1rem;">
-                            <div class="detail-item">
-                                <div class="detail-label" i18n="@@traffic.field.trainNumber">Train Number</div>
-                                <div class="detail-value" id="detail-train-number">
-                                    {{ trainHeaderInfo.trainNumber }}
-                                </div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label" i18n="@@traffic.field.from">From</div>
-                                <div class="detail-value" id="detail-from">
-                                    {{ trainHeaderInfo.from }}
-                                </div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label" i18n="@@traffic.field.departure">Departure</div>
-                                <div class="detail-value" id="detail-dep-time">
-                                    {{ trainHeaderInfo.departureTime | date: 'shortTime' }}
-                                </div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label" i18n="@@traffic.field.to">To</div>
-                                <div class="detail-value" id="detail-to">
-                                    {{ trainHeaderInfo.to }}
-                                </div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label" i18n="@@traffic.field.arrival">Arrival</div>
-                                <div class="detail-value" id="detail-arr-time">
-                                    {{ trainHeaderInfo.arrivalTime | date: 'shortTime' }}
-                                </div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label" i18n="@@traffic.field.opDay">Operational Day</div>
-                                <div class="detail-value" id="detail-op-day">
-                                    @let opDayDetail = trainHeaderInfo.operationalDay;
-                                    {{ opDayDetail ? (isoDateToUtc(opDayDetail) | date: 'mediumDate' : 'UTC') : '-' }}
-                                </div>
-                            </div>
+                        <app-detail-grid style="margin-top:1rem;">
+                            <app-detail-item label="Train Number" i18n-label="@@traffic.field.trainNumber" valueId="detail-train-number">{{ trainHeaderInfo.trainNumber }}</app-detail-item>
+                            <app-detail-item label="From" i18n-label="@@traffic.field.from" valueId="detail-from">{{ trainHeaderInfo.from }}</app-detail-item>
+                            <app-detail-item label="Departure" i18n-label="@@traffic.field.departure" valueId="detail-dep-time">{{ trainHeaderInfo.departureTime | date: 'shortTime' }}</app-detail-item>
+                            <app-detail-item label="To" i18n-label="@@traffic.field.to" valueId="detail-to">{{ trainHeaderInfo.to }}</app-detail-item>
+                            <app-detail-item label="Arrival" i18n-label="@@traffic.field.arrival" valueId="detail-arr-time">{{ trainHeaderInfo.arrivalTime | date: 'shortTime' }}</app-detail-item>
+                            <app-detail-item label="Operational Day" i18n-label="@@traffic.field.opDay" valueId="detail-op-day">
+                                @let opDayDetail = trainHeaderInfo.operationalDay;
+                                {{ opDayDetail ? (isoDateToUtc(opDayDetail) | date: 'mediumDate' : 'UTC') : '-' }}
+                            </app-detail-item>
+                            <!-- Overall Status: kept as raw HTML due to inline tooltip -->
                             <div class="detail-item">
                                 <div class="detail-label">
                                     <ng-container i18n="@@traffic.field.overallStatus">Overall Status</ng-container>
@@ -114,22 +90,15 @@ import {
                                     >
                                 </div>
                                 <div class="detail-value" id="detail-status">
-                                    <span class="traffic-light tl-green"
-                                    ><span class="tl-dot"></span
-                                    ></span>
+                                    <span class="traffic-light tl-green"><span class="tl-dot"></span></span>
                                 </div>
                             </div>
-                            <div class="detail-item">
-                                <div class="detail-label" i18n="@@traffic.field.partners">Partners</div>
-                                <div class="detail-value" id="detail-partners">
-                                    @for (partner of trainHeaderInfo.partners; track partner) {
-                                        <span class="partner-badge partner-badge-{{ partner }}">{{
-                                                partner
-                                            }}</span>
-                                    }
-                                </div>
-                            </div>
-                        </div>
+                            <app-detail-item label="Partners" i18n-label="@@traffic.field.partners" valueId="detail-partners">
+                                @for (partner of trainHeaderInfo.partners; track partner) {
+                                    <app-partner-badge [partner]="partner" />
+                                }
+                            </app-detail-item>
+                        </app-detail-grid>
                     </div>
                 </div>
 
@@ -149,12 +118,7 @@ import {
                                         <div class="branch-name">🌿 {{ branch.branchName }}</div>
                                         <div class="branch-meta">
                                             @for (partner of branch.partners; track partner) {
-                                                <span
-                                                    class="partner-badge partner-badge-{{
-                                                        partner
-                                                    }}"
-                                                >{{ partner }}</span
-                                                >
+                                                <app-partner-badge [partner]="partner" />
                                             }
                                             <span style="margin-left:4px;">{{
                                                     branch.lastChange | date: 'short'
@@ -218,9 +182,9 @@ import {
                     </div>
                 </div>
                 } @else if (trainMainBranch.error()) {
-                    <div class="alert alert-error" i18n="@@traffic.loadError">
+                    <app-alert-banner type="error" i18n="@@traffic.loadError">
                         ⚠️ Failed to load train data. Please go back and try again.
-                    </div>
+                    </app-alert-banner>
                 } @else if (trainMainBranch.isLoading()) {
                     <app-spinner />
                 }

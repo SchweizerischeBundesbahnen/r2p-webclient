@@ -5,10 +5,11 @@ import { TrafficOverviewPageState } from './traffic-overview-page.state';
 import { SortColumn, TrafficOverviewTableService } from './traffic-overview-table.service';
 import { Spinner } from '../../shared/components/spinner/spinner';
 import { MatButton, MatAnchor } from '@angular/material/button';
+import { AlertBanner } from '../../shared/components/alert-banner/alert-banner';
 
 @Component({
     selector: 'app-traffic-overview-page',
-    imports: [RouterLink, TableRow, Spinner, MatButton, MatAnchor],
+    imports: [RouterLink, TableRow, Spinner, MatButton, MatAnchor, AlertBanner],
     template: `
         <!-- ── Main Content ────────────────────────────────────────────── -->
         <div class="main-content">
@@ -74,9 +75,9 @@ import { MatButton, MatAnchor } from '@angular/material/button';
                 @if (trainListResource.isLoading()) {
                     <app-spinner />
                 } @else if (trainListResource.error()) {
-                    <div class="alert alert-error" i18n="@@trafficOverview.loadError">
+                    <app-alert-banner type="error" i18n="@@trafficOverview.loadError">
                         ⚠️ Failed to load trains. Please check your server URL in the settings.
-                    </div>
+                    </app-alert-banner>
                 } @else {
                 @let filteredTrains = tableService.applyFilterOn(trainListResource.value());
                 @if (filteredTrains.length > 0) {

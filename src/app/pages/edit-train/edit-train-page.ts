@@ -11,10 +11,12 @@ import { Spinner } from '../../shared/components/spinner/spinner';
 import { MatFormField, MatLabel, MatError, MatHint } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton, MatAnchor } from '@angular/material/button';
+import { StickyEditBar } from '../../shared/components/sticky-edit-bar/sticky-edit-bar';
+import { AlertBanner } from '../../shared/components/alert-banner/alert-banner';
 
 @Component({
     selector: 'app-edit-train-page',
-    imports: [RouterLink, FormField, JourneyRouteCard, Spinner, MatFormField, MatLabel, MatError, MatHint, MatInput, MatButton, MatAnchor],
+    imports: [RouterLink, FormField, JourneyRouteCard, Spinner, MatFormField, MatLabel, MatError, MatHint, MatInput, MatButton, MatAnchor, StickyEditBar, AlertBanner],
     template: `
         @if (state.branch.isLoading()) {
             <div class="main-content">
@@ -27,46 +29,31 @@ import { MatButton, MatAnchor } from '@angular/material/button';
                 ⚠️ Failed to load train data. Please go back and try again.
             </div>
         } @else {
-            <div
-                class="sticky-edit-bar"
-                [class.dirty]="editTrainForm().dirty()"
-                id="sticky-edit-bar"
+            @let branchInfos = getBranchInfos(state.branch.value()?.branch);
+            <app-sticky-edit-bar
+                [title]="'Edit: ' + branchInfos.trainNumber"
+                [isDirty]="editTrainForm().dirty()"
             >
-                @let branchInfos = getBranchInfos(state.branch.value()?.branch);
-                <div class="sticky-edit-bar-inner">
-                    <div class="sticky-edit-bar-title">
-                        <span id="sticky-title">Edit: {{ branchInfos.trainNumber }}</span>
-                        <span
-                            class="unsaved-indicator"
-                            [class.hidden]="!editTrainForm().dirty()"
-                            id="unsaved-indicator"
-                            i18n="@@editTrain.unsavedChanges"
-                            >● Unsaved changes</span
-                        >
-                    </div>
-                    <div class="sticky-edit-bar-actions">
-                        <a
-                            mat-stroked-button
-                            [routerLink]="'/traffic-view/' + trainId()"
-                            id="sticky-cancel-btn"
-                            i18n="@@editTrain.cancel"
-                            >Cancel</a
-                        >
-                        <button
-                            mat-raised-button
-                            color="primary"
-                            id="sticky-save-btn"
-                            [disabled]="editTrainForm().invalid() || state.editTrainRunning()"
-                            (click)="updateTrain()"
-                        >
-                            @if (state.editTrainRunning()) {
-                                <app-spinner variant="inline" />
-                            }
-                            <ng-container i18n="@@editTrain.save">💾 Save Train</ng-container>
-                        </button>
-                    </div>
-                </div>
-            </div>
+                <a
+                    mat-stroked-button
+                    [routerLink]="'/traffic-view/' + trainId()"
+                    id="sticky-cancel-btn"
+                    i18n="@@editTrain.cancel"
+                    >Cancel</a
+                >
+                <button
+                    mat-raised-button
+                    color="primary"
+                    id="sticky-save-btn"
+                    [disabled]="editTrainForm().invalid() || state.editTrainRunning()"
+                    (click)="updateTrain()"
+                >
+                    @if (state.editTrainRunning()) {
+                        <app-spinner variant="inline" />
+                    }
+                    <ng-container i18n="@@editTrain.save">💾 Save Train</ng-container>
+                </button>
+            </app-sticky-edit-bar>
 
             <!-- ── Main Content ────────────────────────────────────────────── -->
             <div class="main-content">
@@ -92,11 +79,11 @@ import { MatButton, MatAnchor } from '@angular/material/button';
                     </div>
 
                     <!-- Variant context info -->
-                    <div class="alert alert-info" id="branch-alert">
+                    <app-alert-banner type="info" id="branch-alert">
                         <ng-container i18n="@@editTrain.editingInfo">✏️ You are editing variant</ng-container>
                         <strong id="branch-name-display"> {{ branchInfos.branchName }}</strong
                         >. <ng-container i18n="@@editTrain.editingInfoSub">Changes will be saved as a new version of this variant.</ng-container>
-                    </div>
+                    </app-alert-banner>
 
                     <!-- ── Basic Info Card ──────────────────────────────────── -->
                     <div class="card">
