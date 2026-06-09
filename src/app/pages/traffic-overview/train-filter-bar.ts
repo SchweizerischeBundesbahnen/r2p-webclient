@@ -1,0 +1,63 @@
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { TrafficOverviewTableService } from './traffic-overview-table.service';
+
+@Component({
+    selector: 'app-train-filter-bar',
+    imports: [MatButton],
+    template: `
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label for="filter-train-number" i18n="@@trafficOverview.filter.trainNumber">Train Number</label>
+                <input
+                    type="text"
+                    id="filter-train-number"
+                    class="filter-input"
+                    placeholder="e.g., IC 1234"
+                    i18n-placeholder="@@trafficOverview.filter.trainNumberPlaceholder"
+                    [value]="tableService.trainNumber()"
+                    (input)="tableService.trainNumber.set($any($event.target).value)"
+                />
+            </div>
+            <div class="filter-group">
+                <label for="filter-from" i18n="@@trafficOverview.filter.opDayFrom">Op. Day From</label>
+                <input
+                    #fromInput
+                    type="date"
+                    id="filter-from"
+                    class="filter-input"
+                    [value]="tableService.operationalDayFrom()"
+                    (click)="fromInput.showPicker()"
+                    (change)="tableService.operationalDayFrom.set($any($event.target).value)"
+                />
+            </div>
+            <div class="filter-group">
+                <label for="filter-to" i18n="@@trafficOverview.filter.opDayTo">Op. Day To</label>
+                <input
+                    #toInput
+                    type="date"
+                    id="filter-to"
+                    class="filter-input"
+                    [value]="tableService.operationalDayTo()"
+                    (click)="toInput.showPicker()"
+                    (change)="tableService.operationalDayTo.set($any($event.target).value)"
+                />
+            </div>
+            <div class="filter-group" style="flex: 0; min-width: max-content;">
+                <label for="clear">&nbsp;</label>
+                <button
+                    mat-button
+                    id="clear"
+                    (click)="tableService.clearFilters()"
+                    i18n="@@trafficOverview.filter.clear"
+                >
+                    Clear
+                </button>
+            </div>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class TrainFilterBar {
+    protected readonly tableService = inject(TrafficOverviewTableService);
+}
