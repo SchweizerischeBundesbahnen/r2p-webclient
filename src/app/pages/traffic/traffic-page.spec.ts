@@ -193,10 +193,6 @@ function makeSettingsService(organization: string): SettingsService {
 function createFakeState(value?: TrainWithDetails) {
     return {
         trainId: signal<string | undefined>(undefined),
-        newVariantModalIsOpen: signal(false),
-        toggleIsNewVariantModalOpen: () => {
-            void 0;
-        },
         trainMainBranch: {
             value: signal(value),
             error: signal(undefined),

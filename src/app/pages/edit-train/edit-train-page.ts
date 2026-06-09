@@ -8,10 +8,13 @@ import { finalize } from 'rxjs';
 import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
 import { ErrorNotificationService } from '../../shared/error/error-notification.service';
 import { Spinner } from '../../shared/components/spinner/spinner';
+import { MatFormField, MatLabel, MatError, MatHint } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButton, MatAnchor } from '@angular/material/button';
 
 @Component({
     selector: 'app-edit-train-page',
-    imports: [RouterLink, FormField, JourneyRouteCard, Spinner],
+    imports: [RouterLink, FormField, JourneyRouteCard, Spinner, MatFormField, MatLabel, MatError, MatHint, MatInput, MatButton, MatAnchor],
     template: `
         @if (state.branch.isLoading()) {
             <div class="main-content">
@@ -43,16 +46,16 @@ import { Spinner } from '../../shared/components/spinner/spinner';
                     </div>
                     <div class="sticky-edit-bar-actions">
                         <a
+                            mat-stroked-button
                             [routerLink]="'/traffic-view/' + trainId()"
-                            class="btn btn-ghost"
                             id="sticky-cancel-btn"
                             i18n="@@editTrain.cancel"
                             >Cancel</a
                         >
                         <button
-                            class="btn btn-success"
+                            mat-raised-button
+                            color="primary"
                             id="sticky-save-btn"
-                            [class.btn-muted]="editTrainForm().invalid() || state.editTrainRunning()"
                             [disabled]="editTrainForm().invalid() || state.editTrainRunning()"
                             (click)="updateTrain()"
                         >
@@ -102,12 +105,11 @@ import { Spinner } from '../../shared/components/spinner/spinner';
                         </div>
                         <div class="card-body">
                             <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label required" for="train-name" i18n="@@editTrain.field.name">Name</label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label i18n="@@editTrain.field.name">Name</mat-label>
                                     <input
-                                        type="text"
+                                        matInput
                                         id="train-name"
-                                        class="form-input"
                                         [formField]="editTrainForm.name"
                                     />
                                     @if (
@@ -115,18 +117,17 @@ import { Spinner } from '../../shared/components/spinner/spinner';
                                         editTrainForm.name().invalid()
                                     ) {
                                         @for (error of editTrainForm.name().errors(); track error) {
-                                            <span class="form-error">{{ error.message }}</span>
+                                            <mat-error>{{ error.message }}</mat-error>
                                         }
                                     }
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label required" for="train-opday" i18n="@@editTrain.field.opDay"
-                                        >Operational Day</label
-                                    >
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" (click)="opDayInput.showPicker()">
+                                    <mat-label i18n="@@editTrain.field.opDay">Operational Day</mat-label>
                                     <input
+                                        #opDayInput
+                                        matInput
                                         type="date"
                                         id="train-opday"
-                                        class="form-input"
                                         [formField]="editTrainForm.operationalDay"
                                     />
                                     @if (
@@ -137,18 +138,17 @@ import { Spinner } from '../../shared/components/spinner/spinner';
                                             error of editTrainForm.operationalDay().errors();
                                             track error
                                         ) {
-                                            <span class="form-error">{{ error.message }}</span>
+                                            <mat-error>{{ error.message }}</mat-error>
                                         }
                                     }
-                                </div>
+                                </mat-form-field>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label required" for="save-comment" i18n="@@editTrain.field.comment"
-                                    >Change Comment</label
-                                >
+                            <mat-form-field appearance="outline" style="width:100%">
+                                <mat-label i18n="@@editTrain.field.comment">Change Comment</mat-label>
                                 <textarea
+                                    matInput
                                     id="save-comment"
-                                    class="form-textarea"
+                                    rows="3"
                                     placeholder="Describe what you changed…"
                                     i18n-placeholder="@@editTrain.field.commentPlaceholder"
                                     [formField]="editTrainForm.creationComment"
@@ -161,10 +161,10 @@ import { Spinner } from '../../shared/components/spinner/spinner';
                                         error of editTrainForm.creationComment().errors();
                                         track error
                                     ) {
-                                        <span class="form-error">{{ error.message }}</span>
+                                        <mat-error>{{ error.message }}</mat-error>
                                     }
                                 }
-                            </div>
+                            </mat-form-field>
                         </div>
                     </div>
 
@@ -174,8 +174,6 @@ import { Spinner } from '../../shared/components/spinner/spinner';
                         [journey]="state.branch.value()?.train?.journey"
                         (journeyChange)="onJourneyChange($event)"
                     />
-
-                    <!-- ── Action Buttons (removed – use sticky bar above) ──────── -->
                 </div>
             </div>
         }

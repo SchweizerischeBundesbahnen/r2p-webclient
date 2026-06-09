@@ -1,15 +1,17 @@
 import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ReadTrainPageState } from './read-train-page.state';
-import { ViewJsonModal } from './view-json-modal';
+import { ViewJsonModal, ViewJsonDialogData } from './view-json-modal';
 import { DatePipe } from '@angular/common';
 import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
 import { isoDateToUtc } from '../../shared/utils/date.utils';
 import { Spinner } from '../../shared/components/spinner/spinner';
+import { MatDialog } from '@angular/material/dialog';
+import { MatButton, MatAnchor } from '@angular/material/button';
 
 @Component({
     selector: 'app-read-train-page',
-    imports: [RouterLink, ViewJsonModal, DatePipe, JourneyRouteCard, Spinner],
+    imports: [RouterLink, DatePipe, JourneyRouteCard, Spinner, MatButton, MatAnchor],
     template: `
         <!-- ── Main Content ────────────────────────────────────────────── -->
         <div class="main-content">
@@ -38,12 +40,13 @@ import { Spinner } from '../../shared/components/spinner/spinner';
                         <!-- Edit button: only for own variants -->
                         <a
                             [routerLink]="'/traffic-view'"
-                            class="btn btn-primary"
+                            mat-raised-button
+                            color="primary"
                             id="edit-btn"
                             style="display:none;"
                             i18n="@@readTrain.editVariant">✏ Edit Variant</a
                         >
-                        <button class="btn btn-outline" (click)="state.toggleIsJsonModalOpen()" i18n="@@readTrain.viewJson">View JSON</button>
+                        <button mat-stroked-button (click)="openJsonModal()" i18n="@@readTrain.viewJson">View JSON</button>
                     </div>
                 </div>
 
@@ -139,7 +142,7 @@ import { Spinner } from '../../shared/components/spinner/spinner';
                 <div class="btn-group" style="margin-bottom:2rem;">
                     <a
                         [routerLink]="'/traffic-view/' + trainId()"
-                        class="btn btn-ghost"
+                        mat-button
                         id="back-btn"
                         i18n="@@readTrain.backToTraffic">← Back to Traffic View</a
                     >
@@ -147,9 +150,6 @@ import { Spinner } from '../../shared/components/spinner/spinner';
                 }
             </div>
         </div>
-        @if (state.isJsonModalOpen) {
-            <app-read-view-json-modal [train]="state.trainAndBranch.value()!.train" />
-        }
     `,
     styles: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -159,9 +159,19 @@ export class ReadTrainPage {
     readonly trainId = input.required<string>();
     readonly branchId = input.required<string>();
     protected readonly isoDateToUtc = isoDateToUtc;
+    private readonly dialog = inject(MatDialog);
 
     private readonly updateState = effect(() => {
         this.state.trainId.set(this.trainId());
         this.state.branchId.set(this.branchId());
     });
+
+    protected openJsonModal(): void {
+        const train = this.state.trainAndBranch.value()?.train;
+        if (!train) return;
+        this.dialog.open<ViewJsonModal, ViewJsonDialogData>(ViewJsonModal, {
+            data: { train },
+            width: '860px',
+        });
+    }
 }

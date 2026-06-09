@@ -4,10 +4,11 @@ import { TableRow } from './table-row';
 import { TrafficOverviewPageState } from './traffic-overview-page.state';
 import { SortColumn, TrafficOverviewTableService } from './traffic-overview-table.service';
 import { Spinner } from '../../shared/components/spinner/spinner';
+import { MatButton, MatAnchor } from '@angular/material/button';
 
 @Component({
     selector: 'app-traffic-overview-page',
-    imports: [RouterLink, TableRow, Spinner],
+    imports: [RouterLink, TableRow, Spinner, MatButton, MatAnchor],
     template: `
         <!-- ── Main Content ────────────────────────────────────────────── -->
         <div class="main-content">
@@ -17,7 +18,7 @@ import { Spinner } from '../../shared/components/spinner/spinner';
                     <div>
                         <h1 class="page-title" i18n="@@trafficOverview.heading">Traffic Overview</h1>
                     </div>
-                    <a [routerLink]="'../create-train'" class="btn btn-success" i18n="@@trafficOverview.newTrain"> ＋ New Train </a>
+                    <a mat-raised-button color="primary" [routerLink]="'../create-train'" i18n="@@trafficOverview.newTrain"> ＋ New Train </a>
                 </div>
 
                 <!-- Filter Bar -->
@@ -59,8 +60,8 @@ import { Spinner } from '../../shared/components/spinner/spinner';
                     <div class="filter-group" style="flex: 0; min-width: max-content;">
                         <label for="clear">&nbsp;</label>
                         <button
+                            mat-button
                             id="clear"
-                            class="btn btn-ghost"
                             (click)="tableService.clearFilters()"
                             i18n="@@trafficOverview.filter.clear"
                         >

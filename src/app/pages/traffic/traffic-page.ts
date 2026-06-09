@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import { TrafficPageState, TrainWithDetails } from './traffic-page.state';
 import { Branch, BranchState } from '../../shared/models/api.models';
 import { DatePipe } from '@angular/common';
-import { NewVariantModal } from './new-variant-modal';
+import { NewVariantModal, NewVariantDialogData } from './new-variant-modal';
 import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
 import { BranchStatusBadgeComponent } from './branch-status-badge';
 import {
@@ -11,6 +11,7 @@ import {
     parseDurationToDate,
 } from '../../shared/utils/date.utils';
 import { MatDialog } from '@angular/material/dialog';
+import { MatButton, MatAnchor } from '@angular/material/button';
 import { ShareTrainModalComponent, ShareTrainDialogData } from './share-train-modal';
 import { RequestMergeModalComponent, RequestMergeDialogData } from './request-merge-modal';
 import { AcceptMergeModalComponent, AcceptMergeDialogData } from './accept-merge-modal';
@@ -26,7 +27,7 @@ import {
 
 @Component({
     selector: 'app-traffic-page',
-    imports: [RouterLink, DatePipe, NewVariantModal, JourneyRouteCard, BranchStatusBadgeComponent, Spinner],
+    imports: [RouterLink, DatePipe, JourneyRouteCard, BranchStatusBadgeComponent, Spinner, MatButton, MatAnchor],
     template: `
         <!-- ── Main Content ────────────────────────────────────────────── -->
         <div class="main-content">
@@ -51,12 +52,13 @@ import {
                                 </p>
                             </div>
                             <div class="btn-group">
-                                <button class="btn btn-outline" (click)="openShareModal()" i18n="@@traffic.shareTrain">
+                                <button mat-stroked-button color="primary" (click)="openShareModal()" i18n="@@traffic.shareTrain">
                                     🔗 Share Train
                                 </button>
                                 <button
-                                    class="btn btn-primary"
-                                    (click)="trafficPageStateService.toggleIsNewVariantModalOpen()"
+                                    mat-raised-button
+                                    color="primary"
+                                    (click)="openNewVariantModal()"
                                     i18n="@@traffic.newVariant"
                                 >
                                     ⎇ New Variant
@@ -175,7 +177,8 @@ import {
                                                       trainId: trainId(),
                                                       branchId: branch.branchId,
                                                   }"
-                                                  class="btn btn-primary btn-sm"
+                                                  mat-raised-button
+                                                  color="primary"
                                                   i18n="@@traffic.edit">✏ Edit</a>
                                           }
                                           <a
@@ -184,24 +187,26 @@ import {
                                                   trainId: trainId(),
                                                   branchId: branch.branchId,
                                               }"
-                                              class="btn btn-ghost btn-sm"
+                                              mat-button
                                               i18n="@@traffic.view">👁 View</a
                                           >
                                          @if (branch.showMergeRequest) {
                                              <button
-                                                 class="btn btn-outline btn-sm"
+                                                 mat-stroked-button
                                                  (click)="openRequestMergeModal(branch)"
                                                  i18n="@@traffic.mergeRequest"
                                              >Propose Variant</button>
                                          }
                                          @if (branch.showAcceptReject) {
                                              <button
-                                                 class="btn btn-success btn-sm"
+                                                 mat-raised-button
+                                                 color="primary"
                                                  (click)="openAcceptMergeModal(branch)"
                                                  i18n="@@traffic.acceptMerge"
                                              >Accept Variant</button>
                                              <button
-                                                 class="btn btn-danger btn-sm"
+                                                 mat-raised-button
+                                                 color="warn"
                                                  (click)="openRejectMergeModal(branch)"
                                                  i18n="@@traffic.rejectMerge"
                                              >Reject Variant</button>
@@ -221,9 +226,6 @@ import {
                 }
             </div>
         </div>
-        @if (trafficPageStateService.newVariantModalIsOpen()) {
-            <app-new-variant-modal />
-        }
     `,
     styles: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -250,6 +252,22 @@ export class TrafficPage {
         this.dialog
             .open<ShareTrainModalComponent, ShareTrainDialogData>(ShareTrainModalComponent, {
                 data: { trainId, partners },
+                width: '480px',
+            })
+            .afterClosed()
+            .subscribe((result) => {
+                if (result === 'success') {
+                    this.trainMainBranch.reload();
+                }
+            });
+    }
+
+    protected openNewVariantModal(): void {
+        const trainId = this.trafficPageStateService.trainId();
+        if (!trainId) return;
+        this.dialog
+            .open<NewVariantModal, NewVariantDialogData>(NewVariantModal, {
+                data: { trainId },
                 width: '480px',
             })
             .afterClosed()

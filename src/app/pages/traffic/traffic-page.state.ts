@@ -6,8 +6,6 @@ import { Train, TrainListElement } from '../../shared/models/api.models';
 
 @Injectable()
 export class TrafficPageState {
-    createNewVariantRunning = false;
-    newVariantModalIsOpen = signal(false);
     readonly apiService = inject(BackendApiService);
     trainId = signal<string | undefined>(undefined);
 
@@ -34,9 +32,6 @@ export class TrafficPageState {
             ),
     });
 
-    toggleIsNewVariantModalOpen() {
-        this.newVariantModalIsOpen.set(!this.newVariantModalIsOpen());
-    }
 }
 
 export interface TrainWithDetails {
