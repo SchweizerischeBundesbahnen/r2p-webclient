@@ -1,15 +1,16 @@
 import { Injectable, signal } from '@angular/core';
 import { form, required } from '@angular/forms/signals';
+import { Journey } from '../../shared/models/api.models';
+import { minimalTrain } from '../../backend-api.service';
+import { TrainFormModel } from '../../shared/components/train-details-form-card/train-details-form-card';
 
 @Injectable()
 export class CreatePageState {
     createTrainRunning = signal(false);
 
-    private model = signal<{
-        name: string;
-        operationalDay: string;
-        creationComment: string;
-    }>({
+    readonly journey = signal<Journey>(minimalTrain.journey!);
+
+    private model = signal<TrainFormModel>({
         name: '',
         operationalDay: '',
         creationComment: '',
@@ -21,4 +22,3 @@ export class CreatePageState {
         required(schemaPath.creationComment, { message: 'Creation Comment is required' });
     });
 }
-

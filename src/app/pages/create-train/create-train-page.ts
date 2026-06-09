@@ -1,16 +1,15 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { FormField } from '@angular/forms/signals';
 import { BackendApiService } from '../../backend-api.service';
 import { CreatePageState } from './create-train-page.state';
 import { finalize } from 'rxjs';
+import { Journey } from '../../shared/models/api.models';
 import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
 import { ErrorNotificationService } from '../../shared/error/error-notification.service';
 import { Spinner } from '../../shared/components/spinner/spinner';
-import { MatFormField, MatLabel, MatError, MatHint } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
 import { MatButton, MatAnchor } from '@angular/material/button';
 import { StickyEditBar } from '../../shared/components/sticky-edit-bar/sticky-edit-bar';
+import { TrainDetailsFormCard } from '../../shared/components/train-details-form-card/train-details-form-card';
 
 @Component({
     selector: 'app-create-train-page',
@@ -51,106 +50,47 @@ import { StickyEditBar } from '../../shared/components/sticky-edit-bar/sticky-ed
                     </div>
                 </div>
 
-                <!-- ── Basic Info Card ──────────────────────────────────── -->
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title" i18n="@@createTrain.section.trainDetails">📋 Train Details</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-row">
-                            <mat-form-field appearance="outline">
-                                <mat-label i18n="@@createTrain.field.name">Name</mat-label>
-                                <input
-                                    matInput
-                                    id="train-name"
-                                    placeholder="e.g., IC 1234 Zürich–Basel"
-                                    i18n-placeholder="@@createTrain.field.namePlaceholder"
-                                    [formField]="createTrainForm.name"
-                                />
-                                @if (
-                                    createTrainForm.name().touched() &&
-                                    createTrainForm.name().invalid()
-                                ) {
-                                    @for (error of createTrainForm.name().errors(); track error) {
-                                        <mat-error>{{ error.message }}</mat-error>
-                                    }
-                                }
-                            </mat-form-field>
-                            <mat-form-field appearance="outline" (click)="opDayInput.showPicker()">
-                                <mat-label i18n="@@createTrain.field.opDay">Operational Day</mat-label>
-                                <input
-                                    #opDayInput
-                                    matInput
-                                    type="date"
-                                    id="train-opday"
-                                    [formField]="createTrainForm.operationalDay"
-                                />
-                                @if (
-                                    createTrainForm.operationalDay().touched() &&
-                                    createTrainForm.operationalDay().invalid()
-                                ) {
-                                    @for (
-                                        error of createTrainForm.operationalDay().errors();
-                                        track error
-                                    ) {
-                                        <mat-error>{{ error.message }}</mat-error>
-                                    }
-                                }
-                            </mat-form-field>
-                        </div>
-                        <mat-form-field appearance="outline" style="width:100%">
-                            <mat-label i18n="@@createTrain.field.comment">Creation Comment</mat-label>
-                            <textarea
-                                matInput
-                                id="save-comment"
-                                rows="3"
-                                placeholder="Describe this train (required for saving)…"
-                                i18n-placeholder="@@createTrain.field.commentPlaceholder"
-                                [formField]="createTrainForm.creationComment"
-                            ></textarea>
-                            @if (
-                                createTrainForm.creationComment().touched() &&
-                                createTrainForm.creationComment().invalid()
-                            ) {
-                                @for (
-                                    error of createTrainForm.creationComment().errors();
-                                    track error
-                                ) {
-                                    <mat-error>{{ error.message }}</mat-error>
-                                }
-                            }
-                        </mat-form-field>
-                    </div>
-                </div>
+                <app-train-details-form-card
+                    [trainForm]="createTrainForm"
+                    commentLabel="Creation Comment"
+                    i18n-commentLabel="@@createTrain.field.comment"
+                    namePlaceholder="e.g., IC 1234 Zürich–Basel"
+                    i18n-namePlaceholder="@@createTrain.field.namePlaceholder"
+                    commentPlaceholder="Describe this train (required for saving)…"
+                    i18n-commentPlaceholder="@@createTrain.field.commentPlaceholder"
+                />
 
-                <!-- ── Journey Card ─────────────────────────────────────── -->
-                <app-journey-route-card [readonly]="false" />
+                <app-journey-route-card
+                    [readonly]="false"
+                    [journey]="state.journey()"
+                    (journeyChange)="onJourneyChange($event)"
+                />
             </div>
         </div>
     `,
     styles: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [RouterLink, FormField, JourneyRouteCard, Spinner, MatFormField, MatLabel, MatError, MatHint, MatInput, MatButton, MatAnchor, StickyEditBar],
+    imports: [RouterLink, JourneyRouteCard, Spinner, MatButton, MatAnchor, StickyEditBar, TrainDetailsFormCard],
     providers: [CreatePageState],
 })
 export class CreateTrainPage {
-    private apiService = inject(BackendApiService);
-    private router = inject(Router);
-    protected state = inject(CreatePageState);
-    private notifications = inject(ErrorNotificationService);
-    protected createTrainForm = inject(CreatePageState).createTrainForm;
+    private readonly apiService = inject(BackendApiService);
+    private readonly router = inject(Router);
+    protected readonly state = inject(CreatePageState);
+    private readonly notifications = inject(ErrorNotificationService);
+    protected readonly createTrainForm = this.state.createTrainForm;
+
+    protected onJourneyChange(journey: Journey): void {
+        this.state.journey.set(journey);
+    }
 
     protected createTrain() {
         if (this.state.createTrainRunning()) return;
         this.state.createTrainRunning.set(true);
         const { name, creationComment, operationalDay } = this.state.createTrainForm().value();
         this.apiService
-            .createTrain(name, operationalDay, creationComment)
-            .pipe(
-                finalize(() => {
-                    this.state.createTrainRunning.set(false);
-                }),
-            )
+            .createTrain(name, operationalDay, creationComment, this.state.journey())
+            .pipe(finalize(() => this.state.createTrainRunning.set(false)))
             .subscribe({
                 next: () => {
                     this.notifications.showSuccess($localize`:@@createTrain.saveSuccess:Train saved successfully.`);

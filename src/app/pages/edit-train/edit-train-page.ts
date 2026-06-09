@@ -1,22 +1,20 @@
 import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { EditTrainPageState } from './edit-train-page.state';
-import { FormField } from '@angular/forms/signals';
 import { Branch, Journey } from '../../shared/models/api.models';
 import { BackendApiService } from '../../backend-api.service';
 import { finalize } from 'rxjs';
 import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
 import { ErrorNotificationService } from '../../shared/error/error-notification.service';
 import { Spinner } from '../../shared/components/spinner/spinner';
-import { MatFormField, MatLabel, MatError, MatHint } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
 import { MatButton, MatAnchor } from '@angular/material/button';
 import { StickyEditBar } from '../../shared/components/sticky-edit-bar/sticky-edit-bar';
 import { AlertBanner } from '../../shared/components/alert-banner/alert-banner';
+import { TrainDetailsFormCard } from '../../shared/components/train-details-form-card/train-details-form-card';
 
 @Component({
     selector: 'app-edit-train-page',
-    imports: [RouterLink, FormField, JourneyRouteCard, Spinner, MatFormField, MatLabel, MatError, MatHint, MatInput, MatButton, MatAnchor, StickyEditBar, AlertBanner],
+    imports: [RouterLink, JourneyRouteCard, Spinner, MatButton, MatAnchor, StickyEditBar, AlertBanner, TrainDetailsFormCard],
     template: `
         @if (state.branch.isLoading()) {
             <div class="main-content">
@@ -25,9 +23,9 @@ import { AlertBanner } from '../../shared/components/alert-banner/alert-banner';
                 </div>
             </div>
         } @else if (state.branch.error()) {
-            <div class="alert alert-error" i18n="@@editTrain.loadError">
+            <app-alert-banner type="error" i18n="@@editTrain.loadError">
                 ⚠️ Failed to load train data. Please go back and try again.
-            </div>
+            </app-alert-banner>
         } @else {
             @let branchInfos = getBranchInfos(state.branch.value()?.branch);
             <app-sticky-edit-bar
@@ -86,74 +84,13 @@ import { AlertBanner } from '../../shared/components/alert-banner/alert-banner';
                     </app-alert-banner>
 
                     <!-- ── Basic Info Card ──────────────────────────────────── -->
-                    <div class="card">
-                        <div class="card-header">
-                            <span class="card-title" i18n="@@editTrain.section.trainDetails">📋 Train Details</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-row">
-                                <mat-form-field appearance="outline">
-                                    <mat-label i18n="@@editTrain.field.name">Name</mat-label>
-                                    <input
-                                        matInput
-                                        id="train-name"
-                                        [formField]="editTrainForm.name"
-                                    />
-                                    @if (
-                                        editTrainForm.name().touched() &&
-                                        editTrainForm.name().invalid()
-                                    ) {
-                                        @for (error of editTrainForm.name().errors(); track error) {
-                                            <mat-error>{{ error.message }}</mat-error>
-                                        }
-                                    }
-                                </mat-form-field>
-                                <mat-form-field appearance="outline" (click)="opDayInput.showPicker()">
-                                    <mat-label i18n="@@editTrain.field.opDay">Operational Day</mat-label>
-                                    <input
-                                        #opDayInput
-                                        matInput
-                                        type="date"
-                                        id="train-opday"
-                                        [formField]="editTrainForm.operationalDay"
-                                    />
-                                    @if (
-                                        editTrainForm.operationalDay().touched() &&
-                                        editTrainForm.operationalDay().invalid()
-                                    ) {
-                                        @for (
-                                            error of editTrainForm.operationalDay().errors();
-                                            track error
-                                        ) {
-                                            <mat-error>{{ error.message }}</mat-error>
-                                        }
-                                    }
-                                </mat-form-field>
-                            </div>
-                            <mat-form-field appearance="outline" style="width:100%">
-                                <mat-label i18n="@@editTrain.field.comment">Change Comment</mat-label>
-                                <textarea
-                                    matInput
-                                    id="save-comment"
-                                    rows="3"
-                                    placeholder="Describe what you changed…"
-                                    i18n-placeholder="@@editTrain.field.commentPlaceholder"
-                                    [formField]="editTrainForm.creationComment"
-                                ></textarea>
-                                @if (
-                                    editTrainForm.creationComment().touched() &&
-                                    editTrainForm.creationComment().invalid()
-                                ) {
-                                    @for (
-                                        error of editTrainForm.creationComment().errors();
-                                        track error
-                                    ) {
-                                        <mat-error>{{ error.message }}</mat-error>
-                                    }
-                                }
-                            </mat-form-field>
-                        </div>
-                    </div>
+                    <app-train-details-form-card
+                        [trainForm]="editTrainForm"
+                        commentLabel="Change Comment"
+                        i18n-commentLabel="@@editTrain.field.comment"
+                        commentPlaceholder="Describe what you changed…"
+                        i18n-commentPlaceholder="@@editTrain.field.commentPlaceholder"
+                    />
 
                     <!-- ── Journey Card ─────────────────────────────────────── -->
                     <app-journey-route-card

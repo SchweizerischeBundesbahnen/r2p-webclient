@@ -5,6 +5,7 @@ import { map, Observable, switchMap, tap } from 'rxjs';
 import { BackendApiService } from '../../backend-api.service';
 import { Branch, Train } from '../../shared/models/api.models';
 import { assertIsoDate } from '../../shared/utils/date.utils';
+import { TrainFormModel } from '../../shared/components/train-details-form-card/train-details-form-card';
 
 /**
  * Not provided in root, cause state should be destroyed after switching page.
@@ -14,11 +15,7 @@ export class EditTrainPageState {
     editTrainRunning = signal(false);
     readonly apiService = inject(BackendApiService);
 
-    model = signal<{
-        name: string;
-        operationalDay: string;
-        creationComment: string;
-    }>({
+    model = signal<TrainFormModel>({
         name: '',
         operationalDay: '',
         creationComment: '',

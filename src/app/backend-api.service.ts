@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Branch, TimingType, Train, TrainListElement } from './shared/models/api.models';
+import { Branch, Journey, TimingType, Train, TrainListElement } from './shared/models/api.models';
 import { assertIsoDate } from './shared/utils/date.utils';
 import { SettingsService } from './settings/settings.service';
 
@@ -30,12 +30,13 @@ export class BackendApiService {
         name: string,
         operationalDay: string,
         comment: string,
+        journey: Journey,
     ): Observable<TrainListElement> {
         assertIsoDate(operationalDay);
         const headers = this.tokenHeaders;
         return this.httpClient.post<TrainListElement>(
             `${this.baseUrl}/v1/trains`,
-            { ...minimalTrain, id: crypto.randomUUID(), name, startdate: operationalDay },
+            { ...minimalTrain, id: crypto.randomUUID(), name, startdate: operationalDay, journey },
             {
                 params: { comment },
                 headers,
