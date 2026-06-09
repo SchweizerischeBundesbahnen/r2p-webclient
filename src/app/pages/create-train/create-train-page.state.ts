@@ -1,7 +1,7 @@
-import { Injectable, signal } from '@angular/core';
+﻿import { Injectable, signal } from '@angular/core';
 import { form, required } from '@angular/forms/signals';
 import { Journey } from '../../shared/models/api.models';
-import { minimalTrain } from '../../backend-api.service';
+import { minimalTrain } from '../../core/api/backend-api.service';
 import { TrainFormModel } from '../../shared/components/train-details-form-card/train-details-form-card';
 
 @Injectable()

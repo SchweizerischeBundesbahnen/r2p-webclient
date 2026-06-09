@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { EditTrainPageState } from './edit-train-page.state';
 import { Branch, Journey } from '../../shared/models/api.models';
-import { BackendApiService } from '../../backend-api.service';
+import { BackendApiService } from '../../core/api/backend-api.service';
 import { finalize } from 'rxjs';
 import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
-import { ErrorNotificationService } from '../../shared/error/error-notification.service';
+import { ErrorNotificationService } from '../../core/error/error-notification.service';
 import { Spinner } from '../../shared/components/spinner/spinner';
 import { MatButton, MatAnchor } from '@angular/material/button';
 import { StickyEditBar } from '../../shared/components/sticky-edit-bar/sticky-edit-bar';

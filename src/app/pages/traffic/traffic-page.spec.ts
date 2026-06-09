@@ -1,4 +1,4 @@
-import { LOCALE_ID, signal } from '@angular/core';
+﻿import { LOCALE_ID, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { registerLocaleData } from '@angular/common';
@@ -6,7 +6,7 @@ import localeDeCh from '@angular/common/locales/de';
 import { TrafficPage } from './traffic-page';
 import { TrafficPageState, TrainWithDetails } from './traffic-page.state';
 import { TimingType, Train, TrainListElement } from '../../shared/models/api.models';
-import { SettingsService } from '../../settings/settings.service';
+import { SettingsService } from '../../core/settings/settings.service';
 
 registerLocaleData(localeDeCh, 'de-CH');
 

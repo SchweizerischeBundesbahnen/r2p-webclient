@@ -1,10 +1,10 @@
-import { TestBed } from '@angular/core/testing';
+﻿import { TestBed } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { vi } from 'vitest';
 import { settingsGuard } from './settings.guard';
-import { SettingsService } from '../../settings/settings.service';
+import { SettingsService } from '../settings/settings.service';
 
 describe('settingsGuard', () => {
     let hasConfiguredSettings: ReturnType<typeof vi.fn>;

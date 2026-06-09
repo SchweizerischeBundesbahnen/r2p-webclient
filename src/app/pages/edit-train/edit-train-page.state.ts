@@ -1,8 +1,8 @@
-import { inject, Injectable, signal } from '@angular/core';
+﻿import { inject, Injectable, signal } from '@angular/core';
 import { form, required } from '@angular/forms/signals';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { map, Observable, switchMap, tap } from 'rxjs';
-import { BackendApiService } from '../../backend-api.service';
+import { BackendApiService } from '../../core/api/backend-api.service';
 import { Branch, Train } from '../../shared/models/api.models';
 import { assertIsoDate } from '../../shared/utils/date.utils';
 import { TrainFormModel } from '../../shared/components/train-details-form-card/train-details-form-card';

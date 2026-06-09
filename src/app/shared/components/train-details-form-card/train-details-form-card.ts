@@ -3,7 +3,7 @@ import { form, FormField } from '@angular/forms/signals';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 
-export type TrainFormModel = { name: string; operationalDay: string; creationComment: string };
+export interface TrainFormModel { name: string; operationalDay: string; creationComment: string }
 type TrainForm = ReturnType<typeof form<TrainFormModel>>;
 
 @Component({

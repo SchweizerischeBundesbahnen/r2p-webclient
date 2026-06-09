@@ -1,8 +1,8 @@
-import { inject } from '@angular/core';
+﻿import { inject } from '@angular/core';
 import { CanActivateFn } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { SettingsService } from '../../settings/settings.service';
-import { SettingsModal } from '../../settings/settings-modal';
+import { SettingsService } from '../settings/settings.service';
+import { SettingsModal } from '../settings/settings-modal';
 import { map, take } from 'rxjs';
 
 /**

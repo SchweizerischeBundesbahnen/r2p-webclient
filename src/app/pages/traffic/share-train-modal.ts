@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatError, MatFormField, MatHint, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -6,8 +6,8 @@ import { MatButton } from '@angular/material/button';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { form, FormField, maxLength, required, submit } from '@angular/forms/signals';
 import { firstValueFrom } from 'rxjs';
-import { BackendApiService } from '../../backend-api.service';
-import { ORGANIZATION_OPTIONS } from '../../settings/settings.service';
+import { BackendApiService } from '../../core/api/backend-api.service';
+import { ORGANIZATION_OPTIONS } from '../../core/settings/settings.service';
 
 export interface ShareTrainDialogData {
     trainId: string;

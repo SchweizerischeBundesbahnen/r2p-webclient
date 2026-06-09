@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { SettingsModal } from '../settings/settings-modal';
-import { LocaleService } from '../locale/locale.service';
-import { ErrorToastComponent } from '../shared/error/error-toast';
+import { SettingsModal } from '../core/settings/settings-modal';
+import { LocaleService } from '../core/locale/locale.service';
+import { ErrorToastComponent } from '../core/error/error-toast';
 import { PrototypeBannerComponent } from '../shared/components/prototype-banner/prototype-banner';
-import { ORGANIZATION_OPTIONS, SettingsService } from '../settings/settings.service';
+import { ORGANIZATION_OPTIONS, SettingsService } from '../core/settings/settings.service';
 
 @Component({
     selector: 'app-layout',

@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+﻿import { Routes } from '@angular/router';
 import { Layout } from './pages/layout';
 import { CreateTrainPage } from './pages/create-train/create-train-page';
 import { TrafficOverviewPage } from './pages/traffic-overview/traffic-overview-page';
@@ -9,8 +9,8 @@ import { ReadTrainPageState } from './pages/read-train/read-train-page.state';
 import { EditTrainPage } from './pages/edit-train/edit-train-page';
 import { EditTrainPageState } from './pages/edit-train/edit-train-page.state';
 import { NotFoundPage } from './pages/not-found/not-found-page';
-import { settingsGuard } from './shared/guards/settings.guard';
-import { oidcGuard } from './shared/guards/oidc.guard';
+import { settingsGuard } from './core/auth/settings.guard';
+import { oidcGuard } from './core/auth/oidc.guard';
 
 export const routes: Routes = [
     {

@@ -1,12 +1,12 @@
-import { ApplicationConfig, ErrorHandler, LOCALE_ID, provideBrowserGlobalErrorListeners } from '@angular/core';
+﻿import { ApplicationConfig, ErrorHandler, LOCALE_ID, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { routes } from './app.routes';
 import { authInterceptor, provideAuth } from 'angular-auth-oidc-client';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { resolveInitialLocale } from './locale/locale.service';
-import { errorInterceptor } from './shared/error/error-interceptor';
-import { loadSettingsRaw, isSettingsComplete } from './settings/settings.service';
-import { AppErrorHandler } from './shared/error/app-error-handler';
+import { resolveInitialLocale } from './core/locale/locale.service';
+import { errorInterceptor } from './core/error/error-interceptor';
+import { loadSettingsRaw, isSettingsComplete } from './core/settings/settings.service';
+import { AppErrorHandler } from './core/error/app-error-handler';
 
 function provideAppAuth() {
     const s = loadSettingsRaw();

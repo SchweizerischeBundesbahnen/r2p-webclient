@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, computed, effect, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TrafficPageState, TrainWithDetails } from './traffic-page.state';
 import { Branch, BranchState } from '../../shared/models/api.models';
@@ -19,7 +19,7 @@ import { ShareTrainModalComponent, ShareTrainDialogData } from './share-train-mo
 import { RequestMergeModalComponent, RequestMergeDialogData } from './request-merge-modal';
 import { AcceptMergeModalComponent, AcceptMergeDialogData } from './accept-merge-modal';
 import { RejectMergeModalComponent, RejectMergeDialogData } from './reject-merge-modal';
-import { SettingsService } from '../../settings/settings.service';
+import { SettingsService } from '../../core/settings/settings.service';
 import { Spinner } from '../../shared/components/spinner/spinner';
 import {
     getEarliestJourneyLocationDeparture,

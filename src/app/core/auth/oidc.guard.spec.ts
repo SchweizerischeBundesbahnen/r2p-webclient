@@ -1,11 +1,11 @@
-import { TestBed } from '@angular/core/testing';
+﻿import { TestBed } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { of } from 'rxjs';
 import { oidcGuard } from './oidc.guard';
-import { SettingsService } from '../../settings/settings.service';
+import { SettingsService } from '../settings/settings.service';
 
 const CONFIGURED_SETTINGS = {
     authority: 'https://login.example.com/realms/r2p',

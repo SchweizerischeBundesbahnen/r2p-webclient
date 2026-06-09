@@ -1,9 +1,9 @@
-import { TestBed } from '@angular/core/testing';
+﻿import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { BackendApiService, minimalTrain } from './backend-api.service';
-import { Train } from './shared/models/api.models';
-import { SettingsService, ORGANIZATION_OPTIONS } from './settings/settings.service';
+import { Train } from '../../shared/models/api.models';
+import { SettingsService, ORGANIZATION_OPTIONS } from '../settings/settings.service';
 import { vi } from 'vitest';
 
 function makeSettingsService(serverUrl = 'https://settings.example.com', organization = ORGANIZATION_OPTIONS[0].name): SettingsService {
@@ -36,7 +36,7 @@ describe('BackendApiService', () => {
 
     describe('createTrain', () => {
         it('throws for an invalid operationalDay before making an HTTP request', () => {
-            expect(() => service.createTrain('IC 1234', '2026-02-30', 'comment')).toThrow(
+            expect(() => service.createTrain('IC 1234', '2026-02-30', 'comment', minimalTrain.journey!)).toThrow(
                 'Invalid ISO date "2026-02-30"',
             );
             httpController.expectNone({});
@@ -44,13 +44,13 @@ describe('BackendApiService', () => {
 
         it('throws for a date-time string instead of a date-only string', () => {
             expect(() =>
-                service.createTrain('IC 1234', '2026-05-26T10:00:00', 'comment'),
+                service.createTrain('IC 1234', '2026-05-26T10:00:00', 'comment', minimalTrain.journey!),
             ).toThrow('Invalid ISO date "2026-05-26T10:00:00"');
             httpController.expectNone({});
         });
 
         it('makes an HTTP request for a valid operationalDay', () => {
-            service.createTrain('IC 1234', '2026-05-26', 'comment').subscribe();
+            service.createTrain('IC 1234', '2026-05-26', 'comment', minimalTrain.journey!).subscribe();
 
             const req = httpController.expectOne((r) => r.url.endsWith('/v1/trains'));
             expect(req.request.method).toBe('POST');
@@ -59,7 +59,7 @@ describe('BackendApiService', () => {
         });
 
         it('sets the Token header and base URL from settings', () => {
-            service.createTrain('IC 1234', '2026-05-26', 'comment').subscribe();
+            service.createTrain('IC 1234', '2026-05-26', 'comment', minimalTrain.journey!).subscribe();
             const req = httpController.expectOne((r) => r.url.endsWith('/v1/trains'));
             expect(req.request.headers.get('Token')).toBe(ORGANIZATION_OPTIONS[0].name);
             expect(req.request.url).toContain('https://settings.example.com');

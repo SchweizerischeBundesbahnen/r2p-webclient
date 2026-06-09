@@ -1,6 +1,6 @@
-import { inject, Injectable, signal } from '@angular/core';
+﻿import { inject, Injectable, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { BackendApiService } from '../../backend-api.service';
+import { BackendApiService } from '../../core/api/backend-api.service';
 import { map, Observable, of, switchMap } from 'rxjs';
 import { Train, TrainListElement } from '../../shared/models/api.models';
 

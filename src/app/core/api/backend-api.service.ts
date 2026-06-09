@@ -1,9 +1,9 @@
-import { inject, Injectable } from '@angular/core';
+﻿import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Branch, Journey, TimingType, Train, TrainListElement } from './shared/models/api.models';
-import { assertIsoDate } from './shared/utils/date.utils';
-import { SettingsService } from './settings/settings.service';
+import { Branch, Journey, TimingType, Train, TrainListElement } from '../../shared/models/api.models';
+import { assertIsoDate } from '../../shared/utils/date.utils';
+import { SettingsService } from '../settings/settings.service';
 
 @Injectable({ providedIn: 'root' })
 export class BackendApiService {
