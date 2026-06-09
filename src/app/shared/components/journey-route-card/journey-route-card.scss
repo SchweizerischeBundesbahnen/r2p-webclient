@@ -93,8 +93,6 @@
     box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
-.jt-stop-dot.jt-start { background-color: var(--text-primary); }
-.jt-stop-dot.jt-end   { background-color: var(--text-primary); }
 
 .jt-stop-info {
     flex: 1;
@@ -146,90 +144,6 @@
     padding: 10px 0;
 }
 
-.jt-activity-item {
-    background-color: var(--background-color);
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    padding: 6px 8px;
-    font-size: 0.75rem;
-}
-
-.jt-activity-item.activity-rolling-stock    { border-left: 3px solid var(--secondary-color); }
-.jt-activity-item.activity-staff { border-left: 3px solid var(--secondary-color); }
-.jt-activity-item.activity-path  { border-left: 3px solid var(--secondary-color); }
-
-.jt-activity-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 4px;
-    margin-bottom: 3px;
-}
-
-.jt-activity-responsibility {
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    margin-top: 2px;
-}
-
-.jt-activity-times {
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    margin-top: 2px;
-}
-
-.jt-activity-features {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin-top: 4px;
-}
-
-.jt-feature-tag {
-    display: inline-block;
-    font-size: 0.65rem;
-    background: var(--accent-color-light, #e8f0fe);
-    color: var(--accent-color, #1a73e8);
-    border: 1px solid var(--accent-color, #1a73e8);
-    border-radius: 4px;
-    padding: 1px 6px;
-    white-space: nowrap;
-    max-width: 160px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* ── Rolling Stock span / local-only badges ──────────────────── */
-.rolling-stock-local-badge,
-.rolling-stock-span-badge,
-.rolling-stock-continues-badge {
-    display: inline-block;
-    font-size: 0.6rem;
-    border-radius: 4px;
-    padding: 1px 5px;
-    font-weight: 600;
-    white-space: nowrap;
-    vertical-align: middle;
-}
-
-.rolling-stock-local-badge {
-    background: #fff3cd;
-    color: #856404;
-    border: 1px solid #ffc107;
-}
-
-.rolling-stock-span-badge {
-    background: #d1ecf1;
-    color: #0c5460;
-    border: 1px solid #bee5eb;
-}
-
-.rolling-stock-continues-badge {
-    background: #e2e3e5;
-    color: #383d41;
-    border: 1px solid #d6d8db;
-    font-size: 0.58rem;
-}
 
 /* ── Rolling Stock column: continuous vertical span block ────── */
 
@@ -321,38 +235,6 @@ tr.jt-row-rolling-stock-mid {
     white-space: nowrap;
 }
 
-/* Pass-through band on jt-add-stop-row rows between spanning stops */
-.jt-rolling-stock-cell-passthrough {
-    position: relative;
-    min-width: 180px; /* same as jt-activity-cell */
-}
-
-.jt-rolling-stock-cell-passthrough[data-rolling-stock-passthrough="through"]::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: -1px;
-    bottom: -1px;
-    background: rgba(190, 229, 235, 0.28);
-    border-left: 4px solid #4db8c8;
-    pointer-events: none;
-    z-index: 0;
-}
-
-.jt-activity-actions {
-    display: flex;
-    gap: 4px;
-    align-items: center;
-    flex-shrink: 0;
-}
-
-/* ── Plan status badges (responsibility.status) ─────────────── */
-.badge-confirmed { background-color: var(--plan-confirmed-bg); color: var(--plan-confirmed-text); }
-.badge-proposed  { background-color: var(--plan-proposed-bg);  color: var(--plan-proposed-text); }
-.badge-requested { background-color: var(--plan-requested-bg); color: var(--plan-requested-text); }
-.badge-refused   { background-color: var(--plan-refused-bg);   color: var(--plan-refused-text); }
-.badge-dropped   { background-color: var(--plan-dropped-bg);   color: var(--plan-dropped-text); }
 
 .jt-add-activity-btn {
     margin-top: 6px;
@@ -378,16 +260,6 @@ tr.jt-row-rolling-stock-mid {
     background-color: transparent;
 }
 
-/* Stop row (full-height) */
-.jt-stop-row {
-    display: table-row;
-    height: 100%;
-}
-
-.jt-stop-row > * {
-    display: table-cell;
-    vertical-align: middle;
-}
 
 .jt-edit-location-btn {
     margin-top: var(--spacing-xs);
@@ -441,122 +313,4 @@ tr.jt-row-rolling-stock-mid {
     color: white;
 }
 
-/* ── Icon buttons (edit/delete on activity items) ────────────────── */
-.btn-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 22px;
-    height: 22px;
-    border: none;
-    border-radius: 4px;
-    background: transparent;
-    color: var(--text-muted);
-    font-size: 0.75rem;
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s;
-    flex-shrink: 0;
-    padding: 0;
-}
 
-.btn-icon:hover {
-    background: var(--accent-color);
-    color: white;
-}
-
-.btn-icon-danger:hover {
-    background: var(--danger-color, #e53e3e);
-    color: white;
-}
-
-/* ── Activity detail line (staff role, path passthrough) ─────────── */
-.jt-activity-detail {
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    margin-top: 2px;
-}
-
-/* ── Modal sections (fieldsets) ──────────────────────────────────── */
-.modal-section {
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    padding: 0.75rem 1rem 1rem;
-    margin-bottom: 1rem;
-}
-
-.modal-section:last-child {
-    margin-bottom: 0;
-}
-
-.modal-section-title {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    padding: 0 0.25rem;
-}
-
-/* ── Checkbox rows ────────────────────────────────────────────────── */
-.form-check-row {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border-color);
-}
-
-.form-check-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-    font-size: 0.875rem;
-    color: var(--text-primary);
-}
-
-.form-check {
-    width: 16px;
-    height: 16px;
-    flex-shrink: 0;
-    cursor: pointer;
-}
-
-/* ── Features section ─────────────────────────────────────────────── */
-.modal-features-section {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border-color);
-}
-
-.modal-features-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-}
-
-.modal-features-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.modal-feature-row {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-}
-
-.modal-feature-row .form-select {
-    flex: 0 0 auto;
-    width: 200px;
-}
-
-.modal-feature-row .form-input {
-    flex: 1;
-}
-
-/* ── Large modal ──────────────────────────────────────────────────── */
-.modal-lg {
-    max-width: 680px;
-    width: 100%;
-}

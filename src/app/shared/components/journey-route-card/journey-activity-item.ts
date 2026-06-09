@@ -8,6 +8,7 @@ export type CapabilityType = 'rollingStock' | 'staff' | 'path';
 @Component({
     selector: 'app-journey-activity-item',
     templateUrl: './journey-activity-item.html',
+    styleUrl: './journey-activity-item.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [PartnerBadge],
 })
