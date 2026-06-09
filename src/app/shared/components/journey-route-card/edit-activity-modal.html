@@ -1,0 +1,151 @@
+<h2 mat-dialog-title>{{ modalTitle() }}</h2>
+
+<mat-dialog-content>
+    <div class="act-modal-content">
+
+        <!-- ── Responsibility ──────────────────────────────────────── -->
+        <p class="act-section-label" i18n="@@editActivityModal.responsibility">Responsibility</p>
+        <div class="act-form-row">
+            <mat-form-field appearance="outline">
+                <mat-label i18n="@@editActivityModal.responsibility.type">Type</mat-label>
+                <mat-select [value]="respType()" (selectionChange)="respType.set($event.value)">
+                    @for (rt of responsibilityTypes; track rt.value) {
+                        <mat-option [value]="rt.value">{{ rt.label }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label i18n="@@editActivityModal.responsibility.partner">Partner</mat-label>
+                <mat-select [value]="respPartner()" (selectionChange)="respPartner.set($event.value)">
+                    @for (p of partners; track p) {
+                        <mat-option [value]="p">{{ p }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label i18n="@@editActivityModal.responsibility.status">Plan Status</mat-label>
+                <mat-select [value]="respStatus()" (selectionChange)="respStatus.set($event.value)">
+                    @for (s of planStatuses; track s) {
+                        <mat-option [value]="s">{{ s }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <mat-divider style="margin: 0.75rem 0;" />
+
+        <!-- ── Timing ─────────────────────────────────────────────── -->
+        <p class="act-section-label" i18n="@@editActivityModal.timing">Timing (optional)</p>
+        <div class="act-form-row">
+            <mat-form-field appearance="outline">
+                <mat-label i18n="@@editActivityModal.timing.arrival">Arrival</mat-label>
+                <input
+                    matInput
+                    type="time"
+                    step="60"
+                    [value]="arrivalTime()"
+                    (change)="arrivalTime.set($any($event.target).value)"
+                />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label i18n="@@editActivityModal.timing.departure">Departure</mat-label>
+                <input
+                    matInput
+                    type="time"
+                    step="60"
+                    [value]="departureTime()"
+                    (change)="departureTime.set($any($event.target).value)"
+                />
+            </mat-form-field>
+        </div>
+
+        <!-- ── Rolling Stock ──────────────────────────────────────── -->
+        @if (capabilityType === 'rollingStock') {
+            <mat-divider style="margin: 0.75rem 0;" />
+            <p class="act-section-label" i18n="@@editActivityModal.rollingStock">Rolling Stock Details</p>
+
+            <div class="act-form-row">
+                <mat-form-field appearance="outline">
+                    <mat-label i18n="@@editActivityModal.rollingStock.length">Length (mm)</mat-label>
+                    <input matInput type="number" [value]="rsLength()"
+                        (input)="rsLength.set($any($event.target).value)" placeholder="e.g., 200000" />
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label i18n="@@editActivityModal.rollingStock.weight">Weight (kg)</mat-label>
+                    <input matInput type="number" [value]="rsWeight()"
+                        (input)="rsWeight.set($any($event.target).value)" placeholder="e.g., 420000" />
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label i18n="@@editActivityModal.rollingStock.composition">Composition</mat-label>
+                    <input matInput [value]="rsComposition()"
+                        (input)="rsComposition.set($any($event.target).value)" placeholder="e.g., RABDe 502" />
+                </mat-form-field>
+            </div>
+
+            <mat-checkbox
+                style="display:block; margin-bottom:0.75rem;"
+                [checked]="rsLocalOnly()"
+                (change)="rsLocalOnly.set($event.checked)"
+                i18n="@@editActivityModal.rollingStock.localOnly"
+            >Local only (vor Ort)</mat-checkbox>
+
+            <!-- Features -->
+            <div class="act-features-header">
+                <span class="act-section-label" style="margin:0;" i18n="@@editActivityModal.rollingStock.features">Features</span>
+                <button mat-button type="button" (click)="addFeature()"
+                    i18n="@@editActivityModal.rollingStock.addFeature">＋ Add Feature</button>
+            </div>
+            @for (feat of rsFeatures(); track $index) {
+                <div class="act-feature-row">
+                    <mat-form-field appearance="outline" style="flex:0 0 200px;">
+                        <mat-select [value]="feat.type" (selectionChange)="updateFeatureType($index, $event.value)">
+                            @for (ft of rsFeatureTypes; track ft.value) {
+                                <mat-option [value]="ft.value">{{ ft.label }}</mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="flex:1;">
+                        <mat-label i18n="@@editActivityModal.rollingStock.feature.label">Description</mat-label>
+                        <input matInput [value]="feat.offeredservice"
+                            (input)="updateFeatureService($index, $event)" />
+                    </mat-form-field>
+                    <button mat-icon-button type="button" (click)="removeFeature($index)"
+                        i18n-aria-label="@@editActivityModal.rollingStock.removeFeature" aria-label="Remove feature">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </div>
+            }
+        }
+
+        <!-- ── Staff ──────────────────────────────────────────────── -->
+        @if (capabilityType === 'staff') {
+            <mat-divider style="margin: 0.75rem 0;" />
+            <p class="act-section-label" i18n="@@editActivityModal.staff">Staff Details</p>
+            <mat-form-field appearance="outline" style="width:100%;">
+                <mat-label i18n="@@editActivityModal.staff.role">Role</mat-label>
+                <input matInput [value]="staffRole()"
+                    (input)="staffRole.set($any($event.target).value)" placeholder="e.g., conductor" />
+            </mat-form-field>
+        }
+
+        <!-- ── Path ───────────────────────────────────────────────── -->
+        @if (capabilityType === 'path') {
+            <mat-divider style="margin: 0.75rem 0;" />
+            <p class="act-section-label" i18n="@@editActivityModal.path">Path Details</p>
+            <mat-checkbox
+                [checked]="pathPassthrough()"
+                (change)="pathPassthrough.set($event.checked)"
+                i18n="@@editActivityModal.path.passthrough"
+            >Is Passthrough (Durchfahrt)</mat-checkbox>
+        }
+
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="dialogRef.close()" i18n="@@editActivityModal.cancel">Cancel</button>
+    <button mat-flat-button (click)="onSave()" i18n="@@editActivityModal.save">✓ Save Activity</button>
+</mat-dialog-actions>

@@ -2,142 +2,181 @@
     <div class="card-header">
         <span class="card-title" i18n="@@journeyRouteCard.title">Journey Route</span>
     </div>
+
     <div class="card-body" style="padding-top:0.5rem; padding-bottom:0.5rem;">
-        <div class="journey-table-wrapper">
-            <table class="journey-table" id="journey-table">
-                <thead>
-                    <tr>
-                        <th style="width:200px;" i18n="@@journeyRouteCard.col.stop">Stop</th>
-                        <th i18n="@@journeyRouteCard.col.rollingStock">Rolling Stock</th>
-                        <th i18n="@@journeyRouteCard.col.staff">Staff</th>
-                        <th i18n="@@journeyRouteCard.col.path">Path</th>
-                    </tr>
-                </thead>
-                <tbody id="journey-tbody">
-                    @for (stop of stops(); track stop.stopName + $index) {
+
+        @if (stops().length === 0) {
+            <div class="jt-empty-state">
+                <p class="text-muted" i18n="@@journeyRouteCard.empty">No journey stops defined.</p>
+                @if (!readonly()) {
+                    <button
+                        class="btn btn-primary"
+                        style="margin-top:0.75rem;"
+                        (click)="addStop(0)"
+                        i18n="@@journeyRouteCard.addFirstStop"
+                    >＋ Add First Stop</button>
+                }
+            </div>
+        } @else {
+            <div class="journey-table-wrapper">
+                <table class="journey-table">
+                    <thead>
                         <tr>
-                            <td class="jt-stop-cell">
-                                <div class="jt-stop-indicator">
-                                    <div class="jt-stop-line-col">
-                                        <div class="jt-line-seg" [class.jt-line-invisible]="stop.isFirst"></div>
-                                        <div class="jt-stop-dot"></div>
-                                        <div class="jt-line-seg" [class.jt-line-invisible]="stop.isLast"></div>
+                            <th style="width:200px;" i18n="@@journeyRouteCard.col.stop">Stop</th>
+                            <th i18n="@@journeyRouteCard.col.rollingStock">Rolling Stock</th>
+                            <th i18n="@@journeyRouteCard.col.staff">Staff</th>
+                            <th i18n="@@journeyRouteCard.col.path">Path</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (stop of stops(); track stop.stopName + $index) {
+
+                            <!-- Add stop button before each stop (edit mode only) -->
+                            @if (!readonly()) {
+                                <tr class="jt-add-stop-row">
+                                    <td colspan="4">
+                                        <button
+                                            class="jt-add-stop-btn"
+                                            (click)="addStop($index)"
+                                            i18n="@@journeyRouteCard.addStopBefore"
+                                        >＋ Add stop</button>
+                                    </td>
+                                </tr>
+                            }
+
+                            <!-- Stop row -->
+                            <tr
+                                [class.jt-row-rolling-stock-start]="stop.spanRole === 'start'"
+                                [class.jt-row-rolling-stock-mid]="stop.spanRole === 'mid'"
+                                [class.jt-row-rolling-stock-end]="stop.spanRole === 'end'"
+                            >
+                                <!-- Stop cell -->
+                                <td class="jt-stop-cell">
+                                    <div class="jt-stop-indicator">
+                                        <div class="jt-stop-line-col">
+                                            <div class="jt-line-seg" [class.jt-line-invisible]="stop.isFirst"></div>
+                                            <div class="jt-stop-dot"></div>
+                                            <div class="jt-line-seg" [class.jt-line-invisible]="stop.isLast"></div>
+                                        </div>
+                                        <div class="jt-stop-info">
+                                            <div class="jt-stop-name">{{ stop.stopName }}</div>
+                                            @if (!readonly()) {
+                                                <div class="jt-stop-actions">
+                                                    <button
+                                                        class="btn btn-ghost jt-edit-location-btn"
+                                                        (click)="openEditStop($index)"
+                                                        i18n="@@journeyStopRow.editStop"
+                                                    >✎ Edit</button>
+                                                    <button
+                                                        class="btn btn-ghost jt-delete-stop-btn"
+                                                        (click)="deleteStop($index)"
+                                                        i18n="@@journeyStopRow.deleteStop"
+                                                    >✕ Delete</button>
+                                                </div>
+                                            }
+                                        </div>
                                     </div>
-                                    <div class="jt-stop-info">
-                                        <div class="jt-stop-name">{{ stop.stopName }}</div>
+                                </td>
+
+                                <!-- Rolling Stock cell -->
+                                <td
+                                    class="jt-activity-cell jt-rolling-stock-cell"
+                                    [attr.data-rolling-stock-span]="stop.spanRole"
+                                >
+                                    <div class="jt-rolling-stock-cell-inner">
+                                        @if (stop.rollingStockActivities.length > 0) {
+                                            <div class="jt-activity-list jt-rolling-stock-own-activities">
+                                                @for (activity of stop.rollingStockActivities; track $index) {
+                                                    <app-journey-activity-item
+                                                        [activity]="activity"
+                                                        capabilityType="rollingStock"
+                                                        [readonly]="readonly()"
+                                                        (editActivity)="openEditActivity($index, { activity: activity, colType: 'rollingStock' })"
+                                                        (deleteActivity)="deleteActivity($index, { activity: activity, colType: 'rollingStock' })"
+                                                    />
+                                                }
+                                            </div>
+                                        }
+                                        @if (stop.inheritedOriginName) {
+                                            <div class="rolling-stock-span-end-label"
+                                                i18n="@@journeyStopRow.spanEndLabel"
+                                            >ends here · started at {{ stop.inheritedOriginName }}</div>
+                                        }
                                         @if (!readonly()) {
-                                            <button
-                                                class="btn btn-ghost jt-edit-location-btn"
-                                                (click)="openEditLocation($index)"
-                                                i18n="@@journeyRouteCard.stop.editLocation"
-                                            >Edit</button>
+                                            <div class="jt-rolling-stock-add-btn-wrap">
+                                                <button
+                                                    class="jt-add-activity-btn"
+                                                    (click)="openAddActivity($index, 'rollingStock')"
+                                                    i18n="@@journeyStopRow.addRollingStock"
+                                                >＋ Rolling Stock</button>
+                                            </div>
                                         }
                                     </div>
-                                </div>
-                            </td>
-                            <td class="jt-activity-cell jt-rolling-stock-cell" [attr.data-rolling-stock-span]="stop.spanRole">
-                                <div class="jt-rolling-stock-cell-inner">
-                                    @if (stop.rollingStockActivities.length > 0) {
-                                        <div class="jt-activity-list jt-rolling-stock-own-activities">
-                                            @for (activity of stop.rollingStockActivities; track $index) {
-                                                <div class="jt-activity-item activity-rolling-stock">
-                                                    <div class="jt-activity-header">
-                                                        <span style="flex:1;">
-                                                            <app-partner-badge [partner]="activity.responsibility?.id ?? ''" />
-                                                        </span>
-                                                    </div>
-                                                    <div class="jt-activity-responsibility">
-                                                        {{ activity.responsibility?.type }}
-                                                        · <span class="badge badge-{{ activity.responsibility?.status ?? '' }}" style="font-size:0.6rem;">{{ activity.responsibility?.status }}</span>
-                                                    </div>
-                                                    @if (getArrival(activity) || getDeparture(activity)) {
-                                                        <div class="jt-activity-times">
-                                                            @if (getArrival(activity)) { <span i18n="@@journeyRouteCard.arr">Arr:</span> {{ getArrival(activity) }} }
-                                                            @if (getArrival(activity) && getDeparture(activity)) { / }
-                                                            @if (getDeparture(activity)) { <span i18n="@@journeyRouteCard.dep">Dep:</span> {{ getDeparture(activity) }} }
-                                                        </div>
-                                                    }
-                                                    @if (activity.capability?.capabilityFeatures?.length) {
-                                                        <div class="jt-activity-features">
-                                                            @for (cf of activity.capability!.capabilityFeatures!; track $index) {
-                                                                <span class="jt-feature-tag" [title]="cf.feature.offeredservice ?? ''">{{ cf.feature.type }}{{ cf.feature.offeredservice ? ': ' + cf.feature.offeredservice : '' }}</span>
-                                                            }
-                                                        </div>
-                                                    }
-                                                </div>
-                                            }
-                                        </div>
+                                </td>
+
+                                <!-- Staff cell -->
+                                <td class="jt-activity-cell">
+                                    <div class="jt-activity-list">
+                                        @for (activity of stop.staffActivities; track $index) {
+                                            <app-journey-activity-item
+                                                [activity]="activity"
+                                                capabilityType="staff"
+                                                [readonly]="readonly()"
+                                                (editActivity)="openEditActivity($index, { activity: activity, colType: 'staff' })"
+                                                (deleteActivity)="deleteActivity($index, { activity: activity, colType: 'staff' })"
+                                            />
+                                        }
+                                    </div>
+                                    @if (!readonly()) {
+                                        <button
+                                            class="jt-add-activity-btn"
+                                            (click)="openAddActivity($index, 'staff')"
+                                            i18n="@@journeyStopRow.addStaff"
+                                        >＋ Staff</button>
                                     }
-                                    @if (stop.inheritedOriginName) {
-                                        <div class="rolling-stock-span-end-label" i18n="@@journeyRouteCard.spanEndLabel">ends here · started at {{ stop.inheritedOriginName }}</div>
+                                </td>
+
+                                <!-- Path cell -->
+                                <td class="jt-activity-cell">
+                                    <div class="jt-activity-list">
+                                        @for (activity of stop.pathActivities; track $index) {
+                                            <app-journey-activity-item
+                                                [activity]="activity"
+                                                capabilityType="path"
+                                                [readonly]="readonly()"
+                                                (editActivity)="openEditActivity($index, { activity: activity, colType: 'path' })"
+                                                (deleteActivity)="deleteActivity($index, { activity: activity, colType: 'path' })"
+                                            />
+                                        }
+                                    </div>
+                                    @if (!readonly()) {
+                                        <button
+                                            class="jt-add-activity-btn"
+                                            (click)="openAddActivity($index, 'path')"
+                                            i18n="@@journeyStopRow.addPath"
+                                        >＋ Path</button>
                                     }
-                                </div>
-                            </td>
-                            <td class="jt-activity-cell">
-                                <div class="jt-activity-list">
-                                    @for (activity of stop.staffActivities; track $index) {
-                                         <div class="jt-activity-item activity-staff">
-                                            <div class="jt-activity-header">
-                                                <span style="flex:1;">
-                                                    <app-partner-badge [partner]="activity.responsibility?.id ?? ''" />
-                                                </span>
-                                            </div>
-                                            <div class="jt-activity-responsibility">
-                                                {{ activity.responsibility?.type }}
-                                                · <span class="badge badge-{{ activity.responsibility?.status ?? '' }}" style="font-size:0.6rem;">{{ activity.responsibility?.status }}</span>
-                                            </div>
-                                            @if (getArrival(activity) || getDeparture(activity)) {
-                                                <div class="jt-activity-times">
-                                                    @if (getArrival(activity)) { <span i18n="@@journeyRouteCard.arr">Arr:</span> {{ getArrival(activity) }} }
-                                                    @if (getArrival(activity) && getDeparture(activity)) { / }
-                                                    @if (getDeparture(activity)) { <span i18n="@@journeyRouteCard.dep">Dep:</span> {{ getDeparture(activity) }} }
-                                                </div>
-                                            }
-                                        </div>
-                                    }
-                                </div>
-                            </td>
-                            <td class="jt-activity-cell">
-                                <div class="jt-activity-list">
-                                    @for (activity of stop.pathActivities; track $index) {
-                                         <div class="jt-activity-item activity-path">
-                                            <div class="jt-activity-header">
-                                                <span style="flex:1;">
-                                                    <app-partner-badge [partner]="activity.responsibility?.id ?? ''" />
-                                                </span>
-                                            </div>
-                                            <div class="jt-activity-responsibility">
-                                                {{ activity.responsibility?.type }}
-                                                · <span class="badge badge-{{ activity.responsibility?.status ?? '' }}" style="font-size:0.6rem;">{{ activity.responsibility?.status }}</span>
-                                            </div>
-                                            @if (getArrival(activity) || getDeparture(activity)) {
-                                                <div class="jt-activity-times">
-                                                    @if (getArrival(activity)) { <span i18n="@@journeyRouteCard.arr">Arr:</span> {{ getArrival(activity) }} }
-                                                    @if (getArrival(activity) && getDeparture(activity)) { / }
-                                                    @if (getDeparture(activity)) { <span i18n="@@journeyRouteCard.dep">Dep:</span> {{ getDeparture(activity) }} }
-                                                </div>
-                                            }
-                                        </div>
-                                    }
-                                </div>
-                            </td>
-                        </tr>
-                    } @empty {
-                        <tr>
-                            <td colspan="4" class="text-muted text-center" style="padding:2rem;" i18n="@@journeyRouteCard.empty">No journey stops defined.</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                                </td>
+                            </tr>
+
+                        }
+
+                        <!-- Add stop button after the last stop (edit mode only) -->
+                        @if (!readonly()) {
+                            <tr class="jt-add-stop-row">
+                                <td colspan="4">
+                                    <button
+                                        class="jt-add-stop-btn"
+                                        (click)="addStop(stops().length)"
+                                        i18n="@@journeyRouteCard.addStopAfter"
+                                    >＋ Add stop at end</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
     </div>
 </div>
-
-@if (editingStopIndex() !== null && currentEditLocation() !== null) {
-    <app-edit-location-modal
-        [location]="currentEditLocation()!"
-        (locationSaved)="onLocationSaved($event)"
-        (cancelled)="closeEditLocation()"
-    />
-}
-

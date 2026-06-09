@@ -2,24 +2,25 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
+    inject,
     input,
     linkedSignal,
     output,
-    signal
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import {
     Activity,
     ARRIVAL_TIMING_TYPES,
     DEPARTURE_TIMING_TYPES,
     Journey,
     JourneyLocation,
-    Location
+    Location,
 } from '../../models/api.models';
 import { parseDurationToHoursAndMinutes } from '../../utils/date.utils';
-import { EditLocationModal } from './edit-location-modal';
-import { PartnerBadge } from '../partner-badge/partner-badge';
+import { CapabilityType, JourneyActivityItem } from './journey-activity-item';
+import { EditStopModal, EditStopDialogData } from './edit-stop-modal';
+import { EditActivityModal, EditActivityDialogData } from './edit-activity-modal';
 
-/** Capability Types for grouping Columns */
 const CAPABILITY_TYPE_ROLLING_STOCK = 'rollingStock' as const;
 const CAPABILITY_TYPE_STAFF = 'staff' as const;
 const CAPABILITY_TYPE_PATH = 'path' as const;
@@ -36,95 +37,70 @@ export interface JourneyStop {
     inheritedOriginName?: string;
 }
 
+interface ActivityRef {
+    activity: Activity;
+    colType: CapabilityType;
+}
+
 @Component({
     selector: 'app-journey-route-card',
     templateUrl: './journey-route-card.html',
     styleUrl: './journey-route-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [EditLocationModal, PartnerBadge],
+    imports: [JourneyActivityItem],
 })
 export class JourneyRouteCard {
     readonly readonly = input<boolean>(false);
     readonly journey = input<Journey | undefined>(undefined);
     readonly journeyChange = output<Journey>();
 
-    /** Local mutable copy of the journey – resets when the input changes. */
+    private readonly dialog = inject(MatDialog);
+
     protected readonly localJourney = linkedSignal(() => this.journey());
-
-    protected readonly editingStopIndex = signal<number | null>(null);
-
-    protected readonly currentEditLocation = computed<Location | null>(() => {
-        const idx = this.editingStopIndex();
-        if (idx === null) return null;
-        return this.localJourney()?.journeylocations?.[idx]?.locations?.[0] ?? null;
-    });
-
-    protected openEditLocation(stopIndex: number): void {
-        this.editingStopIndex.set(stopIndex);
-    }
-
-    protected closeEditLocation(): void {
-        this.editingStopIndex.set(null);
-    }
-
-    protected onLocationSaved(location: Location): void {
-        const idx = this.editingStopIndex();
-        const j = this.localJourney();
-        if (idx === null || !j?.journeylocations) return;
-
-        const updatedJourneyLocations: JourneyLocation[] = j.journeylocations.map((jl, i) => {
-            if (i !== idx) return jl;
-            const locs = jl.locations ? [...jl.locations] : [];
-            locs[0] = location;
-            return { ...jl, locations: locs };
-        });
-
-        const updatedJourney: Journey = { ...j, journeylocations: updatedJourneyLocations };
-        this.localJourney.set(updatedJourney);
-        this.journeyChange.emit(updatedJourney);
-        this.editingStopIndex.set(null);
-    }
 
     readonly stops = computed<JourneyStop[]>(() => {
         const j = this.localJourney();
         const locations = j?.journeylocations;
         if (!locations?.length) return [];
 
-        // Pre-compute spanning rolling stock state
-        const spanningRollingStock: (Activity | null)[] = new Array(locations.length).fill(null);
-        const spanningRollingStockOrigin: (number | null)[] = new Array(locations.length).fill(
-            null,
-        );
-        let activeRollingStockActivity: Activity | null = null;
-        let activeRollingStockOrigin: number | null = null;
+        const spanningRs: (Activity | null)[] = new Array(locations.length).fill(null);
+        const spanningRsOrigin: (number | null)[] = new Array(locations.length).fill(null);
+        let activeRsActivity: Activity | null = null;
+        let activeRsOrigin: number | null = null;
 
         for (let i = 0; i < locations.length; i++) {
-            const ownRollingStockActivities = (locations[i].activities ?? []).filter(
+            const ownRs = (locations[i].activities ?? []).filter(
                 (a) => a.capability?.type === CAPABILITY_TYPE_ROLLING_STOCK,
             );
-            if (ownRollingStockActivities.length > 0) {
-                activeRollingStockActivity = ownRollingStockActivities.at(-1)!;
-                activeRollingStockOrigin = i;
-                spanningRollingStock[i] = null;
+            if (ownRs.length > 0) {
+                const nonLocal = ownRs.filter(
+                    (a) =>
+                        !((a.capability as { localOnly?: boolean } | undefined)?.localOnly ?? false),
+                );
+                if (nonLocal.length > 0) {
+                    activeRsActivity = nonLocal.at(-1)!;
+                    activeRsOrigin = i;
+                } else {
+                    activeRsActivity = null;
+                    activeRsOrigin = null;
+                }
+                spanningRs[i] = null;
             } else {
-                spanningRollingStock[i] = activeRollingStockActivity;
-                spanningRollingStockOrigin[i] = activeRollingStockOrigin;
+                spanningRs[i] = activeRsActivity;
+                spanningRsOrigin[i] = activeRsOrigin;
             }
         }
 
-        // Compute span roles
         const spanRole: JourneyStop['spanRole'][] = new Array(locations.length).fill('none');
         for (let i = 0; i < locations.length; i++) {
-            const ownRollingStockActivities = (locations[i].activities ?? []).filter(
+            const ownRs = (locations[i].activities ?? []).filter(
                 (a) => a.capability?.type === CAPABILITY_TYPE_ROLLING_STOCK,
             );
-            if (ownRollingStockActivities.length > 0) {
-                const spansOnward =
-                    i + 1 < locations.length && spanningRollingStock[i + 1] !== null;
+            if (ownRs.length > 0) {
+                const spansOnward = i + 1 < locations.length && spanningRs[i + 1] !== null;
                 spanRole[i] = spansOnward ? 'start' : 'solo';
-            } else if (spanningRollingStock[i]) {
-                const continuesNext =
-                    i + 1 < locations.length && spanningRollingStock[i + 1] !== null;
+            } else if (spanningRs[i]) {
+                const continuesNext = i + 1 < locations.length && spanningRs[i + 1] !== null;
                 spanRole[i] = continuesNext ? 'mid' : 'end';
             }
         }
@@ -132,9 +108,9 @@ export class JourneyRouteCard {
         return locations.map((jl, idx) => {
             const activities = jl.activities ?? [];
             const inheritedOriginName =
-                spanRole[idx] === 'end' && spanningRollingStockOrigin[idx] != null
-                    ? (locations[spanningRollingStockOrigin[idx]]?.locations?.[0]?.name ??
-                      `Stop ${spanningRollingStockOrigin[idx] + 1}`)
+                spanRole[idx] === 'end' && spanningRsOrigin[idx] != null
+                    ? (locations[spanningRsOrigin[idx]]?.locations?.[0]?.name ??
+                      `Stop ${(spanningRsOrigin[idx] ?? 0) + 1}`)
                     : undefined;
 
             return {
@@ -157,13 +133,122 @@ export class JourneyRouteCard {
         });
     });
 
+    // ── Stop mutations ────────────────────────────────────────────────────────
+
+    protected addStop(insertAt: number): void {
+        const ref = this.dialog.open<EditStopModal, EditStopDialogData, Location>(EditStopModal, {
+            data: { location: {} },
+            width: '480px',
+        });
+        ref.afterClosed().subscribe((result) => {
+            if (!result) return;
+            const j = this.localJourney();
+            const locs = [...(j?.journeylocations ?? [])];
+            const newLoc: JourneyLocation = { locations: [result], activities: [] };
+            locs.splice(insertAt, 0, newLoc);
+            this.emit(this.withLocations(j, locs));
+        });
+    }
+
+    protected openEditStop(stopIndex: number): void {
+        const location = this.localJourney()?.journeylocations?.[stopIndex]?.locations?.[0] ?? {};
+        const ref = this.dialog.open<EditStopModal, EditStopDialogData, Location>(EditStopModal, {
+            data: { location },
+            width: '480px',
+        });
+        ref.afterClosed().subscribe((result) => {
+            if (!result) return;
+            const j = this.localJourney();
+            const locs = (j?.journeylocations ?? []).map((jl, i) => {
+                if (i !== stopIndex) return jl;
+                const existing = jl.locations ? [...jl.locations] : [];
+                existing[0] = result;
+                return { ...jl, locations: existing };
+            });
+            this.emit(this.withLocations(j, locs));
+        });
+    }
+
+    protected deleteStop(stopIndex: number): void {
+        const j = this.localJourney();
+        const locs = [...(j?.journeylocations ?? [])];
+        locs.splice(stopIndex, 1);
+        this.emit(this.withLocations(j, locs));
+    }
+
+    // ── Activity mutations ────────────────────────────────────────────────────
+
+    protected openAddActivity(stopIndex: number, colType: CapabilityType): void {
+        const ref = this.dialog.open<EditActivityModal, EditActivityDialogData, Activity>(
+            EditActivityModal,
+            { data: { activity: null, capabilityType: colType }, width: '640px' },
+        );
+        ref.afterClosed().subscribe((result) => {
+            if (!result) return;
+            this.applyActivitySaved(stopIndex, null, result);
+        });
+    }
+
+    protected openEditActivity(stopIndex: number, ref: ActivityRef): void {
+        const dialogRef = this.dialog.open<EditActivityModal, EditActivityDialogData, Activity>(
+            EditActivityModal,
+            {
+                data: { activity: ref.activity, capabilityType: ref.colType },
+                width: '640px',
+            },
+        );
+        dialogRef.afterClosed().subscribe((result) => {
+            if (!result) return;
+            this.applyActivitySaved(stopIndex, ref.activity, result);
+        });
+    }
+
+    protected deleteActivity(stopIndex: number, ref: ActivityRef): void {
+        const j = this.localJourney();
+        const locs = (j?.journeylocations ?? []).map((jl, i) => {
+            if (i !== stopIndex) return jl;
+            return { ...jl, activities: (jl.activities ?? []).filter((a) => a !== ref.activity) };
+        });
+        this.emit(this.withLocations(j, locs));
+    }
+
+    private applyActivitySaved(
+        stopIndex: number,
+        existing: Activity | null,
+        activity: Activity,
+    ): void {
+        const j = this.localJourney();
+        const locs = (j?.journeylocations ?? []).map((jl, i) => {
+            if (i !== stopIndex) return jl;
+            const acts = jl.activities ?? [];
+            const updated =
+                existing === null
+                    ? [...acts, activity]
+                    : acts.map((a) => (a === existing ? activity : a));
+            return { ...jl, activities: updated };
+        });
+        this.emit(this.withLocations(j, locs));
+    }
+
+    // ── Helpers ───────────────────────────────────────────────────────────────
+
+    private withLocations(base: Journey | undefined, locs: JourneyLocation[]): Journey {
+        return { ...(base ?? {}), journeylocations: locs };
+    }
+
+    private emit(updated: Journey): void {
+        this.localJourney.set(updated);
+        this.journeyChange.emit(updated);
+    }
+
+    // Legacy public helpers
     getArrival(activity: Activity): string | undefined {
-        const duration = activity.timings?.find((t) => ARRIVAL_TIMING_TYPES.has(t.type))?.duration;
-        return duration ? parseDurationToHoursAndMinutes(duration) : undefined;
+        const d = activity.timings?.find((t) => ARRIVAL_TIMING_TYPES.has(t.type))?.duration;
+        return d ? parseDurationToHoursAndMinutes(d) : undefined;
     }
 
     getDeparture(activity: Activity): string | undefined {
-        const duration = activity.timings?.find((t) => DEPARTURE_TIMING_TYPES.has(t.type))?.duration;
-        return duration ? parseDurationToHoursAndMinutes(duration) : undefined;
+        const d = activity.timings?.find((t) => DEPARTURE_TIMING_TYPES.has(t.type))?.duration;
+        return d ? parseDurationToHoursAndMinutes(d) : undefined;
     }
 }
