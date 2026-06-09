@@ -1,61 +1,9 @@
-import { ChangeDetectionStrategy, Component, input, linkedSignal, output } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, input, linkedSignal, output } from '@angular/core';
 import { Location, LOCATION_TYPES, LocationType } from '../../models/api.models';
 
 @Component({
     selector: 'app-edit-location-modal',
-    template: `
-        <div class="modal-overlay" id="edit-location-modal">
-            <div class="modal-card">
-                <div class="modal-header">
-                    <span class="modal-title" i18n="@@editLocationModal.title">Edit Location</span>
-                    <button class="modal-close" (click)="cancelled.emit()">✕</button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label class="form-label" for="loc-type" i18n="@@editLocationModal.field.type">Type</label>
-                        <select
-                            id="loc-type"
-                            class="form-select"
-                            (change)="onTypeChange($event)"
-                        >
-                            <option value="" [selected]="editedType() === ''">—</option>
-                            @for (t of locationTypes; track t) {
-                                <option [value]="t" [selected]="editedType() === t">{{ t }}</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="loc-code" i18n="@@editLocationModal.field.code">Code</label>
-                        <input
-                            id="loc-code"
-                            type="text"
-                            class="form-input"
-                            [value]="editedCode()"
-                            (input)="onCodeInput($event)"
-                        />
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="loc-name" i18n="@@editLocationModal.field.name">Name</label>
-                        <input
-                            id="loc-name"
-                            type="text"
-                            class="form-input"
-                            [value]="editedName()"
-                            (input)="onNameInput($event)"
-                        />
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-ghost" (click)="cancelled.emit()" i18n="@@editLocationModal.cancel">
-                        Cancel
-                    </button>
-                    <button class="btn btn-primary" (click)="onSave()" i18n="@@editLocationModal.save">
-                        Save
-                    </button>
-                </div>
-            </div>
-        </div>
-    `,
+    templateUrl: './edit-location-modal.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditLocationModal {

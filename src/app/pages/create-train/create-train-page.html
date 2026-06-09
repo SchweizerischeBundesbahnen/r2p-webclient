@@ -1,0 +1,53 @@
+﻿<app-sticky-edit-bar
+    title="Create New Train"
+    i18n-title="@@createTrain.title"
+    [isDirty]="createTrainForm().dirty()"
+>
+    <a
+        mat-stroked-button
+        [routerLink]="'/traffic-overview'"
+        id="sticky-cancel-btn"
+        i18n="@@createTrain.cancel"
+        >Cancel</a
+    >
+    <button
+        mat-raised-button
+        color="primary"
+        id="sticky-save-btn"
+        [disabled]="createTrainForm().invalid() || state.createTrainRunning()"
+        (click)="createTrain()"
+    >
+        @if (state.createTrainRunning()) {
+            <app-spinner variant="inline" />
+        }
+        <ng-container i18n="@@createTrain.save">💾 Save Train</ng-container>
+    </button>
+</app-sticky-edit-bar>
+<div class="main-content">
+    <div class="container">
+        <a [routerLink]="'/traffic-overview'" class="back-link" i18n="@@createTrain.breadcrumb.overview">Traffic Overview</a>
+
+        <div class="page-header">
+            <div>
+                <h1 class="page-title" i18n="@@createTrain.title">Create New Train</h1>
+                <p class="page-subtitle" i18n="@@createTrain.subtitle">Define the train details and journey route</p>
+            </div>
+        </div>
+
+        <app-train-details-form-card
+            [trainForm]="createTrainForm"
+            commentLabel="Creation Comment"
+            i18n-commentLabel="@@createTrain.field.comment"
+            namePlaceholder="e.g., IC 1234 Zürich–Basel"
+            i18n-namePlaceholder="@@createTrain.field.namePlaceholder"
+            commentPlaceholder="Describe this train (required for saving)…"
+            i18n-commentPlaceholder="@@createTrain.field.commentPlaceholder"
+        />
+
+        <app-journey-route-card
+            [readonly]="false"
+            [journey]="state.journey()"
+            (journeyChange)="onJourneyChange($event)"
+        />
+    </div>
+</div>

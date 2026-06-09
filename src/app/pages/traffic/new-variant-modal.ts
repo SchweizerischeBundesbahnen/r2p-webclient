@@ -35,62 +35,7 @@ export interface NewVariantDialogData {
         MatButton,
         FormField,
     ],
-    template: `
-        <h2 mat-dialog-title i18n="@@newVariantModal.title">⎇ Create New Variant</h2>
-        <mat-dialog-content>
-            <mat-form-field appearance="outline" style="width:100%; margin-top:0.5rem;">
-                <mat-label i18n="@@newVariantModal.field.name">Variant Name</mat-label>
-                <input
-                    matInput
-                    [formField]="createTrainVariant.variantName"
-                    placeholder="e.g., sbb/rolling-stock-update"
-                    i18n-placeholder="@@newVariantModal.field.namePlaceholder"
-                />
-                <mat-hint i18n="@@newVariantModal.field.nameHint"
-                    >Lowercase, hyphens and slashes allowed. Max 255 characters.</mat-hint
-                >
-                @if (
-                    createTrainVariant.variantName().touched() &&
-                    createTrainVariant.variantName().invalid()
-                ) {
-                    @for (error of createTrainVariant.variantName().errors(); track error) {
-                        <mat-error>{{ error.message }}</mat-error>
-                    }
-                }
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" style="width:100%; margin-top:1rem;">
-                <mat-label i18n="@@newVariantModal.field.comment">Comment</mat-label>
-                <textarea
-                    matInput
-                    [formField]="createTrainVariant.comment"
-                    rows="3"
-                    placeholder="Describe the purpose of this variant…"
-                    i18n-placeholder="@@newVariantModal.field.commentPlaceholder"
-                ></textarea>
-                @if (
-                    createTrainVariant.comment().touched() &&
-                    createTrainVariant.comment().invalid()
-                ) {
-                    @for (error of createTrainVariant.comment().errors(); track error) {
-                        <mat-error>{{ error.message }}</mat-error>
-                    }
-                }
-            </mat-form-field>
-        </mat-dialog-content>
-        <mat-dialog-actions align="end">
-            <button mat-button mat-dialog-close i18n="@@newVariantModal.cancel">Cancel</button>
-            <button
-                mat-raised-button
-                color="primary"
-                [disabled]="createTrainVariant().invalid() || isRunning()"
-                (click)="createNewVariant()"
-                i18n="@@newVariantModal.createAndEdit"
-            >
-                ⎇ Create &amp; Edit
-            </button>
-        </mat-dialog-actions>
-    `,
+    templateUrl: './new-variant-modal.html',
 })
 export class NewVariantModal {
     private readonly data = inject<NewVariantDialogData>(MAT_DIALOG_DATA);

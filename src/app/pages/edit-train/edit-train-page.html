@@ -1,0 +1,85 @@
+﻿@if (state.branch.isLoading()) {
+    <div class="main-content">
+        <div class="container">
+            <app-spinner />
+        </div>
+    </div>
+} @else if (state.branch.error()) {
+    <app-alert-banner type="error" i18n="@@editTrain.loadError">
+        ⚠️ Failed to load train data. Please go back and try again.
+    </app-alert-banner>
+} @else {
+    @let branchInfos = getBranchInfos(state.branch.value()?.branch);
+    <app-sticky-edit-bar
+        [title]="'Edit: ' + branchInfos.trainNumber"
+        [isDirty]="editTrainForm().dirty()"
+    >
+        <a
+            mat-stroked-button
+            [routerLink]="'/traffic-view/' + trainId()"
+            id="sticky-cancel-btn"
+            i18n="@@editTrain.cancel"
+            >Cancel</a
+        >
+        <button
+            mat-raised-button
+            color="primary"
+            id="sticky-save-btn"
+            [disabled]="editTrainForm().invalid() || state.editTrainRunning()"
+            (click)="updateTrain()"
+        >
+            @if (state.editTrainRunning()) {
+                <app-spinner variant="inline" />
+            }
+            <ng-container i18n="@@editTrain.save">💾 Save Train</ng-container>
+        </button>
+    </app-sticky-edit-bar>
+
+    <!-- ── Main Content ────────────────────────────────────────────── -->
+    <div class="main-content">
+        <div class="container">
+            <a
+                [routerLink]="'/traffic-view/' + this.trainId()"
+                class="back-link"
+                id="back-link"
+                i18n="@@editTrain.breadcrumb.traffic"
+                >Traffic View</a
+            >
+
+            <!-- Page Header with variant info -->
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title" id="page-title">
+                        Edit: {{ branchInfos.trainNumber }}
+                    </h1>
+                    <p class="page-subtitle" id="page-subtitle">
+                        Variant: {{ branchInfos.branchName }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Variant context info -->
+            <app-alert-banner type="info" id="branch-alert">
+                <ng-container i18n="@@editTrain.editingInfo">✏️ You are editing variant</ng-container>
+                <strong id="branch-name-display"> {{ branchInfos.branchName }}</strong
+                >. <ng-container i18n="@@editTrain.editingInfoSub">Changes will be saved as a new version of this variant.</ng-container>
+            </app-alert-banner>
+
+            <!-- ── Basic Info Card ──────────────────────────────────── -->
+            <app-train-details-form-card
+                [trainForm]="editTrainForm"
+                commentLabel="Change Comment"
+                i18n-commentLabel="@@editTrain.field.comment"
+                commentPlaceholder="Describe what you changed…"
+                i18n-commentPlaceholder="@@editTrain.field.commentPlaceholder"
+            />
+
+            <!-- ── Journey Card ─────────────────────────────────────── -->
+            <app-journey-route-card
+                [readonly]="false"
+                [journey]="state.branch.value()?.train?.journey"
+                (journeyChange)="onJourneyChange($event)"
+            />
+        </div>
+    </div>
+}
