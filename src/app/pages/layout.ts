@@ -72,6 +72,7 @@ import { PartnerBadge } from '../shared/components/partner-badge/partner-badge';
             font-size: 0.7rem;
             font-weight: 600;
             letter-spacing: 0.05em;
+            margin-left: 0.5rem;
         }
         .lang-switcher {
             display: flex;
@@ -102,7 +103,7 @@ import { PartnerBadge } from '../shared/components/partner-badge/partner-badge';
             <a class="top-nav-brand" routerLink="/traffic-overview">
                 <span class="logo">🚂</span>
                 <span i18n="@@layout.title">R2P Web Client</span>
-                <span class="version-tag" style="margin-left:0.5rem;">v0.0.12</span>
+                <span class="version-tag">v0.0.12</span>
             </a>
             <div class="top-nav-right">
                 <div class="top-nav-partner">

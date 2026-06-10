@@ -23,7 +23,7 @@ export interface ActivityBuildInput {
         weight: string;
         composition: string;
         localOnly: boolean;
-        features: Array<{ type: string; offeredservice: string }>;
+        features: { type: string; offeredservice: string }[];
     };
     staffRole: string;
     pathPassthrough: boolean;

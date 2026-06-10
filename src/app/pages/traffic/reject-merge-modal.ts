@@ -17,11 +17,15 @@ export interface RejectMergeDialogData {
     selector: 'app-reject-merge-modal',
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose, MatFormField, MatLabel, MatError, MatInput, MatButton, FormField],
+    styles: [`
+        .dialog-hint { margin-bottom: 1rem; color: var(--mat-sys-on-surface-variant); font-size: 0.9rem; }
+        .full-width { width: 100%; }
+    `],
     template: `
         <h2 mat-dialog-title i18n="@@rejectMergeModal.title">Reject Variant</h2>
 
         <mat-dialog-content>
-            <p style="margin-bottom:1rem; color:var(--mat-sys-on-surface-variant); font-size:0.9rem;">
+            <p class="dialog-hint">
                 <ng-container i18n="@@rejectMergeModal.info">
                     Rejecting variant <strong>{{ data.branchName }}</strong>.
                     The variant will revert to <em>Open</em> state and the partner can continue
@@ -29,7 +33,7 @@ export interface RejectMergeDialogData {
                 </ng-container>
             </p>
             <form>
-                <mat-form-field appearance="outline" style="width:100%;">
+                <mat-form-field appearance="outline" class="full-width">
                     <mat-label i18n="@@common.field.comment">Comment</mat-label>
                     <textarea
                         matInput

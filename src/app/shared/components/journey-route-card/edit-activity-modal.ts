@@ -30,6 +30,7 @@ import {
 import { parseDurationToHoursAndMinutes } from '../../utils/date.utils';
 import { CapabilityType } from './journey-activity-item';
 import { buildActivity } from './activity-builder.utils';
+import { planStatusLabel } from './activity-display.utils';
 
 export interface EditActivityDialogData {
     activity: Activity | null;
@@ -93,6 +94,7 @@ export class EditActivityModal {
     protected readonly planStatuses = PLAN_STATUSES;
     protected readonly rsFeatureTypes = RS_FEATURE_TYPES;
     protected readonly capabilityType = this.data.capabilityType;
+    protected readonly planStatusLabel = planStatusLabel;
 
     protected readonly modalTitle = computed(() => {
         const isEdit = this.data.activity !== null;

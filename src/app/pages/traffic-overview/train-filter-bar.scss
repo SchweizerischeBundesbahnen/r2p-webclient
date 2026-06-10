@@ -13,46 +13,18 @@
 .filter-group {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-xs);
     flex: 1;
     min-width: 140px;
-}
 
-.filter-group label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.filter-input,
-.filter-select {
-    padding: var(--spacing-sm) var(--spacing-md);
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    font-size: 0.875rem;
-    color: var(--text-primary);
-    background-color: white;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    width: 100%;
-    font-family: inherit;
-}
-
-.filter-input:focus,
-.filter-select:focus {
-    outline: none;
-    border-color: var(--accent-color);
-    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
-}
-
-.filter-input::placeholder {
-    color: var(--text-muted);
+    mat-form-field {
+        width: 100%;
+    }
 }
 
 .filter-group--shrink {
     flex: 0;
     min-width: max-content;
+    padding-bottom: 22px;
 }
 
 @media (max-width: 767px) {

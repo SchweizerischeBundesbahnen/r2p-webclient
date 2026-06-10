@@ -38,7 +38,7 @@
                 <mat-label i18n="@@editActivityModal.responsibility.status">Plan Status</mat-label>
                 <mat-select [formField]="activityForm.status">
                     @for (s of planStatuses; track s) {
-                        <mat-option [value]="s">{{ s }}</mat-option>
+                        <mat-option [value]="s">{{ planStatusLabel(s) }}</mat-option>
                     }
                 </mat-select>
                 @if (activityForm.status().touched() && activityForm.status().invalid()) {

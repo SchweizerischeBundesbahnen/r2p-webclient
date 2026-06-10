@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 import { Activity, ARRIVAL_TIMING_TYPES, DEPARTURE_TIMING_TYPES } from '../../models/api.models';
 import { parseDurationToHoursAndMinutes } from '../../utils/date.utils';
 import { PartnerBadge } from '../partner-badge/partner-badge';
+import { planStatusLabel, responsibilityTypeLabel } from './activity-display.utils';
 
 export type CapabilityType = 'rollingStock' | 'staff' | 'path';
 
@@ -38,4 +39,7 @@ export class JourneyActivityItem {
         return (this.activity().capability as { passthrough?: boolean } | undefined)?.passthrough ??
             false;
     });
+
+    protected readonly responsibilityTypeLabel = responsibilityTypeLabel;
+    protected readonly planStatusLabel = planStatusLabel;
 }

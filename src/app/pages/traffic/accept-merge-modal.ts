@@ -18,18 +18,22 @@ export interface AcceptMergeDialogData {
     selector: 'app-accept-merge-modal',
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose, MatFormField, MatLabel, MatError, MatInput, MatButton, FormField],
+    styles: [`
+        .dialog-hint { margin-bottom: 1rem; color: var(--mat-sys-on-surface-variant); font-size: 0.9rem; }
+        .full-width { width: 100%; }
+    `],
     template: `
         <h2 mat-dialog-title i18n="@@acceptMergeModal.title">Accept Variant</h2>
 
         <mat-dialog-content>
-            <p style="margin-bottom:1rem; color:var(--mat-sys-on-surface-variant); font-size:0.9rem;">
+            <p class="dialog-hint">
                 <ng-container i18n="@@acceptMergeModal.warning">
                     Variant <strong>{{ data.branchName }}</strong> will be taken over into <strong>main</strong>.
                     This action cannot be undone.
                 </ng-container>
             </p>
             <form>
-                <mat-form-field appearance="outline" style="width:100%;">
+                <mat-form-field appearance="outline" class="full-width">
                     <mat-label i18n="@@common.field.comment">Comment</mat-label>
                     <textarea
                         matInput

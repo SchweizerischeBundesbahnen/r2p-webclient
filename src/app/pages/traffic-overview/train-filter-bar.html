@@ -1,45 +1,46 @@
 ﻿<div class="filter-bar">
     <div class="filter-group">
-        <label for="filter-train-number" i18n="@@common.field.trainNumber">Train Number</label>
-        <input
-            type="text"
-            id="filter-train-number"
-            class="filter-input"
-            placeholder="e.g., IC 1234"
-            i18n-placeholder="@@common.field.trainNumber.placeholder"
-            [value]="tableService.trainNumber()"
-            (input)="tableService.trainNumber.set($any($event.target).value)"
-        />
+        <mat-form-field appearance="outline">
+            <mat-label i18n="@@common.field.trainNumber">Train Number</mat-label>
+            <input
+                matInput
+                type="text"
+                placeholder="e.g., IC 1234"
+                i18n-placeholder="@@common.field.trainNumber.placeholder"
+                [value]="tableService.trainNumber()"
+                (input)="tableService.trainNumber.set($any($event.target).value)"
+            />
+        </mat-form-field>
     </div>
     <div class="filter-group">
-        <label for="filter-from" i18n="@@trafficOverview.filter.opDayFrom">Op. Day From</label>
-        <input
-            #fromInput
-            type="date"
-            id="filter-from"
-            class="filter-input"
-            [value]="tableService.operationalDayFrom()"
-            (click)="fromInput.showPicker()"
-            (change)="tableService.operationalDayFrom.set($any($event.target).value)"
-        />
+        <mat-form-field appearance="outline">
+            <mat-label i18n="@@trafficOverview.filter.opDayFrom">Op. Day From</mat-label>
+            <input
+                #fromInput
+                matInput
+                type="date"
+                [value]="tableService.operationalDayFrom()"
+                (click)="fromInput.showPicker()"
+                (change)="tableService.operationalDayFrom.set($any($event.target).value)"
+            />
+        </mat-form-field>
     </div>
     <div class="filter-group">
-        <label for="filter-to" i18n="@@trafficOverview.filter.opDayTo">Op. Day To</label>
-        <input
-            #toInput
-            type="date"
-            id="filter-to"
-            class="filter-input"
-            [value]="tableService.operationalDayTo()"
-            (click)="toInput.showPicker()"
-            (change)="tableService.operationalDayTo.set($any($event.target).value)"
-        />
+        <mat-form-field appearance="outline">
+            <mat-label i18n="@@trafficOverview.filter.opDayTo">Op. Day To</mat-label>
+            <input
+                #toInput
+                matInput
+                type="date"
+                [value]="tableService.operationalDayTo()"
+                (click)="toInput.showPicker()"
+                (change)="tableService.operationalDayTo.set($any($event.target).value)"
+            />
+        </mat-form-field>
     </div>
     <div class="filter-group filter-group--shrink">
-        <label for="clear">&nbsp;</label>
         <button
             mat-button
-            id="clear"
             (click)="tableService.clearFilters()"
             i18n="@@trafficOverview.filter.clear"
         >

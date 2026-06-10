@@ -35,20 +35,22 @@ export interface DeleteTrainDialogData {
         MatButton,
         FormField,
     ],
+    styles: [`
+        .dialog-warning { margin-bottom: 1rem; color: var(--mat-sys-error); font-size: 0.9rem; font-weight: 500; }
+        .full-width { width: 100%; }
+    `],
     template: `
         <h2 mat-dialog-title i18n="@@deleteTrainModal.title">Delete Train</h2>
 
         <mat-dialog-content>
-            <p
-                style="margin-bottom: 1rem; color: var(--mat-sys-error); font-size: 0.9rem; font-weight: 500;"
-            >
+            <p class="dialog-warning">
                 <ng-container i18n="@@deleteTrainModal.warning">
                     ⚠ Deleting train <strong>{{ data.trainNumber }}</strong> will permanently remove
                     the main branch and all its variants. This action cannot be undone.
                 </ng-container>
             </p>
             <form>
-                <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-form-field appearance="outline" class="full-width">
                     <mat-label i18n="@@deleteTrainModal.field.comment">Reason for deletion</mat-label>
                     <textarea
                         matInput
