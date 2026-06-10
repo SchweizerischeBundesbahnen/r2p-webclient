@@ -1,0 +1,1016 @@
+openapi: 3.0.3
+info:
+  title: R2P Train API
+  version: 1.0.0
+  description: API für Traffic-Objekte
+servers:
+  - url: http://localhost:8080
+    description: Local Server
+
+# Tag-Definition
+tags:
+  - name: R2P
+    description: Trains Endpoints
+
+paths:
+  /v1/trains:
+    get:
+      tags:
+        - R2P
+      summary: List trains
+      description: |
+        Returns all trains accessible to the authenticated partner. Each train is returned with all its branches 
+        and their latest versions. Results can be optionally filtered by operational day range. Both the Lead RU 
+        and shared partners can view trains they have access to.
+      operationId: listTrains
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/PartnerToken'
+        - name: operationalDayFrom
+          in: query
+          required: false
+          description: 'optional filter: only trains at or after this operational day (inclusive)'
+          schema:
+            type: string
+            format: date
+        - name: operationalDayTo
+          in: query
+          required: false
+          description: 'optional filter: only trains up to this operational day (inclusive)'
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TrainListElement'
+    post:
+      tags:
+        - R2P
+      summary: Create train
+      description: |
+        Creates a new train with the provided train data. **Only the Lead RU (Railway Undertaking) can create trains.** 
+        Automatically creates a main branch owned by the Lead RU. The train is initially only accessible to the Lead RU 
+        until explicitly shared with other partners. The creating partner becomes the Lead RU and has exclusive rights 
+        to update the main branch.
+      operationId: createTrain
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/PartnerToken'
+        - name: comment
+          in: query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './schemas/train.yaml#/components/schemas/Train'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainListElement'
+        '403':
+          description: Not authorized to create train
+  /v1/trains/{trainId}/unshare:
+    post:
+      tags:
+        - R2P
+      summary: Unshare train
+      description: |
+        Revokes access to a train from a specified partner. The Lead RU (train owner) can unshare the train with 
+        any partner. Partners can unshare the train with themselves (remove their own access). After unsharing, 
+        the affected partner will no longer be able to view or modify the train.
+        A mandatory comment is recorded in the change history.
+      operationId: unshareTrain
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/PartnerToken'
+        - name: trainId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: unshareWith
+          in: query
+          required: true
+          description: Partner name to unshare the train with
+          schema:
+            type: string
+        - name: comment
+          in: query
+          required: true
+          description: Comment recorded in the change history for this unsharing action.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainListElement'
+        '403':
+          description: Not authorized to unshare train
+        '404':
+          description: Train not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+  /v1/trains/{trainId}/share:
+    post:
+      tags:
+        - R2P
+      summary: Share train
+      description: |
+        Grants access to a train for another partner. **Only the Lead RU or partners who already have access can share 
+        the train.** Once shared, the partner can view the train, all its branches and their history, and may create 
+        their own branches to propose changes. **Shared partners cannot update the main branch** - only the Lead RU 
+        has permission to modify the main branch.
+        A mandatory comment is recorded in the change history.
+      operationId: shareTrain
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/PartnerToken'
+        - name: trainId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: shareWith
+          in: query
+          required: true
+          description: Partner name to share the train with
+          schema:
+            type: string
+        - name: comment
+          in: query
+          required: true
+          description: Comment recorded in the change history for this sharing action.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainListElement'
+        '403':
+          description: Not authorized to share train
+        '404':
+          description: Train not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+  /v1/trains/{trainId}:
+    get:
+      tags:
+        - R2P
+      summary: Get train by ID
+      description: |
+        Retrieves detailed information about a specific train including all its branches and their latest versions. 
+        The response includes branch metadata, train data, complete version history, and the list of partners who 
+        have access to the train. Both the Lead RU and shared partners can view this information, but only the 
+        Lead RU can modify the main branch.
+      operationId: getTrainById
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/PartnerToken'
+        - name: trainId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainListElement'
+        '403':
+          description: Not authorized to access train
+        '404':
+          description: Train not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+  /v1/trains/{trainId}/mergeRequests:
+    get:
+      tags:
+        - R2P
+      summary: List merge requests for a train
+      description: |
+        Returns the latest merge-related changelog entry per branch for the given train.
+        Merge-related actions are MERGE_REQUESTED, MERGE_REJECTED and MERGED. For every branch that has
+        at least one such entry, the most recent entry is returned. Results can optionally be filtered by
+        action (state). Both the Lead RU and shared partners can view the merge requests.
+      operationId: listMergeRequests
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/PartnerToken'
+        - name: trainId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: state
+          in: query
+          required: false
+          description: >
+            Optional filter: only return entries whose action matches this value.
+          schema:
+            $ref: '#/components/schemas/MergeAction'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Change'
+        '403':
+          description: Not authorized to access train
+        '404':
+          description: Train not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+  /v1/trains/{trainId}/branches:
+    post:
+      tags:
+        - R2P
+      summary: Create a train branch
+      description: |
+        Creates a new branch for proposing changes to a train. **Both the Lead RU and shared partners can create 
+        branches.** Branches allow partners to work on modifications independently before the Lead RU merges them 
+        to the main branch. The branch is owned by the authenticated partner and starts in the OPEN state. 
+        Partners can only modify their own branches, while the Lead RU has exclusive rights to update the main branch.
+      operationId: createTrainBranch
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/PartnerToken'
+        - name: trainId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: branchName
+          in: query
+          required: true
+          schema:
+            type: string
+            example: myBranch
+            maxLength: 255
+        - name: comment
+          in: query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './schemas/train.yaml#/components/schemas/Train'
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Branch'
+        '403':
+          description: Not authorized to create train branch
+        '404':
+          description: Train not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '409':
+          description: Main branch is not in OPEN state (e.g. deleted)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+  /v1/trains/{trainId}/branches/{branchId}:
+    get:
+      tags:
+        - R2P
+      summary: Get train branch
+      description: |
+        Retrieves detailed information about a specific branch of a train. The response includes the latest 
+        train data for this branch, along with branch metadata such as owner, state (OPEN, MERGED, DELETED), 
+        version information, and the most recent comment. **All shared partners can view all branches and their 
+        complete history**, but can only modify their own branches. The Lead RU can view and modify the main branch.
+      operationId: getTrainBranch
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/PartnerToken'
+        - name: trainId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: branchId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Branch'
+        '403':
+          description: Not authorized to access train
+        '404':
+          description: Train or branch not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+    put:
+      tags:
+        - R2P
+      summary: Update train branch
+      description: |
+        Creates a new version of a branch with updated train data.
+        **Important access control:** 
+        - **Main branch**: Only the Lead RU can update the main branch 
+        - **Partner branches**: Partners can only update branches they own 
+        - **Lead RU**: Can update the main branch (and other branches they own)
+        
+        Updates are only allowed while the branch is in state OPEN (not merged, deleted, or merge already requested).
+        Each update creates a new version with a new version ID, timestamp, and comment. The previous 
+        version is retained in the version history, maintaining a full audit trail of all changes made to the branch.
+      operationId: updateTrainBranch
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/PartnerToken'
+        - name: trainId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: branchId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: comment
+          in: query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './schemas/train.yaml#/components/schemas/Train'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Branch'
+        '403':
+          description: Not authorized to update train branch
+        '404':
+          description: Train or branch not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '409':
+          description: Branch is not in a valid state for updates (e.g. merged, deleted, or merge already requested)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+    delete:
+      tags:
+        - R2P
+      summary: Delete train branch
+      description: |
+        Marks a branch as deleted by setting its state to DELETED.
+        Partners can only delete branches they own.
+        Deleted branches are retained in the system for audit purposes but are no longer actively used.
+        The branch data and version history remain accessible even after deletion. A comment is required
+        to document the reason for deletion.
+        Only the Lead UR can delete the main branch (and other branches it owns).
+        **If the main branch is deleted, all other non-deleted branches of the same train are also cascadingly deleted.**
+      operationId: deleteTrainBranch
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/PartnerToken'
+        - name: trainId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: branchId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: comment
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Branch'
+        '403':
+          description: Not authorized to delete branch
+        '404':
+          description: Train or branch not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '409':
+          description: Branch is not in a valid state for deletion (e.g. already merged or deleted)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+  /v1/trains/{trainId}/branches/{branchId}/requestMerge:
+    post:
+      tags:
+        - R2P
+      summary: Request a merge of a branch into main
+      description: |
+        Creates a merge request for a branch to be merged into the main branch.
+        **Only the branch owner (creator) can create a merge request.**
+        The branch state changes to MERGE_REQUESTED.
+        The merge request (including its comment) is recorded in the change history.
+        The merge request is then visible to the Lead RU (and to all other partners) via the list merge requests endpoint.
+      operationId: requestMerge
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/PartnerToken'
+        - name: trainId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: branchId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: comment
+          in: query
+          required: true
+          description: Mandatory comment for the merge request, recorded with the merge request in the change history.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Merge request created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Branch'
+        '403':
+          description: Not authorized to request merge
+        '404':
+          description: Train or branch not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '409':
+          description: Branch is not in OPEN state (merge already requested, merged or deleted)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+  /v1/trains/{trainId}/branches/{branchId}/merge:
+    post:
+      tags:
+        - R2P
+      summary: Merge a branch into main
+      description: |
+        Merges the current state of a branch into the main branch. **Only the Lead RU can perform a merge.**
+        The caller must provide the version ID of the branch head they have reviewed; if the branch has been
+        modified since then, the merge is rejected with an error. The branch is closed (state MERGED) and its
+        data is written to the main branch. Both the branch closure and the main branch update are recorded
+        in the change history.
+      operationId: merge
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/PartnerToken'
+        - name: trainId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: branchId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: reviewedVersion
+          in: query
+          required: true
+          description: The version ID that the Lead RU has reviewed; must match the current head version of the branch.
+          schema:
+            type: string
+            format: uuid
+        - name: comment
+          in: query
+          required: true
+          description: Mandatory comment for the merge action, recorded with the merge action in the change history.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Branch merged into main
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainListElement'
+        '403':
+          description: Not authorized to merge
+        '404':
+          description: Train or branch not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '409':
+          description: >
+            Reviewed version does not match current head version of the branch;
+            or the source branch is not in a valid state for merging (e.g. already merged or deleted);
+            or the main branch is not in OPEN state (e.g. it has been deleted).
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+  /v1/trains/{trainId}/branches/{branchId}/rejectMerge:
+    post:
+      tags:
+        - R2P
+      summary: Reject a merge request
+      description: |
+        Rejects an open merge request for a branch. **Only the Lead RU can reject a merge request.**
+        The rejection is recorded in the change history with the provided comment. The branch state reverts
+        to OPEN and the branch data remains unchanged, allowing the partner to continue working on it.
+        The main branch is unchanged.
+      operationId: rejectMerge
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/PartnerToken'
+        - name: trainId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: branchId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: comment
+          in: query
+          required: true
+          description: Mandatory comment with the reason for rejecting the merge request, recorded with the merge rejection in the change history.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Merge request rejected
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Branch'
+        '403':
+          description: Not authorized to reject merge request
+        '404':
+          description: Train or branch not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '409':
+          description: Branch is not in MERGE_REQUESTED state
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+  /v1/trains/versions/{version}:
+    get:
+      tags:
+        - R2P
+      summary: Get specific train version
+      description: |
+        Retrieves the train data for a specific version by its version ID. Each update to a branch creates a new 
+        version, allowing you to access historical train data. **All shared partners can view the complete version 
+        history** of all branches. The train ID and branch ID are implicitly determined from the version ID, so only 
+        the version parameter is required. This is useful for auditing and viewing the exact state of a train at a 
+        specific point in time.
+      operationId: getTrainVersion
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/PartnerToken'
+        - name: version
+          in: path
+          required: true
+          description: the train version to get; note that the trainId is implied by the version and doesn't need to be provided explicitly
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: './schemas/train.yaml#/components/schemas/Train'
+          description: Successful operation
+        '403':
+          description: Not authorized to access train
+        '404':
+          description: Train version not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+  /v1/trains/{trainId}/changes:
+    get:
+      tags:
+        - R2P
+      summary: Get train changes by Id
+      description: |
+        Returns a chronological list of all changes (audit log) for a specific train. Changes include actions such 
+        as train creation, branch creation, updates, deletions, sharing, and unsharing. Each change entry contains 
+        the action type, actor (partner), timestamp, affected entities (train, branch, version), and the associated 
+        comment. Results can be optionally filtered by timestamp range.
+      operationId: getTrainChangesById
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/PartnerToken'
+        - name: trainId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: from
+          in: query
+          required: false
+          description: change timestamp from (inlusive)
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          required: false
+          description: change timestamp to (inclusive)
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Change'
+        '403':
+          description: Not authorized to access train
+        '404':
+          description: Train not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+  /v1/trains/changes:
+    get:
+      tags:
+        - R2P
+      summary: List all train changes
+      description: |
+        Returns a chronological list of all changes (audit log) across all trains accessible to the authenticated 
+        partner within the specified time range. This provides a comprehensive view of all activities related to 
+        the partner's trains, including creations, updates, deletions, and sharing actions. Useful for monitoring 
+        and auditing purposes. Both 'from' and 'to' timestamps are required.
+      operationId: listTrainChanges
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/PartnerToken'
+        - name: from
+          in: query
+          required: true
+          description: change timestamp from (inlusive)
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          required: true
+          description: change timestamp to (inlusive)
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Change'
+
+components:
+  schemas:
+    TrainListElement:
+      description: |
+        Summary information about a train when searching for or listing trains, including trainId, partners,
+        branches and main branch timestamp
+      type: object
+      required:
+        - trainId
+        - mainTimestamp
+        - branches
+      properties:
+        trainId:
+          type: string
+          format: uuid
+        mainTimestamp:
+          type: string
+          format: date-time
+        partners:
+            type: array
+            items:
+              type: string
+        branches:
+          type: array
+          items:
+            $ref: '#/components/schemas/Branch'
+    BranchState:
+      type: string
+      enum:
+        - open
+        - merge_requested
+        - merged
+        - deleted
+    MergeAction:
+      description: >
+        Actions that are specific to merge-request workflows. Used as a filter parameter
+        for the listMergeRequests endpoint.
+      type: string
+      enum:
+        - merge_requested
+        - merge_rejected
+        - merged
+    Action:
+      type: string
+      enum:
+        - created
+        - updated
+        - merge_requested
+        - merge_rejected
+        - merged
+        - deleted
+        - shared
+        - unshared
+    Change:
+      description: 'Change information'
+      type: object
+      required:
+        - action
+        - partner
+        - trainId
+        - timestamp
+        - comment
+      properties:
+        action:
+          $ref: '#/components/schemas/Action'
+        partner:
+          type: string
+          description: partner that has performed this action
+        affectedPartner:
+          type: string
+          description: partner that is affected by this action (e.g. sharing or unsharing)
+        trainId:
+          type: string
+          format: uuid
+        branchId:
+          type: string
+          format: uuid
+        branchName:
+          type: string
+          example: SBB-main
+          maxLength: 255
+        version:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        comment:
+          type: string
+          example: a useful comment
+    Branch:
+        description: 'The branch object'
+        type: object
+        required:
+          - branchId
+          - branchName
+          - business
+          - technical
+        properties:
+          branchId:
+            type: string
+            format: uuid
+          branchName:
+            type: string
+            example: SBB-main
+            maxLength: 255
+          business:
+            $ref: '#/components/schemas/BranchBusinessData'
+          technical:
+            $ref: '#/components/schemas/BranchTechnicalData'
+    BranchBusinessData:
+      description: 'Branch business data'
+      type: object
+      required:
+        - trainNumber
+        - operationalDay
+      properties:
+        trainNumber:
+          type: string
+          example: IC 1234
+        operationalDay:
+          type: string
+          format: date
+    BranchTechnicalData:
+      description: 'Branch technical data'
+      type: object
+      required:
+        - version
+        - branchState
+        - timestamp
+        - mainBranch
+        - comment
+      properties:
+        owner:
+          type: string
+          example: SOB
+        version:
+          type: string
+          format: uuid
+        branchState:
+          $ref: '#/components/schemas/BranchState'
+        timestamp:
+          type: string
+          format: date-time
+        comment:
+          type: string
+          example: a useful comment
+        mainBranch:
+          type: boolean
+          description: 'Indicates whether this branch is the main branch of the train'
+          example: true
+    PartnerToken:
+      description: Represents an authentication token of a partner in the context of the PoC (to be replaced by a real authentication token later)
+      type: string
+      enum:
+        - SBB
+        - BLS
+        - SOB
+    ProblemDetail:
+      type: object
+      description: RFC 7807 Problem Details
+      properties:
+        type:
+          type: string
+          description: A URI reference that identifies the problem type.
+          format: uri
+        title:
+          type: string
+          description: Short, human-readable summary of the problem type.
+        status:
+          type: integer
+          description: The HTTP status code generated by the origin server for this occurrence of the problem.
+          format: int32
+          minimum: 100
+          maximum: 599
+        detail:
+          type: string
+          description: Human-readable explanation specific to this occurrence of the problem.
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurrence of the problem.
+      required:
+        - title
+        - status
+  securitySchemes:
+    path_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://train.swagger.io/oauth/authorize
+          scopes:
+            write:train: modify train in your account
+            read:train: read your train
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header

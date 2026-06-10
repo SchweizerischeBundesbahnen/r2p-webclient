@@ -44,11 +44,11 @@ export class BackendApiService {
         );
     }
 
-    createBranch(trainId: string, branchName: string, comment: string): Observable<Branch> {
+    createBranch(trainId: string, branchName: string, comment: string, train: Train): Observable<Branch> {
         const headers = this.tokenHeaders;
         return this.httpClient.post<Branch>(
             `${this.baseUrl}/v1/trains/${trainId}/branches`,
-            { ...minimalTrain, id: crypto.randomUUID() },
+            { ...train, id: crypto.randomUUID() },
             {
                 params: { branchName, comment },
                 headers,

@@ -12,11 +12,13 @@ import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { form, FormField, maxLength, required } from '@angular/forms/signals';
 import { BackendApiService } from '../../core/api/backend-api.service';
+import { Train } from '../../shared/models/api.models';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 
 export interface NewVariantDialogData {
     trainId: string;
+    mainBranchTrain: Train;
 }
 
 @Component({
@@ -57,7 +59,7 @@ export class NewVariantModal {
         this.isRunning.set(true);
         const { variantName, comment } = this.createTrainVariant().value();
         this.apiService
-            .createBranch(this.data.trainId, variantName, comment)
+            .createBranch(this.data.trainId, variantName, comment, this.data.mainBranchTrain)
             .pipe(finalize(() => this.isRunning.set(false)))
             .subscribe({
                 next: (result) => {

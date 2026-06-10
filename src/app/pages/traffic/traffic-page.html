@@ -28,6 +28,7 @@
                             mat-raised-button
                             color="primary"
                             (click)="openNewVariantModal()"
+                            [disabled]="!trainMainBranch.value()?.details"
                             i18n="@@traffic.newVariant"
                         >
                             ⎇ New Variant

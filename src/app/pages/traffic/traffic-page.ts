@@ -70,10 +70,11 @@ export class TrafficPage {
 
     protected openNewVariantModal(): void {
         const trainId = this.trafficPageStateService.trainId();
-        if (!trainId) return;
+        const details = this.trainMainBranch.value()?.details;
+        if (!trainId || !details) return;
         this.dialog
             .open<NewVariantModal, NewVariantDialogData>(NewVariantModal, {
-                data: { trainId },
+                data: { trainId, mainBranchTrain: details },
                 width: '480px',
             })
             .afterClosed()
