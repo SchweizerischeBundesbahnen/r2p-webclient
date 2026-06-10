@@ -108,17 +108,34 @@ export class EditActivityModal {
         return `${isEdit ? 'Edit' : 'Add'} ${typeLabel} Activity`;
     });
 
-    // ── Responsibility ────────────────────────────────────────────────────────
+    // ── Responsibility + Path (required path fields are validated via this form) ──
     private readonly responsibilityModel = signal({
         type: this.data.activity?.responsibility?.type ?? 'rru',
         id: this.data.activity?.responsibility?.id ?? 'SBB',
         status: this.data.activity?.responsibility?.status ?? 'proposed',
+        pathLength:
+            this.data.activity?.capability?.path?.length != null
+                ? String(this.data.activity.capability.path.length)
+                : '',
+        pathWeight:
+            this.data.activity?.capability?.path?.weight != null
+                ? String(this.data.activity.capability.path.weight)
+                : '',
+        pathMaxSpeed:
+            this.data.activity?.capability?.path?.maxSpeed != null
+                ? String(this.data.activity.capability.path.maxSpeed)
+                : '',
     });
 
     protected readonly activityForm = form(this.responsibilityModel, (p) => {
         required(p.type, { message: $localize`:@@validation.required:Required` });
         required(p.id, { message: $localize`:@@validation.required:Required` });
         required(p.status, { message: $localize`:@@validation.required:Required` });
+        if (this.data.capabilityType === 'path') {
+            required(p.pathLength, { message: $localize`:@@validation.required:Required` });
+            required(p.pathWeight, { message: $localize`:@@validation.required:Required` });
+            required(p.pathMaxSpeed, { message: $localize`:@@validation.required:Required` });
+        }
     });
 
     // ── Timing ────────────────────────────────────────────────────────────────
@@ -191,12 +208,19 @@ export class EditActivityModal {
     // ── Save ──────────────────────────────────────────────────────────────────
     protected onSave(): void {
         void submit(this.activityForm, async (field) => {
-            const { type, id, status } = field().value();
-            this.doSave(type, id, status);
+            const { type, id, status, pathLength, pathWeight, pathMaxSpeed } = field().value();
+            this.doSave(type, id, status, pathLength, pathWeight, pathMaxSpeed);
         });
     }
 
-    private doSave(respType: string, respPartner: string, respStatus: string): void {
+    private doSave(
+        respType: string,
+        respPartner: string,
+        respStatus: string,
+        pathLengthVal: string,
+        pathWeightVal: string,
+        pathMaxSpeedVal: string,
+    ): void {
         const existing = this.data.activity;
         const colType = this.data.capabilityType;
 
@@ -213,11 +237,11 @@ export class EditActivityModal {
         const depDur = hoursMinutesToDuration(this.departureTime());
         const timings = [
             ...otherTimings,
-            ...(arrDur ? [{ type: TimingType.Arrival, duration: arrDur }] : []),
-            ...(depDur ? [{ type: TimingType.Departure, duration: depDur }] : []),
+            ...(arrDur ? [{ type: TimingType.Arrival, duration: arrDur, focus: 'planning' }] : []),
+            ...(depDur ? [{ type: TimingType.Departure, duration: depDur, focus: 'planning' }] : []),
         ];
 
-        let capability: ExtendedCapability = { type: colType };
+        let capability: ExtendedCapability = { type: colType, capabilityFeatures: [] };
 
         if (colType === 'rollingStock') {
             const features: CapabilityFeature[] = this.rsFeatures()
@@ -237,31 +261,44 @@ export class EditActivityModal {
             capability = {
                 type: colType,
                 localOnly: this.rsLocalOnly(),
-                capabilityFeatures: features.length ? features : undefined,
+                capabilityFeatures: features,
                 rollingStock: {
                     ...(existing?.capability?.rollingStock ?? {}),
                     ...(rsLength != null ? { length: rsLength } : {}),
                     ...(rsWeight != null ? { weight: rsWeight } : {}),
-                    ...(rsUnits.length ? { units: rsUnits } : {}),
+                    units: rsUnits,
                 },
             };
         } else if (colType === 'staff') {
             const staffs: Staff[] = this.staffRole()
                 ? [{ type: this.staffRole() }]
                 : (existing?.capability?.staffs ?? []);
-            capability = { type: colType, ...(staffs.length ? { staffs } : {}) };
+            capability = { type: colType, capabilityFeatures: [], ...(staffs.length ? { staffs } : {}) };
         } else if (colType === 'path') {
             capability = {
                 type: colType,
+                capabilityFeatures: [],
                 passthrough: this.pathPassthrough(),
-                path: existing?.capability?.path ?? {},
+                path: {
+                    ...(existing?.capability?.path ?? {}),
+                    id: existing?.capability?.path?.id ?? crypto.randomUUID(),
+                    length: Number(pathLengthVal),
+                    weight: Number(pathWeightVal),
+                    maxSpeed: Number(pathMaxSpeedVal),
+                },
             };
         }
 
+        const defaultActivityType =
+            colType === 'rollingStock' ? 'rollingStock' : colType === 'path' ? 'path.runthrough' : 'move';
+
         this.dialogRef.close({
             ...(existing ?? {}),
+            id: existing?.id ?? crypto.randomUUID(),
+            type: existing?.type ?? defaultActivityType,
             responsibility,
-            timings: timings.length ? timings : undefined,
+            timings,
+            relations: existing?.relations ?? [],
             capability,
         } satisfies Activity);
     }

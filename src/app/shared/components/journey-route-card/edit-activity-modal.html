@@ -150,7 +150,41 @@
         @if (capabilityType === 'path') {
             <mat-divider style="margin: 0.75rem 0;" />
             <p class="act-section-label" i18n="@@editActivityModal.path">Path Details</p>
+
+            <div class="act-form-row">
+                <mat-form-field appearance="outline">
+                    <mat-label i18n="@@editActivityModal.path.length">Length (mm)</mat-label>
+                    <input matInput type="number" [formField]="activityForm.pathLength" placeholder="e.g., 165400" />
+                    @if (activityForm.pathLength().touched() && activityForm.pathLength().invalid()) {
+                        @for (error of activityForm.pathLength().errors(); track error.kind) {
+                            <mat-error>{{ error.message }}</mat-error>
+                        }
+                    }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label i18n="@@editActivityModal.path.weight">Weight (kg)</mat-label>
+                    <input matInput type="number" [formField]="activityForm.pathWeight" placeholder="e.g., 384000" />
+                    @if (activityForm.pathWeight().touched() && activityForm.pathWeight().invalid()) {
+                        @for (error of activityForm.pathWeight().errors(); track error.kind) {
+                            <mat-error>{{ error.message }}</mat-error>
+                        }
+                    }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label i18n="@@editActivityModal.path.maxSpeed">Max Speed (km/h)</mat-label>
+                    <input matInput type="number" [formField]="activityForm.pathMaxSpeed" placeholder="e.g., 140" />
+                    @if (activityForm.pathMaxSpeed().touched() && activityForm.pathMaxSpeed().invalid()) {
+                        @for (error of activityForm.pathMaxSpeed().errors(); track error.kind) {
+                            <mat-error>{{ error.message }}</mat-error>
+                        }
+                    }
+                </mat-form-field>
+            </div>
+
             <mat-checkbox
+                style="display:block; margin-bottom:0.75rem;"
                 [checked]="pathPassthrough()"
                 (change)="pathPassthrough.set($event.checked)"
                 i18n="@@editActivityModal.path.passthrough"
