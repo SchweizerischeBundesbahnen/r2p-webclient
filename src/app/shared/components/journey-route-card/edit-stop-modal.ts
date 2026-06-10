@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { MatButton } from '@angular/material/button';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
@@ -8,6 +8,7 @@ import { Location, LOCATION_TYPES, LocationType } from '../../models/api.models'
 
 export interface EditStopDialogData {
     location: Location;
+    isNew?: boolean;
 }
 
 @Component({
@@ -18,7 +19,11 @@ export interface EditStopDialogData {
         MatFormField, MatLabel, MatInput, MatSelect, MatOption, MatButton,
     ],
     template: `
-        <h2 mat-dialog-title i18n="@@editStopModal.title">Edit Stop</h2>
+        @if (isNew) {
+            <h2 mat-dialog-title i18n="@@editStopModal.addTitle">Add Stop</h2>
+        } @else {
+            <h2 mat-dialog-title i18n="@@editStopModal.title">Edit Stop</h2>
+        }
 
         <mat-dialog-content>
             <div style="display:flex; flex-direction:column; gap:1rem; padding-top:0.5rem;">
@@ -27,6 +32,7 @@ export interface EditStopDialogData {
                     <input
                         matInput
                         id="stop-name"
+                        required
                         [value]="editedName()"
                         (input)="editedName.set($any($event.target).value)"
                         placeholder="e.g., Zürich HB"
@@ -39,6 +45,7 @@ export interface EditStopDialogData {
                     <input
                         matInput
                         id="stop-code"
+                        required
                         [value]="editedCode()"
                         (input)="editedCode.set($any($event.target).value)"
                         placeholder="e.g., 8503000"
@@ -50,10 +57,10 @@ export interface EditStopDialogData {
                     <mat-label i18n="@@editStopModal.field.type">Location Type</mat-label>
                     <mat-select
                         id="stop-type"
+                        required
                         [value]="editedType()"
                         (selectionChange)="editedType.set($event.value)"
                     >
-                        <mat-option value="">—</mat-option>
                         @for (t of locationTypes; track t) {
                             <mat-option [value]="t">{{ t }}</mat-option>
                         }
@@ -64,7 +71,7 @@ export interface EditStopDialogData {
 
         <mat-dialog-actions align="end">
             <button mat-button (click)="dialogRef.close()" i18n="@@editStopModal.cancel">Cancel</button>
-            <button mat-flat-button (click)="onSave()" i18n="@@editStopModal.save">✓ Save Stop</button>
+            <button mat-flat-button [disabled]="!canSave()" (click)="onSave()" i18n="@@editStopModal.save">Save Stop</button>
         </mat-dialog-actions>
     `,
 })
@@ -72,18 +79,24 @@ export class EditStopModal {
     readonly dialogRef = inject(MatDialogRef<EditStopModal>);
     private readonly data = inject<EditStopDialogData>(MAT_DIALOG_DATA);
 
+    protected readonly isNew = this.data.isNew ?? false;
     protected readonly locationTypes: LocationType[] = LOCATION_TYPES;
 
     protected readonly editedName = signal(this.data.location.name ?? '');
     protected readonly editedCode = signal(this.data.location.code ?? '');
     protected readonly editedType = signal(this.data.location.type ?? '');
 
+    protected readonly canSave = computed(
+        () => !!this.editedName().trim() && !!this.editedCode().trim() && !!this.editedType(),
+    );
+
     protected onSave(): void {
+        if (!this.canSave()) return;
         this.dialogRef.close({
             ...this.data.location,
-            type: this.editedType() || undefined,
-            code: this.editedCode() || undefined,
-            name: this.editedName() || undefined,
+            type: this.editedType(),
+            code: this.editedCode(),
+            name: this.editedName(),
         } satisfies Location);
     }
 }

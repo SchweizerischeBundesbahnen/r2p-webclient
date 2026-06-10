@@ -14,8 +14,9 @@ function makeDialogRef() {
 function createComponent(
     location: Location = STUB_LOCATION,
     dialogRef = makeDialogRef(),
+    isNew = false,
 ): { fixture: ComponentFixture<EditStopModal>; dialogRef: ReturnType<typeof makeDialogRef> } {
-    const data: EditStopDialogData = { location };
+    const data: EditStopDialogData = { location, isNew };
     TestBed.configureTestingModule({
         imports: [EditStopModal],
         providers: [
@@ -31,6 +32,20 @@ function createComponent(
 
 describe('EditStopModal', () => {
     afterEach(() => TestBed.resetTestingModule());
+
+    describe('title', () => {
+        it('shows "Edit Stop" title when isNew is false', () => {
+            const { fixture } = createComponent(STUB_LOCATION, makeDialogRef(), false);
+            const title: HTMLElement = fixture.nativeElement.querySelector('[mat-dialog-title]');
+            expect(title.textContent?.trim()).toBe('Edit Stop');
+        });
+
+        it('shows "Add Stop" title when isNew is true', () => {
+            const { fixture } = createComponent(STUB_LOCATION, makeDialogRef(), true);
+            const title: HTMLElement = fixture.nativeElement.querySelector('[mat-dialog-title]');
+            expect(title.textContent?.trim()).toBe('Add Stop');
+        });
+    });
 
     describe('initialization', () => {
         it('creates the component', () => {
@@ -134,9 +149,8 @@ describe('EditStopModal', () => {
             expect(emitted.code).toBe('8507000');
         });
 
-        it('closes with code undefined when code is cleared', () => {
-            const dr = makeDialogRef();
-            const { fixture } = createComponent(STUB_LOCATION, dr);
+        it('disables the save button when code is cleared', () => {
+            const { fixture } = createComponent(STUB_LOCATION);
 
             const codeInput: HTMLInputElement = fixture.nativeElement.querySelector('#stop-code');
             codeInput.value = '';
@@ -146,15 +160,11 @@ describe('EditStopModal', () => {
             const buttons: NodeListOf<HTMLButtonElement> =
                 fixture.nativeElement.querySelectorAll('button');
             const saveBtn = Array.from(buttons).find((b) => b.textContent?.includes('Save'));
-            saveBtn?.click();
-
-            const emitted = dr.close.mock.calls[0][0] as Location;
-            expect(emitted.code).toBeUndefined();
+            expect(saveBtn?.disabled).toBe(true);
         });
 
-        it('closes with name undefined when name is cleared', () => {
-            const dr = makeDialogRef();
-            const { fixture } = createComponent(STUB_LOCATION, dr);
+        it('disables the save button when name is cleared', () => {
+            const { fixture } = createComponent(STUB_LOCATION);
 
             const nameInput: HTMLInputElement = fixture.nativeElement.querySelector('#stop-name');
             nameInput.value = '';
@@ -164,10 +174,17 @@ describe('EditStopModal', () => {
             const buttons: NodeListOf<HTMLButtonElement> =
                 fixture.nativeElement.querySelectorAll('button');
             const saveBtn = Array.from(buttons).find((b) => b.textContent?.includes('Save'));
-            saveBtn?.click();
+            expect(saveBtn?.disabled).toBe(true);
+        });
 
-            const emitted = dr.close.mock.calls[0][0] as Location;
-            expect(emitted.name).toBeUndefined();
+        it('disables the save button when all fields are empty (isNew)', () => {
+            const { fixture } = createComponent({}, makeDialogRef(), true);
+            fixture.detectChanges();
+
+            const buttons: NodeListOf<HTMLButtonElement> =
+                fixture.nativeElement.querySelectorAll('button');
+            const saveBtn = Array.from(buttons).find((b) => b.textContent?.includes('Save'));
+            expect(saveBtn?.disabled).toBe(true);
         });
 
         it('preserves other location properties (e.g. typeCode) when saving', () => {

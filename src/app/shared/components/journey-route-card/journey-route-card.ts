@@ -138,7 +138,7 @@ export class JourneyRouteCard {
 
     protected addStop(insertAt: number): void {
         const ref = this.dialog.open<EditStopModal, EditStopDialogData, Location>(EditStopModal, {
-            data: { location: {} },
+            data: { location: {}, isNew: true },
             width: '480px',
         });
         ref.afterClosed().subscribe((result) => {
