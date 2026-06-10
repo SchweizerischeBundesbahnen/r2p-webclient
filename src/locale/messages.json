@@ -206,6 +206,7 @@
     "journeyRouteCard.addStopBefore": "＋ Add stop",
     "journeyRouteCard.addStopAfter": "＋ Add stop at end",
     "journeyRouteCard.empty": "No journey stops defined.",
+    "journeyRouteCard.requiredEmpty": "* At least one stop is required.",
     "journeyStopRow.editStop": "✎ Edit",
     "journeyStopRow.deleteStop": "✕ Delete",
     "journeyStopRow.addRollingStock": "＋ Rolling Stock",

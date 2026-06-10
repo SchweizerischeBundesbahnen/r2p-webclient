@@ -206,6 +206,7 @@
     "journeyRouteCard.addStopBefore": "＋ Halt hinzufügen",
     "journeyRouteCard.addStopAfter": "＋ Halt am Ende hinzufügen",
     "journeyRouteCard.empty": "Keine Fahrthalte definiert.",
+    "journeyRouteCard.requiredEmpty": "* Mindestens ein Halt ist erforderlich.",
     "journeyStopRow.editStop": "✎ Bearbeiten",
     "journeyStopRow.deleteStop": "✕ Löschen",
     "journeyStopRow.addRollingStock": "＋ Rollmaterial",

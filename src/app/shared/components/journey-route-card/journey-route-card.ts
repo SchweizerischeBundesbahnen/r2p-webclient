@@ -51,6 +51,7 @@ interface ActivityRef {
 })
 export class JourneyRouteCard {
     readonly readonly = input<boolean>(false);
+    readonly required = input<boolean>(false);
     readonly journey = input<Journey | undefined>(undefined);
     readonly journeyChange = output<Journey>();
 

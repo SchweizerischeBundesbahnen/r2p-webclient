@@ -1,13 +1,17 @@
 <div class="card">
     <div class="card-header">
-        <span class="card-title" i18n="@@journeyRouteCard.title">Journey Route</span>
+        <span class="card-title" i18n="@@journeyRouteCard.title">Journey Route</span>@if (required()) {<span aria-hidden="true" style="color: var(--mat-form-field-error-text-color, #c00); margin-left: 2px;">*</span>}
     </div>
 
     <div class="card-body" style="padding-top:0.5rem; padding-bottom:0.5rem;">
 
         @if (stops().length === 0) {
             <div class="jt-empty-state">
-                <p class="text-muted" i18n="@@journeyRouteCard.empty">No journey stops defined.</p>
+                @if (required()) {
+                    <p class="text-muted" i18n="@@journeyRouteCard.requiredEmpty">* At least one stop is required.</p>
+                } @else {
+                    <p class="text-muted" i18n="@@journeyRouteCard.empty">No journey stops defined.</p>
+                }
                 @if (!readonly()) {
                     <button
                         class="btn btn-primary"

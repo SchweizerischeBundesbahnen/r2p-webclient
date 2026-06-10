@@ -1,14 +1,13 @@
 ﻿import { Injectable, signal } from '@angular/core';
 import { form, required } from '@angular/forms/signals';
 import { Journey } from '../../shared/models/api.models';
-import { minimalTrain } from '../../core/api/backend-api.service';
 import { TrainFormModel } from '../../shared/components/train-details-form-card/train-details-form-card';
 
 @Injectable()
 export class CreatePageState {
     createTrainRunning = signal(false);
 
-    readonly journey = signal<Journey>(minimalTrain.journey!);
+    readonly journey = signal<Journey>({});
 
     private model = signal<TrainFormModel>({
         name: '',

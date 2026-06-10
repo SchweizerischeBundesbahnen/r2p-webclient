@@ -14,7 +14,7 @@
         mat-raised-button
         color="primary"
         id="sticky-save-btn"
-        [disabled]="createTrainForm().invalid() || state.createTrainRunning()"
+        [disabled]="createTrainForm().invalid() || state.createTrainRunning() || isJourneyEmpty()"
         (click)="createTrain()"
     >
         @if (state.createTrainRunning()) {
@@ -46,6 +46,7 @@
 
         <app-journey-route-card
             [readonly]="false"
+            [required]="true"
             [journey]="state.journey()"
             (journeyChange)="onJourneyChange($event)"
         />

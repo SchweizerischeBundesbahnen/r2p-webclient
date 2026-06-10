@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { BackendApiService } from '../../core/api/backend-api.service';
 import { CreatePageState } from './create-train-page.state';
@@ -24,6 +24,7 @@ export class CreateTrainPage {
     protected readonly state = inject(CreatePageState);
     private readonly notifications = inject(ErrorNotificationService);
     protected readonly createTrainForm = this.state.createTrainForm;
+    protected readonly isJourneyEmpty = computed(() => !this.state.journey().journeylocations?.length);
 
     protected onJourneyChange(journey: Journey): void {
         this.state.journey.set(journey);
