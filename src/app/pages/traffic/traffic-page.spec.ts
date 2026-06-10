@@ -426,6 +426,35 @@ describe('TrafficPage – Share Train button visibility', () => {
     });
 });
 
+describe('TrafficPage – Delete Train button visibility', () => {
+    afterEach(() => TestBed.resetTestingModule());
+
+    function findDeleteButton(el: HTMLElement): HTMLButtonElement | undefined {
+        return Array.from(el.querySelectorAll<HTMLButtonElement>('.btn-group button')).find((b) =>
+            b.textContent?.includes('Delete Train'),
+        );
+    }
+
+    it('shows Delete Train button when current org is Lead RU (main branch owner)', () => {
+        const el = createComponent('en-US', TRAIN_WITH_DETAILS, 'SBB');
+        expect(findDeleteButton(el)).toBeDefined();
+    });
+
+    it('hides Delete Train button when current org is not Lead RU', () => {
+        const el = createComponent('en-US', TRAIN_WITH_DETAILS, 'BLS');
+        expect(findDeleteButton(el)).toBeUndefined();
+    });
+
+    it('hides Delete Train button when there is no main branch', () => {
+        const trainWithNoBranches: TrainWithDetails = {
+            listElement: { ...TRAIN_LIST_ELEMENT, branches: [] },
+            details: null,
+        };
+        const el = createComponent('en-US', trainWithNoBranches, 'SBB');
+        expect(findDeleteButton(el)).toBeUndefined();
+    });
+});
+
 describe('TrafficPage – edit button visibility', () => {
     afterEach(() => TestBed.resetTestingModule());
 

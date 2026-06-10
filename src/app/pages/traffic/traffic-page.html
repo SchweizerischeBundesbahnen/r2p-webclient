@@ -35,6 +35,16 @@
                         >
                             ⎇ New Variant
                         </button>
+                        @if (isLeadRu()) {
+                        <button
+                            mat-raised-button
+                            color="warn"
+                            (click)="openDeleteTrainModal()"
+                            i18n="@@traffic.deleteTrain"
+                        >
+                            🗑 Delete Train
+                        </button>
+                        }
                     </div>
                 </div>
 

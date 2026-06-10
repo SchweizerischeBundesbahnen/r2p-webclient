@@ -1,5 +1,5 @@
 ﻿import { ChangeDetectionStrategy, Component, computed, effect, inject, input } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TrafficPageState, TrainWithDetails } from './traffic-page.state';
 import { Branch, BranchState } from '../../shared/models/api.models';
 import { DatePipe } from '@angular/common';
@@ -19,6 +19,7 @@ import { ShareTrainModalComponent, ShareTrainDialogData } from './share-train-mo
 import { RequestMergeModalComponent, RequestMergeDialogData } from './request-merge-modal';
 import { AcceptMergeModalComponent, AcceptMergeDialogData } from './accept-merge-modal';
 import { RejectMergeModalComponent, RejectMergeDialogData } from './reject-merge-modal';
+import { DeleteTrainModal, DeleteTrainDialogData } from './delete-train-modal';
 import { SettingsService, ORGANIZATION_OPTIONS } from '../../core/settings/settings.service';
 import { Spinner } from '../../shared/components/spinner/spinner';
 import {
@@ -42,6 +43,7 @@ export class TrafficPage {
     protected readonly isoDateToUtc = isoDateToUtc;
     private readonly dialog = inject(MatDialog);
     private readonly settingsService = inject(SettingsService);
+    private readonly router = inject(Router);
 
     private readonly currentOrg = computed(() => this.settingsService.settings().organization);
 
@@ -49,6 +51,12 @@ export class TrafficPage {
         const partners = this.trainMainBranch.value()?.listElement?.partners ?? [];
         const org = this.currentOrg();
         return ORGANIZATION_OPTIONS.some((o) => o.name !== org && !partners.includes(o.name));
+    });
+
+    protected readonly isLeadRu = computed(() => {
+        const branches = this.trainMainBranch.value()?.listElement?.branches ?? [];
+        const mainBranch = branches.find((b) => b.technical.mainBranch);
+        return mainBranch?.technical.owner === this.currentOrg();
     });
 
     private readonly trainIdEffect = effect(() => {
@@ -87,6 +95,25 @@ export class TrafficPage {
             .subscribe((result) => {
                 if (result === 'success') {
                     this.trainMainBranch.reload();
+                }
+            });
+    }
+
+    protected openDeleteTrainModal(): void {
+        const trainId = this.trafficPageStateService.trainId();
+        const branches = this.trainMainBranch.value()?.listElement?.branches ?? [];
+        const mainBranch = branches.find((b) => b.technical.mainBranch);
+        const trainNumber = mainBranch?.business.trainNumber ?? '';
+        if (!trainId || !mainBranch) return;
+        this.dialog
+            .open<DeleteTrainModal, DeleteTrainDialogData>(DeleteTrainModal, {
+                data: { trainId, branchId: mainBranch.branchId, trainNumber },
+                width: '480px',
+            })
+            .afterClosed()
+            .subscribe((result) => {
+                if (result === 'success') {
+                    void this.router.navigate(['/traffic-overview']);
                 }
             });
     }
@@ -173,8 +200,7 @@ export class TrafficPage {
     protected getVariantInfo(trainWithDetails: TrainWithDetails | undefined): VariantViewModel[] {
         const branches = trainWithDetails?.listElement?.branches ?? [];
         const currentOrg = this.currentOrg();
-        const mainBranch = branches.find((b) => b.technical.mainBranch);
-        const isLeadRU = mainBranch?.technical.owner === currentOrg;
+        const isLeadRU = this.isLeadRu();
 
         const sorted = [...branches].sort((a, b) => {
             if (a.technical.mainBranch && !b.technical.mainBranch) return -1;

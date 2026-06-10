@@ -113,6 +113,13 @@ export class BackendApiService {
         );
     }
 
+    deleteBranch(trainId: string, branchId: string, comment: string): Observable<Branch> {
+        return this.httpClient.delete<Branch>(
+            `${this.baseUrl}/v1/trains/${trainId}/branches/${branchId}`,
+            { params: { comment }, headers: this.tokenHeaders },
+        );
+    }
+
     updateTrain(
         trainId: string,
         train: Train,
