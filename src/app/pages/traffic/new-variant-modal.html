@@ -1,15 +1,16 @@
-﻿<h2 mat-dialog-title i18n="@@newVariantModal.title">⎇ Create New Variant</h2>
+﻿<h2 mat-dialog-title i18n="@@newVariantModal.title">Create New Variant</h2>
 <mat-dialog-content>
     <mat-form-field appearance="outline" style="width:100%; margin-top:0.5rem;">
         <mat-label i18n="@@newVariantModal.field.name">Variant Name</mat-label>
+        <span matTextPrefix>{{ orgPrefix() }}</span>
         <input
             matInput
             [formField]="createTrainVariant.variantName"
-            placeholder="e.g., sbb/rolling-stock-update"
+            placeholder="rollmaterial-update"
             i18n-placeholder="@@newVariantModal.field.namePlaceholder"
         />
         <mat-hint i18n="@@newVariantModal.field.nameHint"
-            >Lowercase, hyphens and slashes allowed. Max 255 characters.</mat-hint
+            >Lowercase and hyphens only. Max 255 characters.</mat-hint
         >
         @if (
             createTrainVariant.variantName().touched() &&
@@ -49,6 +50,6 @@
         (click)="createNewVariant()"
         i18n="@@newVariantModal.createAndEdit"
     >
-        ⎇ Create &amp; Edit
+        Create
     </button>
 </mat-dialog-actions>

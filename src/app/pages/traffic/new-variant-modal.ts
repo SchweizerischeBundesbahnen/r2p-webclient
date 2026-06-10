@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import {
     MAT_DIALOG_DATA,
     MatDialogActions,
@@ -7,11 +7,12 @@ import {
     MatDialogRef,
     MatDialogTitle,
 } from '@angular/material/dialog';
-import { MatError, MatFormField, MatHint, MatLabel } from '@angular/material/form-field';
+import { MatError, MatFormField, MatHint, MatLabel, MatPrefix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { form, FormField, maxLength, required } from '@angular/forms/signals';
 import { BackendApiService } from '../../core/api/backend-api.service';
+import { SettingsService } from '../../core/settings/settings.service';
 import { Train } from '../../shared/models/api.models';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -33,6 +34,7 @@ export interface NewVariantDialogData {
         MatLabel,
         MatError,
         MatHint,
+        MatPrefix,
         MatInput,
         MatButton,
         FormField,
@@ -44,7 +46,12 @@ export class NewVariantModal {
     private readonly dialogRef = inject(MatDialogRef<NewVariantModal>);
     private readonly router = inject(Router);
     private readonly apiService = inject(BackendApiService);
+    private readonly settingsService = inject(SettingsService);
     protected readonly isRunning = signal(false);
+    protected readonly orgPrefix = computed(() => {
+        const org = this.settingsService.settings().organization;
+        return org ? `${org}-` : '';
+    });
 
     private readonly model = signal({ variantName: '', comment: '' });
 
