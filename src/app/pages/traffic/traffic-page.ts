@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, computed, effect, inject, input } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, computed, effect, inject, input, untracked } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TrafficPageState, TrainWithDetails } from './traffic-page.state';
 import { Branch, BranchState } from '../../shared/models/api.models';
@@ -60,7 +60,12 @@ export class TrafficPage {
     });
 
     private readonly trainIdEffect = effect(() => {
-        this.trafficPageStateService.trainId.set(this.trainId());
+        const id = this.trainId();
+        const prevId = untracked(() => this.trafficPageStateService.trainId());
+        this.trafficPageStateService.trainId.set(id);
+        if (id && id === prevId) {
+            this.trainMainBranch.reload();
+        }
     });
 
     protected readonly trainMainBranch = this.trafficPageStateService.trainMainBranch;
