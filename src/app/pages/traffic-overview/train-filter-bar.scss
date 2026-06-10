@@ -50,6 +50,11 @@
     color: var(--text-muted);
 }
 
+.filter-group--shrink {
+    flex: 0;
+    min-width: max-content;
+}
+
 @media (max-width: 767px) {
     .filter-bar { padding: var(--spacing-md); }
 }

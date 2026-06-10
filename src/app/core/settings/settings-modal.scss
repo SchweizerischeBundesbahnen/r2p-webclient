@@ -2,14 +2,14 @@
     color: var(--mat-sys-on-surface);
 }
 
-.settings-modal__close-row {
+.close-row {
     display: flex;
     justify-content: flex-end;
     padding: 0.5rem 0.5rem 0;
     min-height: unset;
 }
 
-.settings-modal__content {
+.modal-content {
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -17,7 +17,7 @@
     background: var(--app-surface);
 }
 
-.settings-modal__first-time-banner {
+.first-time-banner {
     display: flex;
     align-items: flex-start;
     gap: 0.75rem;
@@ -39,13 +39,13 @@
     }
 }
 
-.settings-modal__first-time-banner-icon {
+.first-time-banner-icon {
     font-size: 1.6rem;
     line-height: 1.2;
     flex-shrink: 0;
 }
 
-.settings-modal__error-banner {
+.error-banner {
     display: flex;
     align-items: flex-start;
     gap: 0.75rem;
@@ -62,13 +62,13 @@
     }
 }
 
-.settings-modal__error-banner-icon {
+.error-banner-icon {
     flex-shrink: 0;
     color: var(--mat-sys-error, #b00020);
     margin-top: 0.1rem;
 }
 
-.settings-modal__error-banner-url {
+.error-banner-url {
     margin: 0;
     font-size: 0.85rem;
     font-family: monospace;
@@ -76,13 +76,13 @@
     opacity: 0.85;
 }
 
-.settings-modal__field-row {
+.field-row {
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-.settings-modal__reach-indicator {
+.reach-indicator {
     flex-shrink: 0;
     width: 24px;
     display: flex;
@@ -91,21 +91,21 @@
     margin-bottom: 1.25rem; // align with mat-form-field baseline
 }
 
-.settings-modal__reach-ok {
+.reach-ok {
     color: #2e7d32;
     font-size: 1.25rem;
     width: 1.25rem;
     height: 1.25rem;
 }
 
-.settings-modal__reach-error {
+.reach-error {
     color: var(--mat-sys-error, #b00020);
     font-size: 1.25rem;
     width: 1.25rem;
     height: 1.25rem;
 }
 
-.settings-modal__logo {
+.logo {
     align-self: center;
     margin-bottom: 0.25rem;
     line-height: 1;
@@ -118,7 +118,7 @@
     }
 }
 
-.settings-modal__title {
+.title {
     margin: 0;
     text-align: center;
     color: var(--app-primary-text);
@@ -126,30 +126,30 @@
     font-weight: 700;
 }
 
-.settings-modal__subtitle {
+.subtitle {
     margin: -0.4rem 0 0.5rem;
     text-align: center;
     color: var(--app-muted-text);
     font-size: 1rem;
 }
 
-.settings-modal__field-group {
+.field-group {
     display: flex;
     flex-direction: column;
     gap: 0.35rem;
 }
 
-.settings-modal__field-label {
+.field-label {
     color: var(--app-label-text);
     font-size: 1.05rem;
     font-weight: 600;
 }
 
-.settings-modal__field {
+.field {
     width: 100%;
 }
 
-.settings-modal__hint {
+.hint {
     margin: -0.25rem 0 0;
     color: var(--app-muted-text);
     font-size: 0.95rem;
@@ -164,13 +164,13 @@
     }
 }
 
-.settings-modal__divider {
+.divider {
     border: none;
     border-top: 1px solid var(--mat-sys-outline-variant, #cac4d0);
     margin: 0.25rem 0;
 }
 
-.settings-modal__save {
+.save-btn {
     margin-top: 0.5rem;
     justify-content: center;
     min-height: 44px;

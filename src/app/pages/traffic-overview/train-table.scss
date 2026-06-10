@@ -65,5 +65,14 @@ tbody td {
     border: 2px dashed var(--border-color);
 }
 
-.empty-state-icon { font-size: 2.5rem; margin-bottom: var(--spacing-sm); opacity: 0.5; }
+.empty-state-icon {
+    font-size: 2.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-bottom: var(--spacing-sm);
+    opacity: 0.5;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
 .empty-state-text { font-size: 1rem; font-weight: 600; color: var(--text-secondary); }

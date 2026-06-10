@@ -22,6 +22,8 @@
     text-align: left;
 }
 
+.journey-table thead th.stop-col-header { width: 200px; }
+
 .journey-table tbody tr {
     border-bottom: 1px solid var(--border-color);
     vertical-align: top;
@@ -36,10 +38,10 @@
 }
 
 /* No stripe on add-stop rows or span rows (let the band color dominate) */
-.journey-table tbody tr.jt-add-stop-row,
-.journey-table tbody tr.jt-row-rolling-stock-start,
-.journey-table tbody tr.jt-row-rolling-stock-mid,
-.journey-table tbody tr.jt-row-rolling-stock-end {
+.journey-table tbody tr.add-stop-row,
+.journey-table tbody tr.row-rs-start,
+.journey-table tbody tr.row-rs-mid,
+.journey-table tbody tr.row-rs-end {
     background-color: transparent !important;
 }
 
@@ -50,7 +52,7 @@
 }
 
 /* Stop cell with vertical pearl necklace indicator */
-.jt-stop-cell {
+.stop-cell {
     min-width: 160px;
     white-space: nowrap;
     padding-top: 0 !important;
@@ -58,7 +60,7 @@
     height: 1px; /* enables height:100% on children in table cells */
 }
 
-.jt-stop-indicator {
+.stop-indicator {
     display: flex;
     align-items: stretch;
     gap: var(--spacing-sm);
@@ -66,7 +68,7 @@
     min-height: 44px;
 }
 
-.jt-stop-line-col {
+.stop-line-col {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -74,17 +76,17 @@
     flex-shrink: 0;
 }
 
-.jt-line-seg {
+.line-seg {
     width: 2px;
     flex: 1;
     background-color: var(--border-color);
 }
 
-.jt-line-invisible {
+.line-invisible {
     background-color: transparent;
 }
 
-.jt-stop-dot {
+.stop-dot {
     width: 14px;
     height: 14px;
     border-radius: 50%;
@@ -93,8 +95,7 @@
     box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
-
-.jt-stop-info {
+.stop-info {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -102,13 +103,13 @@
     padding: 10px 0;
 }
 
-.jt-stop-name {
+.stop-name {
     font-weight: 600;
     font-size: 0.875rem;
     color: var(--text-primary);
 }
 
-.jt-stop-actions {
+.stop-actions {
     margin-top: 4px;
     display: flex;
     gap: 4px;
@@ -116,28 +117,28 @@
     align-items: center;
 }
 
-.jt-stop-actions .btn-ghost {
+.stop-actions .btn-ghost {
     font-size: 0.75rem;
     padding: 2px 7px;
     color: var(--accent-color);
     border-color: rgba(49,130,206,0.35);
     background: rgba(49,130,206,0.06);
 }
-.jt-stop-actions .btn-ghost:hover {
+.stop-actions .btn-ghost:hover {
     background: var(--accent-color);
     border-color: var(--accent-color);
     color: white;
 }
 
 /* Activity cell */
-.jt-activity-cell {
+.activity-cell {
     min-width: 180px;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
     height: 1px;
 }
 
-.jt-activity-list {
+.activity-list {
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -148,14 +149,14 @@
 /* ── Rolling Stock column: continuous vertical span block ────── */
 
 /* The RS cell must be position:relative so ::before can fill it */
-.jt-rolling-stock-cell {
+.rolling-stock-cell {
     position: relative;
     overflow: visible;
     /* padding is kept for content; the pseudo fills behind it */
 }
 
 /* Inner wrapper kept above the pseudo-element background */
-.jt-rolling-stock-cell-inner {
+.rolling-stock-cell-inner {
     position: relative;
     z-index: 1;
 }
@@ -167,9 +168,9 @@
  * For mid/end rows the top edge bleeds fully from the row border.
  * This creates a seamless merge across rows.
  */
-.jt-rolling-stock-cell[data-rolling-stock-span="start"]::before,
-.jt-rolling-stock-cell[data-rolling-stock-span="mid"]::before,
-.jt-rolling-stock-cell[data-rolling-stock-span="end"]::before {
+.rolling-stock-cell[data-rolling-stock-span="start"]::before,
+.rolling-stock-cell[data-rolling-stock-span="mid"]::before,
+.rolling-stock-cell[data-rolling-stock-span="end"]::before {
     content: '';
     position: absolute;
     left: 0;
@@ -181,49 +182,49 @@
 }
 
 /* start: band begins at horizontal center of the cell, extends to the bottom */
-.jt-rolling-stock-cell[data-rolling-stock-span="start"]::before {
+.rolling-stock-cell[data-rolling-stock-span="start"]::before {
     top: 50%;
     bottom: -1px; /* overlap the row border by 1px */
 }
 
 /* mid: band fills the entire cell top to bottom, bleeding past both borders */
-.jt-rolling-stock-cell[data-rolling-stock-span="mid"]::before {
+.rolling-stock-cell[data-rolling-stock-span="mid"]::before {
     top: -1px;
     bottom: -1px;
 }
 
 /* end: band starts at the top, ends at horizontal center */
-.jt-rolling-stock-cell[data-rolling-stock-span="end"]::before {
+.rolling-stock-cell[data-rolling-stock-span="end"]::before {
     top: -1px;
     bottom: 50%;
 }
 
 /* Suppress the row bottom border on the RS cell for seamless visual join */
-.jt-row-rolling-stock-start .jt-rolling-stock-cell,
-.jt-row-rolling-stock-mid .jt-rolling-stock-cell {
+.row-rs-start .rolling-stock-cell,
+.row-rs-mid .rolling-stock-cell {
     border-bottom: none !important;
 }
 /* Also suppress on the <tr> itself so cell doesn't get a gap */
-tr.jt-row-rolling-stock-start,
-tr.jt-row-rolling-stock-mid {
+tr.row-rs-start,
+tr.row-rs-mid {
     border-bottom: none !important;
 }
 
 /* "Add activity" button wrapper – sits on top of the band, aligned left */
-.jt-rolling-stock-add-btn-wrap {
+.rs-add-btn-wrap {
     position: relative;
     z-index: 2;
     padding-top: 4px;
 }
 
 /* Own RS activity list inside the band */
-.jt-rolling-stock-own-activities {
+.rs-own-activities {
     position: relative;
     z-index: 2;
 }
 
 /* Small label at the end of a span */
-.rolling-stock-span-end-label {
+.span-end-label {
     position: relative;
     z-index: 2;
     font-size: 0.65rem;
@@ -235,8 +236,7 @@ tr.jt-row-rolling-stock-mid {
     white-space: nowrap;
 }
 
-
-.jt-add-activity-btn {
+.add-activity-btn {
     margin-top: 6px;
     width: 100%;
     padding: 4px 6px;
@@ -250,18 +250,17 @@ tr.jt-row-rolling-stock-mid {
     transition: border-color 0.2s, color 0.2s;
 }
 
-.jt-add-activity-btn:hover {
+.add-activity-btn:hover {
     border-color: var(--accent-color);
     color: var(--accent-color);
 }
 
-.jt-add-stop-row td {
+.add-stop-row td {
     padding: 4px var(--spacing-md);
     background-color: transparent;
 }
 
-
-.jt-edit-location-btn {
+.edit-location-btn {
     margin-top: var(--spacing-xs);
     padding: 2px var(--spacing-sm);
     font-size: 0.7rem;
@@ -270,7 +269,7 @@ tr.jt-row-rolling-stock-mid {
 }
 
 /* ── Empty state ─────────────────────────────────────────────────── */
-.jt-empty-state {
+.empty-state {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -278,8 +277,17 @@ tr.jt-row-rolling-stock-mid {
     text-align: center;
 }
 
+.add-first-stop-btn {
+    margin-top: 0.75rem;
+}
+
+.required-star {
+    color: var(--mat-form-field-error-text-color, #c00);
+    margin-left: 2px;
+}
+
 /* ── Add Stop rows ───────────────────────────────────────────────── */
-.jt-add-stop-btn {
+.add-stop-btn {
     width: 100%;
     padding: 4px var(--spacing-md);
     border: 1.5px dashed var(--border-color);
@@ -292,14 +300,14 @@ tr.jt-row-rolling-stock-mid {
     transition: border-color 0.2s, color 0.2s, background 0.2s;
 }
 
-.jt-add-stop-btn:hover {
+.add-stop-btn:hover {
     border-color: var(--accent-color);
     color: var(--accent-color);
     background: rgba(49, 130, 206, 0.04);
 }
 
 /* ── Delete stop button ──────────────────────────────────────────── */
-.jt-delete-stop-btn {
+.delete-stop-btn {
     font-size: 0.75rem;
     padding: 2px 7px;
     color: var(--danger-color, #e53e3e);
@@ -307,10 +315,8 @@ tr.jt-row-rolling-stock-mid {
     background: rgba(229, 62, 62, 0.06);
 }
 
-.jt-delete-stop-btn:hover {
+.delete-stop-btn:hover {
     background: var(--danger-color, #e53e3e);
     border-color: var(--danger-color, #e53e3e);
     color: white;
 }
-
-

@@ -1,5 +1,6 @@
 ﻿import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
 import { TableRow } from './table-row';
 import { TrafficOverviewPageState } from './traffic-overview-page.state';
 import { SortColumn, TrafficOverviewTableService } from './traffic-overview-table.service';
@@ -8,7 +9,7 @@ import { AlertBanner } from '../../shared/components/alert-banner/alert-banner';
 
 @Component({
     selector: 'app-train-table',
-    imports: [RouterLink, TableRow, Spinner, AlertBanner],
+    imports: [RouterLink, MatIcon, TableRow, Spinner, AlertBanner],
     templateUrl: './train-table.html',
     styleUrl: './train-table.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

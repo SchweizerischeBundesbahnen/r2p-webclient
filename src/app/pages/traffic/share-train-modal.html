@@ -1,17 +1,17 @@
-﻿<h2 mat-dialog-title i18n="@@shareTrainModal.title">Share Train</h2>
+<h2 mat-dialog-title i18n="@@shareTrainModal.title">Share Train</h2>
 
 <mat-dialog-content>
     <form>
         @if (data.partners.length > 0) {
             <p i18n="@@shareTrainModal.sharedWith">Already shared with</p>
-            <div style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:1rem;">
+            <div class="chip-group mb-md">
                 @for (partner of data.partners; track partner) {
                     <app-partner-badge [partner]="partner" />
                 }
             </div>
         }
 
-        <mat-form-field appearance="outline" style="width:100%; margin-top:0.5rem;">
+        <mat-form-field appearance="outline" class="form-field-full mt-sm">
             <mat-label i18n="@@shareTrainModal.field.partner">Partner</mat-label>
             <mat-select [formField]="shareForm.shareWith">
                 @for (org of availableOrganizations; track org.name) {
@@ -31,7 +31,7 @@
             }
         </mat-form-field>
 
-        <mat-form-field appearance="outline" style="width:100%; margin-top:1rem;">
+        <mat-form-field appearance="outline" class="form-field-full mt-md">
             <mat-label i18n="@@shareTrainModal.field.comment">Comment</mat-label>
             <textarea
                 matInput

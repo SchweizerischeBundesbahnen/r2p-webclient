@@ -34,3 +34,22 @@
     gap: var(--spacing-sm);
     flex-wrap: wrap;
 }
+
+.card-header-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.branch-actions-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.branch-date {
+    margin-left: 4px;
+}

@@ -16,6 +16,7 @@ import { AlertBanner } from '../../shared/components/alert-banner/alert-banner';
     selector: 'app-read-train-page',
     imports: [RouterLink, DatePipe, JourneyRouteCard, Spinner, MatButton, MatAnchor, DetailGrid, DetailItem, PartnerBadge, AlertBanner],
     templateUrl: './read-train-page.html',
+    styleUrl: './read-train-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReadTrainPage {

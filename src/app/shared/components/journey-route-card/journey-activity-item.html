@@ -1,8 +1,8 @@
-<div [class]="'jt-activity-item activity-' + capabilityType()">
-    <div class="jt-activity-header">
+<div [class]="'activity-item activity-' + capabilityType()">
+    <div class="activity-header">
         <app-partner-badge [partner]="activity().responsibility?.id ?? ''" />
         @if (!readonly()) {
-            <div class="jt-activity-actions">
+            <div class="activity-actions">
                 <button
                     class="btn-icon"
                     title="Edit activity"
@@ -19,17 +19,17 @@
         }
     </div>
 
-    <div class="jt-activity-responsibility">
+    <div class="activity-responsibility">
         {{ activity().responsibility?.type }}
         @if (activity().responsibility?.status) {
-            · <span class="badge badge-{{ activity().responsibility!.status }}">
+            · <span class="status-badge status-badge-{{ activity().responsibility!.status }}">
                 {{ activity().responsibility!.status }}
             </span>
         }
     </div>
 
     @if (arrival() || departure()) {
-        <div class="jt-activity-times">
+        <div class="activity-times">
             @if (arrival()) {
                 <span i18n="@@journeyActivityItem.arr">Arr:</span> {{ arrival() }}
             }
@@ -41,22 +41,22 @@
     }
 
     @if (capabilityType() === 'staff' && staffRole()) {
-        <div class="jt-activity-detail" i18n="@@journeyActivityItem.staffRole">
+        <div class="activity-detail" i18n="@@journeyActivityItem.staffRole">
             Role: {{ staffRole() }}
         </div>
     }
 
     @if (capabilityType() === 'path' && isPassthrough()) {
-        <div class="jt-activity-detail" i18n="@@journeyActivityItem.passthrough">
+        <div class="activity-detail" i18n="@@journeyActivityItem.passthrough">
             Passthrough
         </div>
     }
 
     @if (activity().capability?.capabilityFeatures?.length) {
-        <div class="jt-activity-features">
+        <div class="activity-features">
             @for (cf of activity().capability!.capabilityFeatures!; track $index) {
                 <span
-                    class="jt-feature-tag"
+                    class="feature-tag"
                     [title]="cf.feature.offeredservice ?? ''"
                 >{{ cf.feature.type }}{{ cf.feature.offeredservice ? ': ' + cf.feature.offeredservice : '' }}</span>
             }

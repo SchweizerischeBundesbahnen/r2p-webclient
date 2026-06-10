@@ -1,12 +1,12 @@
 <div class="card">
     <div class="card-header">
-        <span class="card-title" i18n="@@journeyRouteCard.title">Journey Route</span>@if (required()) {<span aria-hidden="true" style="color: var(--mat-form-field-error-text-color, #c00); margin-left: 2px;">*</span>}
+        <span class="card-title" i18n="@@journeyRouteCard.title">Journey Route</span>@if (required()) {<span class="required-star" aria-hidden="true">*</span>}
     </div>
 
-    <div class="card-body" style="padding-top:0.5rem; padding-bottom:0.5rem;">
+    <div class="card-body card-body--compact">
 
         @if (stops().length === 0) {
-            <div class="jt-empty-state">
+            <div class="empty-state">
                 @if (required()) {
                     <p class="text-muted" i18n="@@journeyRouteCard.requiredEmpty">* At least one stop is required.</p>
                 } @else {
@@ -14,8 +14,7 @@
                 }
                 @if (!readonly()) {
                     <button
-                        class="btn btn-primary"
-                        style="margin-top:0.75rem;"
+                        class="btn btn-primary add-first-stop-btn"
                         (click)="addStop(0)"
                         i18n="@@journeyRouteCard.addFirstStop"
                     >＋ Add First Stop</button>
@@ -26,7 +25,7 @@
                 <table class="journey-table">
                     <thead>
                         <tr>
-                            <th style="width:200px;" i18n="@@journeyRouteCard.col.stop">Stop</th>
+                            <th class="stop-col-header" i18n="@@journeyRouteCard.col.stop">Stop</th>
                             <th i18n="@@journeyRouteCard.col.rollingStock">Rolling Stock</th>
                             <th i18n="@@journeyRouteCard.col.staff">Staff</th>
                             <th i18n="@@journeyRouteCard.col.path">Path</th>
@@ -38,10 +37,10 @@
 
                             <!-- Add stop button before each stop (edit mode only) -->
                             @if (!readonly()) {
-                                <tr class="jt-add-stop-row">
+                                <tr class="add-stop-row">
                                     <td colspan="4">
                                         <button
-                                            class="jt-add-stop-btn"
+                                            class="add-stop-btn"
                                             (click)="addStop($index)"
                                             i18n="@@journeyRouteCard.addStopBefore"
                                         >＋ Add stop</button>
@@ -51,29 +50,29 @@
 
                             <!-- Stop row -->
                             <tr
-                                [class.jt-row-rolling-stock-start]="stop.spanRole === 'start'"
-                                [class.jt-row-rolling-stock-mid]="stop.spanRole === 'mid'"
-                                [class.jt-row-rolling-stock-end]="stop.spanRole === 'end'"
+                                [class.row-rs-start]="stop.spanRole === 'start'"
+                                [class.row-rs-mid]="stop.spanRole === 'mid'"
+                                [class.row-rs-end]="stop.spanRole === 'end'"
                             >
                                 <!-- Stop cell -->
-                                <td class="jt-stop-cell">
-                                    <div class="jt-stop-indicator">
-                                        <div class="jt-stop-line-col">
-                                            <div class="jt-line-seg" [class.jt-line-invisible]="stop.isFirst"></div>
-                                            <div class="jt-stop-dot"></div>
-                                            <div class="jt-line-seg" [class.jt-line-invisible]="stop.isLast"></div>
+                                <td class="stop-cell">
+                                    <div class="stop-indicator">
+                                        <div class="stop-line-col">
+                                            <div class="line-seg" [class.line-invisible]="stop.isFirst"></div>
+                                            <div class="stop-dot"></div>
+                                            <div class="line-seg" [class.line-invisible]="stop.isLast"></div>
                                         </div>
-                                        <div class="jt-stop-info">
-                                            <div class="jt-stop-name">{{ stop.stopName }}</div>
+                                        <div class="stop-info">
+                                            <div class="stop-name">{{ stop.stopName }}</div>
                                             @if (!readonly()) {
-                                                <div class="jt-stop-actions">
+                                                <div class="stop-actions">
                                                     <button
-                                                        class="btn btn-ghost jt-edit-location-btn"
+                                                        class="btn btn-ghost edit-location-btn"
                                                         (click)="openEditStop($index)"
                                                         i18n="@@journeyStopRow.editStop"
                                                     >✎ Edit</button>
                                                     <button
-                                                        class="btn btn-ghost jt-delete-stop-btn"
+                                                        class="btn btn-ghost delete-stop-btn"
                                                         (click)="deleteStop($index)"
                                                         i18n="@@journeyStopRow.deleteStop"
                                                     >✕ Delete</button>
@@ -85,12 +84,12 @@
 
                                 <!-- Rolling Stock cell -->
                                 <td
-                                    class="jt-activity-cell jt-rolling-stock-cell"
+                                    class="activity-cell rolling-stock-cell"
                                     [attr.data-rolling-stock-span]="stop.spanRole"
                                 >
-                                    <div class="jt-rolling-stock-cell-inner">
+                                    <div class="rolling-stock-cell-inner">
                                         @if (stop.rollingStockActivities.length > 0) {
-                                            <div class="jt-activity-list jt-rolling-stock-own-activities">
+                                            <div class="activity-list rs-own-activities">
                                                 @for (activity of stop.rollingStockActivities; track $index) {
                                                     <app-journey-activity-item
                                                         [activity]="activity"
@@ -103,14 +102,14 @@
                                             </div>
                                         }
                                         @if (stop.inheritedOriginName) {
-                                            <div class="rolling-stock-span-end-label"
+                                            <div class="span-end-label"
                                                 i18n="@@journeyStopRow.spanEndLabel"
                                             >ends here · started at {{ stop.inheritedOriginName }}</div>
                                         }
                                         @if (!readonly()) {
-                                            <div class="jt-rolling-stock-add-btn-wrap">
+                                            <div class="rs-add-btn-wrap">
                                                 <button
-                                                    class="jt-add-activity-btn"
+                                                    class="add-activity-btn"
                                                     (click)="openAddActivity($index, 'rollingStock')"
                                                     i18n="@@journeyStopRow.addRollingStock"
                                                 >＋ Rolling Stock</button>
@@ -120,8 +119,8 @@
                                 </td>
 
                                 <!-- Staff cell -->
-                                <td class="jt-activity-cell">
-                                    <div class="jt-activity-list">
+                                <td class="activity-cell">
+                                    <div class="activity-list">
                                         @for (activity of stop.staffActivities; track $index) {
                                             <app-journey-activity-item
                                                 [activity]="activity"
@@ -134,7 +133,7 @@
                                     </div>
                                     @if (!readonly()) {
                                         <button
-                                            class="jt-add-activity-btn"
+                                            class="add-activity-btn"
                                             (click)="openAddActivity($index, 'staff')"
                                             i18n="@@journeyStopRow.addStaff"
                                         >＋ Staff</button>
@@ -142,8 +141,8 @@
                                 </td>
 
                                 <!-- Path cell -->
-                                <td class="jt-activity-cell">
-                                    <div class="jt-activity-list">
+                                <td class="activity-cell">
+                                    <div class="activity-list">
                                         @for (activity of stop.pathActivities; track $index) {
                                             <app-journey-activity-item
                                                 [activity]="activity"
@@ -156,7 +155,7 @@
                                     </div>
                                     @if (!readonly()) {
                                         <button
-                                            class="jt-add-activity-btn"
+                                            class="add-activity-btn"
                                             (click)="openAddActivity($index, 'path')"
                                             i18n="@@journeyStopRow.addPath"
                                         >＋ Path</button>
@@ -168,10 +167,10 @@
 
                         <!-- Add stop button after the last stop (edit mode only) -->
                         @if (!readonly()) {
-                            <tr class="jt-add-stop-row">
+                            <tr class="add-stop-row">
                                 <td colspan="4">
                                     <button
-                                        class="jt-add-stop-btn"
+                                        class="add-stop-btn"
                                         (click)="addStop(stops().length)"
                                         i18n="@@journeyRouteCard.addStopAfter"
                                     >＋ Add stop at end</button>

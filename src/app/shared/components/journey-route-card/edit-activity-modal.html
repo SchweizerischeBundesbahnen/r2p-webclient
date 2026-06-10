@@ -1,11 +1,11 @@
 <h2 mat-dialog-title>{{ modalTitle() }}</h2>
 
 <mat-dialog-content>
-    <div class="act-modal-content">
+    <div class="modal-content">
 
         <!-- ── Responsibility ──────────────────────────────────────── -->
-        <p class="act-section-label" i18n="@@editActivityModal.responsibility">Responsibility</p>
-        <div class="act-form-row">
+        <p class="section-label" i18n="@@editActivityModal.responsibility">Responsibility</p>
+        <div class="form-row">
             <mat-form-field appearance="outline">
                 <mat-label i18n="@@editActivityModal.responsibility.type">Type</mat-label>
                 <mat-select [formField]="activityForm.type">
@@ -49,11 +49,11 @@
             </mat-form-field>
         </div>
 
-        <mat-divider style="margin: 0.75rem 0;" />
+        <mat-divider class="section-divider" />
 
         <!-- ── Timing ─────────────────────────────────────────────── -->
-        <p class="act-section-label" i18n="@@editActivityModal.timing">Timing (optional)</p>
-        <div class="act-form-row">
+        <p class="section-label" i18n="@@editActivityModal.timing">Timing (optional)</p>
+        <div class="form-row">
             <mat-form-field appearance="outline">
                 <mat-label i18n="@@editActivityModal.timing.arrival">Arrival</mat-label>
                 <input
@@ -79,10 +79,10 @@
 
         <!-- ── Rolling Stock ──────────────────────────────────────── -->
         @if (capabilityType === 'rollingStock') {
-            <mat-divider style="margin: 0.75rem 0;" />
-            <p class="act-section-label" i18n="@@editActivityModal.rollingStock">Rolling Stock Details</p>
+            <mat-divider class="section-divider" />
+            <p class="section-label" i18n="@@editActivityModal.rollingStock">Rolling Stock Details</p>
 
-            <div class="act-form-row">
+            <div class="form-row">
                 <mat-form-field appearance="outline">
                     <mat-label i18n="@@editActivityModal.rollingStock.length">Length (mm)</mat-label>
                     <input matInput type="number" [value]="rsLength()"
@@ -101,28 +101,28 @@
             </div>
 
             <mat-checkbox
-                style="display:block; margin-bottom:0.75rem;"
+                class="checkbox-block"
                 [checked]="rsLocalOnly()"
                 (change)="rsLocalOnly.set($event.checked)"
                 i18n="@@editActivityModal.rollingStock.localOnly"
             >Local only (vor Ort)</mat-checkbox>
 
             <!-- Features -->
-            <div class="act-features-header">
-                <span class="act-section-label" style="margin:0;" i18n="@@editActivityModal.rollingStock.features">Features</span>
+            <div class="features-header">
+                <span class="section-label section-label--no-margin" i18n="@@editActivityModal.rollingStock.features">Features</span>
                 <button mat-button type="button" (click)="addFeature()"
                     i18n="@@editActivityModal.rollingStock.addFeature">＋ Add Feature</button>
             </div>
             @for (feat of rsFeatures(); track $index) {
-                <div class="act-feature-row">
-                    <mat-form-field appearance="outline" style="flex:0 0 200px;">
+                <div class="feature-row">
+                    <mat-form-field appearance="outline" class="feature-type-field">
                         <mat-select [value]="feat.type" (selectionChange)="updateFeatureType($index, $event.value)">
                             @for (ft of rsFeatureTypes; track ft.value) {
                                 <mat-option [value]="ft.value">{{ ft.label }}</mat-option>
                             }
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field appearance="outline" style="flex:1;">
+                    <mat-form-field appearance="outline" class="feature-value-field">
                         <mat-label i18n="@@editActivityModal.rollingStock.feature.label">Description</mat-label>
                         <input matInput [value]="feat.offeredservice"
                             (input)="updateFeatureService($index, $event)" />
@@ -137,9 +137,9 @@
 
         <!-- ── Staff ──────────────────────────────────────────────── -->
         @if (capabilityType === 'staff') {
-            <mat-divider style="margin: 0.75rem 0;" />
-            <p class="act-section-label" i18n="@@editActivityModal.staff">Staff Details</p>
-            <mat-form-field appearance="outline" style="width:100%;">
+            <mat-divider class="section-divider" />
+            <p class="section-label" i18n="@@editActivityModal.staff">Staff Details</p>
+            <mat-form-field appearance="outline" class="form-field-full">
                 <mat-label i18n="@@editActivityModal.staff.role">Role</mat-label>
                 <input matInput [value]="staffRole()"
                     (input)="staffRole.set($any($event.target).value)" placeholder="e.g., conductor" />
@@ -148,10 +148,10 @@
 
         <!-- ── Path ───────────────────────────────────────────────── -->
         @if (capabilityType === 'path') {
-            <mat-divider style="margin: 0.75rem 0;" />
-            <p class="act-section-label" i18n="@@editActivityModal.path">Path Details</p>
+            <mat-divider class="section-divider" />
+            <p class="section-label" i18n="@@editActivityModal.path">Path Details</p>
 
-            <div class="act-form-row">
+            <div class="form-row">
                 <mat-form-field appearance="outline">
                     <mat-label i18n="@@editActivityModal.path.length">Length (mm)</mat-label>
                     <input matInput type="number" [formField]="activityForm.pathLength" placeholder="e.g., 165400" />
@@ -184,7 +184,7 @@
             </div>
 
             <mat-checkbox
-                style="display:block; margin-bottom:0.75rem;"
+                class="checkbox-block"
                 [checked]="pathPassthrough()"
                 (change)="pathPassthrough.set($event.checked)"
                 i18n="@@editActivityModal.path.passthrough"

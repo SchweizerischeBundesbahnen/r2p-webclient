@@ -1,4 +1,4 @@
-﻿<!-- ── Main Content ────────────────────────────────────────────── -->
+<!-- ── Main Content ────────────────────────────────────────────── -->
 <div class="main-content">
     <div class="container">
         <a [routerLink]="'/traffic-view/' + trainId()" class="back-link" id="back-link"
@@ -28,7 +28,7 @@
                     mat-raised-button
                     color="primary"
                     id="edit-btn"
-                    style="display:none;"
+                    class="hidden"
                     i18n="@@readTrain.editVariant">✏ Edit Variant</a
                 >
                 <button mat-stroked-button (click)="openJsonModal()" i18n="@@readTrain.viewJson">View JSON</button>
@@ -70,14 +70,9 @@
                 </app-detail-grid>
 
                 <!-- Version comment -->
-                <div
-                    style="margin-top: 0.5rem; background-color: var(--background-color); padding: 0.75rem 1rem; border-radius: 6px; border-left: 3px solid var(--accent-color);"
-                >
+                <div class="version-comment">
                     <div class="detail-label" i18n="@@readTrain.field.versionComment">Version Comment</div>
-                    <div
-                        style="font-size:0.875rem; color:var(--text-secondary); margin-top:0.25rem;"
-                        id="detail-comment"
-                    >
+                    <div class="version-comment-text" id="detail-comment">
                         {{ branch?.technical?.comment ?? '-' }}
                     </div>
                 </div>
@@ -88,7 +83,7 @@
         <app-journey-route-card [readonly]="true" [journey]="state.trainAndBranch.value()?.train?.journey" />
 
         <!-- Back button -->
-        <div class="btn-group" style="margin-bottom:2rem;">
+        <div class="btn-group mb-xl">
             <a
                 [routerLink]="'/traffic-view/' + trainId()"
                 mat-button
