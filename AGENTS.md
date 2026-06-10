@@ -20,7 +20,8 @@
 ## Testing
 - Uses **Vitest**. Import: `import { vi, describe, it, expect, beforeEach } from 'vitest'`
 - No Jasmine: use `vi.fn()`, `toBe(true/false)` – not `spyOn`, `toBeTrue`, `toBeFalse`.
-- Run tests with: `npm test -- --watch=false` · lint: `npm run lint` · fix all issues (also prexisting ones!) before finishing.
+- Run tests with: `npm test` (runs via `ng test`). **Never use `npx vitest run` directly** — it bypasses Angular's test environment setup and produces false negatives.
+- Run tests without watch mode: `npm test -- --watch=false` · lint: `npm run lint` · fix all issues (also preexisting ones!) before finishing.
 - After adding async operations to a component constructor (e.g. reachability checks), reset affected signals to `'idle'` in `beforeEach` when testing computed properties that depend on them.
 - `SettingsService.load()` normalizes values – specs that test normalization must **not** bypass it by calling `loadSettingsRaw()` directly.
 - Components that use `OidcSecurityService` need `{ provide: OidcSecurityService, useValue: { ... } }` in the TestBed providers (the real service requires `StsConfigLoader`).

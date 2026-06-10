@@ -49,8 +49,8 @@ describe('SettingsModal', () => {
         });
 
         it('shows the first-time banner, hides the title, blocks continue and disables dialog close', () => {
-            expect(fixture.nativeElement.querySelector('.settings-modal__first-time-banner')).toBeTruthy();
-            expect(fixture.nativeElement.querySelector('.settings-modal__title')).toBeFalsy();
+            expect(fixture.nativeElement.querySelector('.first-time-banner')).toBeTruthy();
+            expect(fixture.nativeElement.querySelector('.title')).toBeFalsy();
             expect(fixture.componentInstance.isFirstTime()).toBe(true);
             expect(fixture.componentInstance.canContinue()).toBe(false);
             const dialogRef = TestBed.inject(MatDialogRef) as { disableClose: boolean };
@@ -67,7 +67,7 @@ describe('SettingsModal', () => {
         });
 
         it('shows the title, hides the banner and allows dialog close', () => {
-            expect(fixture.nativeElement.querySelector('.settings-modal__title')).toBeTruthy();
+            expect(fixture.nativeElement.querySelector('.title')).toBeTruthy();
             expect(fixture.componentInstance.isFirstTime()).toBe(false);
             const dialogRef = TestBed.inject(MatDialogRef) as { disableClose: boolean };
             expect(dialogRef.disableClose).toBe(false);
@@ -191,7 +191,7 @@ describe('SettingsModal', () => {
         it('shows the unreachable-URL banner when unreachableUrl is provided', () => {
             const fixture = createComponent(makeSettingsService(), { unreachableUrl: 'https://bad.example.com/.well-known/openid-configuration' });
             fixture.detectChanges();
-            const banner = fixture.nativeElement.querySelector('.settings-modal__error-banner');
+            const banner = fixture.nativeElement.querySelector('.error-banner');
             expect(banner).toBeTruthy();
             expect((banner as HTMLElement).textContent).toContain('bad.example.com');
         });
@@ -199,7 +199,7 @@ describe('SettingsModal', () => {
         it('shows the IdP error banner when oidcError is provided', () => {
             const fixture = createComponent(makeSettingsService(), { oidcError: 'unauthorized_client: Client is not enabled' });
             fixture.detectChanges();
-            const banners = fixture.nativeElement.querySelectorAll('.settings-modal__error-banner') as NodeListOf<HTMLElement>;
+            const banners = fixture.nativeElement.querySelectorAll('.error-banner') as NodeListOf<HTMLElement>;
             const texts = Array.from(banners).map((b) => b.textContent ?? '');
             expect(texts.some((t) => t.includes('unauthorized_client'))).toBe(true);
         });
@@ -207,7 +207,7 @@ describe('SettingsModal', () => {
         it('shows the failed-redirect banner when failedRedirectUri is provided', () => {
             const fixture = createComponent(makeSettingsService(), { failedRedirectUri: 'http://localhost:4200' });
             fixture.detectChanges();
-            const banners = fixture.nativeElement.querySelectorAll('.settings-modal__error-banner') as NodeListOf<HTMLElement>;
+            const banners = fixture.nativeElement.querySelectorAll('.error-banner') as NodeListOf<HTMLElement>;
             const texts = Array.from(banners).map((b) => b.textContent ?? '');
             expect(texts.some((t) => t.includes('localhost:4200'))).toBe(true);
         });
@@ -215,7 +215,7 @@ describe('SettingsModal', () => {
         it('shows no error banners when no dialog data is provided', () => {
             const fixture = createComponent(makeSettingsService());
             fixture.detectChanges();
-            const banners = fixture.nativeElement.querySelectorAll('.settings-modal__error-banner');
+            const banners = fixture.nativeElement.querySelectorAll('.error-banner');
             expect(banners.length).toBe(0);
         });
     });

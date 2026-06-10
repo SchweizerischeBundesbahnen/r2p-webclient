@@ -24,15 +24,12 @@ import {
     Activity,
     ARRIVAL_TIMING_TYPES,
     Capability,
-    CapabilityFeature,
     DEPARTURE_TIMING_TYPES,
-    Feature,
-    Responsibility,
-    Staff,
     TimingType,
 } from '../../models/api.models';
-import { hoursMinutesToDuration, parseDurationToHoursAndMinutes } from '../../utils/date.utils';
+import { parseDurationToHoursAndMinutes } from '../../utils/date.utils';
 import { CapabilityType } from './journey-activity-item';
+import { buildActivity } from './activity-builder.utils';
 
 export interface EditActivityDialogData {
     activity: Activity | null;
@@ -209,97 +206,25 @@ export class EditActivityModal {
     protected onSave(): void {
         void submit(this.activityForm, async (field) => {
             const { type, id, status, pathLength, pathWeight, pathMaxSpeed } = field().value();
-            this.doSave(type, id, status, pathLength, pathWeight, pathMaxSpeed);
+            this.dialogRef.close(
+                buildActivity({
+                    existing: this.data.activity,
+                    capabilityType: this.data.capabilityType,
+                    responsibility: { type, id, status },
+                    arrivalTime: this.arrivalTime(),
+                    departureTime: this.departureTime(),
+                    rollingStock: {
+                        length: this.rsLength(),
+                        weight: this.rsWeight(),
+                        composition: this.rsComposition(),
+                        localOnly: this.rsLocalOnly(),
+                        features: this.rsFeatures(),
+                    },
+                    staffRole: this.staffRole(),
+                    pathPassthrough: this.pathPassthrough(),
+                    pathFields: { length: pathLength, weight: pathWeight, maxSpeed: pathMaxSpeed },
+                }),
+            );
         });
-    }
-
-    private doSave(
-        respType: string,
-        respPartner: string,
-        respStatus: string,
-        pathLengthVal: string,
-        pathWeightVal: string,
-        pathMaxSpeedVal: string,
-    ): void {
-        const existing = this.data.activity;
-        const colType = this.data.capabilityType;
-
-        const responsibility: Responsibility = {
-            type: respType,
-            id: respPartner,
-            status: respStatus,
-        };
-
-        const otherTimings = (existing?.timings ?? []).filter(
-            (t) => !ARRIVAL_TIMING_TYPES.has(t.type) && !DEPARTURE_TIMING_TYPES.has(t.type),
-        );
-        const arrDur = hoursMinutesToDuration(this.arrivalTime());
-        const depDur = hoursMinutesToDuration(this.departureTime());
-        const timings = [
-            ...otherTimings,
-            ...(arrDur ? [{ type: TimingType.Arrival, duration: arrDur, focus: 'planning' }] : []),
-            ...(depDur ? [{ type: TimingType.Departure, duration: depDur, focus: 'planning' }] : []),
-        ];
-
-        let capability: ExtendedCapability = { type: colType, capabilityFeatures: [] };
-
-        if (colType === 'rollingStock') {
-            const features: CapabilityFeature[] = this.rsFeatures()
-                .filter((f) => f.type)
-                .map((f) => ({
-                    feature: {
-                        type: f.type,
-                        ...(f.offeredservice ? { offeredservice: f.offeredservice } : {}),
-                    } satisfies Feature,
-                }));
-            const rsLength = this.rsLength() ? Number(this.rsLength()) : undefined;
-            const rsWeight = this.rsWeight() ? Number(this.rsWeight()) : undefined;
-            const rsUnits = this.rsComposition()
-                ? [{ name: this.rsComposition() }]
-                : (existing?.capability?.rollingStock?.units ?? []);
-
-            capability = {
-                type: colType,
-                localOnly: this.rsLocalOnly(),
-                capabilityFeatures: features,
-                rollingStock: {
-                    ...(existing?.capability?.rollingStock ?? {}),
-                    ...(rsLength != null ? { length: rsLength } : {}),
-                    ...(rsWeight != null ? { weight: rsWeight } : {}),
-                    units: rsUnits,
-                },
-            };
-        } else if (colType === 'staff') {
-            const staffs: Staff[] = this.staffRole()
-                ? [{ type: this.staffRole() }]
-                : (existing?.capability?.staffs ?? []);
-            capability = { type: colType, capabilityFeatures: [], ...(staffs.length ? { staffs } : {}) };
-        } else if (colType === 'path') {
-            capability = {
-                type: colType,
-                capabilityFeatures: [],
-                passthrough: this.pathPassthrough(),
-                path: {
-                    ...(existing?.capability?.path ?? {}),
-                    id: existing?.capability?.path?.id ?? crypto.randomUUID(),
-                    length: Number(pathLengthVal),
-                    weight: Number(pathWeightVal),
-                    maxSpeed: Number(pathMaxSpeedVal),
-                },
-            };
-        }
-
-        const defaultActivityType =
-            colType === 'rollingStock' ? 'rollingStock' : colType === 'path' ? 'path.runthrough' : 'move';
-
-        this.dialogRef.close({
-            ...(existing ?? {}),
-            id: existing?.id ?? crypto.randomUUID(),
-            type: existing?.type ?? defaultActivityType,
-            responsibility,
-            timings,
-            relations: existing?.relations ?? [],
-            capability,
-        } satisfies Activity);
     }
 }

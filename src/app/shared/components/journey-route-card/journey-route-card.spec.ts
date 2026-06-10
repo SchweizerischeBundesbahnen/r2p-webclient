@@ -207,7 +207,7 @@ describe('JourneyRouteCard', () => {
         fixture.detectChanges();
 
         const el: HTMLElement = fixture.nativeElement;
-        expect(el.querySelector('.jt-edit-location-btn')).toBeNull();
+        expect(el.querySelector('.edit-location-btn')).toBeNull();
     });
 
     it('should show edit button for stops when not readonly', () => {
@@ -219,7 +219,7 @@ describe('JourneyRouteCard', () => {
         fixture.detectChanges();
 
         const el: HTMLElement = fixture.nativeElement;
-        expect(el.querySelector('.jt-edit-location-btn')).not.toBeNull();
+        expect(el.querySelector('.edit-location-btn')).not.toBeNull();
     });
 
     it('should call dialog.open(EditStopModal) when edit button is clicked', () => {
@@ -231,7 +231,7 @@ describe('JourneyRouteCard', () => {
         fixture.detectChanges();
 
         const el: HTMLElement = fixture.nativeElement;
-        (el.querySelector('.jt-edit-location-btn') as HTMLButtonElement).click();
+        (el.querySelector('.edit-location-btn') as HTMLButtonElement).click();
 
         expect(openSpy).toHaveBeenCalledOnce();
         expect(openSpy.mock.calls[0][0]).toBe(EditStopModal);
@@ -251,7 +251,7 @@ describe('JourneyRouteCard', () => {
         fixture.componentInstance.journeyChange.subscribe(journeyChangeSpy);
 
         const el: HTMLElement = fixture.nativeElement;
-        (el.querySelector('.jt-edit-location-btn') as HTMLButtonElement).click();
+        (el.querySelector('.edit-location-btn') as HTMLButtonElement).click();
 
         // Simulate dialog returning a saved location
         afterClosed$.next({ name: 'Zürich HB', type: 'UIC', code: '8507000' });
@@ -260,7 +260,7 @@ describe('JourneyRouteCard', () => {
         expect(journeyChangeSpy).toHaveBeenCalledOnce();
         const emitted = journeyChangeSpy.mock.calls[0][0] as Journey;
         expect(emitted.journeylocations?.[0].locations?.[0].name).toBe('Zürich HB');
-        expect(el.querySelector('.jt-stop-name')!.textContent).toBe('Zürich HB');
+        expect(el.querySelector('.stop-name')!.textContent).toBe('Zürich HB');
     });
 
     it('should not emit journeyChange when dialog is cancelled (closes with undefined)', () => {
@@ -275,13 +275,13 @@ describe('JourneyRouteCard', () => {
         fixture.componentInstance.journeyChange.subscribe(journeyChangeSpy);
 
         const el: HTMLElement = fixture.nativeElement;
-        (el.querySelector('.jt-edit-location-btn') as HTMLButtonElement).click();
+        (el.querySelector('.edit-location-btn') as HTMLButtonElement).click();
 
         afterClosed$.next(undefined);
         fixture.detectChanges();
 
         expect(journeyChangeSpy).not.toHaveBeenCalled();
-        expect(el.querySelector('.jt-stop-name')!.textContent).toBe('Bern');
+        expect(el.querySelector('.stop-name')!.textContent).toBe('Bern');
     });
 
     it('should expose location on JourneyStop', () => {
