@@ -129,7 +129,7 @@
       "acceptMergeModal.submitting": "Accepting…",
       "acceptMergeModal.validation.commentRequired": "Comment is required",
       "rejectMergeModal.title": "Reject Variant",
-      "rejectMergeModal.info": "Rejecting variant {$START_TAG_STRONG}{$CLOSE_TAG_STRONG}. The variant will revert to {$START_TAG_EM}Open{$CLOSE_TAG_EM} state.",
+      "rejectMergeModal.info": "Rejecting variant {$START_TAG_STRONG}{$INTERPOLATION}{$CLOSE_TAG_STRONG}. The variant will revert to {$START_EMPHASISED_TEXT}Open{$CLOSE_EMPHASISED_TEXT} state and the partner can continue working on it.",
       "rejectMergeModal.field.comment": "Comment",
       "rejectMergeModal.field.commentPlaceholder": "Reason for rejecting this variant…",
       "rejectMergeModal.cancel": "Cancel",
@@ -196,6 +196,9 @@
       "error.notFound": "Resource not found (404).",
       "error.server": "Server error ({$PH}) – please try again later.",
       "error.unexpected": "Unexpected error ({$PH}).",
-      "error.toast.dismissLabel": "Dismiss"
+      "error.toast.dismissLabel": "Dismiss",
+      "trainForm.section.trainDetails": "📋 Train Details",
+      "trainForm.field.opDay": "Operational Day",
+      "stickyEditBar.unsavedChanges": "● Unsaved changes"
   }
 }
