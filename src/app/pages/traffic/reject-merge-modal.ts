@@ -30,7 +30,7 @@ export interface RejectMergeDialogData {
             </p>
             <form>
                 <mat-form-field appearance="outline" style="width:100%;">
-                    <mat-label i18n="@@rejectMergeModal.field.comment">Comment</mat-label>
+                    <mat-label i18n="@@common.field.comment">Comment</mat-label>
                     <textarea
                         matInput
                         [formField]="rejectForm.comment"
@@ -48,7 +48,7 @@ export interface RejectMergeDialogData {
         </mat-dialog-content>
 
         <mat-dialog-actions align="end">
-            <button mat-button mat-dialog-close i18n="@@rejectMergeModal.cancel">Cancel</button>
+            <button mat-button mat-dialog-close i18n="@@common.cancel">Cancel</button>
             <button
                 mat-flat-button
                 type="button"
@@ -73,7 +73,7 @@ export class RejectMergeModalComponent {
 
     protected readonly rejectForm = form(this.model, (p) => {
         required(p.comment, {
-            message: $localize`:@@rejectMergeModal.validation.commentRequired:Comment is required`,
+            message: $localize`:@@common.validation.commentRequired:Comment is required`,
         });
     });
 

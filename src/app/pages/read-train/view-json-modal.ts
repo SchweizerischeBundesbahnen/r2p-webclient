@@ -24,7 +24,7 @@ export interface ViewJsonDialogData {
             <pre class="json-viewer" id="json-viewer-content">{{ data.train | json }}</pre>
         </mat-dialog-content>
         <mat-dialog-actions align="end">
-            <button mat-button mat-dialog-close i18n="@@viewJsonModal.close">Close</button>
+            <button mat-button mat-dialog-close i18n="@@common.close">Close</button>
         </mat-dialog-actions>
     `,
     styles: `

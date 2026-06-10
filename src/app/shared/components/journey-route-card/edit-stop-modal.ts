@@ -77,7 +77,7 @@ export interface EditStopDialogData {
         </mat-dialog-content>
 
         <mat-dialog-actions align="end">
-            <button mat-button (click)="dialogRef.close()" i18n="@@editStopModal.cancel">Cancel</button>
+            <button mat-button (click)="dialogRef.close()" i18n="@@common.cancel">Cancel</button>
             <button mat-flat-button [disabled]="stopForm().submitting()" (click)="onSave()" i18n="@@editStopModal.save">Save Stop</button>
         </mat-dialog-actions>
     `,

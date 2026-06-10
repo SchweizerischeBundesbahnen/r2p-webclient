@@ -2,13 +2,13 @@
 <div class="main-content">
     <div class="container">
         <a [routerLink]="'/traffic-view/' + trainId()" class="back-link" id="back-link"
-            i18n="@@readTrain.breadcrumb.traffic">Traffic View</a
+            i18n="@@common.breadcrumb.trafficView">Traffic View</a
         >
 
         @if (state.trainAndBranch.isLoading()) {
             <app-spinner />
         } @else if (state.trainAndBranch.error()) {
-            <app-alert-banner type="error" i18n="@@readTrain.loadError">
+            <app-alert-banner type="error" i18n="@@common.train.loadError">
                 ⚠️ Failed to load train data. Please go back and try again.
             </app-alert-banner>
         } @else {
@@ -40,8 +40,8 @@
             <div class="card-body">
                 @let branch = state.trainAndBranch.value()?.branch;
                 <app-detail-grid>
-                    <app-detail-item label="Train Number" i18n-label="@@readTrain.field.trainNumber" valueId="detail-train-number">{{ branch?.business?.trainNumber ?? '-' }}</app-detail-item>
-                    <app-detail-item label="Operational Day" i18n-label="@@readTrain.field.opDay" valueId="detail-op-day">
+                    <app-detail-item label="Train Number" i18n-label="@@common.field.trainNumber" valueId="detail-train-number">{{ branch?.business?.trainNumber ?? '-' }}</app-detail-item>
+                    <app-detail-item label="Operational Day" i18n-label="@@common.field.opDay" valueId="detail-op-day">
                         @let opDay = branch?.business?.operationalDay;
                         {{ opDay ? (isoDateToUtc(opDay) | date: 'mediumDate' : 'UTC') : '-' }}
                     </app-detail-item>

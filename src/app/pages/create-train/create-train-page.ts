@@ -39,7 +39,7 @@ export class CreateTrainPage {
             .pipe(finalize(() => this.state.createTrainRunning.set(false)))
             .subscribe({
                 next: () => {
-                    this.notifications.showSuccess($localize`:@@createTrain.saveSuccess:Train saved successfully.`);
+                    this.notifications.showSuccess($localize`:@@common.train.saveSuccess:Train saved successfully.`);
                     this.router.navigate(['/traffic-overview']);
                 },
                 error: () => {

@@ -15,14 +15,14 @@ import { PartnerBadge } from '../../shared/components/partner-badge/partner-badg
         <td>
             <div>{{ train().start ?? '-' }}</div>
             <div class="cell-sub"
-                ><ng-container i18n="@@tableRow.dep">Dep:</ng-container>
+                ><ng-container i18n="@@common.dep">Dep:</ng-container>
                 {{ train().startTime | date: 'shortTime' }}</div
             >
         </td>
         <td>
             <div>{{ train().end ?? '-' }}</div>
             <div class="cell-sub"
-                ><ng-container i18n="@@tableRow.arr">Arr:</ng-container>
+                ><ng-container i18n="@@common.arr">Arr:</ng-container>
                 {{ train().endTime | date: 'shortTime' }}</div
             >
         </td>

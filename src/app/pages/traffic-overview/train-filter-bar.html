@@ -1,12 +1,12 @@
 ﻿<div class="filter-bar">
     <div class="filter-group">
-        <label for="filter-train-number" i18n="@@trafficOverview.filter.trainNumber">Train Number</label>
+        <label for="filter-train-number" i18n="@@common.field.trainNumber">Train Number</label>
         <input
             type="text"
             id="filter-train-number"
             class="filter-input"
             placeholder="e.g., IC 1234"
-            i18n-placeholder="@@trafficOverview.filter.trainNumberPlaceholder"
+            i18n-placeholder="@@common.field.trainNumber.placeholder"
             [value]="tableService.trainNumber()"
             (input)="tableService.trainNumber.set($any($event.target).value)"
         />

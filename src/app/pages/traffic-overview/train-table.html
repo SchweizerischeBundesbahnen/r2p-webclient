@@ -27,7 +27,7 @@
                             <ng-container i18n="@@trafficOverview.table.opDay">Op. Day</ng-container>
                             <span class="sort-indicator">{{ sortIndicator('operationalDay') }}</span>
                         </th>
-                        <th i18n="@@trafficOverview.table.partners">Partners</th>
+                        <th i18n="@@common.field.partners">Partners</th>
                         <th class="sort-header" (click)="tableService.toggleSort('lastChange')">
                             <ng-container i18n="@@trafficOverview.table.lastChange">Last Change / Version</ng-container>
                             <span class="sort-indicator">{{ sortIndicator('lastChange') }}</span>
@@ -36,7 +36,7 @@
                             <ng-container i18n="@@trafficOverview.table.status">Status</ng-container>
                             <span class="tooltip-anchor" tabindex="0"
                                 >?<span class="tooltip-box"
-                                    ><ng-container i18n="@@trafficOverview.status.allConfirmed">🟢 Circle: All activities are <em>confirmed</em>.</ng-container><br /><ng-container i18n="@@trafficOverview.status.someProposed">🟧 Square: At least one activity is <em>proposed</em> or <em>requested</em>, none refused.</ng-container><br /><ng-container i18n="@@trafficOverview.status.someRefused">🔺 Triangle: At least one activity is <em>refused</em> or <em>dropped</em>.</ng-container></span
+                                    ><ng-container i18n="@@common.status.allConfirmed">🟢 Circle: All activities are <em>confirmed</em>.</ng-container><br /><ng-container i18n="@@common.status.someProposed">🟧 Square: At least one activity is <em>proposed</em> or <em>requested</em>, none refused.</ng-container><br /><ng-container i18n="@@common.status.someRefused">🔺 Triangle: At least one activity is <em>refused</em> or <em>dropped</em>.</ng-container></span
                                 ></span
                             >
                         </th>

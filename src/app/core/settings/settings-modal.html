@@ -1,7 +1,7 @@
 <div class="settings-modal">
     @if (!isFirstTime()) {
         <mat-dialog-actions class="close-row">
-            <button mat-icon-button mat-dialog-close aria-label="Close" i18n-aria-label="@@settings.close.aria">
+            <button mat-icon-button mat-dialog-close aria-label="Close" i18n-aria-label="@@common.close">
                 <mat-icon>close</mat-icon>
             </button>
         </mat-dialog-actions>
@@ -73,7 +73,7 @@
                 <p class="hint hint--error" i18n="@@validation.required">Required.</p>
             }
             @if (serverUrl().trim() && !isServerUrlValid()) {
-                <p class="hint hint--error" i18n="@@settings.serverUrlInvalid">Must be a valid URL.</p>
+                <p class="hint hint--error" i18n="@@common.url.invalid">Must be a valid URL.</p>
             }
             <p class="hint" i18n="@@settings.serverUrlHint">Base URL of the R2P backend server.</p>
         </div>
@@ -124,7 +124,7 @@
                 <p class="hint hint--error" i18n="@@validation.required">Required.</p>
             }
             @if (authority().trim() && !isAuthorityValid()) {
-                <p class="hint hint--error" i18n="@@settings.authorityInvalid">Must be a valid URL.</p>
+                <p class="hint hint--error" i18n="@@common.url.invalid">Must be a valid URL.</p>
             }
             @if (isAzureV1Authority()) {
                 <p class="hint hint--error" i18n="@@settings.authorityAzureV1Error">

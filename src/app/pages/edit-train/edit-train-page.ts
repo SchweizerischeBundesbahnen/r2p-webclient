@@ -53,7 +53,7 @@ export class EditTrainPage {
             )
             .subscribe({
                 next: () => {
-                    this.notifications.showSuccess($localize`:@@editTrain.saveSuccess:Train saved successfully.`);
+                    this.notifications.showSuccess($localize`:@@common.train.saveSuccess:Train saved successfully.`);
                     this.router.navigate(['/traffic-view/' + this.trainId()]);
                 },
                 error: () => {

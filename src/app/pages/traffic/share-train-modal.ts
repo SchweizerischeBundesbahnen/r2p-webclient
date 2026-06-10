@@ -40,7 +40,7 @@ export class ShareTrainModalComponent {
     protected readonly shareForm = form(this.model, (p) => {
         required(p.shareWith, { message: $localize`:@@shareTrainModal.validation.partnerRequired:Partner is required` });
         maxLength(p.shareWith, 255, { message: $localize`:@@shareTrainModal.validation.partnerMaxLength:Max 255 characters` });
-        required(p.comment, { message: $localize`:@@shareTrainModal.validation.commentRequired:Comment is required` });
+        required(p.comment, { message: $localize`:@@common.validation.commentRequired:Comment is required` });
     });
 
     protected onSubmit(): void {

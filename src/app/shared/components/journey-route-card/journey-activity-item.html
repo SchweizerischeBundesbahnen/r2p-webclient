@@ -31,11 +31,11 @@
     @if (arrival() || departure()) {
         <div class="activity-times">
             @if (arrival()) {
-                <span i18n="@@journeyActivityItem.arr">Arr:</span> {{ arrival() }}
+                <span i18n="@@common.arr">Arr:</span> {{ arrival() }}
             }
             @if (arrival() && departure()) { / }
             @if (departure()) {
-                <span i18n="@@journeyActivityItem.dep">Dep:</span> {{ departure() }}
+                <span i18n="@@common.dep">Dep:</span> {{ departure() }}
             }
         </div>
     }

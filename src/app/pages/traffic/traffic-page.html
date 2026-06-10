@@ -1,7 +1,7 @@
 <!-- ── Main Content ────────────────────────────────────────────── -->
 <div class="main-content">
     <div class="container">
-        <a [routerLink]="'/traffic-overview'" class="back-link" i18n="@@traffic.breadcrumb.overview">Traffic Overview</a>
+        <a [routerLink]="'/traffic-overview'" class="back-link" i18n="@@common.breadcrumb.trafficOverview">Traffic Overview</a>
 
         @if (trainMainBranch.value(); as trainData) {
         @let trainHeaderInfo = getTrainHeaderInfo(trainData);
@@ -47,12 +47,12 @@
                 </div>
 
                 <app-detail-grid class="mt-md">
-                    <app-detail-item label="Train Number" i18n-label="@@traffic.field.trainNumber" valueId="detail-train-number">{{ trainHeaderInfo.trainNumber }}</app-detail-item>
+                    <app-detail-item label="Train Number" i18n-label="@@common.field.trainNumber" valueId="detail-train-number">{{ trainHeaderInfo.trainNumber }}</app-detail-item>
                     <app-detail-item label="From" i18n-label="@@traffic.field.from" valueId="detail-from">{{ trainHeaderInfo.from }}</app-detail-item>
                     <app-detail-item label="Departure" i18n-label="@@traffic.field.departure" valueId="detail-dep-time">{{ trainHeaderInfo.departureTime | date: 'shortTime' }}</app-detail-item>
                     <app-detail-item label="To" i18n-label="@@traffic.field.to" valueId="detail-to">{{ trainHeaderInfo.to }}</app-detail-item>
                     <app-detail-item label="Arrival" i18n-label="@@traffic.field.arrival" valueId="detail-arr-time">{{ trainHeaderInfo.arrivalTime | date: 'shortTime' }}</app-detail-item>
-                    <app-detail-item label="Operational Day" i18n-label="@@traffic.field.opDay" valueId="detail-op-day">
+                    <app-detail-item label="Operational Day" i18n-label="@@common.field.opDay" valueId="detail-op-day">
                         @let opDayDetail = trainHeaderInfo.operationalDay;
                         {{ opDayDetail ? (isoDateToUtc(opDayDetail) | date: 'mediumDate' : 'UTC') : '-' }}
                     </app-detail-item>
@@ -62,7 +62,7 @@
                             <ng-container i18n="@@traffic.field.overallStatus">Overall Status</ng-container>
                             <span class="tooltip-anchor" tabindex="0"
                             >?<span class="tooltip-box"
-                            ><ng-container i18n="@@traffic.status.allConfirmed">🟢 Circle: All activities are <em>confirmed</em>.</ng-container><br /><ng-container i18n="@@traffic.status.someProposed">🟧 Square: At least one activity is <em>proposed</em> or <em>requested</em>, none refused.</ng-container><br /><ng-container i18n="@@traffic.status.someRefused">🔺 Triangle: At least one activity is <em>refused</em> or <em>dropped</em>.</ng-container></span
+                            ><ng-container i18n="@@common.status.allConfirmed">🟢 Circle: All activities are <em>confirmed</em>.</ng-container><br /><ng-container i18n="@@common.status.someProposed">🟧 Square: At least one activity is <em>proposed</em> or <em>requested</em>, none refused.</ng-container><br /><ng-container i18n="@@common.status.someRefused">🔺 Triangle: At least one activity is <em>refused</em> or <em>dropped</em>.</ng-container></span
                             ></span
                             >
                         </div>
@@ -70,7 +70,7 @@
                             <app-overall-status [train]="trainMainBranch.value()?.details" />
                         </div>
                     </div>
-                    <app-detail-item label="Partners" i18n-label="@@traffic.field.partners" valueId="detail-partners">
+                    <app-detail-item label="Partners" i18n-label="@@common.field.partners" valueId="detail-partners">
                         @for (partner of trainHeaderInfo.partners; track partner) {
                             <app-partner-badge [partner]="partner" />
                         }
@@ -157,7 +157,7 @@
             </div>
         </div>
         } @else if (trainMainBranch.error()) {
-            <app-alert-banner type="error" i18n="@@traffic.loadError">
+            <app-alert-banner type="error" i18n="@@common.train.loadError">
                 ⚠️ Failed to load train data. Please go back and try again.
             </app-alert-banner>
         } @else if (trainMainBranch.isLoading()) {

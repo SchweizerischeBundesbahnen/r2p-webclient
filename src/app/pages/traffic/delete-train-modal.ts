@@ -67,7 +67,7 @@ export interface DeleteTrainDialogData {
         </mat-dialog-content>
 
         <mat-dialog-actions align="end">
-            <button mat-button mat-dialog-close i18n="@@deleteTrainModal.cancel">Cancel</button>
+            <button mat-button mat-dialog-close i18n="@@common.cancel">Cancel</button>
             <button
                 mat-flat-button
                 color="warn"
