@@ -46,10 +46,13 @@
     <button
         mat-raised-button
         color="primary"
-        [disabled]="createTrainVariant().invalid() || isRunning()"
+        [disabled]="createTrainVariant().submitting()"
         (click)="createNewVariant()"
-        i18n="@@newVariantModal.createAndEdit"
     >
-        Create
+        @if (createTrainVariant().submitting()) {
+            <ng-container i18n="@@newVariantModal.creating">Creating…</ng-container>
+        } @else {
+            <ng-container i18n="@@newVariantModal.createAndEdit">Create</ng-container>
+        }
     </button>
 </mat-dialog-actions>

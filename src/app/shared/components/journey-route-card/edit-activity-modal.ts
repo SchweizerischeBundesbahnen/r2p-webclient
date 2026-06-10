@@ -5,6 +5,7 @@ import {
     inject,
     signal,
 } from '@angular/core';
+import { form, FormField, required, submit } from '@angular/forms/signals';
 import {
     MAT_DIALOG_DATA,
     MatDialogActions,
@@ -14,7 +15,7 @@ import {
 } from '@angular/material/dialog';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { MatIcon } from '@angular/material/icon';
@@ -80,8 +81,8 @@ function initialTiming(
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         MatDialogTitle, MatDialogContent, MatDialogActions,
-        MatFormField, MatLabel, MatInput, MatSelect, MatOption,
-        MatButton, MatIconButton, MatIcon, MatCheckbox, MatDivider,
+        MatFormField, MatLabel, MatError, MatInput, MatSelect, MatOption,
+        MatButton, MatIconButton, MatIcon, MatCheckbox, MatDivider, FormField,
     ],
     templateUrl: './edit-activity-modal.html',
     styleUrl: './edit-activity-modal.scss',
@@ -108,9 +109,17 @@ export class EditActivityModal {
     });
 
     // ── Responsibility ────────────────────────────────────────────────────────
-    protected readonly respType = signal(this.data.activity?.responsibility?.type ?? 'rru');
-    protected readonly respPartner = signal(this.data.activity?.responsibility?.id ?? 'SBB');
-    protected readonly respStatus = signal(this.data.activity?.responsibility?.status ?? 'proposed');
+    private readonly responsibilityModel = signal({
+        type: this.data.activity?.responsibility?.type ?? 'rru',
+        id: this.data.activity?.responsibility?.id ?? 'SBB',
+        status: this.data.activity?.responsibility?.status ?? 'proposed',
+    });
+
+    protected readonly activityForm = form(this.responsibilityModel, (p) => {
+        required(p.type, { message: $localize`:@@validation.required:Required` });
+        required(p.id, { message: $localize`:@@validation.required:Required` });
+        required(p.status, { message: $localize`:@@validation.required:Required` });
+    });
 
     // ── Timing ────────────────────────────────────────────────────────────────
     protected readonly arrivalTime = signal(
@@ -181,13 +190,20 @@ export class EditActivityModal {
 
     // ── Save ──────────────────────────────────────────────────────────────────
     protected onSave(): void {
+        void submit(this.activityForm, async (field) => {
+            const { type, id, status } = field().value();
+            this.doSave(type, id, status);
+        });
+    }
+
+    private doSave(respType: string, respPartner: string, respStatus: string): void {
         const existing = this.data.activity;
         const colType = this.data.capabilityType;
 
         const responsibility: Responsibility = {
-            type: this.respType(),
-            id: this.respPartner(),
-            status: this.respStatus(),
+            type: respType,
+            id: respPartner,
+            status: respStatus,
         };
 
         const otherTimings = (existing?.timings ?? []).filter(

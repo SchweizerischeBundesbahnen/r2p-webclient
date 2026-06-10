@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { MatButton } from '@angular/material/button';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
+import { form, FormField, required, submit } from '@angular/forms/signals';
 import { Location, LOCATION_TYPES, LocationType } from '../../models/api.models';
 
 export interface EditStopDialogData {
@@ -16,7 +17,7 @@ export interface EditStopDialogData {
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         MatDialogTitle, MatDialogContent, MatDialogActions,
-        MatFormField, MatLabel, MatInput, MatSelect, MatOption, MatButton,
+        MatFormField, MatLabel, MatError, MatInput, MatSelect, MatOption, MatButton, FormField,
     ],
     template: `
         @if (isNew) {
@@ -32,12 +33,15 @@ export interface EditStopDialogData {
                     <input
                         matInput
                         id="stop-name"
-                        required
-                        [value]="editedName()"
-                        (input)="editedName.set($any($event.target).value)"
+                        [formField]="stopForm.name"
                         placeholder="e.g., Zürich HB"
                         i18n-placeholder="@@editStopModal.field.name.placeholder"
                     />
+                    @if (stopForm.name().touched() && stopForm.name().invalid()) {
+                        @for (error of stopForm.name().errors(); track error.kind) {
+                            <mat-error>{{ error.message }}</mat-error>
+                        }
+                    }
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" style="width:100%">
@@ -45,33 +49,36 @@ export interface EditStopDialogData {
                     <input
                         matInput
                         id="stop-code"
-                        required
-                        [value]="editedCode()"
-                        (input)="editedCode.set($any($event.target).value)"
+                        [formField]="stopForm.code"
                         placeholder="e.g., 8503000"
                         i18n-placeholder="@@editStopModal.field.code.placeholder"
                     />
+                    @if (stopForm.code().touched() && stopForm.code().invalid()) {
+                        @for (error of stopForm.code().errors(); track error.kind) {
+                            <mat-error>{{ error.message }}</mat-error>
+                        }
+                    }
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" style="width:100%">
                     <mat-label i18n="@@editStopModal.field.type">Location Type</mat-label>
-                    <mat-select
-                        id="stop-type"
-                        required
-                        [value]="editedType()"
-                        (selectionChange)="editedType.set($event.value)"
-                    >
+                    <mat-select id="stop-type" [formField]="stopForm.type">
                         @for (t of locationTypes; track t) {
                             <mat-option [value]="t">{{ t }}</mat-option>
                         }
                     </mat-select>
+                    @if (stopForm.type().touched() && stopForm.type().invalid()) {
+                        @for (error of stopForm.type().errors(); track error.kind) {
+                            <mat-error>{{ error.message }}</mat-error>
+                        }
+                    }
                 </mat-form-field>
             </div>
         </mat-dialog-content>
 
         <mat-dialog-actions align="end">
             <button mat-button (click)="dialogRef.close()" i18n="@@editStopModal.cancel">Cancel</button>
-            <button mat-flat-button [disabled]="!canSave()" (click)="onSave()" i18n="@@editStopModal.save">Save Stop</button>
+            <button mat-flat-button [disabled]="stopForm().submitting()" (click)="onSave()" i18n="@@editStopModal.save">Save Stop</button>
         </mat-dialog-actions>
     `,
 })
@@ -82,21 +89,22 @@ export class EditStopModal {
     protected readonly isNew = this.data.isNew ?? false;
     protected readonly locationTypes: LocationType[] = LOCATION_TYPES;
 
-    protected readonly editedName = signal(this.data.location.name ?? '');
-    protected readonly editedCode = signal(this.data.location.code ?? '');
-    protected readonly editedType = signal(this.data.location.type ?? '');
+    private readonly model = signal({
+        name: this.data.location.name ?? '',
+        code: this.data.location.code ?? '',
+        type: this.data.location.type ?? '',
+    });
 
-    protected readonly canSave = computed(
-        () => !!this.editedName().trim() && !!this.editedCode().trim() && !!this.editedType(),
-    );
+    protected readonly stopForm = form(this.model, (p) => {
+        required(p.name, { message: $localize`:@@validation.required:Required` });
+        required(p.code, { message: $localize`:@@validation.required:Required` });
+        required(p.type, { message: $localize`:@@validation.required:Required` });
+    });
 
     protected onSave(): void {
-        if (!this.canSave()) return;
-        this.dialogRef.close({
-            ...this.data.location,
-            type: this.editedType(),
-            code: this.editedCode(),
-            name: this.editedName(),
-        } satisfies Location);
+        void submit(this.stopForm, async (field) => {
+            const { name, code, type } = field().value();
+            this.dialogRef.close({ ...this.data.location, name, code, type } satisfies Location);
+        });
     }
 }

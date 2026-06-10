@@ -24,9 +24,6 @@
     "editTrain.section.trainDetails": "📋 Zugdetails",
     "editTrain.field.trainNumber": "Zugnummer",
     "trainForm.field.trainNumber": "Zugnummer",
-    "trainForm.section.trainDetails": "📋 Zugdetails",
-    "trainForm.field.opDay": "Betriebstag",
-    "stickyEditBar.unsavedChanges": "● Ungespeicherte Änderungen",
     "editTrain.field.opDay": "Betriebstag",
     "editTrain.field.comment": "Änderungskommentar",
     "editTrain.field.commentPlaceholder": "Änderungen beschreiben…",
@@ -98,6 +95,8 @@
     "newVariantModal.field.commentPlaceholder": "Zweck dieser Variante beschreiben…",
     "newVariantModal.cancel": "Abbrechen",
     "newVariantModal.createAndEdit": "Erstellen",
+    "newVariantModal.creating": "Wird erstellt…",
+    "newVariantModal.validation.nameMaxLength": "Max. 255 Zeichen",
     "rejectMergeModal.title": "Variante ablehnen",
     "rejectMergeModal.info": "Die Variante {$START_TAG_STRONG}{$INTERPOLATION}{$CLOSE_TAG_STRONG} wird abgelehnt. Sie wird wieder auf {$START_EMPHASISED_TEXT}Offen{$CLOSE_EMPHASISED_TEXT} gesetzt und der Partner kann weiter daran arbeiten.",
     "rejectMergeModal.field.comment": "Kommentar",
@@ -232,6 +231,7 @@
     "error.notFound": "Ressource nicht gefunden (404).",
     "error.server": "Serverfehler ({$PH}) – bitte später erneut versuchen.",
     "error.unexpected": "Unerwarteter Fehler ({$PH}).",
-    "error.toast.dismissLabel": "Schliessen"
+    "error.toast.dismissLabel": "Schliessen",
+    "validation.required": "Erforderlich"
   }
 }

@@ -8,29 +8,44 @@
         <div class="act-form-row">
             <mat-form-field appearance="outline">
                 <mat-label i18n="@@editActivityModal.responsibility.type">Type</mat-label>
-                <mat-select [value]="respType()" (selectionChange)="respType.set($event.value)">
+                <mat-select [formField]="activityForm.type">
                     @for (rt of responsibilityTypes; track rt.value) {
                         <mat-option [value]="rt.value">{{ rt.label }}</mat-option>
                     }
                 </mat-select>
+                @if (activityForm.type().touched() && activityForm.type().invalid()) {
+                    @for (error of activityForm.type().errors(); track error.kind) {
+                        <mat-error>{{ error.message }}</mat-error>
+                    }
+                }
             </mat-form-field>
 
             <mat-form-field appearance="outline">
                 <mat-label i18n="@@editActivityModal.responsibility.partner">Partner</mat-label>
-                <mat-select [value]="respPartner()" (selectionChange)="respPartner.set($event.value)">
+                <mat-select [formField]="activityForm.id">
                     @for (p of partners; track p) {
                         <mat-option [value]="p">{{ p }}</mat-option>
                     }
                 </mat-select>
+                @if (activityForm.id().touched() && activityForm.id().invalid()) {
+                    @for (error of activityForm.id().errors(); track error.kind) {
+                        <mat-error>{{ error.message }}</mat-error>
+                    }
+                }
             </mat-form-field>
 
             <mat-form-field appearance="outline">
                 <mat-label i18n="@@editActivityModal.responsibility.status">Plan Status</mat-label>
-                <mat-select [value]="respStatus()" (selectionChange)="respStatus.set($event.value)">
+                <mat-select [formField]="activityForm.status">
                     @for (s of planStatuses; track s) {
                         <mat-option [value]="s">{{ s }}</mat-option>
                     }
                 </mat-select>
+                @if (activityForm.status().touched() && activityForm.status().invalid()) {
+                    @for (error of activityForm.status().errors(); track error.kind) {
+                        <mat-error>{{ error.message }}</mat-error>
+                    }
+                }
             </mat-form-field>
         </div>
 
@@ -147,5 +162,5 @@
 
 <mat-dialog-actions align="end">
     <button mat-button (click)="dialogRef.close()" i18n="@@editActivityModal.cancel">Cancel</button>
-    <button mat-flat-button (click)="onSave()" i18n="@@editActivityModal.save">✓ Save Activity</button>
+    <button mat-flat-button [disabled]="activityForm().submitting()" (click)="onSave()" i18n="@@editActivityModal.save">✓ Save Activity</button>
 </mat-dialog-actions>

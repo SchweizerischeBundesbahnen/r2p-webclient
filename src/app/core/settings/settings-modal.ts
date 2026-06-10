@@ -42,6 +42,7 @@ export class SettingsModal {
     readonly scope = signal(this.settingsService.settings().scope);
 
     readonly isFirstTime = computed(() => !this.settingsService.hasConfiguredSettings());
+    readonly submitted = signal(false);
 
     readonly isAuthorityValid = computed(() => {
         const val = this.authority().trim();
@@ -72,6 +73,7 @@ export class SettingsModal {
     }
 
     protected onClose(): void {
+        this.submitted.set(true);
         if (!this.canContinue()) return;
         this.persist();
         this.oidcSecurityService.logoffLocal();

@@ -5,6 +5,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { EditStopModal, EditStopDialogData } from './edit-stop-modal';
 import { Location, LOCATION_TYPES } from '../../models/api.models';
 
+interface FieldState { value(): string }
+interface StopFormComp { stopForm: { name(): FieldState; code(): FieldState; type(): FieldState } }
+
 const STUB_LOCATION: Location = { type: 'UIC', code: '8507000', name: 'Bern' };
 
 function makeDialogRef() {
@@ -53,28 +56,28 @@ describe('EditStopModal', () => {
             expect(fixture.componentInstance).toBeTruthy();
         });
 
-        it('pre-fills the name signal from location.name', () => {
+        it('pre-fills the name form field from location.name', () => {
             const { fixture } = createComponent();
-            const comp = fixture.componentInstance as unknown as { editedName: () => string };
-            expect(comp.editedName()).toBe('Bern');
+            const comp = fixture.componentInstance as unknown as StopFormComp;
+            expect(comp.stopForm.name().value()).toBe('Bern');
         });
 
-        it('pre-fills the code signal from location.code', () => {
+        it('pre-fills the code form field from location.code', () => {
             const { fixture } = createComponent();
-            const comp = fixture.componentInstance as unknown as { editedCode: () => string };
-            expect(comp.editedCode()).toBe('8507000');
+            const comp = fixture.componentInstance as unknown as StopFormComp;
+            expect(comp.stopForm.code().value()).toBe('8507000');
         });
 
-        it('pre-fills the type signal from location.type', () => {
+        it('pre-fills the type form field from location.type', () => {
             const { fixture } = createComponent();
-            const comp = fixture.componentInstance as unknown as { editedType: () => string };
-            expect(comp.editedType()).toBe('UIC');
+            const comp = fixture.componentInstance as unknown as StopFormComp;
+            expect(comp.stopForm.type().value()).toBe('UIC');
         });
 
-        it('sets type to empty string when location has no type', () => {
+        it('sets type form field to empty string when location has no type', () => {
             const { fixture } = createComponent({ code: '123', name: 'No Type' });
-            const comp = fixture.componentInstance as unknown as { editedType: () => string };
-            expect(comp.editedType()).toBe('');
+            const comp = fixture.componentInstance as unknown as StopFormComp;
+            expect(comp.stopForm.type().value()).toBe('');
         });
 
         it('pre-fills the name input element', () => {
@@ -91,26 +94,26 @@ describe('EditStopModal', () => {
     });
 
     describe('user interaction – name input', () => {
-        it('updates editedName signal on input event', () => {
+        it('updates name form field on input event', () => {
             const { fixture } = createComponent();
             const nameInput: HTMLInputElement = fixture.nativeElement.querySelector('#stop-name');
             nameInput.value = 'Zürich HB';
             nameInput.dispatchEvent(new Event('input'));
             fixture.detectChanges();
-            const comp = fixture.componentInstance as unknown as { editedName: () => string };
-            expect(comp.editedName()).toBe('Zürich HB');
+            const comp = fixture.componentInstance as unknown as StopFormComp;
+            expect(comp.stopForm.name().value()).toBe('Zürich HB');
         });
     });
 
     describe('user interaction – code input', () => {
-        it('updates editedCode signal on input event', () => {
+        it('updates code form field on input event', () => {
             const { fixture } = createComponent();
             const codeInput: HTMLInputElement = fixture.nativeElement.querySelector('#stop-code');
             codeInput.value = 'NEW_CODE';
             codeInput.dispatchEvent(new Event('input'));
             fixture.detectChanges();
-            const comp = fixture.componentInstance as unknown as { editedCode: () => string };
-            expect(comp.editedCode()).toBe('NEW_CODE');
+            const comp = fixture.componentInstance as unknown as StopFormComp;
+            expect(comp.stopForm.code().value()).toBe('NEW_CODE');
         });
     });
 
@@ -128,6 +131,16 @@ describe('EditStopModal', () => {
     });
 
     describe('save button', () => {
+        it('is enabled even when required fields are empty', () => {
+            const { fixture } = createComponent({}, makeDialogRef(), true);
+            fixture.detectChanges();
+
+            const buttons: NodeListOf<HTMLButtonElement> =
+                fixture.nativeElement.querySelectorAll('button');
+            const saveBtn = Array.from(buttons).find((b) => b.textContent?.includes('Save'));
+            expect(saveBtn?.disabled).toBe(false);
+        });
+
         it('calls dialogRef.close with updated location when Save is clicked', () => {
             const dr = makeDialogRef();
             const { fixture } = createComponent(STUB_LOCATION, dr);
@@ -149,22 +162,9 @@ describe('EditStopModal', () => {
             expect(emitted.code).toBe('8507000');
         });
 
-        it('disables the save button when code is cleared', () => {
-            const { fixture } = createComponent(STUB_LOCATION);
-
-            const codeInput: HTMLInputElement = fixture.nativeElement.querySelector('#stop-code');
-            codeInput.value = '';
-            codeInput.dispatchEvent(new Event('input'));
-            fixture.detectChanges();
-
-            const buttons: NodeListOf<HTMLButtonElement> =
-                fixture.nativeElement.querySelectorAll('button');
-            const saveBtn = Array.from(buttons).find((b) => b.textContent?.includes('Save'));
-            expect(saveBtn?.disabled).toBe(true);
-        });
-
-        it('disables the save button when name is cleared', () => {
-            const { fixture } = createComponent(STUB_LOCATION);
+        it('shows required error and does not close when name is empty on submit', () => {
+            const dr = makeDialogRef();
+            const { fixture } = createComponent(STUB_LOCATION, dr);
 
             const nameInput: HTMLInputElement = fixture.nativeElement.querySelector('#stop-name');
             nameInput.value = '';
@@ -174,17 +174,48 @@ describe('EditStopModal', () => {
             const buttons: NodeListOf<HTMLButtonElement> =
                 fixture.nativeElement.querySelectorAll('button');
             const saveBtn = Array.from(buttons).find((b) => b.textContent?.includes('Save'));
-            expect(saveBtn?.disabled).toBe(true);
+            saveBtn?.click();
+            fixture.detectChanges();
+
+            const errors = fixture.nativeElement.querySelectorAll('mat-error');
+            expect(errors.length).toBeGreaterThan(0);
+            expect(dr.close).not.toHaveBeenCalled();
         });
 
-        it('disables the save button when all fields are empty (isNew)', () => {
-            const { fixture } = createComponent({}, makeDialogRef(), true);
+        it('shows required error and does not close when code is empty on submit', () => {
+            const dr = makeDialogRef();
+            const { fixture } = createComponent(STUB_LOCATION, dr);
+
+            const codeInput: HTMLInputElement = fixture.nativeElement.querySelector('#stop-code');
+            codeInput.value = '';
+            codeInput.dispatchEvent(new Event('input'));
             fixture.detectChanges();
 
             const buttons: NodeListOf<HTMLButtonElement> =
                 fixture.nativeElement.querySelectorAll('button');
             const saveBtn = Array.from(buttons).find((b) => b.textContent?.includes('Save'));
-            expect(saveBtn?.disabled).toBe(true);
+            saveBtn?.click();
+            fixture.detectChanges();
+
+            const errors = fixture.nativeElement.querySelectorAll('mat-error');
+            expect(errors.length).toBeGreaterThan(0);
+            expect(dr.close).not.toHaveBeenCalled();
+        });
+
+        it('shows required errors and does not close when submitting an empty form', () => {
+            const dr = makeDialogRef();
+            const { fixture } = createComponent({}, dr, true);
+            fixture.detectChanges();
+
+            const buttons: NodeListOf<HTMLButtonElement> =
+                fixture.nativeElement.querySelectorAll('button');
+            const saveBtn = Array.from(buttons).find((b) => b.textContent?.includes('Save'));
+            saveBtn?.click();
+            fixture.detectChanges();
+
+            const errors = fixture.nativeElement.querySelectorAll('mat-error');
+            expect(errors.length).toBeGreaterThanOrEqual(2);
+            expect(dr.close).not.toHaveBeenCalled();
         });
 
         it('preserves other location properties (e.g. typeCode) when saving', () => {
@@ -201,12 +232,12 @@ describe('EditStopModal', () => {
             expect(emitted.typeCode).toBe('TC1');
         });
 
-        it('pre-selects each available location type', () => {
+        it('pre-selects each available location type in the form field', () => {
             for (const type of LOCATION_TYPES) {
                 TestBed.resetTestingModule();
                 const { fixture } = createComponent({ type, code: 'X', name: 'X' });
-                const comp = fixture.componentInstance as unknown as { editedType: () => string };
-                expect(comp.editedType()).toBe(type);
+                const comp = fixture.componentInstance as unknown as StopFormComp;
+                expect(comp.stopForm.type().value()).toBe(type);
             }
         });
     });

@@ -10,12 +10,12 @@ import {
 import { MatError, MatFormField, MatHint, MatLabel, MatPrefix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
-import { form, FormField, maxLength, required } from '@angular/forms/signals';
+import { form, FormField, maxLength, required, submit } from '@angular/forms/signals';
 import { BackendApiService } from '../../core/api/backend-api.service';
 import { SettingsService } from '../../core/settings/settings.service';
 import { Train } from '../../shared/models/api.models';
 import { Router } from '@angular/router';
-import { finalize } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 export interface NewVariantDialogData {
     trainId: string;
@@ -47,7 +47,6 @@ export class NewVariantModal {
     private readonly router = inject(Router);
     private readonly apiService = inject(BackendApiService);
     private readonly settingsService = inject(SettingsService);
-    protected readonly isRunning = signal(false);
     protected readonly orgPrefix = computed(() => {
         const org = this.settingsService.settings().organization;
         return org ? `${org}-` : '';
@@ -56,28 +55,34 @@ export class NewVariantModal {
     private readonly model = signal({ variantName: '', comment: '' });
 
     createTrainVariant = form(this.model, (schemaPath) => {
-        required(schemaPath.variantName, { message: 'Variant Name is required' });
-        maxLength(schemaPath.variantName, 255, { message: 'Max 255 characters.' });
-        required(schemaPath.comment, { message: 'Comment is required' });
+        required(schemaPath.variantName, {
+            message: $localize`:@@validation.required:Required`,
+        });
+        maxLength(schemaPath.variantName, 255, {
+            message: $localize`:@@newVariantModal.validation.nameMaxLength:Max 255 characters`,
+        });
+        required(schemaPath.comment, {
+            message: $localize`:@@validation.required:Required`,
+        });
     });
 
-    protected createNewVariant() {
-        if (this.isRunning()) return;
-        this.isRunning.set(true);
-        const { variantName, comment } = this.createTrainVariant().value();
-        this.apiService
-            .createBranch(this.data.trainId, variantName, comment, this.data.mainBranchTrain)
-            .pipe(finalize(() => this.isRunning.set(false)))
-            .subscribe({
-                next: (result) => {
-                    this.dialogRef.close('success');
-                    this.router.navigate(['/edit-train'], {
-                        queryParams: { trainId: this.data.trainId, branchId: result.branchId },
-                    });
-                },
-                error: () => {
-                    // Error is handled by the error interceptor (global toast)
-                },
+    protected createNewVariant(): void {
+        void submit(this.createTrainVariant, async (field) => {
+            const { variantName, comment } = field().value();
+            const result = await firstValueFrom(
+                this.apiService.createBranch(
+                    this.data.trainId,
+                    variantName,
+                    comment,
+                    this.data.mainBranchTrain,
+                ),
+            );
+            this.dialogRef.close('success');
+            void this.router.navigate(['/edit-train'], {
+                queryParams: { trainId: this.data.trainId, branchId: result.branchId },
             });
+        }).catch(() => {
+            // Error is handled by the error interceptor (global toast)
+        });
     }
 }

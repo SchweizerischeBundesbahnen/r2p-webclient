@@ -95,6 +95,8 @@
     "newVariantModal.field.commentPlaceholder": "Describe the purpose of this variant…",
     "newVariantModal.cancel": " Cancel ",
     "newVariantModal.createAndEdit": "Create",
+    "newVariantModal.creating": "Creating…",
+    "newVariantModal.validation.nameMaxLength": "Max 255 characters",
     "rejectMergeModal.title": "Reject Variant",
     "rejectMergeModal.info": " Rejecting variant {$START_TAG_STRONG}{$INTERPOLATION}{$CLOSE_TAG_STRONG}. The variant will revert to {$START_EMPHASISED_TEXT}Open{$CLOSE_EMPHASISED_TEXT} state and the partner can continue working on it. ",
     "rejectMergeModal.field.comment": "Comment",
@@ -229,6 +231,7 @@
     "error.notFound": "Resource not found (404).",
     "error.server": "Server error ({$PH}) – please try again later.",
     "error.unexpected": "Unexpected error ({$PH}).",
-    "error.toast.dismissLabel": "Dismiss"
+    "error.toast.dismissLabel": "Dismiss",
+    "validation.required": "Required"
   }
 }
