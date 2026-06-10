@@ -61,7 +61,6 @@
     "readTrain.breadcrumb.traffic": "Traffic View",
     "readTrain.loadError": " ⚠️ Failed to load train data. Please go back and try again. ",
     "readTrain.breadcrumb.read": "Read View",
-    "readTrain.editVariant": "✏ Edit Variant",
     "readTrain.viewJson": "View JSON",
     "readTrain.readonlyNotice": " 👁️ This is a {$START_TAG_STRONG}read-only view{$CLOSE_TAG_STRONG} of the variant. No changes can be made here. ",
     "readTrain.section.trainDetails": "📋 Train Details",

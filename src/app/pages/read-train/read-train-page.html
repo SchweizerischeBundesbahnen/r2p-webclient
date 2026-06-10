@@ -22,15 +22,6 @@
                 </p>
             </div>
             <div class="btn-group">
-                <!-- Edit button: only for own variants -->
-                <a
-                    [routerLink]="'/traffic-view'"
-                    mat-raised-button
-                    color="primary"
-                    id="edit-btn"
-                    class="hidden"
-                    i18n="@@readTrain.editVariant">✏ Edit Variant</a
-                >
                 <button mat-stroked-button (click)="openJsonModal()" i18n="@@readTrain.viewJson">View JSON</button>
             </div>
         </div>
