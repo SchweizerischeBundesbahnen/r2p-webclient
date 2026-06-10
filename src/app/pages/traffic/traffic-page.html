@@ -51,12 +51,12 @@
                             <ng-container i18n="@@traffic.field.overallStatus">Overall Status</ng-container>
                             <span class="tooltip-anchor" tabindex="0"
                             >?<span class="tooltip-box"
-                            ><ng-container i18n="@@traffic.status.allConfirmed">🟢 All activities are <em>confirmed</em>.</ng-container><br /><ng-container i18n="@@traffic.status.someProposed">🟡 At least one activity is <em>proposed</em> or <em>requested</em>, none refused.</ng-container><br /><ng-container i18n="@@traffic.status.someRefused">🔴 At least one activity is <em>refused</em> or <em>dropped</em>.</ng-container></span
+                            ><ng-container i18n="@@traffic.status.allConfirmed">🟢 Circle: All activities are <em>confirmed</em>.</ng-container><br /><ng-container i18n="@@traffic.status.someProposed">🟧 Square: At least one activity is <em>proposed</em> or <em>requested</em>, none refused.</ng-container><br /><ng-container i18n="@@traffic.status.someRefused">🔺 Triangle: At least one activity is <em>refused</em> or <em>dropped</em>.</ng-container></span
                             ></span
                             >
                         </div>
                         <div class="detail-value" id="detail-status">
-                            <span class="traffic-light tl-green"><span class="tl-dot"></span></span>
+                            <app-overall-status [train]="trainMainBranch.value()?.details" />
                         </div>
                     </div>
                     <app-detail-item label="Partners" i18n-label="@@traffic.field.partners" valueId="detail-partners">

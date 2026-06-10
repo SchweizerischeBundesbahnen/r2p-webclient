@@ -12,6 +12,7 @@ const TRAIN_A: TrainRow = {
     end: 'Basel SBB',
     endTime: '',
     revInfo: { lastChange: '2026-03-01T10:00:00Z', version: 'v-001' },
+    trainData: {},
 };
 
 const TRAIN_B: TrainRow = {
@@ -24,6 +25,7 @@ const TRAIN_B: TrainRow = {
     end: 'Romanshorn',
     endTime: '',
     revInfo: { lastChange: '2026-04-08T13:00:00Z', version: 'v-020' },
+    trainData: {},
 };
 
 const TRAIN_C: TrainRow = {
@@ -36,6 +38,7 @@ const TRAIN_C: TrainRow = {
     end: 'Thun',
     endTime: '',
     revInfo: { lastChange: '2026-05-01T08:00:00Z', version: 'v-005' },
+    trainData: {},
 };
 
 const ALL_TRAINS = [TRAIN_A, TRAIN_B, TRAIN_C];

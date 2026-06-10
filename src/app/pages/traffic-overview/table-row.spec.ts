@@ -18,6 +18,7 @@ const TRAIN_ROW: TrainRow = {
     end: 'Basel SBB',
     partners: ['SBB'],
     revInfo: { lastChange: '2026-05-26T10:30:00', version: 'v-001' },
+    trainData: {},
 };
 
 // TableRow uses selector tr[appTrainRow], so it must be placed inside a table.

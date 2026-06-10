@@ -76,6 +76,7 @@ export const mapTrainToOverviewRow = ({
             lastChange: mainTimestamp,
             version,
         },
+        trainData: train,
     };
 };
 

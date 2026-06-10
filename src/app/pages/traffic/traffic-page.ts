@@ -27,10 +27,11 @@ import {
     getLastJourneyLocationName,
     getLatestJourneyLocationArrival,
 } from '../../shared/utils/journeyLocation.utils';
+import { OverallStatusComponent } from '../../shared/components/overall-status/overall-status.component';
 
 @Component({
     selector: 'app-traffic-page',
-    imports: [RouterLink, DatePipe, JourneyRouteCard, BranchStatusBadgeComponent, Spinner, MatButton, MatAnchor, DetailGrid, DetailItem, PartnerBadge, AlertBanner],
+    imports: [RouterLink, DatePipe, JourneyRouteCard, BranchStatusBadgeComponent, Spinner, MatButton, MatAnchor, DetailGrid, DetailItem, PartnerBadge, AlertBanner, OverallStatusComponent],
     templateUrl: './traffic-page.html',
     styleUrl: './traffic-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,6 +1,8 @@
 import { Component, input } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { isoDateToUtc } from '../../shared/utils/date.utils';
+import { Train } from '../../shared/models/api.models';
+import { OverallStatusComponent } from '../../shared/components/overall-status/overall-status.component';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
@@ -32,11 +34,11 @@ import { isoDateToUtc } from '../../shared/utils/date.utils';
             <span class="text-muted" style="font-size:0.75rem;">{{ train().revInfo.version }}</span>
         </td>
         <td>
-            <span class="traffic-light tl-yellow"><span class="tl-dot"></span></span>
+            <app-overall-status [train]="train().trainData" />
         </td>
     `,
     styles: [``],
-    imports: [DatePipe],
+    imports: [DatePipe, OverallStatusComponent],
 })
 export class TableRow {
     readonly train = input.required<TrainRow>();
@@ -60,4 +62,5 @@ export interface TrainRow {
         lastChange: string;
         version: string;
     };
+    trainData: Train;
 }
