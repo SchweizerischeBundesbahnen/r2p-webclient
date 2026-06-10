@@ -9,24 +9,24 @@ import { PartnerBadge } from '../../shared/components/partner-badge/partner-badg
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'tr[appTrainRow]',
     template: `
-        <td>
-            <strong>{{ train().trainNumber }}</strong>
+        <td class="td-train-number">
+            <span class="train-number">{{ train().trainNumber }}</span>
         </td>
         <td>
-            <div>{{ train().start ?? '-' }}</div>
+            <div class="cell-location">{{ train().start ?? '-' }}</div>
             <div class="cell-sub"
                 ><ng-container i18n="@@common.dep">Dep:</ng-container>
                 {{ train().startTime | date: 'shortTime' }}</div
             >
         </td>
         <td>
-            <div>{{ train().end ?? '-' }}</div>
+            <div class="cell-location">{{ train().end ?? '-' }}</div>
             <div class="cell-sub"
                 ><ng-container i18n="@@common.arr">Arr:</ng-container>
                 {{ train().endTime | date: 'shortTime' }}</div
             >
         </td>
-        <td>{{ isoDateToUtc(train().operationalDay) | date: 'mediumDate' : 'UTC' }}</td>
+        <td class="td-small">{{ isoDateToUtc(train().operationalDay) | date: 'mediumDate' : 'UTC' }}</td>
         <td>
             <div class="partners-cell">
                 @for (partner of train().partners ?? []; track partner) {
@@ -34,7 +34,7 @@ import { PartnerBadge } from '../../shared/components/partner-badge/partner-badg
                 }
             </div>
         </td>
-        <td>
+        <td class="td-small">
             <div>{{ train().revInfo.lastChange | date: 'short' }}</div>
             <div class="cell-sub">{{ train().revInfo.version }}</div>
         </td>
@@ -44,8 +44,28 @@ import { PartnerBadge } from '../../shared/components/partner-badge/partner-badg
     `,
     styles: [
         `
-            .cell-sub {
+            :host td {
+                padding: 0.375rem var(--spacing-sm);
+                color: var(--text-secondary);
+                font-size: 0.8125rem;
+                vertical-align: middle;
+            }
+            .td-train-number {
+                padding-left: var(--spacing-md);
+            }
+            .train-number {
+                font-weight: 600;
+                color: var(--text-primary);
+                font-size: 0.8125rem;
+            }
+            .td-small {
                 font-size: 0.75rem;
+            }
+            .cell-location {
+                font-size: 0.75rem;
+            }
+            .cell-sub {
+                font-size: 0.7rem;
                 color: var(--text-muted);
                 margin-top: 2px;
             }
