@@ -1,6 +1,7 @@
 import {
     assertIsoDate,
     durationToMinutes,
+    hoursMinutesToDuration,
     isoDateToUtc,
     parseDurationToDate,
     parseDurationToHoursAndMinutes,
@@ -157,6 +158,31 @@ describe('durationToMinutes', () => {
         it('returns Infinity for an ISO date string', () => {
             expect(durationToMinutes('2026-05-26')).toBe(Infinity);
         });
+    });
+});
+
+describe('hoursMinutesToDuration', () => {
+    it('converts HH:MM to ISO-8601 duration', () => {
+        expect(hoursMinutesToDuration('08:30')).toBe('PT8H30M');
+        expect(hoursMinutesToDuration('10:00')).toBe('PT10H');
+        expect(hoursMinutesToDuration('00:45')).toBe('PT45M');
+    });
+
+    it('converts 00:00 to PT0M (midnight is a valid time)', () => {
+        expect(hoursMinutesToDuration('00:00')).toBe('PT0M');
+    });
+
+    it('returns undefined for empty, undefined, or malformed input', () => {
+        expect(hoursMinutesToDuration(undefined)).toBeUndefined();
+        expect(hoursMinutesToDuration('')).toBeUndefined();
+        expect(hoursMinutesToDuration('abc')).toBeUndefined();
+        expect(hoursMinutesToDuration('8:30:00')).toBeUndefined();
+        expect(hoursMinutesToDuration('8.5:30')).toBeUndefined();
+    });
+
+    it('returns undefined for out-of-range minutes', () => {
+        expect(hoursMinutesToDuration('08:60')).toBeUndefined();
+        expect(hoursMinutesToDuration('08:-1')).toBeUndefined();
     });
 });
 

@@ -11,7 +11,7 @@ import {
  * Determines the initial locale by checking (in order):
  * 1. The value persisted in localStorage
  * 2. The browser's language preferences
- * 3. The app default locale (de-CH)
+ * 3. The app default locale (DEFAULT_LOCALE)
  */
 export function resolveInitialLocale(): SupportedLocale {
     const stored = normalizeToSupportedLocale(globalThis.localStorage?.getItem(LOCALE_STORAGE_KEY));
@@ -31,7 +31,7 @@ export function resolveInitialLocale(): SupportedLocale {
         }
     }
 
-    return 'de-CH';
+    return DEFAULT_LOCALE;
 }
 
 export interface LocaleOption {

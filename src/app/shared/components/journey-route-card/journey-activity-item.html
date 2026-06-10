@@ -1,4 +1,4 @@
-<div class="jt-activity-item" [class]="'activity-' + capabilityType()">
+<div [class]="'jt-activity-item activity-' + capabilityType()">
     <div class="jt-activity-header">
         <app-partner-badge [partner]="activity().responsibility?.id ?? ''" />
         @if (!readonly()) {

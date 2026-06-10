@@ -30,6 +30,7 @@
                     </thead>
                     <tbody>
                         @for (stop of stops(); track stop.stopName + $index) {
+                            @let stopIndex = $index;
 
                             <!-- Add stop button before each stop (edit mode only) -->
                             @if (!readonly()) {
@@ -91,8 +92,8 @@
                                                         [activity]="activity"
                                                         capabilityType="rollingStock"
                                                         [readonly]="readonly()"
-                                                        (editActivity)="openEditActivity($index, { activity: activity, colType: 'rollingStock' })"
-                                                        (deleteActivity)="deleteActivity($index, { activity: activity, colType: 'rollingStock' })"
+                                                        (editActivity)="openEditActivity(stopIndex, { activity: activity, colType: 'rollingStock' })"
+                                                        (deleteActivity)="deleteActivity(stopIndex, { activity: activity, colType: 'rollingStock' })"
                                                     />
                                                 }
                                             </div>
@@ -122,8 +123,8 @@
                                                 [activity]="activity"
                                                 capabilityType="staff"
                                                 [readonly]="readonly()"
-                                                (editActivity)="openEditActivity($index, { activity: activity, colType: 'staff' })"
-                                                (deleteActivity)="deleteActivity($index, { activity: activity, colType: 'staff' })"
+                                                (editActivity)="openEditActivity(stopIndex, { activity: activity, colType: 'staff' })"
+                                                (deleteActivity)="deleteActivity(stopIndex, { activity: activity, colType: 'staff' })"
                                             />
                                         }
                                     </div>
@@ -144,8 +145,8 @@
                                                 [activity]="activity"
                                                 capabilityType="path"
                                                 [readonly]="readonly()"
-                                                (editActivity)="openEditActivity($index, { activity: activity, colType: 'path' })"
-                                                (deleteActivity)="deleteActivity($index, { activity: activity, colType: 'path' })"
+                                                (editActivity)="openEditActivity(stopIndex, { activity: activity, colType: 'path' })"
+                                                (deleteActivity)="deleteActivity(stopIndex, { activity: activity, colType: 'path' })"
                                             />
                                         }
                                     </div>

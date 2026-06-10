@@ -36,10 +36,7 @@ thead th {
     transition: background-color 0.2s;
 }
 
-.sort-header:hover         { background-color: rgba(255,255,255,0.1); }
-.sort-header::after        { content: ' ⇅'; position: absolute; right: var(--spacing-sm); opacity: 0.4; font-size: 0.75rem; }
-.sort-header.sort-asc::after  { content: ' ↑'; opacity: 1; }
-.sort-header.sort-desc::after { content: ' ↓'; opacity: 1; }
+.sort-header:hover { background-color: rgba(255,255,255,0.1); }
 
 tbody tr {
     border-bottom: 1px solid var(--border-color);
