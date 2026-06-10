@@ -5,15 +5,15 @@
     <div class="card-body">
         <div class="form-row">
             <mat-form-field appearance="outline">
-                <mat-label i18n="@@trainForm.field.name">Name</mat-label>
+                <mat-label i18n="@@trainForm.field.trainNumber">Train Number</mat-label>
                 <input
                     matInput
                     id="train-name"
-                    [placeholder]="namePlaceholder()"
-                    [formField]="trainForm().name"
+                    [placeholder]="trainNumberPlaceholder()"
+                    [formField]="trainForm().trainNumber"
                 />
-                @if (trainForm().name().touched() && trainForm().name().invalid()) {
-                    @for (error of trainForm().name().errors(); track error) {
+                @if (trainForm().trainNumber().touched() && trainForm().trainNumber().invalid()) {
+                    @for (error of trainForm().trainNumber().errors(); track error) {
                         <mat-error>{{ error.message }}</mat-error>
                     }
                 }

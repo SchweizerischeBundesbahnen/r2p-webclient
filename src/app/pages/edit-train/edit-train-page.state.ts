@@ -16,13 +16,13 @@ export class EditTrainPageState {
     readonly apiService = inject(BackendApiService);
 
     model = signal<TrainFormModel>({
-        name: '',
+        trainNumber: '',
         operationalDay: '',
         creationComment: '',
     });
 
     editTrainForm = form(this.model, (schemaPath) => {
-        required(schemaPath.name, { message: 'Name is required' });
+        required(schemaPath.trainNumber, { message: 'Train Number is required' });
         required(schemaPath.operationalDay, { message: 'Operational Day is required' });
         required(schemaPath.creationComment, { message: 'Creation Comment is required' });
     });
@@ -43,7 +43,7 @@ export class EditTrainPageState {
                         business: { trainNumber, operationalDay },
                         technical: { comment },
                     } = branch;
-                    this.editTrainForm.name().value.set(trainNumber);
+                    this.editTrainForm.trainNumber().value.set(trainNumber);
                     assertIsoDate(operationalDay);
                     this.editTrainForm.operationalDay().value.set(operationalDay);
                     this.editTrainForm.creationComment().value.set(comment);

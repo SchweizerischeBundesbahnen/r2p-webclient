@@ -27,7 +27,7 @@ export class BackendApiService {
     }
 
     public createTrain(
-        name: string,
+        trainNumber: string,
         operationalDay: string,
         comment: string,
         journey: Journey,
@@ -36,7 +36,7 @@ export class BackendApiService {
         const headers = this.tokenHeaders;
         return this.httpClient.post<TrainListElement>(
             `${this.baseUrl}/v1/trains`,
-            { ...minimalTrain, id: crypto.randomUUID(), name, startdate: operationalDay, journey },
+            { ...minimalTrain, id: trainNumber, name: trainNumber, startdate: operationalDay, journey },
             {
                 params: { comment },
                 headers,
@@ -117,7 +117,7 @@ export class BackendApiService {
         trainId: string,
         train: Train,
         branchId: string,
-        name: string,
+        trainNumber: string,
         comment: string,
         operationalDay: string,
     ): Observable<Train> {
@@ -125,7 +125,7 @@ export class BackendApiService {
         const headers = this.tokenHeaders;
         return this.httpClient.put<Train>(
             `${this.baseUrl}/v1/trains/${trainId}/branches/${branchId}`,
-            { ...train, name, startdate: operationalDay },
+            { ...train, id: trainNumber, name: trainNumber, startdate: operationalDay },
             {
                 params: { comment },
                 headers,

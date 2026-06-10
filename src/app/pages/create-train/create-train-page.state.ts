@@ -10,13 +10,13 @@ export class CreatePageState {
     readonly journey = signal<Journey>({ featuresets: [] });
 
     private model = signal<TrainFormModel>({
-        name: '',
+        trainNumber: '',
         operationalDay: '',
         creationComment: '',
     });
 
     createTrainForm = form(this.model, (schemaPath) => {
-        required(schemaPath.name, { message: 'Name is required' });
+        required(schemaPath.trainNumber, { message: 'Train Number is required' });
         required(schemaPath.operationalDay, { message: 'Operational Day is required' });
         required(schemaPath.creationComment, { message: 'Creation Comment is required' });
     });

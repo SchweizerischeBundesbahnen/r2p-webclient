@@ -33,9 +33,9 @@ export class CreateTrainPage {
     protected createTrain() {
         if (this.state.createTrainRunning()) return;
         this.state.createTrainRunning.set(true);
-        const { name, creationComment, operationalDay } = this.state.createTrainForm().value();
+        const { trainNumber, creationComment, operationalDay } = this.state.createTrainForm().value();
         this.apiService
-            .createTrain(name, operationalDay, creationComment, this.state.journey())
+            .createTrain(trainNumber, operationalDay, creationComment, this.state.journey())
             .pipe(finalize(() => this.state.createTrainRunning.set(false)))
             .subscribe({
                 next: () => {

@@ -3,7 +3,7 @@ import { form, FormField } from '@angular/forms/signals';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 
-export interface TrainFormModel { name: string; operationalDay: string; creationComment: string }
+export interface TrainFormModel { trainNumber: string; operationalDay: string; creationComment: string }
 type TrainForm = ReturnType<typeof form<TrainFormModel>>;
 
 @Component({
@@ -15,6 +15,6 @@ type TrainForm = ReturnType<typeof form<TrainFormModel>>;
 export class TrainDetailsFormCard {
     readonly trainForm = input.required<TrainForm>();
     readonly commentLabel = input.required<string>();
-    readonly namePlaceholder = input('');
+    readonly trainNumberPlaceholder = input('');
     readonly commentPlaceholder = input('');
 }

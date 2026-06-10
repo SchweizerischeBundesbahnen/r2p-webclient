@@ -35,14 +35,14 @@ export class EditTrainPage {
     protected updateTrain() {
         if (this.editTrainForm().invalid()) return;
         const { train, branch } = this.state.branch.value()!;
-        const { name, operationalDay, creationComment } = this.editTrainForm().value();
+        const { trainNumber, operationalDay, creationComment } = this.editTrainForm().value();
         this.state.editTrainRunning.set(true);
         this.apiService
             .updateTrain(
                 this.trainId(),
                 train,
                 branch.branchId,
-                name,
+                trainNumber,
                 creationComment,
                 operationalDay,
             )
