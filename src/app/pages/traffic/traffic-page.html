@@ -21,9 +21,11 @@
                         </p>
                     </div>
                     <div class="btn-group">
+                        @if (canShareTrain()) {
                         <button mat-stroked-button color="primary" (click)="openShareModal()" i18n="@@traffic.shareTrain">
                             🔗 Share Train
                         </button>
+                        }
                         <button
                             mat-raised-button
                             color="primary"

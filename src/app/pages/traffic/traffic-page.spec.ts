@@ -381,6 +381,51 @@ describe('TrafficPage – variant sort order', () => {
     });
 });
 
+describe('TrafficPage – Share Train button visibility', () => {
+    afterEach(() => TestBed.resetTestingModule());
+
+    function trainWithPartners(partners: string[] | undefined): TrainWithDetails {
+        return {
+            listElement: { ...TRAIN_LIST_ELEMENT, partners },
+            details: null,
+        };
+    }
+
+    function findShareButton(el: HTMLElement): HTMLButtonElement | undefined {
+        return Array.from(el.querySelectorAll<HTMLButtonElement>('.btn-group button')).find((b) =>
+            b.textContent?.includes('Share Train'),
+        );
+    }
+
+    it('shows Share Train button when at least one other org has not been shared with', () => {
+        // SBB logged in, BLS shared but SOB not → button visible
+        const el = createComponent('en-US', trainWithPartners(['BLS']), 'SBB');
+        expect(findShareButton(el)).toBeDefined();
+    });
+
+    it('hides Share Train button when all other orgs are already shared', () => {
+        // SBB logged in, BLS and SOB both shared → button hidden
+        const el = createComponent('en-US', trainWithPartners(['BLS', 'SOB']), 'SBB');
+        expect(findShareButton(el)).toBeUndefined();
+    });
+
+    it('shows Share Train button when partners is undefined or empty', () => {
+        const elUndefined = createComponent('en-US', trainWithPartners(undefined), 'SBB');
+        expect(findShareButton(elUndefined)).toBeDefined();
+
+        TestBed.resetTestingModule();
+
+        const elEmpty = createComponent('en-US', trainWithPartners([]), 'SBB');
+        expect(findShareButton(elEmpty)).toBeDefined();
+    });
+
+    it('does not count own org as an unshared partner', () => {
+        // SBB logged in, only SBB missing from partners — still hidden because SBB is the current org
+        const el = createComponent('en-US', trainWithPartners(['BLS', 'SOB']), 'SBB');
+        expect(findShareButton(el)).toBeUndefined();
+    });
+});
+
 describe('TrafficPage – edit button visibility', () => {
     afterEach(() => TestBed.resetTestingModule());
 

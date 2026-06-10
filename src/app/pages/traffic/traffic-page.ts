@@ -19,7 +19,7 @@ import { ShareTrainModalComponent, ShareTrainDialogData } from './share-train-mo
 import { RequestMergeModalComponent, RequestMergeDialogData } from './request-merge-modal';
 import { AcceptMergeModalComponent, AcceptMergeDialogData } from './accept-merge-modal';
 import { RejectMergeModalComponent, RejectMergeDialogData } from './reject-merge-modal';
-import { SettingsService } from '../../core/settings/settings.service';
+import { SettingsService, ORGANIZATION_OPTIONS } from '../../core/settings/settings.service';
 import { Spinner } from '../../shared/components/spinner/spinner';
 import {
     getEarliestJourneyLocationDeparture,
@@ -44,6 +44,12 @@ export class TrafficPage {
     private readonly settingsService = inject(SettingsService);
 
     private readonly currentOrg = computed(() => this.settingsService.settings().organization);
+
+    protected readonly canShareTrain = computed(() => {
+        const partners = this.trainMainBranch.value()?.listElement?.partners ?? [];
+        const org = this.currentOrg();
+        return ORGANIZATION_OPTIONS.some((o) => o.name !== org && !partners.includes(o.name));
+    });
 
     private readonly trainIdEffect = effect(() => {
         this.trafficPageStateService.trainId.set(this.trainId());
