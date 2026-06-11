@@ -179,13 +179,13 @@ describe('EditActivityModal', () => {
         it('pre-fills responsibility fields from existing activity', () => {
             const existing: Activity = {
                 ...STUB_EXISTING,
-                responsibility: { type: 'rp', id: 'BLS', status: 'confirmed' },
+                responsibility: { type: 'ra', id: 'BLS', status: 'confirmed' },
             };
             const dr = makeDialogRef();
             const { fixture } = createComponent('rollingStock', existing, dr);
             clickSave(fixture);
             const emitted = dr.close.mock.calls[0][0] as Activity;
-            expect(emitted.responsibility).toEqual({ type: 'rp', id: 'BLS', status: 'confirmed' });
+            expect(emitted.responsibility).toEqual({ type: 'ra', id: 'BLS', status: 'confirmed' });
         });
     });
 

@@ -5,7 +5,9 @@ import {
     CapabilityFeature,
     DEPARTURE_TIMING_TYPES,
     Feature,
+    PlanStatus,
     Responsibility,
+    ResponsibilityType,
     Staff,
     TimingType,
 } from '../../models/api.models';
@@ -15,7 +17,7 @@ import { CapabilityType } from './journey-activity-item';
 export interface ActivityBuildInput {
     existing: Activity | null;
     capabilityType: CapabilityType;
-    responsibility: { type: string; id: string; status: string };
+    responsibility: { type: ResponsibilityType; id: string; status: PlanStatus };
     arrivalTime: string;
     departureTime: string;
     rollingStock: {

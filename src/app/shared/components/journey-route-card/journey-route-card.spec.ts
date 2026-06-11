@@ -52,7 +52,7 @@ describe('JourneyRouteCard', () => {
                     activities: [
                         {
                             type: 'journey',
-                            responsibility: { type: 'carrier', id: 'SBB', status: 'accepted' },
+                            responsibility: { type: 'rru', id: 'SBB', status: 'confirmed' },
                             timings: [{ type: TimingType.Departure, duration: 'PT8H30M' }],
                         },
                     ],
@@ -62,7 +62,7 @@ describe('JourneyRouteCard', () => {
                     activities: [
                         {
                             type: 'journey',
-                            responsibility: { type: 'carrier', id: 'SBB', status: 'accepted' },
+                            responsibility: { type: 'rru', id: 'SBB', status: 'confirmed' },
                             timings: [{ type: TimingType.Arrival, duration: 'PT9H30M' }],
                         },
                     ],

@@ -3,14 +3,16 @@ import { planStatusLabel, responsibilityTypeLabel } from './activity-display.uti
 
 describe('responsibilityTypeLabel', () => {
     it('returns formatted labels for all known types', () => {
-        expect(responsibilityTypeLabel('rru')).toBe('rru – Responsible RU');
-        expect(responsibilityTypeLabel('rp')).toBe('rp – Resource Provider');
-        expect(responsibilityTypeLabel('ra')).toBe('ra – Responsible Applicant');
         expect(responsibilityTypeLabel('rim')).toBe('rim – Responsible Infrastructure Manager');
         expect(responsibilityTypeLabel('pim')).toBe('pim – Planning Infrastructure Manager');
+        expect(responsibilityTypeLabel('ra')).toBe('ra – Responsible Applicant');
+        expect(responsibilityTypeLabel('rru')).toBe('rru – Responsible RU');
+        expect(responsibilityTypeLabel('tru')).toBe('tru – Traction RU');
+        expect(responsibilityTypeLabel('pru')).toBe('pru – Personnel RU');
     });
 
-    it('returns the raw type string for unknown types', () => {
+    it('returns the raw type string for unknown or stale types', () => {
+        expect(responsibilityTypeLabel('rp')).toBe('rp');
         expect(responsibilityTypeLabel('unknown')).toBe('unknown');
         expect(responsibilityTypeLabel('')).toBe('');
         expect(responsibilityTypeLabel('RRU')).toBe('RRU');

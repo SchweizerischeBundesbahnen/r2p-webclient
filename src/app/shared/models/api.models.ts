@@ -166,10 +166,13 @@ export interface Timing {
     source?: string;
 }
 
+export type ResponsibilityType = 'rim' | 'pim' | 'ra' | 'rru' | 'tru' | 'pru';
+export type PlanStatus = 'proposed' | 'requested' | 'confirmed' | 'refused' | 'dropped';
+
 export interface Responsibility {
-    type: string;
+    type: ResponsibilityType;
     id?: string;
-    status?: string;
+    status?: PlanStatus;
 }
 
 export interface Alignment {

@@ -39,10 +39,11 @@ export interface EditActivityDialogData {
 
 export const RESPONSIBILITY_TYPES = [
     { value: 'rru', label: 'rru – Responsible RU' },
-    { value: 'rp', label: 'rp – Resource Provider' },
     { value: 'ra', label: 'ra – Responsible Applicant' },
     { value: 'rim', label: 'rim – Responsible Infrastructure Manager' },
     { value: 'pim', label: 'pim – Planning Infrastructure Manager' },
+    { value: 'tru', label: 'tru – Traction RU' },
+    { value: 'pru', label: 'pru – Personnel RU' },
 ] as const;
 
 export const PARTNERS = ['SBB', 'BLS', 'SOB'] as const;

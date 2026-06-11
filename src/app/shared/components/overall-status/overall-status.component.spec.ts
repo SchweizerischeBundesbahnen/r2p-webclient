@@ -6,7 +6,8 @@ function makeTrain(activities: { status?: string }[]): Train {
     return {
         journey: {
             journeylocations: activities.map((a) => ({
-                activities: [{ responsibility: { type: 'staff', ...a } }],
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                activities: [{ responsibility: { type: 'rru', ...a } as any }],
             })),
         },
     };
