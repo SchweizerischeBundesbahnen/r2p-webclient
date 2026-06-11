@@ -90,6 +90,97 @@ describe('BackendApiService', () => {
         });
     });
 
+    describe('createBranch', () => {
+        it('POST /v1/trains/{trainId}/branches with branchName and comment params', () => {
+            service.createBranch('train-1', 'my-branch', 'reason', minimalTrain).subscribe();
+            const req = httpController.expectOne((r) =>
+                r.url.includes('/v1/trains/train-1/branches') && r.method === 'POST',
+            );
+            expect(req.request.params.get('branchName')).toBe('my-branch');
+            expect(req.request.params.get('comment')).toBe('reason');
+            expect(req.request.headers.get('Token')).toBeTruthy();
+            req.flush({});
+        });
+    });
+
+    describe('getTrainById', () => {
+        it('GET /v1/trains/{trainId} with Token header', () => {
+            service.getTrainById('train-42').subscribe();
+            const req = httpController.expectOne((r) =>
+                r.url.endsWith('/v1/trains/train-42') && r.method === 'GET',
+            );
+            expect(req.request.headers.get('Token')).toBeTruthy();
+            req.flush({ trainId: 'train-42', branches: [], mainTimestamp: '' });
+        });
+    });
+
+    describe('getTrainByVersion', () => {
+        it('GET /v1/trains/versions/{version} with Token header', () => {
+            service.getTrainByVersion('version-99').subscribe();
+            const req = httpController.expectOne((r) =>
+                r.url.includes('/v1/trains/versions/version-99') && r.method === 'GET',
+            );
+            expect(req.request.headers.get('Token')).toBeTruthy();
+            req.flush({});
+        });
+    });
+
+    describe('getByTrainIdAndBranchId', () => {
+        it('GET /v1/trains/{trainId}/branches/{branchId}', () => {
+            service.getByTrainIdAndBranchId('t-1', 'b-1').subscribe();
+            const req = httpController.expectOne((r) =>
+                r.url.includes('/v1/trains/t-1/branches/b-1') && r.method === 'GET',
+            );
+            expect(req.request.headers.get('Token')).toBeTruthy();
+            req.flush({});
+        });
+    });
+
+    describe('requestMerge', () => {
+        it('POST /v1/trains/{trainId}/branches/{branchId}/requestMerge', () => {
+            service.requestMerge('t-1', 'b-1', 'merge please').subscribe();
+            const req = httpController.expectOne((r) =>
+                r.url.includes('/requestMerge') && r.method === 'POST',
+            );
+            expect(req.request.params.get('comment')).toBe('merge please');
+            req.flush({});
+        });
+    });
+
+    describe('merge', () => {
+        it('POST /v1/trains/{trainId}/branches/{branchId}/merge with reviewedVersion', () => {
+            service.merge('t-1', 'b-1', 'v-007', 'approved').subscribe();
+            const req = httpController.expectOne((r) =>
+                r.url.includes('/merge') && r.method === 'POST',
+            );
+            expect(req.request.params.get('reviewedVersion')).toBe('v-007');
+            expect(req.request.params.get('comment')).toBe('approved');
+            req.flush({});
+        });
+    });
+
+    describe('rejectMerge', () => {
+        it('POST /v1/trains/{trainId}/branches/{branchId}/rejectMerge', () => {
+            service.rejectMerge('t-1', 'b-1', 'not ready').subscribe();
+            const req = httpController.expectOne((r) =>
+                r.url.includes('/rejectMerge') && r.method === 'POST',
+            );
+            expect(req.request.params.get('comment')).toBe('not ready');
+            req.flush({});
+        });
+    });
+
+    describe('deleteBranch', () => {
+        it('DELETE /v1/trains/{trainId}/branches/{branchId}', () => {
+            service.deleteBranch('t-1', 'b-1', 'cleanup').subscribe();
+            const req = httpController.expectOne((r) =>
+                r.url.includes('/v1/trains/t-1/branches/b-1') && r.method === 'DELETE',
+            );
+            expect(req.request.params.get('comment')).toBe('cleanup');
+            req.flush({});
+        });
+    });
+
     describe('updateTrain', () => {
 
         const trainId = 'train-1';

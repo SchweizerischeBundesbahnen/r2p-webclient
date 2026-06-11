@@ -66,6 +66,46 @@ describe('buildActivity — timing types', () => {
     });
 });
 
+describe('buildActivity — rolling stock features', () => {
+    it('includes offeredservice when provided', () => {
+        const result = buildActivity({
+            ...BASE_INPUT,
+            rollingStock: {
+                ...BASE_INPUT.rollingStock,
+                features: [{ type: 'WLAN_HOTSPOT', offeredservice: 'Free WiFi' }],
+            },
+        });
+        const features = result.capability?.capabilityFeatures ?? [];
+        expect(features[0].feature.offeredservice).toBe('Free WiFi');
+    });
+
+    it('omits offeredservice when empty', () => {
+        const result = buildActivity({
+            ...BASE_INPUT,
+            rollingStock: {
+                ...BASE_INPUT.rollingStock,
+                features: [{ type: 'WLAN_HOTSPOT', offeredservice: '' }],
+            },
+        });
+        const features = result.capability?.capabilityFeatures ?? [];
+        expect(Object.hasOwn(features[0].feature, 'offeredservice')).toBe(false);
+    });
+
+    it('filters out features with an empty type', () => {
+        const result = buildActivity({
+            ...BASE_INPUT,
+            rollingStock: {
+                ...BASE_INPUT.rollingStock,
+                features: [
+                    { type: '', offeredservice: '' },
+                    { type: 'RESTAURANT', offeredservice: '' },
+                ],
+            },
+        });
+        expect(result.capability?.capabilityFeatures).toHaveLength(1);
+    });
+});
+
 describe('buildActivity — rolling stock NaN guard', () => {
     it('omits length and weight when inputs are empty', () => {
         const result = buildActivity(BASE_INPUT);
