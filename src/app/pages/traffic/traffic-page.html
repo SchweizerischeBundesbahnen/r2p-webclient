@@ -91,70 +91,103 @@
                 <span class="card-title" i18n="@@traffic.variants">⎇ Variants</span>
             </div>
             <div id="branches-list">
-                @for (branch of variants; track branch.branchName) {
-                    <div class="branch-row">
+                @let activeVariants = variants.filter(v => !v.isArchived);
+                @let archivedVariants = variants.filter(v => v.isArchived);
+
+                @for (branch of activeVariants; track branch.branchName) {
+                    <div class="branch-row" [class.branch-row--main]="branch.isMain"
+                         [routerLink]="'/read-train'"
+                         [queryParams]="{ trainId: trainId(), branchId: branch.branchId }">
                         <div class="branch-info">
-                            <div>
-                                <div class="branch-name" [matTooltip]="branch.branchName">🌿 {{ branch.branchName }}</div>
-                                <div class="branch-meta">
-                                    @for (partner of branch.partners; track partner) {
-                                        <app-partner-badge [partner]="partner" />
-                                    }
-                                    <span class="branch-date">{{
-                                            branch.lastChange | date: 'short'
-                                        }}</span>
-                                    @if (branch.comment) {
-                                        — <em>{{ branch.comment }}</em>
-                                    }
-                                </div>
+                            <div class="branch-name-row">
+                                <span class="branch-name" [matTooltip]="branch.branchName">{{ branch.branchName }}</span>
+                                @if (branch.isMain) {
+                                    <span class="main-tag" i18n="@@traffic.mainTag">main</span>
+                                }
+                            </div>
+                            <div class="branch-meta">
+                                @for (partner of branch.partners; track partner) {
+                                    <app-partner-badge [partner]="partner" />
+                                }
+                                <span>{{ branch.lastChange | date: 'short' }}</span>
+                                @if (branch.comment) {
+                                    <span>— <em>{{ branch.comment }}</em></span>
+                                }
                             </div>
                         </div>
-                         <div class="branch-actions-row">
-                             <app-branch-status-badge [state]="branch.status" />
-                              <div class="branch-actions">
-                                  @if (branch.showEdit) {
-                                      <a
-                                          routerLink="/edit-train"
-                                          [queryParams]="{
-                                              trainId: trainId(),
-                                              branchId: branch.branchId,
-                                          }"
-                                          mat-raised-button
-                                          color="primary"
-                                          i18n="@@traffic.edit">✏ Edit</a>
-                                  }
-                                  <a
-                                      [routerLink]="'/read-train'"
-                                      [queryParams]="{
-                                          trainId: trainId(),
-                                          branchId: branch.branchId,
-                                      }"
-                                      mat-button
-                                      i18n="@@traffic.view">👁 View</a
-                                  >
-                                 @if (branch.showMergeRequest) {
-                                     <button
-                                         mat-stroked-button
-                                         (click)="openRequestMergeModal(branch)"
-                                         i18n="@@traffic.mergeRequest"
-                                     >Propose Variant</button>
-                                 }
-                                 @if (branch.showAcceptReject) {
-                                     <button
-                                         mat-raised-button
-                                         color="primary"
-                                         (click)="openAcceptMergeModal(branch)"
-                                         i18n="@@traffic.acceptMerge"
-                                     >Accept Variant</button>
-                                     <button
-                                         mat-raised-button
-                                         color="warn"
-                                         (click)="openRejectMergeModal(branch)"
-                                         i18n="@@traffic.rejectMerge"
-                                     >Reject Variant</button>
-                                 }
-                             </div>
+                        <div class="branch-actions" (click)="$event.stopPropagation()">
+                            @if (branch.showMergeRequest) {
+                                <button
+                                    mat-stroked-button
+                                    (click)="openRequestMergeModal(branch)"
+                                    i18n="@@traffic.mergeRequest"
+                                >Propose Variant</button>
+                            }
+                            @if (branch.showAcceptReject) {
+                                <button
+                                    mat-flat-button
+                                    color="primary"
+                                    (click)="openAcceptMergeModal(branch)"
+                                    i18n="@@traffic.acceptMerge"
+                                >Accept</button>
+                                <button
+                                    mat-stroked-button
+                                    color="warn"
+                                    (click)="openRejectMergeModal(branch)"
+                                    i18n="@@traffic.rejectMerge"
+                                >Reject</button>
+                            }
                         </div>
+                        <div class="branch-status-area" (click)="$event.stopPropagation()">
+                            @if (branch.showEdit) {
+                                <a
+                                    class="icon-btn"
+                                    routerLink="/edit-train"
+                                    [queryParams]="{ trainId: trainId(), branchId: branch.branchId }"
+                                    matTooltip="Edit"
+                                    i18n-matTooltip="@@traffic.edit"
+                                ><span class="material-icons">edit</span></a>
+                            }
+                            <app-branch-status-badge [state]="branch.status" />
+                        </div>
+                        <span class="material-icons row-chevron">chevron_right</span>
+                    </div>
+                }
+
+                @if (archivedVariants.length > 0) {
+                    <div class="archive-section">
+                        <button class="archive-toggle" (click)="toggleArchive()">
+                            <span i18n="@@traffic.archive">Archive</span>
+                            <span class="archive-count">({{ archivedVariants.length }})</span>
+                            <span class="material-icons archive-chevron">{{ archiveExpanded() ? 'expand_less' : 'expand_more' }}</span>
+                        </button>
+                        @if (archiveExpanded()) {
+                            @for (branch of archivedVariants; track branch.branchName) {
+                                <div class="branch-row branch-row--archived"
+                                     [routerLink]="'/read-train'"
+                                     [queryParams]="{ trainId: trainId(), branchId: branch.branchId }">
+                                    <div class="branch-info">
+                                        <div class="branch-name-row">
+                                            <span class="branch-name" [matTooltip]="branch.branchName">{{ branch.branchName }}</span>
+                                        </div>
+                                        <div class="branch-meta">
+                                            @for (partner of branch.partners; track partner) {
+                                                <app-partner-badge [partner]="partner" />
+                                            }
+                                            <span>{{ branch.lastChange | date: 'short' }}</span>
+                                            @if (branch.comment) {
+                                                <span>— <em>{{ branch.comment }}</em></span>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="branch-actions"></div>
+                                    <div class="branch-status-area">
+                                        <app-branch-status-badge [state]="branch.status" />
+                                    </div>
+                                    <span class="material-icons row-chevron">chevron_right</span>
+                                </div>
+                            }
+                        }
                     </div>
                 }
             </div>

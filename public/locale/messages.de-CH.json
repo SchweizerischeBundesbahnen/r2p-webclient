@@ -146,6 +146,8 @@
     "traffic.mergeRequest": "Variante vorschlagen",
     "traffic.acceptMerge": "Variante übernehmen",
     "traffic.rejectMerge": "Variante ablehnen",
+    "traffic.mainTag": "main",
+    "traffic.archive": "Archiv",
     "planStatus.proposed": "Vorgeschlagen",
     "planStatus.requested": "Angefordert",
     "planStatus.confirmed": "Bestätigt",

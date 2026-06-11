@@ -67,15 +67,17 @@
                                             @if (!readonly()) {
                                                 <div class="stop-actions">
                                                     <button
-                                                        class="btn btn-ghost edit-location-btn"
+                                                        class="stop-icon-btn"
                                                         (click)="openEditStop($index)"
-                                                        i18n="@@journeyStopRow.editStop"
-                                                    >✎ Edit</button>
+                                                        matTooltip="Edit"
+                                                        i18n-matTooltip="@@journeyStopRow.editStop"
+                                                    ><span class="material-icons">edit</span></button>
                                                     <button
-                                                        class="btn btn-ghost delete-stop-btn"
+                                                        class="stop-icon-btn stop-icon-btn-danger"
                                                         (click)="deleteStop($index)"
-                                                        i18n="@@journeyStopRow.deleteStop"
-                                                    >✕ Delete</button>
+                                                        matTooltip="Delete"
+                                                        i18n-matTooltip="@@journeyStopRow.deleteStop"
+                                                    ><span class="material-icons">delete</span></button>
                                                 </div>
                                             }
                                         </div>

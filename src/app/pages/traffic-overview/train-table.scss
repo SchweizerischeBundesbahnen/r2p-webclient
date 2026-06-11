@@ -55,6 +55,11 @@ tbody td {
     vertical-align: middle;
 }
 
+.th-chevron {
+    width: 24px;
+    padding: 0 8px 0 4px;
+}
+
 .empty-state {
     padding: var(--spacing-2xl);
     text-align: center;

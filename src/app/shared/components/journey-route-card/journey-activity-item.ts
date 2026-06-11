@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 import { Activity, ARRIVAL_TIMING_TYPES, DEPARTURE_TIMING_TYPES } from '../../models/api.models';
 import { parseDurationToHoursAndMinutes } from '../../utils/date.utils';
 import { PartnerBadge } from '../partner-badge/partner-badge';
+import { MatTooltip } from '@angular/material/tooltip';
 import { planStatusLabel, responsibilityTypeLabel } from './activity-display.utils';
 
 export type CapabilityType = 'rollingStock' | 'staff' | 'path';
@@ -11,7 +12,7 @@ export type CapabilityType = 'rollingStock' | 'staff' | 'path';
     templateUrl: './journey-activity-item.html',
     styleUrl: './journey-activity-item.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [PartnerBadge],
+    imports: [PartnerBadge, MatTooltip],
 })
 export class JourneyActivityItem {
     readonly activity = input.required<Activity>();

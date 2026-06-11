@@ -8,6 +8,7 @@ import {
     output,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTooltip } from '@angular/material/tooltip';
 import {
     Activity,
     ARRIVAL_TIMING_TYPES,
@@ -34,7 +35,7 @@ interface ActivityRef {
     templateUrl: './journey-route-card.html',
     styleUrl: './journey-route-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [JourneyActivityItem],
+    imports: [JourneyActivityItem, MatTooltip],
 })
 export class JourneyRouteCard {
     readonly readonly = input<boolean>(false);

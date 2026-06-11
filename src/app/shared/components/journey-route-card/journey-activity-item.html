@@ -5,16 +5,16 @@
             <div class="activity-actions">
                 <button
                     class="btn-icon"
-                    title="Edit activity"
+                    matTooltip="Edit"
+                    i18n-matTooltip="@@journeyStopRow.editStop"
                     (click)="editActivity.emit()"
-                    i18n="@@journeyActivityItem.edit"
-                >✎</button>
+                ><span class="material-icons">edit</span></button>
                 <button
                     class="btn-icon btn-icon-danger"
-                    title="Delete activity"
+                    matTooltip="Delete"
+                    i18n-matTooltip="@@journeyStopRow.deleteStop"
                     (click)="deleteActivity.emit()"
-                    i18n="@@journeyActivityItem.delete"
-                >✕</button>
+                ><span class="material-icons">delete</span></button>
             </div>
         }
     </div>

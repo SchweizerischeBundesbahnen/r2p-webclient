@@ -117,17 +117,32 @@
     align-items: center;
 }
 
-.stop-actions .btn-ghost {
-    font-size: 0.75rem;
-    padding: 2px 7px;
-    color: var(--accent-color);
-    border-color: rgba(49,130,206,0.35);
-    background: rgba(49,130,206,0.06);
+.stop-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    flex-shrink: 0;
+    padding: 0;
+
+    .material-icons { font-size: 0.9rem; }
 }
-.stop-actions .btn-ghost:hover {
-    background: var(--accent-color);
-    border-color: var(--accent-color);
-    color: white;
+
+.stop-icon-btn:hover {
+    background: rgba(21, 101, 192, 0.08);
+    color: var(--primary-color);
+}
+
+.stop-icon-btn-danger:hover {
+    background: rgba(198, 40, 40, 0.08);
+    color: #C62828;
 }
 
 /* Activity cell */
@@ -260,13 +275,6 @@ tr.row-rs-mid {
     background-color: transparent;
 }
 
-.edit-location-btn {
-    margin-top: var(--spacing-xs);
-    padding: 2px var(--spacing-sm);
-    font-size: 0.7rem;
-    font-weight: 500;
-    border-radius: 4px;
-}
 
 /* ── Empty state ─────────────────────────────────────────────────── */
 .empty-state {
@@ -306,17 +314,3 @@ tr.row-rs-mid {
     background: rgba(49, 130, 206, 0.04);
 }
 
-/* ── Delete stop button ──────────────────────────────────────────── */
-.delete-stop-btn {
-    font-size: 0.75rem;
-    padding: 2px 7px;
-    color: var(--danger-color, #e53e3e);
-    border-color: rgba(229, 62, 62, 0.35);
-    background: rgba(229, 62, 62, 0.06);
-}
-
-.delete-stop-btn:hover {
-    background: var(--danger-color, #e53e3e);
-    border-color: var(--danger-color, #e53e3e);
-    color: white;
-}

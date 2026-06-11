@@ -121,6 +121,8 @@
       "traffic.mergeRequest": "Propose Variant",
       "traffic.acceptMerge": "Accept Variant",
       "traffic.rejectMerge": "Reject Variant",
+      "traffic.mainTag": "main",
+      "traffic.archive": "Archive",
       "requestMergeModal.title": "Propose Variant",
       "requestMergeModal.info": "Proposing this variant to be taken over into {$START_TAG_STRONG}main{$CLOSE_TAG_STRONG}. The variant name is:",
       "requestMergeModal.field.comment": "Comment",

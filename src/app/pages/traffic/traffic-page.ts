@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, computed, effect, inject, input, untracked } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TrafficPageState, TrainWithDetails } from './traffic-page.state';
 import { Branch, BranchState } from '../../shared/models/api.models';
@@ -70,6 +70,11 @@ export class TrafficPage {
     });
 
     protected readonly trainMainBranch = this.trafficPageStateService.trainMainBranch;
+    protected readonly archiveExpanded = signal(false);
+
+    protected toggleArchive(): void {
+        this.archiveExpanded.update((v) => !v);
+    }
 
     protected openShareModal(): void {
         const trainId = this.trafficPageStateService.trainId();
@@ -226,7 +231,9 @@ export class TrafficPage {
                 lastChange: branch.technical.timestamp,
                 status: state,
                 version: branch.technical.version,
-                showEdit: isOwn,
+                isMain,
+                isArchived: state === 'merged' || state === 'deleted',
+                showEdit: isOwn && (state === 'open' || state === 'merge_requested'),
                 showMergeRequest: isOwn && state === 'open' && !isMain,
                 showAcceptReject: isLeadRU && state === 'merge_requested' && !isMain,
             };
@@ -254,6 +261,8 @@ export interface VariantViewModel {
     lastChange: string;
     status: BranchState;
     version: string;
+    isMain: boolean;
+    isArchived: boolean;
     showMergeRequest: boolean;
     showAcceptReject: boolean;
     showEdit: boolean;

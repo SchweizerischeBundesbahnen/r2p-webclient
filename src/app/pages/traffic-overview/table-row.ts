@@ -41,6 +41,9 @@ import { PartnerBadge } from '../../shared/components/partner-badge/partner-badg
         <td>
             <app-overall-status [train]="train().trainData" />
         </td>
+        <td class="td-chevron">
+            <span class="material-icons row-chevron">chevron_right</span>
+        </td>
     `,
     styles: [
         `
@@ -73,6 +76,22 @@ import { PartnerBadge } from '../../shared/components/partner-badge/partner-badg
                 display: flex;
                 flex-wrap: wrap;
                 gap: 4px;
+            }
+            .td-chevron {
+                width: 24px;
+                padding: 0 8px 0 4px;
+                text-align: right;
+            }
+            .row-chevron {
+                font-size: 1.125rem;
+                color: var(--text-muted);
+                opacity: 0.3;
+                transition: opacity 0.15s, transform 0.15s;
+                vertical-align: middle;
+            }
+            :host-context(tr.clickable:hover) .row-chevron {
+                opacity: 0.8;
+                transform: translateX(2px);
             }
         `,
     ],
