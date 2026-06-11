@@ -201,7 +201,12 @@ describe('EditActivityModal', () => {
             fixture.detectChanges();
             clickSave(fixture);
             const emitted = dr.close.mock.calls[0][0] as Activity;
-            expect(emitted.capability?.rollingStock?.units).toEqual([{ name: 'RABe 502' }]);
+            const unit = emitted.capability?.rollingStock?.units?.[0];
+            expect(unit?.name).toBe('RABe 502');
+            expect(typeof unit?.id).toBe('string');
+            expect(unit?.carbodies).toEqual([]);
+            expect(unit?.capabilityFeatures).toEqual([]);
+            expect(unit?.featuresetRefs).toEqual([]);
         });
 
         it('preserves existing units when composition input is left empty', () => {
