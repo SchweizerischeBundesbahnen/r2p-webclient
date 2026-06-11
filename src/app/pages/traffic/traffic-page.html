@@ -28,9 +28,12 @@
                             mat-raised-button
                             color="primary"
                             (click)="openNewVariantModal()"
-                            [disabled]="!trainMainBranch.value()?.details"
+                            [disabled]="!trainMainBranch.value()?.details || trainMainBranch.isLoading()"
                             i18n="@@traffic.newVariant"
                         >
+                            @if (trainMainBranch.isLoading()) {
+                                <app-spinner variant="inline" [attr.aria-hidden]="true" />
+                            }
                             ⎇ New Variant
                         </button>
                         @if (isLeadRu()) {
