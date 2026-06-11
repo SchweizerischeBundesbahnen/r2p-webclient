@@ -207,7 +207,7 @@ describe('JourneyRouteCard', () => {
         fixture.detectChanges();
 
         const el: HTMLElement = fixture.nativeElement;
-        expect(el.querySelector('.edit-location-btn')).toBeNull();
+        expect(el.querySelector('.stop-icon-btn')).toBeNull();
     });
 
     it('should show edit button for stops when not readonly', () => {
@@ -219,7 +219,7 @@ describe('JourneyRouteCard', () => {
         fixture.detectChanges();
 
         const el: HTMLElement = fixture.nativeElement;
-        expect(el.querySelector('.edit-location-btn')).not.toBeNull();
+        expect(el.querySelector('.stop-icon-btn')).not.toBeNull();
     });
 
     it('should call dialog.open(EditStopModal) when edit button is clicked', () => {
@@ -231,7 +231,7 @@ describe('JourneyRouteCard', () => {
         fixture.detectChanges();
 
         const el: HTMLElement = fixture.nativeElement;
-        (el.querySelector('.edit-location-btn') as HTMLButtonElement).click();
+        (el.querySelector('.stop-icon-btn') as HTMLButtonElement).click();
 
         expect(openSpy).toHaveBeenCalledOnce();
         expect(openSpy.mock.calls[0][0]).toBe(EditStopModal);
@@ -251,7 +251,7 @@ describe('JourneyRouteCard', () => {
         fixture.componentInstance.journeyChange.subscribe(journeyChangeSpy);
 
         const el: HTMLElement = fixture.nativeElement;
-        (el.querySelector('.edit-location-btn') as HTMLButtonElement).click();
+        (el.querySelector('.stop-icon-btn') as HTMLButtonElement).click();
 
         // Simulate dialog returning a saved location
         afterClosed$.next({ name: 'Zürich HB', type: 'UIC', code: '8507000' });
@@ -275,7 +275,7 @@ describe('JourneyRouteCard', () => {
         fixture.componentInstance.journeyChange.subscribe(journeyChangeSpy);
 
         const el: HTMLElement = fixture.nativeElement;
-        (el.querySelector('.edit-location-btn') as HTMLButtonElement).click();
+        (el.querySelector('.stop-icon-btn') as HTMLButtonElement).click();
 
         afterClosed$.next(undefined);
         fixture.detectChanges();

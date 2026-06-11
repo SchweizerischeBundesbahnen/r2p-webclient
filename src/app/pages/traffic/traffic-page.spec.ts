@@ -325,8 +325,8 @@ describe('TrafficPage – merge action buttons', () => {
     it('shows Accept and Reject buttons for Lead RU when branch is merge_requested', () => {
         const el = createComponent('en-US', TRAIN_WITH_DETAILS, 'SBB');
         const branchActions = el.querySelectorAll('.branch-actions');
-        expect(branchActions[1].textContent).toContain('Accept Variant');
-        expect(branchActions[1].textContent).toContain('Reject Variant');
+        expect(branchActions[1].textContent).toContain('Accept');
+        expect(branchActions[1].textContent).toContain('Reject');
     });
 
     it('does not show Accept and Reject buttons for non-Lead RU', () => {
@@ -459,17 +459,17 @@ describe('TrafficPage – edit button visibility', () => {
     afterEach(() => TestBed.resetTestingModule());
 
     it('shows Edit button only for own branches', () => {
-        // SBB is logged in → only SBB-main branch should show Edit
+        // SBB is logged in → only SBB-main branch (row 0) should show the edit icon-btn
         const el = createComponent('en-US', TRAIN_WITH_DETAILS, 'SBB');
-        const branchActions = el.querySelectorAll('.branch-actions');
-        expect(branchActions[0].textContent).toContain('Edit');
-        expect(branchActions[1].textContent).not.toContain('Edit');
+        const rows = el.querySelectorAll('.branch-row');
+        expect(rows[0].querySelector('.icon-btn')).not.toBeNull();
+        expect(rows[1].querySelector('.icon-btn')).toBeNull();
     });
 
     it('shows Edit button for BLS branch when logged in as BLS', () => {
         const el = createComponent('en-US', TRAIN_WITH_DETAILS, 'BLS');
-        const branchActions = el.querySelectorAll('.branch-actions');
-        expect(branchActions[0].textContent).not.toContain('Edit');
-        expect(branchActions[1].textContent).toContain('Edit');
+        const rows = el.querySelectorAll('.branch-row');
+        expect(rows[0].querySelector('.icon-btn')).toBeNull();
+        expect(rows[1].querySelector('.icon-btn')).not.toBeNull();
     });
 });

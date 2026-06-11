@@ -115,11 +115,11 @@
                                 }
                             </div>
                         </div>
-                        <div class="branch-actions" (click)="$event.stopPropagation()">
+                        <div class="branch-actions">
                             @if (branch.showMergeRequest) {
                                 <button
                                     mat-stroked-button
-                                    (click)="openRequestMergeModal(branch)"
+                                    (click)="$event.stopPropagation(); openRequestMergeModal(branch)"
                                     i18n="@@traffic.mergeRequest"
                                 >Propose Variant</button>
                             }
@@ -127,18 +127,18 @@
                                 <button
                                     mat-flat-button
                                     color="primary"
-                                    (click)="openAcceptMergeModal(branch)"
+                                    (click)="$event.stopPropagation(); openAcceptMergeModal(branch)"
                                     i18n="@@traffic.acceptMerge"
                                 >Accept</button>
                                 <button
                                     mat-stroked-button
                                     color="warn"
-                                    (click)="openRejectMergeModal(branch)"
+                                    (click)="$event.stopPropagation(); openRejectMergeModal(branch)"
                                     i18n="@@traffic.rejectMerge"
                                 >Reject</button>
                             }
                         </div>
-                        <div class="branch-status-area" (click)="$event.stopPropagation()">
+                        <div class="branch-status-area">
                             @if (branch.showEdit) {
                                 <a
                                     class="icon-btn"
@@ -146,6 +146,7 @@
                                     [queryParams]="{ trainId: trainId(), branchId: branch.branchId }"
                                     matTooltip="Edit"
                                     i18n-matTooltip="@@traffic.edit"
+                                    (click)="$event.stopPropagation()"
                                 ><span class="material-icons">edit</span></a>
                             }
                             <app-branch-status-badge [state]="branch.status" />
