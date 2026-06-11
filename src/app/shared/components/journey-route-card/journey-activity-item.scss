@@ -1,0 +1,112 @@
+:host {
+    --plan-confirmed-bg: #c6f6d5;
+    --plan-confirmed-text: #22543d;
+    --plan-proposed-bg: #fefcbf;
+    --plan-proposed-text: #7b341e;
+    --plan-requested-bg: #feebc8;
+    --plan-requested-text: #7c2d12;
+    --plan-refused-bg: #fed7d7;
+    --plan-refused-text: #742a2a;
+    --plan-dropped-bg: #e2e8f0;
+    --plan-dropped-text: #2d3748;
+}
+
+.activity-item {
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 6px 8px;
+    font-size: 0.75rem;
+}
+
+.activity-item.activity-rollingStock,
+.activity-item.activity-staff,
+.activity-item.activity-path {
+    border-left: 3px solid var(--secondary-color);
+}
+
+.activity-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    margin-bottom: 3px;
+}
+
+.activity-actions {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.activity-responsibility,
+.activity-times,
+.activity-detail {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.activity-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 4px;
+}
+
+.activity-detail-label {
+    width: 100%;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+.feature-tag {
+    display: inline-block;
+    font-size: 0.65rem;
+    background: var(--accent-color-light, #e8f0fe);
+    color: var(--accent-color, #1a73e8);
+    border: 1px solid var(--accent-color, #1a73e8);
+    border-radius: 4px;
+    padding: 1px 6px;
+    white-space: nowrap;
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Compact plan-status badge — smaller than global .badge to fit activity items */
+.status-badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-weight: 600;
+}
+
+.status-badge-confirmed { background-color: var(--plan-confirmed-bg); color: var(--plan-confirmed-text); }
+.status-badge-proposed  { background-color: var(--plan-proposed-bg);  color: var(--plan-proposed-text); }
+.status-badge-requested { background-color: var(--plan-requested-bg); color: var(--plan-requested-text); }
+.status-badge-refused   { background-color: var(--plan-refused-bg);   color: var(--plan-refused-text); }
+.status-badge-dropped   { background-color: var(--plan-dropped-bg);   color: var(--plan-dropped-text); }
+
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    flex-shrink: 0;
+    padding: 0;
+
+    .material-icons { font-size: 0.875rem; }
+}
+
+.btn-icon:hover { background: var(--accent-color); color: white; }
+.btn-icon-danger:hover { background: var(--danger-color, #e53e3e); color: white; }

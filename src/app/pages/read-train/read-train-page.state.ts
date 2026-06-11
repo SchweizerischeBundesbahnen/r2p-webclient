@@ -1,7 +1,7 @@
-import { inject, Injectable, signal } from '@angular/core';
+﻿import { inject, Injectable, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { map, Observable, switchMap } from 'rxjs';
-import { BackendApiService } from '../../backend-api.service';
+import { BackendApiService } from '../../core/api/backend-api.service';
 import { BranchAndTrain } from '../edit-train/edit-train-page.state';
 
 @Injectable()
@@ -10,9 +10,6 @@ export class ReadTrainPageState {
     trainId = signal<string | undefined>(undefined);
 
     branchId = signal<string | undefined>(undefined);
-    isJsonModalOpen = false;
-
-
     readonly trainAndBranch = rxResource({
         params: () => {
             const trainId = this.trainId();
@@ -31,7 +28,4 @@ export class ReadTrainPageState {
                 ),
     });
 
-    toggleIsJsonModalOpen() {
-        this.isJsonModalOpen = !this.isJsonModalOpen;
-    }
 }

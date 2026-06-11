@@ -31,8 +31,6 @@ function createFakeState(branch?: Branch) {
     return {
         trainId: signal<string | undefined>(undefined),
         branchId: signal<string | undefined>(undefined),
-        isJsonModalOpen: false,
-        toggleIsJsonModalOpen: () => { /* noop for testing */ },
         trainAndBranch: {
             value: signal(value),
             error: signal(undefined),

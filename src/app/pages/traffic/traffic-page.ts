@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input } from '@angular/core';
-import { RouterLink } from '@angular/router';
+﻿import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { TrafficPageState, TrainWithDetails } from './traffic-page.state';
 import { Branch, BranchState } from '../../shared/models/api.models';
 import { DatePipe } from '@angular/common';
-import { NewVariantModal } from './new-variant-modal';
+import { NewVariantModal, NewVariantDialogData } from './new-variant-modal';
 import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
 import { BranchStatusBadgeComponent } from './branch-status-badge';
 import {
@@ -11,11 +11,17 @@ import {
     parseDurationToDate,
 } from '../../shared/utils/date.utils';
 import { MatDialog } from '@angular/material/dialog';
+import { MatButton, MatAnchor } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { DetailGrid, DetailItem } from '../../shared/components/detail-grid/detail-grid';
+import { PartnerBadge } from '../../shared/components/partner-badge/partner-badge';
+import { AlertBanner } from '../../shared/components/alert-banner/alert-banner';
 import { ShareTrainModalComponent, ShareTrainDialogData } from './share-train-modal';
 import { RequestMergeModalComponent, RequestMergeDialogData } from './request-merge-modal';
 import { AcceptMergeModalComponent, AcceptMergeDialogData } from './accept-merge-modal';
 import { RejectMergeModalComponent, RejectMergeDialogData } from './reject-merge-modal';
-import { SettingsService } from '../../settings/settings.service';
+import { DeleteTrainModal, DeleteTrainDialogData } from './delete-train-modal';
+import { SettingsService, ORGANIZATION_OPTIONS } from '../../core/settings/settings.service';
 import { Spinner } from '../../shared/components/spinner/spinner';
 import {
     getEarliestJourneyLocationDeparture,
@@ -23,209 +29,13 @@ import {
     getLastJourneyLocationName,
     getLatestJourneyLocationArrival,
 } from '../../shared/utils/journeyLocation.utils';
+import { OverallStatusComponent } from '../../shared/components/overall-status/overall-status.component';
 
 @Component({
     selector: 'app-traffic-page',
-    imports: [RouterLink, DatePipe, NewVariantModal, JourneyRouteCard, BranchStatusBadgeComponent, Spinner],
-    template: `
-        <!-- ── Main Content ────────────────────────────────────────────── -->
-        <div class="main-content">
-            <div class="container">
-                <a [routerLink]="'/traffic-overview'" class="back-link" i18n="@@traffic.breadcrumb.overview">Traffic Overview</a>
-
-                @if (trainMainBranch.value(); as trainData) {
-                @let trainHeaderInfo = getTrainHeaderInfo(trainData);
-                @let variants = getVariantInfo(trainData);
-                <div class="card" id="train-header-card">
-                    <div class="card-body">
-                        <div
-                            style="display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:1rem;"
-                        >
-                            <div>
-                                <h1 class="page-title" id="train-title">
-                                    {{ trainHeaderInfo.trainNumber }}
-                                </h1>
-                                <p class="page-subtitle" id="train-name">
-                                    @let opDay = trainHeaderInfo.operationalDay;
-                                    {{ opDay ? (isoDateToUtc(opDay) | date: 'mediumDate' : 'UTC') : '-' }}
-                                </p>
-                            </div>
-                            <div class="btn-group">
-                                <button class="btn btn-outline" (click)="openShareModal()" i18n="@@traffic.shareTrain">
-                                    🔗 Share Train
-                                </button>
-                                <button
-                                    class="btn btn-primary"
-                                    (click)="trafficPageStateService.toggleIsNewVariantModalOpen()"
-                                    i18n="@@traffic.newVariant"
-                                >
-                                    ⎇ New Variant
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="detail-grid" style="margin-top:1rem;">
-                            <div class="detail-item">
-                                <div class="detail-label" i18n="@@traffic.field.trainNumber">Train Number</div>
-                                <div class="detail-value" id="detail-train-number">
-                                    {{ trainHeaderInfo.trainNumber }}
-                                </div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label" i18n="@@traffic.field.from">From</div>
-                                <div class="detail-value" id="detail-from">
-                                    {{ trainHeaderInfo.from }}
-                                </div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label" i18n="@@traffic.field.departure">Departure</div>
-                                <div class="detail-value" id="detail-dep-time">
-                                    {{ trainHeaderInfo.departureTime | date: 'shortTime' }}
-                                </div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label" i18n="@@traffic.field.to">To</div>
-                                <div class="detail-value" id="detail-to">
-                                    {{ trainHeaderInfo.to }}
-                                </div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label" i18n="@@traffic.field.arrival">Arrival</div>
-                                <div class="detail-value" id="detail-arr-time">
-                                    {{ trainHeaderInfo.arrivalTime | date: 'shortTime' }}
-                                </div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label" i18n="@@traffic.field.opDay">Operational Day</div>
-                                <div class="detail-value" id="detail-op-day">
-                                    @let opDayDetail = trainHeaderInfo.operationalDay;
-                                    {{ opDayDetail ? (isoDateToUtc(opDayDetail) | date: 'mediumDate' : 'UTC') : '-' }}
-                                </div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">
-                                    <ng-container i18n="@@traffic.field.overallStatus">Overall Status</ng-container>
-                                    <span class="tooltip-anchor" tabindex="0"
-                                    >?<span class="tooltip-box"
-                                    ><ng-container i18n="@@traffic.status.allConfirmed">🟢 All activities are <em>confirmed</em>.</ng-container><br /><ng-container i18n="@@traffic.status.someProposed">🟡 At least one activity is <em>proposed</em> or <em>requested</em>, none refused.</ng-container><br /><ng-container i18n="@@traffic.status.someRefused">🔴 At least one activity is <em>refused</em> or <em>dropped</em>.</ng-container></span
-                                    ></span
-                                    >
-                                </div>
-                                <div class="detail-value" id="detail-status">
-                                    <span class="traffic-light tl-green"
-                                    ><span class="tl-dot"></span
-                                    ></span>
-                                </div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label" i18n="@@traffic.field.partners">Partners</div>
-                                <div class="detail-value" id="detail-partners">
-                                    @for (partner of trainHeaderInfo.partners; track partner) {
-                                        <span class="partner-badge partner-badge-{{ partner }}">{{
-                                                partner
-                                            }}</span>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Journey (main variant – read-only table) -->
-                <app-journey-route-card [readonly]="true" [journey]="trainMainBranch.value()?.details?.journey" />
-
-                <!-- Variants Section -->
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title" i18n="@@traffic.variants">⎇ Variants</span>
-                    </div>
-                    <div id="branches-list">
-                        @for (branch of variants; track branch.branchName) {
-                            <div class="branch-row">
-                                <div class="branch-info">
-                                    <div>
-                                        <div class="branch-name">🌿 {{ branch.branchName }}</div>
-                                        <div class="branch-meta">
-                                            @for (partner of branch.partners; track partner) {
-                                                <span
-                                                    class="partner-badge partner-badge-{{
-                                                        partner
-                                                    }}"
-                                                >{{ partner }}</span
-                                                >
-                                            }
-                                            <span style="margin-left:4px;">{{
-                                                    branch.lastChange | date: 'short'
-                                                }}</span>
-                                            @if (branch.comment) {
-                                                — <em>{{ branch.comment }}</em>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                                 <div
-                                     style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;"
-                                 >
-                                     <app-branch-status-badge [state]="branch.status" />
-                                      <div class="branch-actions">
-                                          @if (branch.showEdit) {
-                                              <a
-                                                  routerLink="/edit-train"
-                                                  [queryParams]="{
-                                                      trainId: trainId(),
-                                                      branchId: branch.branchId,
-                                                  }"
-                                                  class="btn btn-primary btn-sm"
-                                                  i18n="@@traffic.edit">✏ Edit</a>
-                                          }
-                                          <a
-                                              [routerLink]="'/read-train'"
-                                              [queryParams]="{
-                                                  trainId: trainId(),
-                                                  branchId: branch.branchId,
-                                              }"
-                                              class="btn btn-ghost btn-sm"
-                                              i18n="@@traffic.view">👁 View</a
-                                          >
-                                         @if (branch.showMergeRequest) {
-                                             <button
-                                                 class="btn btn-outline btn-sm"
-                                                 (click)="openRequestMergeModal(branch)"
-                                                 i18n="@@traffic.mergeRequest"
-                                             >Propose Variant</button>
-                                         }
-                                         @if (branch.showAcceptReject) {
-                                             <button
-                                                 class="btn btn-success btn-sm"
-                                                 (click)="openAcceptMergeModal(branch)"
-                                                 i18n="@@traffic.acceptMerge"
-                                             >Accept Variant</button>
-                                             <button
-                                                 class="btn btn-danger btn-sm"
-                                                 (click)="openRejectMergeModal(branch)"
-                                                 i18n="@@traffic.rejectMerge"
-                                             >Reject Variant</button>
-                                         }
-                                     </div>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </div>
-                } @else if (trainMainBranch.error()) {
-                    <div class="alert alert-error" i18n="@@traffic.loadError">
-                        ⚠️ Failed to load train data. Please go back and try again.
-                    </div>
-                } @else if (trainMainBranch.isLoading()) {
-                    <app-spinner />
-                }
-            </div>
-        </div>
-        @if (trafficPageStateService.newVariantModalIsOpen()) {
-            <app-new-variant-modal />
-        }
-    `,
-    styles: ``,
+    imports: [RouterLink, DatePipe, JourneyRouteCard, BranchStatusBadgeComponent, Spinner, MatButton, MatAnchor, MatTooltip, DetailGrid, DetailItem, PartnerBadge, AlertBanner, OverallStatusComponent],
+    templateUrl: './traffic-page.html',
+    styleUrl: './traffic-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TrafficPage {
@@ -234,14 +44,37 @@ export class TrafficPage {
     protected readonly isoDateToUtc = isoDateToUtc;
     private readonly dialog = inject(MatDialog);
     private readonly settingsService = inject(SettingsService);
+    private readonly router = inject(Router);
 
     private readonly currentOrg = computed(() => this.settingsService.settings().organization);
 
+    protected readonly canShareTrain = computed(() => {
+        const partners = this.trainMainBranch.value()?.listElement?.partners ?? [];
+        const org = this.currentOrg();
+        return ORGANIZATION_OPTIONS.some((o) => o.name !== org && !partners.includes(o.name));
+    });
+
+    protected readonly isLeadRu = computed(() => {
+        const branches = this.trainMainBranch.value()?.listElement?.branches ?? [];
+        const mainBranch = branches.find((b) => b.technical.mainBranch);
+        return mainBranch?.technical.owner === this.currentOrg();
+    });
+
     private readonly trainIdEffect = effect(() => {
-        this.trafficPageStateService.trainId.set(this.trainId());
+        const id = this.trainId();
+        const prevId = untracked(() => this.trafficPageStateService.trainId());
+        this.trafficPageStateService.trainId.set(id);
+        if (id && id === prevId) {
+            this.trainMainBranch.reload();
+        }
     });
 
     protected readonly trainMainBranch = this.trafficPageStateService.trainMainBranch;
+    protected readonly archiveExpanded = signal(false);
+
+    protected toggleArchive(): void {
+        this.archiveExpanded.update((v) => !v);
+    }
 
     protected openShareModal(): void {
         const trainId = this.trafficPageStateService.trainId();
@@ -256,6 +89,42 @@ export class TrafficPage {
             .subscribe((result) => {
                 if (result === 'success') {
                     this.trainMainBranch.reload();
+                }
+            });
+    }
+
+    protected openNewVariantModal(): void {
+        const trainId = this.trafficPageStateService.trainId();
+        const details = this.trainMainBranch.value()?.details;
+        if (!trainId || !details || this.trainMainBranch.isLoading()) return;
+        this.dialog
+            .open<NewVariantModal, NewVariantDialogData>(NewVariantModal, {
+                data: { trainId, mainBranchTrain: details },
+                width: '480px',
+            })
+            .afterClosed()
+            .subscribe((result) => {
+                if (result === 'success') {
+                    this.trainMainBranch.reload();
+                }
+            });
+    }
+
+    protected openDeleteTrainModal(): void {
+        const trainId = this.trafficPageStateService.trainId();
+        const branches = this.trainMainBranch.value()?.listElement?.branches ?? [];
+        const mainBranch = branches.find((b) => b.technical.mainBranch);
+        const trainNumber = mainBranch?.business.trainNumber ?? '';
+        if (!trainId || !mainBranch) return;
+        this.dialog
+            .open<DeleteTrainModal, DeleteTrainDialogData>(DeleteTrainModal, {
+                data: { trainId, branchId: mainBranch.branchId, trainNumber },
+                width: '480px',
+            })
+            .afterClosed()
+            .subscribe((result) => {
+                if (result === 'success') {
+                    void this.router.navigate(['/traffic-overview']);
                 }
             });
     }
@@ -342,8 +211,7 @@ export class TrafficPage {
     protected getVariantInfo(trainWithDetails: TrainWithDetails | undefined): VariantViewModel[] {
         const branches = trainWithDetails?.listElement?.branches ?? [];
         const currentOrg = this.currentOrg();
-        const mainBranch = branches.find((b) => b.technical.mainBranch);
-        const isLeadRU = mainBranch?.technical.owner === currentOrg;
+        const isLeadRU = this.isLeadRu();
 
         const sorted = [...branches].sort((a, b) => {
             if (a.technical.mainBranch && !b.technical.mainBranch) return -1;
@@ -363,7 +231,9 @@ export class TrafficPage {
                 lastChange: branch.technical.timestamp,
                 status: state,
                 version: branch.technical.version,
-                showEdit: isOwn,
+                isMain,
+                isArchived: state === 'merged' || state === 'deleted',
+                showEdit: isOwn && (state === 'open' || state === 'merge_requested'),
                 showMergeRequest: isOwn && state === 'open' && !isMain,
                 showAcceptReject: isLeadRU && state === 'merge_requested' && !isMain,
             };
@@ -391,6 +261,8 @@ export interface VariantViewModel {
     lastChange: string;
     status: BranchState;
     version: string;
+    isMain: boolean;
+    isArchived: boolean;
     showMergeRequest: boolean;
     showAcceptReject: boolean;
     showEdit: boolean;

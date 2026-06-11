@@ -22,6 +22,8 @@
     text-align: left;
 }
 
+.journey-table thead th.stop-col-header { width: 200px; }
+
 .journey-table tbody tr {
     border-bottom: 1px solid var(--border-color);
     vertical-align: top;
@@ -36,10 +38,10 @@
 }
 
 /* No stripe on add-stop rows or span rows (let the band color dominate) */
-.journey-table tbody tr.jt-add-stop-row,
-.journey-table tbody tr.jt-row-rolling-stock-start,
-.journey-table tbody tr.jt-row-rolling-stock-mid,
-.journey-table tbody tr.jt-row-rolling-stock-end {
+.journey-table tbody tr.add-stop-row,
+.journey-table tbody tr.row-rs-start,
+.journey-table tbody tr.row-rs-mid,
+.journey-table tbody tr.row-rs-end {
     background-color: transparent !important;
 }
 
@@ -50,7 +52,7 @@
 }
 
 /* Stop cell with vertical pearl necklace indicator */
-.jt-stop-cell {
+.stop-cell {
     min-width: 160px;
     white-space: nowrap;
     padding-top: 0 !important;
@@ -58,7 +60,7 @@
     height: 1px; /* enables height:100% on children in table cells */
 }
 
-.jt-stop-indicator {
+.stop-indicator {
     display: flex;
     align-items: stretch;
     gap: var(--spacing-sm);
@@ -66,7 +68,7 @@
     min-height: 44px;
 }
 
-.jt-stop-line-col {
+.stop-line-col {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -74,17 +76,17 @@
     flex-shrink: 0;
 }
 
-.jt-line-seg {
+.line-seg {
     width: 2px;
     flex: 1;
     background-color: var(--border-color);
 }
 
-.jt-line-invisible {
+.line-invisible {
     background-color: transparent;
 }
 
-.jt-stop-dot {
+.stop-dot {
     width: 14px;
     height: 14px;
     border-radius: 50%;
@@ -93,10 +95,7 @@
     box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
-.jt-stop-dot.jt-start { background-color: var(--text-primary); }
-.jt-stop-dot.jt-end   { background-color: var(--text-primary); }
-
-.jt-stop-info {
+.stop-info {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -104,13 +103,13 @@
     padding: 10px 0;
 }
 
-.jt-stop-name {
+.stop-name {
     font-weight: 600;
     font-size: 0.875rem;
     color: var(--text-primary);
 }
 
-.jt-stop-actions {
+.stop-actions {
     margin-top: 4px;
     display: flex;
     gap: 4px;
@@ -118,130 +117,61 @@
     align-items: center;
 }
 
-.jt-stop-actions .btn-ghost {
-    font-size: 0.75rem;
-    padding: 2px 7px;
-    color: var(--accent-color);
-    border-color: rgba(49,130,206,0.35);
-    background: rgba(49,130,206,0.06);
+.stop-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    flex-shrink: 0;
+    padding: 0;
+
+    .material-icons { font-size: 0.9rem; }
 }
-.jt-stop-actions .btn-ghost:hover {
-    background: var(--accent-color);
-    border-color: var(--accent-color);
-    color: white;
+
+.stop-icon-btn:hover {
+    background: rgba(21, 101, 192, 0.08);
+    color: var(--primary-color);
+}
+
+.stop-icon-btn-danger:hover {
+    background: rgba(198, 40, 40, 0.08);
+    color: #C62828;
 }
 
 /* Activity cell */
-.jt-activity-cell {
+.activity-cell {
     min-width: 180px;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
     height: 1px;
 }
 
-.jt-activity-list {
+.activity-list {
     display: flex;
     flex-direction: column;
     gap: 6px;
     padding: 10px 0;
 }
 
-.jt-activity-item {
-    background-color: var(--background-color);
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    padding: 6px 8px;
-    font-size: 0.75rem;
-}
-
-.jt-activity-item.activity-rolling-stock    { border-left: 3px solid var(--secondary-color); }
-.jt-activity-item.activity-staff { border-left: 3px solid var(--secondary-color); }
-.jt-activity-item.activity-path  { border-left: 3px solid var(--secondary-color); }
-
-.jt-activity-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 4px;
-    margin-bottom: 3px;
-}
-
-.jt-activity-responsibility {
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    margin-top: 2px;
-}
-
-.jt-activity-times {
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    margin-top: 2px;
-}
-
-.jt-activity-features {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin-top: 4px;
-}
-
-.jt-feature-tag {
-    display: inline-block;
-    font-size: 0.65rem;
-    background: var(--accent-color-light, #e8f0fe);
-    color: var(--accent-color, #1a73e8);
-    border: 1px solid var(--accent-color, #1a73e8);
-    border-radius: 4px;
-    padding: 1px 6px;
-    white-space: nowrap;
-    max-width: 160px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* ── Rolling Stock span / local-only badges ──────────────────── */
-.rolling-stock-local-badge,
-.rolling-stock-span-badge,
-.rolling-stock-continues-badge {
-    display: inline-block;
-    font-size: 0.6rem;
-    border-radius: 4px;
-    padding: 1px 5px;
-    font-weight: 600;
-    white-space: nowrap;
-    vertical-align: middle;
-}
-
-.rolling-stock-local-badge {
-    background: #fff3cd;
-    color: #856404;
-    border: 1px solid #ffc107;
-}
-
-.rolling-stock-span-badge {
-    background: #d1ecf1;
-    color: #0c5460;
-    border: 1px solid #bee5eb;
-}
-
-.rolling-stock-continues-badge {
-    background: #e2e3e5;
-    color: #383d41;
-    border: 1px solid #d6d8db;
-    font-size: 0.58rem;
-}
 
 /* ── Rolling Stock column: continuous vertical span block ────── */
 
 /* The RS cell must be position:relative so ::before can fill it */
-.jt-rolling-stock-cell {
+.rolling-stock-cell {
     position: relative;
     overflow: visible;
     /* padding is kept for content; the pseudo fills behind it */
 }
 
 /* Inner wrapper kept above the pseudo-element background */
-.jt-rolling-stock-cell-inner {
+.rolling-stock-cell-inner {
     position: relative;
     z-index: 1;
 }
@@ -253,9 +183,9 @@
  * For mid/end rows the top edge bleeds fully from the row border.
  * This creates a seamless merge across rows.
  */
-.jt-rolling-stock-cell[data-rolling-stock-span="start"]::before,
-.jt-rolling-stock-cell[data-rolling-stock-span="mid"]::before,
-.jt-rolling-stock-cell[data-rolling-stock-span="end"]::before {
+.rolling-stock-cell[data-rolling-stock-span="start"]::before,
+.rolling-stock-cell[data-rolling-stock-span="mid"]::before,
+.rolling-stock-cell[data-rolling-stock-span="end"]::before {
     content: '';
     position: absolute;
     left: 0;
@@ -267,49 +197,49 @@
 }
 
 /* start: band begins at horizontal center of the cell, extends to the bottom */
-.jt-rolling-stock-cell[data-rolling-stock-span="start"]::before {
+.rolling-stock-cell[data-rolling-stock-span="start"]::before {
     top: 50%;
     bottom: -1px; /* overlap the row border by 1px */
 }
 
 /* mid: band fills the entire cell top to bottom, bleeding past both borders */
-.jt-rolling-stock-cell[data-rolling-stock-span="mid"]::before {
+.rolling-stock-cell[data-rolling-stock-span="mid"]::before {
     top: -1px;
     bottom: -1px;
 }
 
 /* end: band starts at the top, ends at horizontal center */
-.jt-rolling-stock-cell[data-rolling-stock-span="end"]::before {
+.rolling-stock-cell[data-rolling-stock-span="end"]::before {
     top: -1px;
     bottom: 50%;
 }
 
 /* Suppress the row bottom border on the RS cell for seamless visual join */
-.jt-row-rolling-stock-start .jt-rolling-stock-cell,
-.jt-row-rolling-stock-mid .jt-rolling-stock-cell {
+.row-rs-start .rolling-stock-cell,
+.row-rs-mid .rolling-stock-cell {
     border-bottom: none !important;
 }
 /* Also suppress on the <tr> itself so cell doesn't get a gap */
-tr.jt-row-rolling-stock-start,
-tr.jt-row-rolling-stock-mid {
+tr.row-rs-start,
+tr.row-rs-mid {
     border-bottom: none !important;
 }
 
 /* "Add activity" button wrapper – sits on top of the band, aligned left */
-.jt-rolling-stock-add-btn-wrap {
+.rs-add-btn-wrap {
     position: relative;
     z-index: 2;
     padding-top: 4px;
 }
 
 /* Own RS activity list inside the band */
-.jt-rolling-stock-own-activities {
+.rs-own-activities {
     position: relative;
     z-index: 2;
 }
 
 /* Small label at the end of a span */
-.rolling-stock-span-end-label {
+.span-end-label {
     position: relative;
     z-index: 2;
     font-size: 0.65rem;
@@ -321,33 +251,7 @@ tr.jt-row-rolling-stock-mid {
     white-space: nowrap;
 }
 
-/* Pass-through band on jt-add-stop-row rows between spanning stops */
-.jt-rolling-stock-cell-passthrough {
-    position: relative;
-    min-width: 180px; /* same as jt-activity-cell */
-}
-
-.jt-rolling-stock-cell-passthrough[data-rolling-stock-passthrough="through"]::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: -1px;
-    bottom: -1px;
-    background: rgba(190, 229, 235, 0.28);
-    border-left: 4px solid #4db8c8;
-    pointer-events: none;
-    z-index: 0;
-}
-
-.jt-activity-actions {
-    display: flex;
-    gap: 4px;
-    align-items: center;
-    flex-shrink: 0;
-}
-
-.jt-add-activity-btn {
+.add-activity-btn {
     margin-top: 6px;
     width: 100%;
     padding: 4px 6px;
@@ -361,31 +265,52 @@ tr.jt-row-rolling-stock-mid {
     transition: border-color 0.2s, color 0.2s;
 }
 
-.jt-add-activity-btn:hover {
+.add-activity-btn:hover {
     border-color: var(--accent-color);
     color: var(--accent-color);
 }
 
-.jt-add-stop-row td {
+.add-stop-row td {
     padding: 4px var(--spacing-md);
     background-color: transparent;
 }
 
-/* Stop row (full-height) */
-.jt-stop-row {
-    display: table-row;
-    height: 100%;
+
+/* ── Empty state ─────────────────────────────────────────────────── */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    text-align: center;
 }
 
-.jt-stop-row > * {
-    display: table-cell;
-    vertical-align: middle;
+.add-first-stop-btn {
+    margin-top: 0.75rem;
 }
 
-.jt-edit-location-btn {
-    margin-top: var(--spacing-xs);
-    padding: 2px var(--spacing-sm);
-    font-size: 0.7rem;
-    font-weight: 500;
-    border-radius: 4px;
+.required-star {
+    color: var(--mat-form-field-error-text-color, #c00);
+    margin-left: 2px;
 }
+
+/* ── Add Stop rows ───────────────────────────────────────────────── */
+.add-stop-btn {
+    width: 100%;
+    padding: 4px var(--spacing-md);
+    border: 1.5px dashed var(--border-color);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.add-stop-btn:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    background: rgba(49, 130, 206, 0.04);
+}
+

@@ -1,0 +1,60 @@
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    padding-top: 0.5rem;
+    min-width: 480px;
+}
+
+.section-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--mat-sys-on-surface-variant);
+    margin-bottom: 0.5rem;
+}
+
+.section-label--no-margin {
+    margin-bottom: 0;
+}
+
+.form-row {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+
+    mat-form-field {
+        flex: 1 1 160px;
+    }
+}
+
+.features-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.25rem;
+}
+
+.feature-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.section-divider {
+    margin: 0.75rem 0;
+}
+
+.checkbox-block {
+    display: block;
+    margin-bottom: 0.75rem;
+}
+
+.feature-type-field {
+    flex: 0 0 200px;
+}
+
+.feature-value-field {
+    flex: 1;
+}

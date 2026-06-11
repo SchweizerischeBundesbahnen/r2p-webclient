@@ -1,33 +1,47 @@
-import { Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { JsonPipe } from '@angular/common';
 import { Train } from '../../shared/models/api.models';
-import { ReadTrainPageState } from './read-train-page.state';
+import {
+    MAT_DIALOG_DATA,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogContent,
+    MatDialogTitle,
+} from '@angular/material/dialog';
+import { MatButton } from '@angular/material/button';
+
+export interface ViewJsonDialogData {
+    train: Train;
+}
 
 @Component({
     selector: 'app-read-view-json-modal',
-    imports: [JsonPipe],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [JsonPipe, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose, MatButton],
     template: `
-        <div class="modal-overlay" id="modal-json">
-            <div class="modal-card modal-xl">
-                <div class="modal-header">
-                    <span class="modal-title" i18n="@@viewJsonModal.title">JSON – Train Payload</span>
-                    <button class="modal-close" (click)="close()">✕</button>
-                </div>
-                <div class="modal-body" style="padding:1rem;">
-                    <pre class="json-viewer" id="json-viewer-content">{{ train() | json }}</pre>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-ghost" (click)="close()" i18n="@@viewJsonModal.close">Close</button>
-                </div>
-            </div>
-        </div>
+        <h2 mat-dialog-title i18n="@@viewJsonModal.title">JSON – Train Payload</h2>
+        <mat-dialog-content>
+            <pre class="json-viewer" id="json-viewer-content">{{ data.train | json }}</pre>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button mat-button mat-dialog-close i18n="@@common.close">Close</button>
+        </mat-dialog-actions>
+    `,
+    styles: `
+        .json-viewer {
+            background-color: #1a202c;
+            color: #e2e8f0;
+            padding: var(--spacing-md);
+            border-radius: 6px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            overflow: auto;
+            max-height: 60vh;
+            white-space: pre;
+        }
     `,
 })
 export class ViewJsonModal {
-    state = inject(ReadTrainPageState);
-    train = input.required<Train>();
-
-    close() {
-        this.state.toggleIsJsonModalOpen();
-    }
+    protected readonly data = inject<ViewJsonDialogData>(MAT_DIALOG_DATA);
 }

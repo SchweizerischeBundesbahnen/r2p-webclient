@@ -1,4 +1,4 @@
-import { LOCALE_ID, signal } from '@angular/core';
+﻿import { LOCALE_ID, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { registerLocaleData } from '@angular/common';
@@ -6,7 +6,7 @@ import localeDeCh from '@angular/common/locales/de';
 import { TrafficPage } from './traffic-page';
 import { TrafficPageState, TrainWithDetails } from './traffic-page.state';
 import { TimingType, Train, TrainListElement } from '../../shared/models/api.models';
-import { SettingsService } from '../../settings/settings.service';
+import { SettingsService } from '../../core/settings/settings.service';
 
 registerLocaleData(localeDeCh, 'de-CH');
 
@@ -193,10 +193,6 @@ function makeSettingsService(organization: string): SettingsService {
 function createFakeState(value?: TrainWithDetails) {
     return {
         trainId: signal<string | undefined>(undefined),
-        newVariantModalIsOpen: signal(false),
-        toggleIsNewVariantModalOpen: () => {
-            void 0;
-        },
         trainMainBranch: {
             value: signal(value),
             error: signal(undefined),
@@ -329,8 +325,8 @@ describe('TrafficPage – merge action buttons', () => {
     it('shows Accept and Reject buttons for Lead RU when branch is merge_requested', () => {
         const el = createComponent('en-US', TRAIN_WITH_DETAILS, 'SBB');
         const branchActions = el.querySelectorAll('.branch-actions');
-        expect(branchActions[1].textContent).toContain('Accept Variant');
-        expect(branchActions[1].textContent).toContain('Reject Variant');
+        expect(branchActions[1].textContent).toContain('Accept');
+        expect(branchActions[1].textContent).toContain('Reject');
     });
 
     it('does not show Accept and Reject buttons for non-Lead RU', () => {
@@ -385,21 +381,95 @@ describe('TrafficPage – variant sort order', () => {
     });
 });
 
+describe('TrafficPage – Share Train button visibility', () => {
+    afterEach(() => TestBed.resetTestingModule());
+
+    function trainWithPartners(partners: string[] | undefined): TrainWithDetails {
+        return {
+            listElement: { ...TRAIN_LIST_ELEMENT, partners },
+            details: null,
+        };
+    }
+
+    function findShareButton(el: HTMLElement): HTMLButtonElement | undefined {
+        return Array.from(el.querySelectorAll<HTMLButtonElement>('.btn-group button')).find((b) =>
+            b.textContent?.includes('Share Train'),
+        );
+    }
+
+    it('shows Share Train button when at least one other org has not been shared with', () => {
+        // SBB logged in, BLS shared but SOB not → button visible
+        const el = createComponent('en-US', trainWithPartners(['BLS']), 'SBB');
+        expect(findShareButton(el)).toBeDefined();
+    });
+
+    it('hides Share Train button when all other orgs are already shared', () => {
+        // SBB logged in, BLS and SOB both shared → button hidden
+        const el = createComponent('en-US', trainWithPartners(['BLS', 'SOB']), 'SBB');
+        expect(findShareButton(el)).toBeUndefined();
+    });
+
+    it('shows Share Train button when partners is undefined or empty', () => {
+        const elUndefined = createComponent('en-US', trainWithPartners(undefined), 'SBB');
+        expect(findShareButton(elUndefined)).toBeDefined();
+
+        TestBed.resetTestingModule();
+
+        const elEmpty = createComponent('en-US', trainWithPartners([]), 'SBB');
+        expect(findShareButton(elEmpty)).toBeDefined();
+    });
+
+    it('does not count own org as an unshared partner', () => {
+        // SBB logged in, only SBB missing from partners — still hidden because SBB is the current org
+        const el = createComponent('en-US', trainWithPartners(['BLS', 'SOB']), 'SBB');
+        expect(findShareButton(el)).toBeUndefined();
+    });
+});
+
+describe('TrafficPage – Delete Train button visibility', () => {
+    afterEach(() => TestBed.resetTestingModule());
+
+    function findDeleteButton(el: HTMLElement): HTMLButtonElement | undefined {
+        return Array.from(el.querySelectorAll<HTMLButtonElement>('.btn-group button')).find((b) =>
+            b.textContent?.includes('Delete Train'),
+        );
+    }
+
+    it('shows Delete Train button when current org is Lead RU (main branch owner)', () => {
+        const el = createComponent('en-US', TRAIN_WITH_DETAILS, 'SBB');
+        expect(findDeleteButton(el)).toBeDefined();
+    });
+
+    it('hides Delete Train button when current org is not Lead RU', () => {
+        const el = createComponent('en-US', TRAIN_WITH_DETAILS, 'BLS');
+        expect(findDeleteButton(el)).toBeUndefined();
+    });
+
+    it('hides Delete Train button when there is no main branch', () => {
+        const trainWithNoBranches: TrainWithDetails = {
+            listElement: { ...TRAIN_LIST_ELEMENT, branches: [] },
+            details: null,
+        };
+        const el = createComponent('en-US', trainWithNoBranches, 'SBB');
+        expect(findDeleteButton(el)).toBeUndefined();
+    });
+});
+
 describe('TrafficPage – edit button visibility', () => {
     afterEach(() => TestBed.resetTestingModule());
 
     it('shows Edit button only for own branches', () => {
-        // SBB is logged in → only SBB-main branch should show Edit
+        // SBB is logged in → only SBB-main branch (row 0) should show the edit icon-btn
         const el = createComponent('en-US', TRAIN_WITH_DETAILS, 'SBB');
-        const branchActions = el.querySelectorAll('.branch-actions');
-        expect(branchActions[0].textContent).toContain('Edit');
-        expect(branchActions[1].textContent).not.toContain('Edit');
+        const rows = el.querySelectorAll('.branch-row');
+        expect(rows[0].querySelector('.icon-btn')).not.toBeNull();
+        expect(rows[1].querySelector('.icon-btn')).toBeNull();
     });
 
     it('shows Edit button for BLS branch when logged in as BLS', () => {
         const el = createComponent('en-US', TRAIN_WITH_DETAILS, 'BLS');
-        const branchActions = el.querySelectorAll('.branch-actions');
-        expect(branchActions[0].textContent).not.toContain('Edit');
-        expect(branchActions[1].textContent).toContain('Edit');
+        const rows = el.querySelectorAll('.branch-row');
+        expect(rows[0].querySelector('.icon-btn')).toBeNull();
+        expect(rows[1].querySelector('.icon-btn')).not.toBeNull();
     });
 });

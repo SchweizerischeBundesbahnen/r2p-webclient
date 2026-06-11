@@ -1,10 +1,11 @@
-import { inject, Injectable, signal } from '@angular/core';
+﻿import { inject, Injectable, signal } from '@angular/core';
 import { form, required } from '@angular/forms/signals';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { map, Observable, switchMap, tap } from 'rxjs';
-import { BackendApiService } from '../../backend-api.service';
+import { BackendApiService } from '../../core/api/backend-api.service';
 import { Branch, Train } from '../../shared/models/api.models';
 import { assertIsoDate } from '../../shared/utils/date.utils';
+import { TrainFormModel } from '../../shared/components/train-details-form-card/train-details-form-card';
 
 /**
  * Not provided in root, cause state should be destroyed after switching page.
@@ -14,18 +15,14 @@ export class EditTrainPageState {
     editTrainRunning = signal(false);
     readonly apiService = inject(BackendApiService);
 
-    model = signal<{
-        name: string;
-        operationalDay: string;
-        creationComment: string;
-    }>({
-        name: '',
+    model = signal<TrainFormModel>({
+        trainNumber: '',
         operationalDay: '',
         creationComment: '',
     });
 
     editTrainForm = form(this.model, (schemaPath) => {
-        required(schemaPath.name, { message: 'Name is required' });
+        required(schemaPath.trainNumber, { message: 'Train Number is required' });
         required(schemaPath.operationalDay, { message: 'Operational Day is required' });
         required(schemaPath.creationComment, { message: 'Creation Comment is required' });
     });
@@ -46,7 +43,7 @@ export class EditTrainPageState {
                         business: { trainNumber, operationalDay },
                         technical: { comment },
                     } = branch;
-                    this.editTrainForm.name().value.set(trainNumber);
+                    this.editTrainForm.trainNumber().value.set(trainNumber);
                     assertIsoDate(operationalDay);
                     this.editTrainForm.operationalDay().value.set(operationalDay);
                     this.editTrainForm.creationComment().value.set(comment);

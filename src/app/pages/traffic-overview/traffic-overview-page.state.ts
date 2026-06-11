@@ -1,5 +1,5 @@
-import { inject, Injectable } from '@angular/core';
-import { BackendApiService } from '../../backend-api.service';
+﻿import { inject, Injectable } from '@angular/core';
+import { BackendApiService } from '../../core/api/backend-api.service';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { forkJoin, map, of, switchMap } from 'rxjs';
 import { TrainRow } from './table-row';
@@ -76,6 +76,7 @@ export const mapTrainToOverviewRow = ({
             lastChange: mainTimestamp,
             version,
         },
+        trainData: train,
     };
 };
 

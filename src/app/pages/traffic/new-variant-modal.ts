@@ -1,124 +1,87 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { TrafficPageState } from './traffic-page.state';
-import { form, FormField, maxLength, required } from '@angular/forms/signals';
-import { BackendApiService } from '../../backend-api.service';
+﻿import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+    MAT_DIALOG_DATA,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogContent,
+    MatDialogRef,
+    MatDialogTitle,
+} from '@angular/material/dialog';
+import { MatError, MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
+import { form, FormField, maxLength, required, submit } from '@angular/forms/signals';
+import { BackendApiService } from '../../core/api/backend-api.service';
+import { SettingsService } from '../../core/settings/settings.service';
+import { Train } from '../../shared/models/api.models';
 import { Router } from '@angular/router';
-import { finalize } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
+
+export interface NewVariantDialogData {
+    trainId: string;
+    mainBranchTrain: Train;
+}
 
 @Component({
     selector: 'app-new-variant-modal',
-    template: ` <div class="modal-overlay" id="modal-create-branch">
-        <div class="modal-card">
-            <div class="modal-header">
-                <span class="modal-title" i18n="@@newVariantModal.title">⎇ Create New Variant</span>
-                <button class="modal-close" (click)="state.toggleIsNewVariantModalOpen()">✕</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label required" for="branch-name-input" i18n="@@newVariantModal.field.name">Variant Name</label>
-                    <input
-                        type="text"
-                        id="branch-name-input"
-                        class="form-input"
-                        placeholder="e.g., sbb/rolling-stock-update"
-                        i18n-placeholder="@@newVariantModal.field.namePlaceholder"
-                        [formField]="createTrainVariant.variantName"
-                    />
-                    <p class="form-hint" i18n="@@newVariantModal.field.nameHint">
-                        Lowercase, hyphens and slashes allowed. Max 255 characters.
-                    </p>
-                    @if (
-                        createTrainVariant.variantName().touched() &&
-                        createTrainVariant.variantName().invalid()
-                    ) {
-                        @for (error of createTrainVariant.variantName().errors(); track error) {
-                            <span class="form-error">{{ error.message }}</span>
-                        }
-                    }
-                </div>
-                <div class="form-group">
-                    <label class="form-label required" for="branch-comment-input" i18n="@@newVariantModal.field.comment">Comment</label>
-                    <textarea
-                        id="branch-comment-input"
-                        class="form-textarea"
-                        placeholder="Describe the purpose of this variant…"
-                        i18n-placeholder="@@newVariantModal.field.commentPlaceholder"
-                        [formField]="createTrainVariant.comment"
-                    ></textarea>
-                    @if (
-                        createTrainVariant.comment().touched() &&
-                        createTrainVariant.comment().invalid()
-                    ) {
-                        @for (error of createTrainVariant.comment().errors(); track error) {
-                            <span class="form-error">{{ error.message }}</span>
-                        }
-                    }
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-ghost" (click)="state.toggleIsNewVariantModalOpen()" i18n="@@newVariantModal.cancel">
-                    Cancel
-                </button>
-                <button
-                    [class.btn-muted]="createTrainVariant().invalid()"
-                    [disabled]="createTrainVariant().invalid()"
-                    class="btn btn-primary"
-                    (click)="createNewVariant()"
-                    i18n="@@newVariantModal.createAndEdit"
-                >
-                    ⎇ Create &amp; Edit
-                </button>
-            </div>
-        </div>
-    </div>`,
-    styles: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FormField],
+    imports: [
+        MatDialogTitle,
+        MatDialogContent,
+        MatDialogActions,
+        MatDialogClose,
+        MatFormField,
+        MatLabel,
+        MatError,
+        MatPrefix,
+        MatInput,
+        MatButton,
+        FormField,
+    ],
+    templateUrl: './new-variant-modal.html',
 })
 export class NewVariantModal {
-    private router = inject(Router);
-    private apiService = inject(BackendApiService);
-    protected state = inject(TrafficPageState);
-
-    private model = signal<{
-        variantName: string;
-        comment: string;
-    }>({
-        variantName: '',
-        comment: '',
+    private readonly data = inject<NewVariantDialogData>(MAT_DIALOG_DATA);
+    private readonly dialogRef = inject(MatDialogRef<NewVariantModal>);
+    private readonly router = inject(Router);
+    private readonly apiService = inject(BackendApiService);
+    private readonly settingsService = inject(SettingsService);
+    protected readonly orgPrefix = computed(() => {
+        const org = this.settingsService.settings().organization;
+        return org ? `${org}-` : '';
     });
+
+    private readonly model = signal({ variantName: '', comment: '' });
 
     createTrainVariant = form(this.model, (schemaPath) => {
-        required(schemaPath.variantName, { message: 'Variant Name is required' });
-        maxLength(schemaPath.variantName, 255, { message: 'Max 255 characters.' });
-        required(schemaPath.comment, { message: 'Comment is required' });
+        required(schemaPath.variantName, {
+            message: $localize`:@@validation.required:Required`,
+        });
+        maxLength(schemaPath.variantName, 255, {
+            message: $localize`:@@newVariantModal.validation.nameMaxLength:Max 255 characters`,
+        });
+        required(schemaPath.comment, {
+            message: $localize`:@@validation.required:Required`,
+        });
     });
 
-    protected createNewVariant() {
-        if (this.state.createNewVariantRunning) return;
-        this.state.createNewVariantRunning = true;
-        const trainId = this.state.trainId();
-        const { variantName, comment } = this.createTrainVariant().value();
-        if (trainId) {
-            this.apiService
-                .createBranch(trainId, variantName, comment)
-                .pipe(
-                    finalize(() => {
-                        this.state.createNewVariantRunning = false;
-                    }),
-                )
-                .subscribe({
-                    next: (result) => {
-                        this.state.toggleIsNewVariantModalOpen();
-                        this.state.trainMainBranch.reload();
-                        this.router.navigate(['/edit-train'], {
-                            queryParams: { trainId, branchId: result.branchId },
-                        });
-                    },
-                    error: () => {
-                        // Error already handled by errorInterceptor (toast shown)
-                    },
-                });
-        }
+    protected createNewVariant(): void {
+        void submit(this.createTrainVariant, async (field) => {
+            const { variantName, comment } = field().value();
+            const result = await firstValueFrom(
+                this.apiService.createBranch(
+                    this.data.trainId,
+                    variantName,
+                    comment,
+                    this.data.mainBranchTrain,
+                ),
+            );
+            this.dialogRef.close('success');
+            void this.router.navigate(['/edit-train'], {
+                queryParams: { trainId: this.data.trainId, branchId: result.branchId },
+            });
+        }).catch(() => {
+            // Error is handled by the error interceptor (global toast)
+        });
     }
 }

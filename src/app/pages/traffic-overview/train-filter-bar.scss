@@ -1,0 +1,32 @@
+.filter-bar {
+    background-color: var(--card-background);
+    padding: var(--spacing-md) var(--spacing-xl);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    align-items: flex-end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 140px;
+
+    mat-form-field {
+        width: 100%;
+    }
+}
+
+.filter-group--shrink {
+    flex: 0;
+    min-width: max-content;
+    padding-bottom: 22px;
+}
+
+@media (max-width: 767px) {
+    .filter-bar { padding: var(--spacing-md); }
+}

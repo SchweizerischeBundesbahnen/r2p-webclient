@@ -1,16 +1,13 @@
-import { inject, Injectable, signal } from '@angular/core';
+﻿import { inject, Injectable, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { BackendApiService } from '../../backend-api.service';
+import { BackendApiService } from '../../core/api/backend-api.service';
 import { map, Observable, of, switchMap } from 'rxjs';
 import { Train, TrainListElement } from '../../shared/models/api.models';
 
 @Injectable()
 export class TrafficPageState {
-    createNewVariantRunning = false;
-    newVariantModalIsOpen = signal(false);
     readonly apiService = inject(BackendApiService);
     trainId = signal<string | undefined>(undefined);
-
 
     readonly trainMainBranch = rxResource({
         params: () => {
@@ -34,9 +31,6 @@ export class TrafficPageState {
             ),
     });
 
-    toggleIsNewVariantModalOpen() {
-        this.newVariantModalIsOpen.set(!this.newVariantModalIsOpen());
-    }
 }
 
 export interface TrainWithDetails {

@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { form, FormField, required, submit } from '@angular/forms/signals';
 import { firstValueFrom } from 'rxjs';
-import { BackendApiService } from '../../backend-api.service';
+import { BackendApiService } from '../../core/api/backend-api.service';
 
 export interface AcceptMergeDialogData {
     trainId: string;
@@ -18,19 +18,23 @@ export interface AcceptMergeDialogData {
     selector: 'app-accept-merge-modal',
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose, MatFormField, MatLabel, MatError, MatInput, MatButton, FormField],
+    styles: [`
+        .dialog-hint { margin-bottom: 1rem; color: var(--mat-sys-on-surface-variant); font-size: 0.9rem; }
+        .full-width { width: 100%; }
+    `],
     template: `
         <h2 mat-dialog-title i18n="@@acceptMergeModal.title">Accept Variant</h2>
 
         <mat-dialog-content>
-            <p style="margin-bottom:1rem; color:var(--mat-sys-on-surface-variant); font-size:0.9rem;">
+            <p class="dialog-hint">
                 <ng-container i18n="@@acceptMergeModal.warning">
                     Variant <strong>{{ data.branchName }}</strong> will be taken over into <strong>main</strong>.
                     This action cannot be undone.
                 </ng-container>
             </p>
             <form>
-                <mat-form-field appearance="outline" style="width:100%;">
-                    <mat-label i18n="@@acceptMergeModal.field.comment">Comment</mat-label>
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label i18n="@@common.field.comment">Comment</mat-label>
                     <textarea
                         matInput
                         [formField]="acceptForm.comment"
@@ -48,7 +52,7 @@ export interface AcceptMergeDialogData {
         </mat-dialog-content>
 
         <mat-dialog-actions align="end">
-            <button mat-button mat-dialog-close i18n="@@acceptMergeModal.cancel">Cancel</button>
+            <button mat-button mat-dialog-close i18n="@@common.cancel">Cancel</button>
             <button
                 mat-flat-button
                 type="button"
@@ -73,7 +77,7 @@ export class AcceptMergeModalComponent {
 
     protected readonly acceptForm = form(this.model, (p) => {
         required(p.comment, {
-            message: $localize`:@@acceptMergeModal.validation.commentRequired:Comment is required`,
+            message: $localize`:@@common.validation.commentRequired:Comment is required`,
         });
     });
 

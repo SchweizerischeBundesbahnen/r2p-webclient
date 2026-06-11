@@ -1,20 +1,41 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { MatDialog } from '@angular/material/dialog';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { Subject } from 'rxjs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { JourneyRouteCard } from './journey-route-card';
+import { EditStopModal } from './edit-stop-modal';
+import { EditStopDialogData } from './edit-stop-modal';
 import { Journey, TimingType } from '../../models/api.models';
+
+function makeDialogMock() {
+    const afterClosed$ = new Subject<unknown>();
+    const dialogRefMock = { afterClosed: () => afterClosed$.asObservable() };
+    const openSpy = vi.fn().mockReturnValue(dialogRefMock);
+    return { openSpy, afterClosed$, dialogRefMock };
+}
 
 describe('JourneyRouteCard', () => {
     let fixture: ComponentFixture<JourneyRouteCard>;
     let component: JourneyRouteCard;
+    let openSpy: ReturnType<typeof vi.fn>;
+    let afterClosed$: Subject<unknown>;
 
     beforeEach(async () => {
+        ({ openSpy, afterClosed$ } = makeDialogMock());
         await TestBed.configureTestingModule({
             imports: [JourneyRouteCard],
+            providers: [
+                provideAnimationsAsync(),
+                { provide: MatDialog, useValue: { open: openSpy } },
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(JourneyRouteCard);
         component = fixture.componentInstance;
     });
+
+    afterEach(() => TestBed.resetTestingModule());
 
     it('should show "No journey stops defined." when no journey is provided', () => {
         fixture.detectChanges();
@@ -31,7 +52,7 @@ describe('JourneyRouteCard', () => {
                     activities: [
                         {
                             type: 'journey',
-                            responsibility: { type: 'carrier', id: 'SBB', status: 'accepted' },
+                            responsibility: { type: 'rru', id: 'SBB', status: 'confirmed' },
                             timings: [{ type: TimingType.Departure, duration: 'PT8H30M' }],
                         },
                     ],
@@ -41,7 +62,7 @@ describe('JourneyRouteCard', () => {
                     activities: [
                         {
                             type: 'journey',
-                            responsibility: { type: 'carrier', id: 'SBB', status: 'accepted' },
+                            responsibility: { type: 'rru', id: 'SBB', status: 'confirmed' },
                             timings: [{ type: TimingType.Arrival, duration: 'PT9H30M' }],
                         },
                     ],
@@ -79,9 +100,7 @@ describe('JourneyRouteCard', () => {
                                 { type: TimingType.Arrival, duration: 'PT7H00M' },
                                 { type: TimingType.Departure, duration: 'PT7H05M' },
                             ],
-                            capability: {
-                                type: 'path',
-                            },
+                            capability: { type: 'path' },
                         },
                     ],
                 },
@@ -108,9 +127,7 @@ describe('JourneyRouteCard', () => {
                                 { type: TimingType.EarliestArrival, duration: 'PT7H00M' },
                                 { type: TimingType.EarliestDeparture, duration: 'PT7H05M' },
                             ],
-                            capability: {
-                                type: 'path',
-                            },
+                            capability: { type: 'path' },
                         },
                     ],
                 },
@@ -137,9 +154,7 @@ describe('JourneyRouteCard', () => {
                                 { type: TimingType.LatestArrival, duration: 'PT7H00M' },
                                 { type: TimingType.LatestDeparture, duration: 'PT7H05M' },
                             ],
-                            capability: {
-                                type: 'path',
-                            },
+                            capability: { type: 'path' },
                         },
                     ],
                 },
@@ -154,7 +169,7 @@ describe('JourneyRouteCard', () => {
         expect(el.textContent).toContain('07:05');
     });
 
-    it('should display first arrival and departure times', () => {
+    it('should display first arrival and departure times when multiple timing types present', () => {
         const journey: Journey = {
             journeylocations: [
                 {
@@ -168,9 +183,7 @@ describe('JourneyRouteCard', () => {
                                 { type: TimingType.Departure, duration: 'PT7H05M' },
                                 { type: TimingType.LatestDeparture, duration: 'PT7H07M' },
                             ],
-                            capability: {
-                                type: 'path',
-                            },
+                            capability: { type: 'path' },
                         },
                     ],
                 },
@@ -194,7 +207,7 @@ describe('JourneyRouteCard', () => {
         fixture.detectChanges();
 
         const el: HTMLElement = fixture.nativeElement;
-        expect(el.querySelector('.jt-edit-location-btn')).toBeNull();
+        expect(el.querySelector('.stop-icon-btn')).toBeNull();
     });
 
     it('should show edit button for stops when not readonly', () => {
@@ -206,10 +219,10 @@ describe('JourneyRouteCard', () => {
         fixture.detectChanges();
 
         const el: HTMLElement = fixture.nativeElement;
-        expect(el.querySelector('.jt-edit-location-btn')).not.toBeNull();
+        expect(el.querySelector('.stop-icon-btn')).not.toBeNull();
     });
 
-    it('should open edit modal when edit button is clicked', () => {
+    it('should call dialog.open(EditStopModal) when edit button is clicked', () => {
         const journey: Journey = {
             journeylocations: [{ locations: [{ name: 'Bern', type: 'UIC', code: '8507000' }] }],
         };
@@ -218,33 +231,15 @@ describe('JourneyRouteCard', () => {
         fixture.detectChanges();
 
         const el: HTMLElement = fixture.nativeElement;
-        const editBtn = el.querySelector('.jt-edit-location-btn') as HTMLButtonElement;
-        editBtn.click();
-        fixture.detectChanges();
+        (el.querySelector('.stop-icon-btn') as HTMLButtonElement).click();
 
-        expect(el.querySelector('#edit-location-modal')).not.toBeNull();
+        expect(openSpy).toHaveBeenCalledOnce();
+        expect(openSpy.mock.calls[0][0]).toBe(EditStopModal);
+        const opts = openSpy.mock.calls[0][1] as { data: EditStopDialogData };
+        expect(opts.data.location.name).toBe('Bern');
     });
 
-    it('should close edit modal on cancel', () => {
-        const journey: Journey = {
-            journeylocations: [{ locations: [{ name: 'Bern', type: 'UIC', code: '8507000' }] }],
-        };
-        fixture.componentRef.setInput('readonly', false);
-        fixture.componentRef.setInput('journey', journey);
-        fixture.detectChanges();
-
-        const el: HTMLElement = fixture.nativeElement;
-        (el.querySelector('.jt-edit-location-btn') as HTMLButtonElement).click();
-        fixture.detectChanges();
-
-        const closeBtn = el.querySelector('.modal-close') as HTMLButtonElement;
-        closeBtn.click();
-        fixture.detectChanges();
-
-        expect(el.querySelector('#edit-location-modal')).toBeNull();
-    });
-
-    it('should emit journeyChange and update stop name when location is saved', () => {
+    it('should update stop name and emit journeyChange when dialog closes with a location', () => {
         const journey: Journey = {
             journeylocations: [{ locations: [{ name: 'Bern', type: 'UIC', code: '8507000' }] }],
         };
@@ -256,26 +251,37 @@ describe('JourneyRouteCard', () => {
         fixture.componentInstance.journeyChange.subscribe(journeyChangeSpy);
 
         const el: HTMLElement = fixture.nativeElement;
-        (el.querySelector('.jt-edit-location-btn') as HTMLButtonElement).click();
+        (el.querySelector('.stop-icon-btn') as HTMLButtonElement).click();
+
+        // Simulate dialog returning a saved location
+        afterClosed$.next({ name: 'Zürich HB', type: 'UIC', code: '8507000' });
         fixture.detectChanges();
 
-        // Change the name field
-        const nameInput = el.querySelector('#loc-name') as HTMLInputElement;
-        nameInput.value = 'Zürich HB';
-        nameInput.dispatchEvent(new Event('input'));
-        fixture.detectChanges();
-
-        const saveBtn = el.querySelector('.modal-footer .btn-primary') as HTMLButtonElement;
-        saveBtn.click();
-        fixture.detectChanges();
-
-        expect(el.querySelector('#edit-location-modal')).toBeNull();
         expect(journeyChangeSpy).toHaveBeenCalledOnce();
-        const emittedJourney = journeyChangeSpy.mock.calls[0][0] as Journey;
-        expect(emittedJourney.journeylocations?.[0].locations?.[0].name).toBe('Zürich HB');
+        const emitted = journeyChangeSpy.mock.calls[0][0] as Journey;
+        expect(emitted.journeylocations?.[0].locations?.[0].name).toBe('Zürich HB');
+        expect(el.querySelector('.stop-name')!.textContent).toBe('Zürich HB');
+    });
 
-        // Table should reflect the new name
-        expect(el.querySelector('.jt-stop-name')!.textContent).toBe('Zürich HB');
+    it('should not emit journeyChange when dialog is cancelled (closes with undefined)', () => {
+        const journey: Journey = {
+            journeylocations: [{ locations: [{ name: 'Bern', type: 'UIC', code: '8507000' }] }],
+        };
+        fixture.componentRef.setInput('readonly', false);
+        fixture.componentRef.setInput('journey', journey);
+        fixture.detectChanges();
+
+        const journeyChangeSpy = vi.fn();
+        fixture.componentInstance.journeyChange.subscribe(journeyChangeSpy);
+
+        const el: HTMLElement = fixture.nativeElement;
+        (el.querySelector('.stop-icon-btn') as HTMLButtonElement).click();
+
+        afterClosed$.next(undefined);
+        fixture.detectChanges();
+
+        expect(journeyChangeSpy).not.toHaveBeenCalled();
+        expect(el.querySelector('.stop-name')!.textContent).toBe('Bern');
     });
 
     it('should expose location on JourneyStop', () => {
@@ -294,12 +300,7 @@ describe('JourneyRouteCard', () => {
             journeylocations: [
                 {
                     locations: [{ name: 'Bern' }],
-                    activities: [
-                        {
-                            type: 'formation',
-                            capability: { type: 'rollingStock' },
-                        },
-                    ],
+                    activities: [{ type: 'formation', capability: { type: 'rollingStock' } }],
                 },
             ],
         };
@@ -319,12 +320,7 @@ describe('JourneyRouteCard', () => {
             journeylocations: [
                 {
                     locations: [{ name: 'Zürich HB' }],
-                    activities: [
-                        {
-                            type: 'crewing',
-                            capability: { type: 'staff' },
-                        },
-                    ],
+                    activities: [{ type: 'crewing', capability: { type: 'staff' } }],
                 },
             ],
         };
@@ -344,12 +340,7 @@ describe('JourneyRouteCard', () => {
             journeylocations: [
                 {
                     locations: [{ name: 'Basel SBB' }],
-                    activities: [
-                        {
-                            type: 'routing',
-                            capability: { type: 'path' },
-                        },
-                    ],
+                    activities: [{ type: 'routing', capability: { type: 'path' } }],
                 },
             ],
         };

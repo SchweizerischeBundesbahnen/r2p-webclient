@@ -1,0 +1,179 @@
+<div class="settings-modal">
+    @if (!isFirstTime()) {
+        <mat-dialog-actions class="close-row">
+            <button mat-icon-button mat-dialog-close aria-label="Close" i18n-aria-label="@@common.close">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-dialog-actions>
+    }
+    <mat-dialog-content class="modal-content">
+
+        @if (isFirstTime()) {
+            <div class="first-time-banner">
+                <span class="first-time-banner-icon" aria-hidden="true">⚙️</span>
+                <div>
+                    <strong i18n="@@settings.firstTime.title">Welcome – Configuration Required</strong>
+                    <p i18n="@@settings.firstTime.description">
+                        This is your first time starting R2P Web Client. Please fill in all required fields below before continuing.
+                    </p>
+                </div>
+            </div>
+        } @else {
+            <h2 class="title" i18n="@@settings.editTitle">Settings</h2>
+        }
+
+        @if (unreachableUrl) {
+            <div class="error-banner" role="alert">
+                <mat-icon class="error-banner-icon" aria-hidden="true">wifi_off</mat-icon>
+                <div>
+                    <strong i18n="@@settings.authorityUnreachable">Authority is not reachable:</strong>
+                    <p class="error-banner-url">{{ unreachableUrl }}</p>
+                </div>
+            </div>
+        }
+
+        @if (oidcError) {
+            <div class="error-banner" role="alert">
+                <mat-icon class="error-banner-icon" aria-hidden="true">key_off</mat-icon>
+                <div>
+                    <strong i18n="@@settings.oidcAuthError">Authentication failed – please check your Client ID and settings:</strong>
+                    <p class="error-banner-url">{{ oidcError }}</p>
+                </div>
+            </div>
+        }
+
+        @if (failedRedirectUri) {
+            <div class="error-banner" role="alert">
+                <mat-icon class="error-banner-icon" aria-hidden="true">link_off</mat-icon>
+                <div>
+                    <strong i18n="@@settings.oidcRedirectFailed">Login redirect was not completed.</strong>
+                    <p i18n="@@settings.oidcRedirectFailedHint">Possible causes: wrong Client ID, or the following Redirect URI is not registered in your Identity Provider:</p>
+                    <p class="error-banner-url">{{ failedRedirectUri }}</p>
+                </div>
+            </div>
+        }
+
+        <!-- Server URL -->
+        <div class="field-group">
+            <label class="field-label" for="server-url" i18n="@@settings.serverUrl">Server URL *</label>
+            <div class="field-row">
+                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="field">
+                    <input
+                        id="server-url"
+                        matInput
+                        [value]="serverUrl()"
+                        (input)="serverUrl.set($any($event.target).value)"
+                        placeholder="https://api.example.com"
+                        aria-label="Server URL"
+                        i18n-aria-label="@@settings.serverUrl.aria"
+                    />
+                </mat-form-field>
+            </div>
+            @if (submitted() && !serverUrl().trim()) {
+                <p class="hint hint--error" i18n="@@validation.required">Required.</p>
+            }
+            @if (serverUrl().trim() && !isServerUrlValid()) {
+                <p class="hint hint--error" i18n="@@common.url.invalid">Must be a valid URL.</p>
+            }
+            <p class="hint" i18n="@@settings.serverUrlHint">Base URL of the R2P backend server.</p>
+        </div>
+
+        <!-- Organization -->
+        <div class="field-group">
+            <label class="field-label" for="organization" i18n="@@settings.organization">Your Organization *</label>
+            <mat-form-field appearance="outline" subscriptSizing="dynamic" class="field">
+                <mat-select id="organization" [value]="organization()"
+                            (valueChange)="organization.set($event)" aria-label="Your Organization"
+                            i18n-aria-label="@@settings.organization.aria">
+                    @for (option of organizations; track option.name) {
+                        <mat-option [value]="option.name">{{ option.label }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+            @if (submitted() && !organizations.some(o => o.name === organization())) {
+                <p class="hint hint--error" i18n="@@validation.required">Required.</p>
+            }
+            <p class="hint" i18n="@@settings.organizationHint">All requests will be sent on behalf of this organization.</p>
+        </div>
+
+        <hr class="divider" />
+
+        <p class="hint">
+            <span i18n="@@settings.oauthHelpPrefix">Need help with the OAuth settings?</span>
+            <a href="https://github.com/SchweizerischeBundesbahnen/r2p-webclient/wiki/OAuth-Settings"
+               target="_blank" rel="noopener noreferrer"
+               i18n="@@settings.oauthHelpLink"> View configuration guide ↗</a>
+        </p>
+
+        <!-- Authority -->
+        <div class="field-group">
+            <label class="field-label" for="authority" i18n="@@settings.authority">Authority (OIDC Issuer URL) *</label>
+            <div class="field-row">
+                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="field">
+                    <input
+                        id="authority"
+                        matInput
+                        [value]="authority()"
+                        (input)="authority.set($any($event.target).value)"
+                        placeholder="https://login.microsoftonline.com/<tenant-id>/v2.0"
+                        aria-label="Authority"
+                    />
+                </mat-form-field>
+            </div>
+            @if (submitted() && !authority().trim()) {
+                <p class="hint hint--error" i18n="@@validation.required">Required.</p>
+            }
+            @if (authority().trim() && !isAuthorityValid()) {
+                <p class="hint hint--error" i18n="@@common.url.invalid">Must be a valid URL.</p>
+            }
+            @if (isAzureV1Authority()) {
+                <p class="hint hint--error" i18n="@@settings.authorityAzureV1Error">
+                    Azure AD v1 endpoint is not supported. Please use the v2.0 endpoint:
+                    <code>https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</code>
+                </p>
+            }
+        </div>
+
+        <!-- Client ID -->
+        <div class="field-group">
+            <label class="field-label" for="client-id" i18n="@@settings.clientId">Client ID *</label>
+            <mat-form-field appearance="outline" subscriptSizing="dynamic" class="field">
+                <input
+                    id="client-id"
+                    matInput
+                    [value]="clientId()"
+                    (input)="clientId.set($any($event.target).value)"
+                    placeholder="your-client-id"
+                    aria-label="Client ID"
+                />
+            </mat-form-field>
+            @if (submitted() && !clientId().trim()) {
+                <p class="hint hint--error" i18n="@@validation.required">Required.</p>
+            }
+        </div>
+
+        <!-- Scope -->
+        <div class="field-group">
+            <label class="field-label" for="scope" i18n="@@settings.scope">Scope *</label>
+            <mat-form-field appearance="outline" subscriptSizing="dynamic" class="field">
+                <input
+                    id="scope"
+                    matInput
+                    [value]="scope()"
+                    (input)="scope.set($any($event.target).value)"
+                    placeholder=""
+                    aria-label="Scope"
+                />
+            </mat-form-field>
+            @if (submitted() && !scope().trim()) {
+                <p class="hint hint--error" i18n="@@validation.required">Required.</p>
+            }
+        </div>
+
+        <button mat-flat-button color="primary" class="save-btn"
+                (click)="onClose()" i18n="@@settings.save">
+            Save
+        </button>
+
+    </mat-dialog-content>
+</div>

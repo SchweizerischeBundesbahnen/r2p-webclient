@@ -55,7 +55,7 @@ describe('EditTrainPageState', () => {
         await TestBed.inject(() => state.branch.isLoading(), { optional: true });
 
         expect(state.editTrainForm.operationalDay().value()).toBe('2026-05-26');
-        expect(state.editTrainForm.name().value()).toBe('IC 1234');
+        expect(state.editTrainForm.trainNumber().value()).toBe('IC 1234');
     });
 
     it('sets the resource into error state when the API returns an invalid operationalDay', async () => {

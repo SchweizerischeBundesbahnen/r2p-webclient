@@ -63,6 +63,22 @@ export function parseDurationToHoursAndMinutes(duration: string): string | undef
 }
 
 /**
+ * Converts a "HH:MM" string to an ISO-8601 duration string (e.g. "PT8H30M", "PT0M" for "00:00").
+ * Returns `undefined` if the input is empty or not a valid time string.
+ */
+export function hoursMinutesToDuration(time: string | undefined): string | undefined {
+    if (!time) return undefined;
+    const parts = time.split(':');
+    if (parts.length !== 2) return undefined;
+    const h = Number(parts[0]);
+    const m = Number(parts[1]);
+    if (!Number.isInteger(h) || !Number.isInteger(m) || h < 0 || m < 0 || m > 59) return undefined;
+    const hours = h > 0 ? `${h}H` : '';
+    const mins = m > 0 ? `${m}M` : hours ? '' : '0M';
+    return `PT${hours}${mins}`;
+}
+
+/**
  * Adds an ISO-8601 duration string (e.g. "PT8H12M", "P1DT14H35M") to a date
  * string (e.g. "2025-06-15") and returns the result as an ISO-8601 date-time
  * string (e.g. "2025-06-15T08:12:00.000Z").

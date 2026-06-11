@@ -20,3 +20,8 @@ dist/
 
 # Miscellaneous
 /.angular/cache
+
+.claude
+_bmad
+_bmad-output
+coverage/

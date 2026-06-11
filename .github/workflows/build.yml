@@ -34,13 +34,33 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Check dependency rules
+        run: npm run check-deps
+
       - name: Build project
         run: npm run build
 
-      - name: Run tests
+      - name: Run tests with coverage
         run: |
           set -o pipefail
-          npm test -- --watch=false | tee test-results.txt
+          npm test -- --watch=false --coverage | tee test-results.txt
+
+      - name: Write coverage summary
+        if: always()
+        run: |
+          echo "## Test Coverage" >> $GITHUB_STEP_SUMMARY
+          if [ -f coverage/r2p-webclient/coverage-summary.json ]; then
+            jq -r '
+              "| Metric | Coverage | Covered / Total |",
+              "|--------|----------|-----------------| ",
+              "| Statements | \(.total.statements.pct)% | \(.total.statements.covered) / \(.total.statements.total) |",
+              "| Branches | \(.total.branches.pct)% | \(.total.branches.covered) / \(.total.branches.total) |",
+              "| Functions | \(.total.functions.pct)% | \(.total.functions.covered) / \(.total.functions.total) |",
+              "| Lines | \(.total.lines.pct)% | \(.total.lines.covered) / \(.total.lines.total) |"
+            ' coverage/r2p-webclient/coverage-summary.json >> $GITHUB_STEP_SUMMARY
+          else
+            echo "Coverage data not found" >> $GITHUB_STEP_SUMMARY
+          fi
 
       - name: Upload test results
         if: always()
@@ -49,3 +69,11 @@ jobs:
           name: test-results
           path: test-results.txt
           if-no-files-found: error
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-report
+          path: coverage/
+          if-no-files-found: warn

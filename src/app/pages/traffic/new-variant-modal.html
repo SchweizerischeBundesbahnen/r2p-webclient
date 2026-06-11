@@ -1,0 +1,55 @@
+<h2 mat-dialog-title i18n="@@newVariantModal.title">Create New Variant</h2>
+<mat-dialog-content>
+    <mat-form-field appearance="outline" class="form-field-full mt-sm">
+        <mat-label i18n="@@newVariantModal.field.name">Variant Name</mat-label>
+        <span matTextPrefix>{{ orgPrefix() }}</span>
+        <input
+            matInput
+            [formField]="createTrainVariant.variantName"
+            placeholder="my variant"
+            i18n-placeholder="@@newVariantModal.field.namePlaceholder"
+        />
+        @if (
+            createTrainVariant.variantName().touched() &&
+            createTrainVariant.variantName().invalid()
+        ) {
+            @for (error of createTrainVariant.variantName().errors(); track error) {
+                <mat-error>{{ error.message }}</mat-error>
+            }
+        }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-field-full mt-md">
+        <mat-label i18n="@@common.field.comment">Comment</mat-label>
+        <textarea
+            matInput
+            [formField]="createTrainVariant.comment"
+            rows="3"
+            placeholder="Describe the purpose of this variant…"
+            i18n-placeholder="@@newVariantModal.field.commentPlaceholder"
+        ></textarea>
+        @if (
+            createTrainVariant.comment().touched() &&
+            createTrainVariant.comment().invalid()
+        ) {
+            @for (error of createTrainVariant.comment().errors(); track error) {
+                <mat-error>{{ error.message }}</mat-error>
+            }
+        }
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close i18n="@@common.cancel">Cancel</button>
+    <button
+        mat-raised-button
+        color="primary"
+        [disabled]="createTrainVariant().submitting()"
+        (click)="createNewVariant()"
+    >
+        @if (createTrainVariant().submitting()) {
+            <ng-container i18n="@@newVariantModal.creating">Creating…</ng-container>
+        } @else {
+            <ng-container i18n="@@newVariantModal.create">Create</ng-container>
+        }
+    </button>
+</mat-dialog-actions>

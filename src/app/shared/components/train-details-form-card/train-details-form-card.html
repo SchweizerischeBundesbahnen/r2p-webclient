@@ -1,0 +1,59 @@
+﻿<div class="card">
+    <div class="card-header">
+        <span class="card-title" i18n="@@trainForm.section.trainDetails">📋 Train Details</span>
+    </div>
+    <div class="card-body">
+        <div class="form-row">
+            <mat-form-field appearance="outline">
+                <mat-label i18n="@@common.field.trainNumber">Train Number</mat-label>
+                <input
+                    matInput
+                    id="train-name"
+                    [placeholder]="trainNumberPlaceholder()"
+                    [formField]="trainForm().trainNumber"
+                />
+                @if (trainForm().trainNumber().touched() && trainForm().trainNumber().invalid()) {
+                    @for (error of trainForm().trainNumber().errors(); track error) {
+                        <mat-error>{{ error.message }}</mat-error>
+                    }
+                }
+            </mat-form-field>
+            <mat-form-field appearance="outline" (click)="opDayInput.showPicker()">
+                <mat-label i18n="@@common.field.opDay">Operational Day</mat-label>
+                <input
+                    #opDayInput
+                    matInput
+                    type="date"
+                    id="train-opday"
+                    [formField]="trainForm().operationalDay"
+                />
+                @if (
+                    trainForm().operationalDay().touched() &&
+                    trainForm().operationalDay().invalid()
+                ) {
+                    @for (error of trainForm().operationalDay().errors(); track error) {
+                        <mat-error>{{ error.message }}</mat-error>
+                    }
+                }
+            </mat-form-field>
+        </div>
+        <mat-form-field appearance="outline" class="form-field-full">
+            <mat-label>{{ commentLabel() }}</mat-label>
+            <textarea
+                matInput
+                id="save-comment"
+                rows="3"
+                [placeholder]="commentPlaceholder()"
+                [formField]="trainForm().creationComment"
+            ></textarea>
+            @if (
+                trainForm().creationComment().touched() &&
+                trainForm().creationComment().invalid()
+            ) {
+                @for (error of trainForm().creationComment().errors(); track error) {
+                    <mat-error>{{ error.message }}</mat-error>
+                }
+            }
+        </mat-form-field>
+    </div>
+</div>
