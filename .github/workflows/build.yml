@@ -34,6 +34,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Check dependency rules
+        run: npm run check-deps
+
       - name: Build project
         run: npm run build
 
