@@ -41,8 +41,17 @@
     }
 
     @if (capabilityType() === 'staff' && staffRole()) {
-        <div class="activity-detail" i18n="@@journeyActivityItem.staffRole">
-            Role: {{ staffRole() }}
+        <div class="activity-detail">
+            <span i18n="@@journeyActivityItem.staffRole">Role:</span>
+            @switch (staffRole()) {
+                @case ('driver') {<span i18n="@@staffType.driver">Driver</span>}
+                @case ('shunter') {<span i18n="@@staffType.shunter">Shunter</span>}
+                @case ('technicalInspector') {<span i18n="@@staffType.technicalInspector">Technical Inspector</span>}
+                @case ('conductor') {<span i18n="@@staffType.conductor">Conductor</span>}
+                @case ('cleaner') {<span i18n="@@staffType.cleaner">Cleaner</span>}
+                @case ('catering') {<span i18n="@@staffType.catering">Catering</span>}
+                @default {<span>{{ staffRole() }}</span>}
+            }
         </div>
     }
 
@@ -54,11 +63,17 @@
 
     @if (activity().capability?.capabilityFeatures?.length) {
         <div class="activity-features">
+            <span class="activity-detail-label" i18n="@@journeyActivityItem.features">Features</span>
             @for (cf of activity().capability!.capabilityFeatures!; track $index) {
-                <span
-                    class="feature-tag"
-                    [title]="cf.feature.offeredservice ?? ''"
-                >{{ cf.feature.type }}{{ cf.feature.offeredservice ? ': ' + cf.feature.offeredservice : '' }}</span>
+                <span class="feature-tag" [title]="cf.feature.offeredservice ?? ''">
+                    @switch (cf.feature.type) {
+                        @case ('WLAN_HOTSPOT') {<span i18n="@@featureType.wlanHotspot">WLAN Hotspot</span>}
+                        @case ('RESTAURANT') {<span i18n="@@featureType.restaurant">Restaurant</span>}
+                        @case ('QUIET_ZONE_1ST_CLASS') {<span i18n="@@featureType.quietZone1stClass">Quiet zone 1st class</span>}
+                        @case ('LOW_FLOOR_ENTRY') {<span i18n="@@featureType.lowFloorEntry">Low-floor entry</span>}
+                        @default {<span>{{ cf.feature.type }}</span>}
+                    }{{ cf.feature.offeredservice ? ': ' + cf.feature.offeredservice : '' }}
+                </span>
             }
         </div>
     }

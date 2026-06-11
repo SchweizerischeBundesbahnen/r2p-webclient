@@ -210,6 +210,18 @@
       "error.toast.dismissLabel": "Dismiss",
       "trainForm.section.trainDetails": "📋 Train Details",
       "trainForm.field.opDay": "Operational Day",
-      "stickyEditBar.unsavedChanges": "● Unsaved changes"
+      "stickyEditBar.unsavedChanges": "● Unsaved changes",
+      "journeyActivityItem.staffRole": "Role:",
+      "staffType.driver": "Driver",
+      "staffType.shunter": "Shunter",
+      "staffType.technicalInspector": "Technical Inspector",
+      "staffType.conductor": "Conductor",
+      "staffType.cleaner": "Cleaner",
+      "staffType.catering": "Catering",
+      "journeyActivityItem.features": "Features",
+      "featureType.wlanHotspot": "WLAN Hotspot",
+      "featureType.restaurant": "Restaurant",
+      "featureType.quietZone1stClass": "Quiet zone 1st class",
+      "featureType.lowFloorEntry": "Low-floor entry"
   }
 }

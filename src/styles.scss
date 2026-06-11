@@ -2,6 +2,9 @@
 @use './styles/theme' as theme;
 @use './styles/tokens';
 @import 'material-icons/iconfont/material-icons.css';
+@import '@fontsource/roboto/300.css';
+@import '@fontsource/roboto/400.css';
+@import '@fontsource/roboto/500.css';
 
 @include mat.core();
 

@@ -117,9 +117,10 @@
                 <div class="feature-row">
                     <mat-form-field appearance="outline" class="feature-type-field">
                         <mat-select [value]="feat.type" (selectionChange)="updateFeatureType($index, $event.value)">
-                            @for (ft of rsFeatureTypes; track ft.value) {
-                                <mat-option [value]="ft.value">{{ ft.label }}</mat-option>
-                            }
+                            <mat-option value="WLAN_HOTSPOT" i18n="@@featureType.wlanHotspot">WLAN Hotspot</mat-option>
+                            <mat-option value="RESTAURANT" i18n="@@featureType.restaurant">Restaurant</mat-option>
+                            <mat-option value="QUIET_ZONE_1ST_CLASS" i18n="@@featureType.quietZone1stClass">Quiet zone 1st class</mat-option>
+                            <mat-option value="LOW_FLOOR_ENTRY" i18n="@@featureType.lowFloorEntry">Low-floor entry</mat-option>
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field appearance="outline" class="feature-value-field">
@@ -141,8 +142,14 @@
             <p class="section-label" i18n="@@editActivityModal.staff">Staff Details</p>
             <mat-form-field appearance="outline" class="form-field-full">
                 <mat-label i18n="@@editActivityModal.staff.role">Role</mat-label>
-                <input matInput [value]="staffRole()"
-                    (input)="staffRole.set($any($event.target).value)" placeholder="e.g., conductor" />
+                <mat-select [value]="staffRole()" (selectionChange)="staffRole.set($event.value)">
+                    <mat-option value="driver" i18n="@@staffType.driver">Driver</mat-option>
+                    <mat-option value="shunter" i18n="@@staffType.shunter">Shunter</mat-option>
+                    <mat-option value="technicalInspector" i18n="@@staffType.technicalInspector">Technical Inspector</mat-option>
+                    <mat-option value="conductor" i18n="@@staffType.conductor">Conductor</mat-option>
+                    <mat-option value="cleaner" i18n="@@staffType.cleaner">Cleaner</mat-option>
+                    <mat-option value="catering" i18n="@@staffType.catering">Catering</mat-option>
+                </mat-select>
             </mat-form-field>
         }
 
