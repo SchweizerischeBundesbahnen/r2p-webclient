@@ -10,6 +10,7 @@ import { Spinner } from '../../shared/components/spinner/spinner';
 import { MatButton, MatAnchor } from '@angular/material/button';
 import { StickyEditBar } from '../../shared/components/sticky-edit-bar/sticky-edit-bar';
 import { TrainDetailsFormCard } from '../../shared/components/train-details-form-card/train-details-form-card';
+import { SettingsService } from '../../core/settings/settings.service';
 
 @Component({
     selector: 'app-create-train-page',
@@ -23,8 +24,10 @@ export class CreateTrainPage {
     private readonly router = inject(Router);
     protected readonly state = inject(CreatePageState);
     private readonly notifications = inject(ErrorNotificationService);
+    private readonly settingsService = inject(SettingsService);
     protected readonly createTrainForm = this.state.createTrainForm;
     protected readonly isJourneyEmpty = computed(() => !this.state.journey().journeylocations?.length);
+    protected readonly ownOrganization = computed(() => this.settingsService.settings().organization);
 
     protected onJourneyChange(journey: Journey): void {
         this.state.journey.set(journey);

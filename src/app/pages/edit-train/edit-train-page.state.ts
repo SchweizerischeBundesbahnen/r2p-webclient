@@ -1,11 +1,12 @@
-﻿import { inject, Injectable, signal } from '@angular/core';
+﻿import { computed, inject, Injectable, signal } from '@angular/core';
 import { form, required } from '@angular/forms/signals';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { map, Observable, switchMap, tap } from 'rxjs';
 import { BackendApiService } from '../../core/api/backend-api.service';
-import { Branch, Train } from '../../shared/models/api.models';
+import { Branch, Train, TrainListElement } from '../../shared/models/api.models';
 import { assertIsoDate } from '../../shared/utils/date.utils';
 import { TrainFormModel } from '../../shared/components/train-details-form-card/train-details-form-card';
+import { SettingsService } from '../../core/settings/settings.service';
 
 /**
  * Not provided in root, cause state should be destroyed after switching page.
@@ -14,6 +15,7 @@ import { TrainFormModel } from '../../shared/components/train-details-form-card/
 export class EditTrainPageState {
     editTrainRunning = signal(false);
     readonly apiService = inject(BackendApiService);
+    private readonly settingsService = inject(SettingsService);
 
     model = signal<TrainFormModel>({
         trainNumber: '',
@@ -29,6 +31,21 @@ export class EditTrainPageState {
     trainId = signal<string | undefined>(undefined);
 
     branchId = signal<string | undefined>(undefined);
+
+    readonly trainListElement = rxResource({
+        params: () => {
+            const trainId = this.trainId();
+            return trainId ? { trainId } : undefined;
+        },
+        stream: ({ params }): Observable<TrainListElement> =>
+            this.apiService.getTrainById(params.trainId),
+    });
+
+    readonly partners = computed(() => {
+        const ownOrg = this.settingsService.settings().organization;
+        const sharedWith = this.trainListElement.value()?.partners ?? [];
+        return [...new Set([ownOrg, ...sharedWith])];
+    });
 
     readonly branch = rxResource({
         params: () => {

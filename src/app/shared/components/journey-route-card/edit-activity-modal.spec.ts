@@ -15,7 +15,7 @@ function createComponent(
     activity: Activity | null = null,
     dialogRef = makeDialogRef(),
 ): { fixture: ComponentFixture<EditActivityModal>; dialogRef: ReturnType<typeof makeDialogRef> } {
-    const data: EditActivityDialogData = { activity, capabilityType };
+    const data: EditActivityDialogData = { activity, capabilityType, partners: ['SBB', 'BLS'] };
     TestBed.configureTestingModule({
         imports: [EditActivityModal],
         providers: [
@@ -58,6 +58,49 @@ const STUB_EXISTING: Activity = {
 
 describe('EditActivityModal', () => {
     afterEach(() => TestBed.resetTestingModule());
+
+    describe('partner dropdown', () => {
+        it('uses the partners from dialog data when provided', () => {
+            TestBed.resetTestingModule();
+            const data: EditActivityDialogData = {
+                activity: null,
+                capabilityType: 'rollingStock',
+                partners: ['SBB', 'BLS'],
+            };
+            TestBed.configureTestingModule({
+                imports: [EditActivityModal],
+                providers: [
+                    provideAnimationsAsync(),
+                    { provide: MAT_DIALOG_DATA, useValue: data },
+                    { provide: MatDialogRef, useValue: makeDialogRef() },
+                ],
+            });
+            const fixture = TestBed.createComponent(EditActivityModal);
+            fixture.detectChanges();
+            const component = fixture.componentInstance as unknown as { partners: string[] };
+            expect(component.partners).toEqual(['SBB', 'BLS']);
+        });
+
+        it('uses empty array when dialog data provides no partners', () => {
+            TestBed.resetTestingModule();
+            const data: EditActivityDialogData = {
+                activity: null,
+                capabilityType: 'rollingStock',
+            };
+            TestBed.configureTestingModule({
+                imports: [EditActivityModal],
+                providers: [
+                    provideAnimationsAsync(),
+                    { provide: MAT_DIALOG_DATA, useValue: data },
+                    { provide: MatDialogRef, useValue: makeDialogRef() },
+                ],
+            });
+            const fixture = TestBed.createComponent(EditActivityModal);
+            fixture.detectChanges();
+            const component = fixture.componentInstance as unknown as { partners: string[] };
+            expect(component.partners).toEqual([]);
+        });
+    });
 
     describe('title', () => {
         it('shows "Add <Type> Activity" for each capability type when creating new', () => {

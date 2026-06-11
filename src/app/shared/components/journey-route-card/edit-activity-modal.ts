@@ -35,6 +35,7 @@ import { planStatusLabel } from './activity-display.utils';
 export interface EditActivityDialogData {
     activity: Activity | null;
     capabilityType: CapabilityType;
+    partners?: string[];
 }
 
 export const RESPONSIBILITY_TYPES = [
@@ -91,7 +92,7 @@ export class EditActivityModal {
     private readonly data = inject<EditActivityDialogData>(MAT_DIALOG_DATA);
 
     protected readonly responsibilityTypes = RESPONSIBILITY_TYPES;
-    protected readonly partners = PARTNERS;
+    protected readonly partners = this.data.partners ?? [];
     protected readonly planStatuses = PLAN_STATUSES;
     protected readonly rsFeatureTypes = RS_FEATURE_TYPES;
     protected readonly capabilityType = this.data.capabilityType;
