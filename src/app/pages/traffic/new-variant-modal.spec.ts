@@ -70,7 +70,7 @@ describe('NewVariantModal', () => {
 
     it('form is initially invalid with both fields empty', () => {
         const { fixture } = createComponent();
-        expect((fixture.componentInstance as any).createTrainVariant().invalid()).toBe(true);
+        expect((fixture.componentInstance as unknown as { createTrainVariant: () => { invalid: () => boolean } }).createTrainVariant().invalid()).toBe(true);
     });
 
     it('shows validation errors and does not call API when submitting empty fields', async () => {

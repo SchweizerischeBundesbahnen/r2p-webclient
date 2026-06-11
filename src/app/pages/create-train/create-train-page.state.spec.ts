@@ -23,22 +23,22 @@ describe('CreatePageState', () => {
     });
 
     it('form remains invalid when only trainNumber is set', () => {
-        (state as any).model.set({ trainNumber: 'IC 1', operationalDay: '', creationComment: '' });
+        (state as unknown as { model: { set: (v: { trainNumber: string; operationalDay: string; creationComment: string }) => void } }).model.set({ trainNumber: 'IC 1', operationalDay: '', creationComment: '' });
         expect(state.createTrainForm().invalid()).toBe(true);
     });
 
     it('form remains invalid when only operationalDay is set', () => {
-        (state as any).model.set({ trainNumber: '', operationalDay: '2026-06-11', creationComment: '' });
+        (state as unknown as { model: { set: (v: { trainNumber: string; operationalDay: string; creationComment: string }) => void } }).model.set({ trainNumber: '', operationalDay: '2026-06-11', creationComment: '' });
         expect(state.createTrainForm().invalid()).toBe(true);
     });
 
     it('form remains invalid when only creationComment is set', () => {
-        (state as any).model.set({ trainNumber: '', operationalDay: '', creationComment: 'my comment' });
+        (state as unknown as { model: { set: (v: { trainNumber: string; operationalDay: string; creationComment: string }) => void } }).model.set({ trainNumber: '', operationalDay: '', creationComment: 'my comment' });
         expect(state.createTrainForm().invalid()).toBe(true);
     });
 
     it('form becomes valid when all required fields are non-empty', () => {
-        (state as any).model.set({ trainNumber: 'IC 1', operationalDay: '2026-06-11', creationComment: 'my comment' });
+        (state as unknown as { model: { set: (v: { trainNumber: string; operationalDay: string; creationComment: string }) => void } }).model.set({ trainNumber: 'IC 1', operationalDay: '2026-06-11', creationComment: 'my comment' });
         expect(state.createTrainForm().invalid()).toBe(false);
     });
 

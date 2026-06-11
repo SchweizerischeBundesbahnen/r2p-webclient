@@ -12,7 +12,7 @@ const VALID_FORM = { trainNumber: 'IC 1', operationalDay: '2026-06-11', creation
 const NON_EMPTY_JOURNEY: Journey = { featuresets: [], journeylocations: [{ locations: [] }] };
 
 function makeFormValid(state: CreatePageState): void {
-    (state as any).model.set(VALID_FORM);
+    (state as unknown as { model: { set: (v: typeof VALID_FORM) => void } }).model.set(VALID_FORM);
 }
 
 describe('CreateTrainPage', () => {
@@ -34,17 +34,18 @@ describe('CreateTrainPage', () => {
     });
 
     it('isJourneyEmpty is true initially and false after journeylocations are set', () => {
-        expect((fixture.componentInstance as any).isJourneyEmpty()).toBe(true);
+        const comp = fixture.componentInstance as unknown as { isJourneyEmpty: () => boolean };
+        expect(comp.isJourneyEmpty()).toBe(true);
 
         state.journey.set({ featuresets: [], journeylocations: [{ locations: [] }] });
         fixture.detectChanges();
 
-        expect((fixture.componentInstance as any).isJourneyEmpty()).toBe(false);
+        expect(comp.isJourneyEmpty()).toBe(false);
     });
 
     it('onJourneyChange updates the state journey signal', () => {
         const journey: Journey = { featuresets: [], journeylocations: [{ locations: [] }] };
-        (fixture.componentInstance as any).onJourneyChange(journey);
+        (fixture.componentInstance as unknown as { onJourneyChange: (j: Journey) => void }).onJourneyChange(journey);
         expect(state.journey()).toEqual(journey);
     });
 
@@ -87,7 +88,7 @@ describe('CreateTrainPage', () => {
         makeFormValid(state);
         state.journey.set(NON_EMPTY_JOURNEY);
 
-        (fixture.componentInstance as any).createTrain();
+        (fixture.componentInstance as unknown as { createTrain: () => void }).createTrain();
         await fixture.whenStable();
 
         expect(api.createTrain).toHaveBeenCalledWith(
@@ -112,7 +113,7 @@ describe('CreateTrainPage', () => {
 
         makeFormValid(state);
 
-        (fixture.componentInstance as any).createTrain();
+        (fixture.componentInstance as unknown as { createTrain: () => void }).createTrain();
         await fixture.whenStable();
 
         expect(state.createTrainRunning()).toBe(false);
