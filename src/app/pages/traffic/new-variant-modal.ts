@@ -7,7 +7,7 @@ import {
     MatDialogRef,
     MatDialogTitle,
 } from '@angular/material/dialog';
-import { MatError, MatFormField, MatHint, MatLabel, MatPrefix } from '@angular/material/form-field';
+import { MatError, MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { form, FormField, maxLength, required, submit } from '@angular/forms/signals';
@@ -33,7 +33,6 @@ export interface NewVariantDialogData {
         MatFormField,
         MatLabel,
         MatError,
-        MatHint,
         MatPrefix,
         MatInput,
         MatButton,
