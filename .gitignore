@@ -24,3 +24,4 @@ dist/
 .claude
 _bmad
 _bmad-output
+coverage/
