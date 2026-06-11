@@ -1,5 +1,83 @@
 # Changelog
 
+## [0.0.16](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.15...r2p-webclient-v0.0.16) (2026-06-11)
+
+
+### Features
+
+* add Delete Train button for Lead RU with confirmation modal ([f2dcb26](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/f2dcb262080bd2bbc41dd734b29dd9c19af0dd0e))
+* hide Share Train button when all partners already shared ([fdc5625](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/fdc5625fd94bd20fbd7507ce723e9abe02a1408e))
+* implement JourneyRoute with MatDialog modals and clean component split ([1e2b6f2](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/1e2b6f250956e97538770254c60b0a54a54d542d))
+* implement overall status indicator for traffic overview and view ([753f98b](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/753f98bb52920099994904cb46abb1b4e9667d6b))
+* improve traffic overview table UX — compact rows and partner badges ([19d131e](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/19d131e30208ef5e381ce2ca8e9c89a51f7afd41))
+* JourneyRoutes Editor and code restructuring ([c9bc839](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/c9bc839cc35715139593e0224a08608ccb3f7cc6))
+* unified icon-button pattern across route editor and variants list ([8526272](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/8526272457601ceccbcdebf6704385a177828bac))
+
+
+### Bug Fixes
+
+* add missing i18n keys and fix rejectMergeModal placeholder mismatch ([92fc966](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/92fc966deff9582939c129b70c537b54031362da))
+* apply code review fixes from Copilot review ([7de1de1](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/7de1de1d96f487b8489987fa739900fce5895c60))
+* edit stop modal title, required fields, remove checkmark ([c7fee19](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/c7fee195a360fd0d9b4f6255b88a3b68b4e26d4f))
+* guard against NaN/uppercase status in activity builder and badge ([97ed80e](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/97ed80ef3a35fc900f39bedc598c79c2284d1d39))
+* initialise journey with featuresets[] to satisfy API contract ([3bd6bb5](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/3bd6bb5796832fbf0d35c63dee428b4cb0c8a878))
+* load Roboto font, staff-role dropdown with i18n, feature type translations ([c1142b7](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/c1142b722338e0e3fc571dc60c31bf6b0eb33c36))
+* neue Variante erstellen kopiert aktuellen Stand des Hauptasts ([38b4e27](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/38b4e2737d54caf3290690ac49fead74a69ddeac))
+* new train starts with empty journey route ([dd8c862](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/dd8c862d7dcabd7543e7b22557d2f6e650709c2d))
+* reload traffic view when state is reused after navigation ([37ebb8c](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/37ebb8c9a1129084fe102a7b515d38c2eacb47de))
+* remove misleading variant name hint and rename stale i18n key ([8d44159](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/8d44159ef42b681aabe82a78c9db02419097a354))
+* remove non-functional edit variant button from read view ([9db4823](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/9db482350babb3fb937d88dbf272dbadb1cc6613))
+* replace no-explicit-any casts with typed unknown assertions in specs ([9b8e628](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/9b8e6280aac4bb5dc8e0b9e294be29bc9748a18c))
+* resolve component style budget error and fix Angular view encapsulation ([b0536a4](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/b0536a40582b1715f61b08fbba5911d6d54c7284))
+* send required fields when creating activities to satisfy backend validation ([fed63ca](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/fed63ca79ae299a4004e422a7092fe94d555e099))
+* show inline spinner on New Variant button during reload ([29e7865](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/29e78654276420a64828d4114387d3561a376cd2))
+* show org prefix inline in new-variant modal, remove branch icon ([1e8f423](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/1e8f423579bb909aa4413afa4795967bdd3223a5))
+* truncate long variant names with ellipsis and tooltip in traffic view ([d5f8df1](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/d5f8df1b5390c86bd93cedfeee3ebbb29839e034))
+* update specs after icon-button and label refactor ([07fb4bf](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/07fb4bf0c73c452e7858d06ca87bcc2e91411f3f))
+* use format-neutral placeholder in new variant modal ([38aa169](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/38aa16933aa608a9bea957bfc4790aaf3e161c9d))
+* use Train.id as train number — remove UUID generation ([e1421e3](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/e1421e3968a38af70efd561ad8dab0a9a07ffa73))
+
+
+### Miscellaneous Chores
+
+* add de-CH translations for JourneyRoute modals and activity items ([9f57aba](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/9f57abad96beaef19fb5a7987de2ef21fd9a8c6d))
+* add dependency-cruiser and architecture docs ([8fc9635](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/8fc9635d31898f31febd3d93c525de342f744008))
+* **deps-dev:** bump prettier from 3.8.3 to 3.8.4 ([#68](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/issues/68)) ([053f1e5](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/053f1e55433607d85516d165c6e3e32e45f7111d))
+* remove r2p spec ([7cd275b](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/7cd275bab0eda12bf3b2ab32a7282f02a53f7595))
+
+
+### Code Refactoring
+
+* consolidate duplicate i18n keys into common.* namespace ([b6f0b36](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/b6f0b36049d4339d5716da44e1bf073c8b63c568))
+* decompose traffic-overview-page into TrainFilterBar and TrainTable ([f350e12](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/f350e1242ebaf92fc28abcf2ff4f9c6b231a1d41))
+* extract large inline templates into separate HTML files ([dc457ac](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/dc457ac0bb82f2f9b2b494bc7cc108d22ef230ca))
+* extract StickyEditBar, DetailGrid, AlertBanner and PartnerBadge shared components ([629663b](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/629663b4f012ef496ffad2cbffdb4f797302ecf6))
+* extract TrainDetailsFormCard and wire journey editing in create-train ([ac534b8](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/ac534b84c8dbb1ccd03db37d01d79287c3dfa103))
+* extract utils, fix stale spec class names, clarify test runner ([a5fe334](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/a5fe334e0ff05cdb6ec54032b7e4dac7958f8a86))
+* introduce core/ layer and consolidate singleton infrastructure ([7c5a290](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/7c5a290d18e0b00544dd1e02e8108f8dc457730b))
+* migrate to Angular Material buttons, forms and dialogs ([f7e6038](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/f7e6038ed86c299f7d0b75b2314b39303b6951cf))
+* move component styles into components, slim styles.scss ([fdcd7d4](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/fdcd7d4c6ece2f1db5f24bfc0736f4f98ec58cf1))
+* reduce font sizes and add left padding in traffic overview table row ([7bb96c9](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/7bb96c9ad137a8899e5e1d39ef484fa199c9c24c))
+* replace remaining partner-badge spans in journey-route-card ([a6ff909](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/a6ff909c8adf4fb58e8b1d5d881d04195ae87120))
+* standardize modal button validation to Pattern B ([96f96b1](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/96f96b13b8add76dffec7d568637e4ef46692f2e))
+* styling quick wins — drop BEM prefixes, extract inline styles, isolate plan-status colors ([50b0805](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/50b0805d309165afd3f779a4ce2809e5184ca0de))
+* type Responsibility with ResponsibilityType and PlanStatus, fix stale rp type, add tru/pru ([174bf38](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/174bf38f05ef794b9748dc3e3391ab62f1052255))
+* ui polish — status i18n, inline styles to css, material filter bar ([16d4f7a](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/16d4f7a9769e6d275d34aa7bba995e760aa18593))
+
+
+### Tests
+
+* add spec for NewVariantModal covering validation, submit, and error paths ([cca516d](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/cca516da3a4339b15d772d4f17373d446473908d))
+* add specs for CreateTrainPage and CreatePageState ([f604036](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/f604036462ceb524c396098ee9034bbb4204cdf9))
+* extend CreateTrainPage specs with per-field validation and createTrain() paths ([2b0507a](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/2b0507a868dbb4d6696cf7f5598a7fd1caaac5cb))
+* increase coverage to ~82% and add CI coverage reporting ([bf8d1ef](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/bf8d1ef233087268590d5d4a1eabf9454bec9963))
+
+
+### Continuous Integration
+
+* fix coverage reporting and upload coverage artifact ([96ee9fc](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/96ee9fcc2f6da1b1c6d06d8b9868ef0565ec4201))
+* run tests with --coverage and write summary to GitHub Step Summary ([bf8d1ef](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/bf8d1ef233087268590d5d4a1eabf9454bec9963))
+
 ## [0.0.15](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.14...r2p-webclient-v0.0.15) (2026-06-09)
 
 
