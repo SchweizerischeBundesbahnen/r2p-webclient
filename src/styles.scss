@@ -13,37 +13,43 @@ html {
    CSS Variables
    ======================================== */
 :root {
-    --primary-color: #2c5282;
-    --secondary-color: #4a5568;
-    --accent-color: #3182ce;
-    --background-color: #f7fafc;
+    --primary-color: #1565C0;
+    --primary-dark: #0A3D62;
+    --secondary-color: #607D8B;
+    --accent-color: #1565C0;
+    --background-color: #F0F4F8;
     --card-background: #ffffff;
-    --border-color: #e2e8f0;
-    --text-primary: #1a202c;
-    --text-secondary: #4a5568;
-    --text-muted: #718096;
-    --text-warn: #d24e5c;
+    --border-color: #CFD8DC;
+    --border-subtle: #ECEFF1;
+    --text-primary: #1A2B3C;
+    --text-secondary: #607D8B;
+    --text-muted: #90A4AE;
+    --text-warn: #BF360C;
 
     /* Partner colors */
     --partner-sbb: #eb0000;
     --partner-bls: #00539b;
     --partner-sob: #009b3a;
-    --partner-default: #718096;
+    --partner-default: #90A4AE;
 
     /* Status - branch state */
-    --status-open-bg: #c6f6d5;
-    --status-open-text: #22543d;
-    --status-merged-bg: #bee3f8;
-    --status-merged-text: #2c5282;
-    --status-deleted-bg: #e2e8f0;
-    --status-deleted-text: #2d3748;
-    --status-mr-bg: #e9d8fd;
-    --status-mr-text: #553c9a;
+    --status-open-bg: #E3F2FD;
+    --status-open-text: #1565C0;
+    --status-open-dot: #1565C0;
+    --status-merged-bg: #E8F5E9;
+    --status-merged-text: #2E7D32;
+    --status-merged-dot: #388E3C;
+    --status-deleted-bg: #FFEBEE;
+    --status-deleted-text: #B71C1C;
+    --status-deleted-dot: #C62828;
+    --status-mr-bg: #FFF8E1;
+    --status-mr-text: #E65100;
+    --status-mr-dot: #FF6D00;
 
     /* Traffic light */
-    --tl-green: #38a169;
-    --tl-yellow: #d69e2e;
-    --tl-red: #e53e3e;
+    --tl-green: #388E3C;
+    --tl-yellow: #F9A825;
+    --tl-red: #C62828;
 
     /* Spacing */
     --spacing-xs: 0.25rem;
@@ -64,9 +70,9 @@ html {
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-    font-size: 17px;
-    line-height: 1.6;
+    font-family: Roboto, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
     color: var(--text-primary);
     background-color: var(--background-color);
     min-height: 100vh;
@@ -97,9 +103,10 @@ body {
 }
 
 .page-title {
-    font-size: 1.75rem;
+    font-size: 1.375rem;
     font-weight: 700;
-    color: var(--primary-color);
+    color: var(--primary-dark);
+    letter-spacing: -0.3px;
 }
 
 .page-subtitle {
@@ -114,7 +121,7 @@ body {
 .card {
     background-color: var(--card-background);
     border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border: 1px solid var(--border-color);
     margin-bottom: var(--spacing-lg);
 }
 
@@ -140,20 +147,33 @@ body {
    Badge base + branch state (shared across components)
    ======================================== */
 .badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 9px;
+    border-radius: 12px;
+    font-size: 0.6875rem;
+    font-weight: 700;
     white-space: nowrap;
 }
 
-.badge-open            { background-color: var(--status-open-bg);   color: var(--status-open-text); }
+.badge::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.badge-open            { background-color: var(--status-open-bg);    color: var(--status-open-text); }
+.badge-open::before    { background-color: var(--status-open-dot); }
 .badge-merged          { background-color: var(--status-merged-bg);  color: var(--status-merged-text); }
+.badge-merged::before  { background-color: var(--status-merged-dot); }
 .badge-deleted         { background-color: var(--status-deleted-bg); color: var(--status-deleted-text); }
-.badge-merge-requested { background-color: var(--status-mr-bg);      color: var(--status-mr-text); }
+.badge-deleted::before { background-color: var(--status-deleted-dot); }
+.badge-merge-requested          { background-color: var(--status-mr-bg);  color: var(--status-mr-text); }
+.badge-merge-requested::before  { background-color: var(--status-mr-dot); }
 
 /* ========================================
    Button Group
@@ -239,7 +259,7 @@ body {
 }
 
 thead .tooltip-anchor {
-    background-color: rgba(255,255,255,0.35);
+    background-color: var(--text-muted);
     color: white;
 }
 

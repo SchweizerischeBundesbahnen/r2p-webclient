@@ -15,7 +15,7 @@ import { PartnerBadge } from '../shared/components/partner-badge/partner-badge';
     changeDetection: ChangeDetectionStrategy.OnPush,
     styles: `
         .top-nav {
-            background-color: var(--primary-color);
+            background-color: var(--primary-dark);
             color: white;
             padding: 0 var(--spacing-xl);
             display: flex;
