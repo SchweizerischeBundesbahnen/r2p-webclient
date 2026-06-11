@@ -22,8 +22,8 @@
     <div class="activity-responsibility">
         {{ responsibilityTypeLabel(activity().responsibility?.type ?? '') }}
         @if (activity().responsibility?.status) {
-            · <span class="status-badge status-badge-{{ activity().responsibility!.status }}">
-                {{ planStatusLabel(activity().responsibility!.status ?? '') }}
+            · <span class="status-badge status-badge-{{ activity().responsibility!.status!.toLowerCase() }}">
+                {{ planStatusLabel(activity().responsibility!.status!.toLowerCase()) }}
             </span>
         }
     </div>

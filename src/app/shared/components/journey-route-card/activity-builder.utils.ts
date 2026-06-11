@@ -44,15 +44,18 @@ export function buildActivity(input: ActivityBuildInput): Activity {
         status: input.responsibility.status,
     };
 
-    const otherTimings = (existing?.timings ?? []).filter(
+    const existingTimings = existing?.timings ?? [];
+    const existingArrType = existingTimings.find((t) => ARRIVAL_TIMING_TYPES.has(t.type))?.type;
+    const existingDepType = existingTimings.find((t) => DEPARTURE_TIMING_TYPES.has(t.type))?.type;
+    const otherTimings = existingTimings.filter(
         (t) => !ARRIVAL_TIMING_TYPES.has(t.type) && !DEPARTURE_TIMING_TYPES.has(t.type),
     );
     const arrDur = hoursMinutesToDuration(input.arrivalTime);
     const depDur = hoursMinutesToDuration(input.departureTime);
     const timings = [
         ...otherTimings,
-        ...(arrDur ? [{ type: TimingType.Arrival, duration: arrDur, focus: 'planning' }] : []),
-        ...(depDur ? [{ type: TimingType.Departure, duration: depDur, focus: 'planning' }] : []),
+        ...(arrDur ? [{ type: existingArrType ?? TimingType.EarliestArrival, duration: arrDur, focus: 'planning' }] : []),
+        ...(depDur ? [{ type: existingDepType ?? TimingType.EarliestDeparture, duration: depDur, focus: 'planning' }] : []),
     ];
 
     let capability: ExtendedCapability = { type: colType, capabilityFeatures: [] };
@@ -78,8 +81,8 @@ export function buildActivity(input: ActivityBuildInput): Activity {
             capabilityFeatures: features,
             rollingStock: {
                 ...(existing?.capability?.rollingStock ?? {}),
-                ...(rsLength != null ? { length: rsLength } : {}),
-                ...(rsWeight != null ? { weight: rsWeight } : {}),
+                ...(Number.isFinite(rsLength ?? NaN) ? { length: rsLength } : {}),
+                ...(Number.isFinite(rsWeight ?? NaN) ? { weight: rsWeight } : {}),
                 units: rsUnits,
             },
         };
@@ -93,6 +96,10 @@ export function buildActivity(input: ActivityBuildInput): Activity {
             ...(staffs.length ? { staffs } : {}),
         };
     } else if (colType === 'path') {
+        const toFiniteOrNaN = (s: string) => (s.trim() !== '' ? Number(s) : NaN);
+        const pathLength = toFiniteOrNaN(input.pathFields.length);
+        const pathWeight = toFiniteOrNaN(input.pathFields.weight);
+        const pathMaxSpeed = toFiniteOrNaN(input.pathFields.maxSpeed);
         capability = {
             type: colType,
             capabilityFeatures: [],
@@ -100,9 +107,9 @@ export function buildActivity(input: ActivityBuildInput): Activity {
             path: {
                 ...(existing?.capability?.path ?? {}),
                 id: existing?.capability?.path?.id ?? crypto.randomUUID(),
-                length: Number(input.pathFields.length),
-                weight: Number(input.pathFields.weight),
-                maxSpeed: Number(input.pathFields.maxSpeed),
+                ...(Number.isFinite(pathLength) ? { length: pathLength } : {}),
+                ...(Number.isFinite(pathWeight) ? { weight: pathWeight } : {}),
+                ...(Number.isFinite(pathMaxSpeed) ? { maxSpeed: pathMaxSpeed } : {}),
             },
         };
     }
