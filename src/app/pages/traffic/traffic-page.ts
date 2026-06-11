@@ -12,6 +12,7 @@ import {
 } from '../../shared/utils/date.utils';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButton, MatAnchor } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
 import { DetailGrid, DetailItem } from '../../shared/components/detail-grid/detail-grid';
 import { PartnerBadge } from '../../shared/components/partner-badge/partner-badge';
 import { AlertBanner } from '../../shared/components/alert-banner/alert-banner';
@@ -32,7 +33,7 @@ import { OverallStatusComponent } from '../../shared/components/overall-status/o
 
 @Component({
     selector: 'app-traffic-page',
-    imports: [RouterLink, DatePipe, JourneyRouteCard, BranchStatusBadgeComponent, Spinner, MatButton, MatAnchor, DetailGrid, DetailItem, PartnerBadge, AlertBanner, OverallStatusComponent],
+    imports: [RouterLink, DatePipe, JourneyRouteCard, BranchStatusBadgeComponent, Spinner, MatButton, MatAnchor, MatTooltip, DetailGrid, DetailItem, PartnerBadge, AlertBanner, OverallStatusComponent],
     templateUrl: './traffic-page.html',
     styleUrl: './traffic-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

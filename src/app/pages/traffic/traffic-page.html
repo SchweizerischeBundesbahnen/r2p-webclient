@@ -95,7 +95,7 @@
                     <div class="branch-row">
                         <div class="branch-info">
                             <div>
-                                <div class="branch-name">🌿 {{ branch.branchName }}</div>
+                                <div class="branch-name" [matTooltip]="branch.branchName">🌿 {{ branch.branchName }}</div>
                                 <div class="branch-meta">
                                     @for (partner of branch.partners; track partner) {
                                         <app-partner-badge [partner]="partner" />

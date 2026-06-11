@@ -16,12 +16,16 @@
     gap: var(--spacing-md);
     flex: 1;
     min-width: 200px;
+    overflow: hidden;
 }
 
 .branch-name {
     font-weight: 600;
     font-size: 0.9rem;
     color: var(--text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .branch-meta {
