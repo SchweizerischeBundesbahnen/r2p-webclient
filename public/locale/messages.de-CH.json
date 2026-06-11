@@ -108,7 +108,7 @@
     "deleteTrainModal.validation.commentRequired": "Löschungsgrund ist erforderlich",
     "newVariantModal.title": "Neue Variante erstellen",
     "newVariantModal.field.name": "Variantenname",
-    "newVariantModal.field.namePlaceholder": "z.B. rollmaterial-update",
+    "newVariantModal.field.namePlaceholder": "meine Variante",
     "newVariantModal.field.commentPlaceholder": "Zweck dieser Variante beschreiben…",
     "newVariantModal.creating": "Wird erstellt…",
     "newVariantModal.create": "Erstellen",

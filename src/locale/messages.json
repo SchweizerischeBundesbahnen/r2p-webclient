@@ -108,7 +108,7 @@
     "deleteTrainModal.validation.commentRequired": "Reason for deletion is required",
     "newVariantModal.title": "Create New Variant",
     "newVariantModal.field.name": "Variant Name",
-    "newVariantModal.field.namePlaceholder": "rollmaterial-update",
+    "newVariantModal.field.namePlaceholder": "my variant",
     "newVariantModal.field.commentPlaceholder": "Describe the purpose of this variant…",
     "newVariantModal.creating": "Creating…",
     "newVariantModal.create": "Create",
