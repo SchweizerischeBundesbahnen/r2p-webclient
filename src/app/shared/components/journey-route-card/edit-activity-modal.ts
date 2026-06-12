@@ -112,7 +112,7 @@ export class EditActivityModal {
     // ── Responsibility + Path (required path fields are validated via this form) ──
     private readonly responsibilityModel = signal({
         type: this.data.activity?.responsibility?.type ?? 'rru',
-        id: this.data.activity?.responsibility?.id ?? 'SBB',
+        id: this.data.activity?.responsibility?.id ?? (this.partners[0] ?? ''),
         status: this.data.activity?.responsibility?.status ?? 'proposed',
         pathLength:
             this.data.activity?.capability?.path?.length != null

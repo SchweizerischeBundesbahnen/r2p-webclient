@@ -100,6 +100,50 @@ describe('EditActivityModal', () => {
             const component = fixture.componentInstance as unknown as { partners: string[] };
             expect(component.partners).toEqual([]);
         });
+
+        it('defaults responsibility id to the first partner when creating a new activity', () => {
+            TestBed.resetTestingModule();
+            const dr = makeDialogRef();
+            const data: EditActivityDialogData = {
+                activity: null,
+                capabilityType: 'rollingStock',
+                partners: ['BLS', 'SBB'],
+            };
+            TestBed.configureTestingModule({
+                imports: [EditActivityModal],
+                providers: [
+                    provideAnimationsAsync(),
+                    { provide: MAT_DIALOG_DATA, useValue: data },
+                    { provide: MatDialogRef, useValue: dr },
+                ],
+            });
+            const fixture = TestBed.createComponent(EditActivityModal);
+            fixture.detectChanges();
+            clickSave(fixture);
+            const emitted = dr.close.mock.calls[0][0] as Activity;
+            expect(emitted.responsibility?.id).toBe('BLS');
+        });
+
+        it('leaves responsibility id empty when no partners provided, preventing form submission', () => {
+            TestBed.resetTestingModule();
+            const dr = makeDialogRef();
+            const data: EditActivityDialogData = {
+                activity: null,
+                capabilityType: 'rollingStock',
+            };
+            TestBed.configureTestingModule({
+                imports: [EditActivityModal],
+                providers: [
+                    provideAnimationsAsync(),
+                    { provide: MAT_DIALOG_DATA, useValue: data },
+                    { provide: MatDialogRef, useValue: dr },
+                ],
+            });
+            const fixture = TestBed.createComponent(EditActivityModal);
+            fixture.detectChanges();
+            clickSave(fixture);
+            expect(dr.close).not.toHaveBeenCalled();
+        });
     });
 
     describe('title', () => {
