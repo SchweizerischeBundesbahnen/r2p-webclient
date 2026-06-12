@@ -6,7 +6,6 @@ import { BackendApiService } from '../../core/api/backend-api.service';
 import { Branch, Train, TrainListElement } from '../../shared/models/api.models';
 import { assertIsoDate } from '../../shared/utils/date.utils';
 import { TrainFormModel } from '../../shared/components/train-details-form-card/train-details-form-card';
-import { SettingsService } from '../../core/settings/settings.service';
 
 /**
  * Not provided in root, cause state should be destroyed after switching page.
@@ -15,7 +14,6 @@ import { SettingsService } from '../../core/settings/settings.service';
 export class EditTrainPageState {
     editTrainRunning = signal(false);
     readonly apiService = inject(BackendApiService);
-    private readonly settingsService = inject(SettingsService);
 
     model = signal<TrainFormModel>({
         trainNumber: '',
@@ -41,11 +39,7 @@ export class EditTrainPageState {
             this.apiService.getTrainById(params.trainId),
     });
 
-    readonly partners = computed(() => {
-        const ownOrg = this.settingsService.settings().organization;
-        const sharedWith = this.trainListElement.value()?.partners ?? [];
-        return [...new Set([ownOrg, ...sharedWith])];
-    });
+    readonly partners = computed(() => this.trainListElement.value()?.partners ?? []);
 
     readonly branch = rxResource({
         params: () => {
