@@ -51,7 +51,7 @@ export class BackendApiService {
         const headers = this.tokenHeaders;
         return this.httpClient.post<Branch>(
             `${this.baseUrl}/v1/trains/${trainId}/branches`,
-            { ...train, id: crypto.randomUUID() },
+            { ...train },
             {
                 params: { branchName, comment },
                 headers,

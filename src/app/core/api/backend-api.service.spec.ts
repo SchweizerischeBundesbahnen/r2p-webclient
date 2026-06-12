@@ -58,6 +58,15 @@ describe('BackendApiService', () => {
             req.flush({});
         });
 
+        it('sends the train number as both id and name', () => {
+            service.createTrain('IC 1234', '2026-05-26', 'comment', minimalTrain.journey!).subscribe();
+
+            const req = httpController.expectOne((r) => r.url.endsWith('/v1/trains'));
+            expect(req.request.body.id).toBe('IC 1234');
+            expect(req.request.body.name).toBe('IC 1234');
+            req.flush({});
+        });
+
         it('sets the Token header and base URL from settings', () => {
             service.createTrain('IC 1234', '2026-05-26', 'comment', minimalTrain.journey!).subscribe();
             const req = httpController.expectOne((r) => r.url.endsWith('/v1/trains'));
@@ -218,6 +227,19 @@ describe('BackendApiService', () => {
             );
             expect(req.request.method).toBe('PUT');
             expect(req.request.body.startdate).toBe('2026-05-26');
+            req.flush({});
+        });
+
+        it('sends the train number as both id and name', () => {
+            service
+                .updateTrain(trainId, train, branchId, 'IC 1234', 'comment', '2026-05-26')
+                .subscribe();
+
+            const req = httpController.expectOne((r) =>
+                r.url.endsWith(`/v1/trains/${trainId}/branches/${branchId}`),
+            );
+            expect(req.request.body.id).toBe('IC 1234');
+            expect(req.request.body.name).toBe('IC 1234');
             req.flush({});
         });
     });
