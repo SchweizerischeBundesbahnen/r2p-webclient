@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { MatDialog } from '@angular/material/dialog';
 import { Layout } from './layout';
 import { version } from '../../../package.json';
@@ -15,7 +15,7 @@ describe('Layout', () => {
             providers: [
                 provideRouter([]),
                 provideAnimationsAsync(),
-                { provide: MatDialog, useValue: { open: () => {} } },
+                { provide: MatDialog, useValue: { open: vi.fn() } },
             ],
         }).compileComponents();
         fixture = TestBed.createComponent(Layout);
