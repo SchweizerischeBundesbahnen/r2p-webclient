@@ -16,7 +16,7 @@ export type Action =
     | 'shared'
     | 'unshared';
 
-export type PartnerToken = 'SBB' | 'BLS' | 'SOB';
+export type PartnerToken = 'SBB' | 'BLS' | 'SOB' | 'TI' | 'DBF' | 'DBC' | 'DBCNL' | 'SBBC' | 'SBBCI' | 'RCA' | 'MEV';
 
 export interface TrainListElement {
     /** UUID */

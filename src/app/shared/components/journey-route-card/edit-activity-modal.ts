@@ -47,7 +47,7 @@ export const RESPONSIBILITY_TYPES = [
     { value: 'pru', label: 'pru – Personnel RU' },
 ] as const;
 
-export const PARTNERS = ['SBB', 'BLS', 'SOB'] as const;
+export const PARTNERS = ['SBB', 'BLS', 'SOB', 'TI', 'DBF', 'DBC', 'DBCNL', 'SBBC', 'SBBCI', 'RCA', 'MEV'] as const;
 
 export const PLAN_STATUSES = ['proposed', 'requested', 'confirmed', 'refused', 'dropped'] as const;
 
