@@ -309,6 +309,10 @@ export interface Train {
     journey?: Journey;
 }
 
+export interface InstanceOwner {
+    name: string;
+}
+
 /** RFC 7807 Problem Details */
 export interface ProblemDetail {
     /** A URI reference that identifies the problem type */

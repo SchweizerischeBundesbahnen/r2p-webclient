@@ -1,4 +1,4 @@
-﻿import { inject, Injectable } from '@angular/core';
+﻿import { computed, inject, Injectable } from '@angular/core';
 import { BackendApiService } from '../../core/api/backend-api.service';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { forkJoin, map, of, switchMap } from 'rxjs';
@@ -11,10 +11,21 @@ import {
     getLatestJourneyLocationArrival,
 } from '../../shared/utils/journeyLocation.utils';
 import { parseDurationToDate } from '../../shared/utils/date.utils';
+import { SettingsService } from '../../core/settings/settings.service';
 
 @Injectable()
 export class TrafficOverviewPageState {
     private readonly apiService = inject(BackendApiService);
+    private readonly settingsService = inject(SettingsService);
+
+    instanceOwnerResource = rxResource({
+        stream: () => this.apiService.getInstanceOwner(),
+    });
+
+    isInstanceOwner = computed(() => {
+        const owner = this.instanceOwnerResource.value();
+        return owner !== undefined && owner.name === this.settingsService.settings().organization;
+    });
 
     trainListResource = rxResource({
         stream: () => {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TrafficOverviewPageState } from './traffic-overview-page.state';
 import { TrafficOverviewTableService } from './traffic-overview-table.service';
@@ -16,7 +16,9 @@ import { TrainTable } from './train-table';
                     <div>
                         <h1 class="page-title" i18n="@@trafficOverview.heading">Traffic Overview</h1>
                     </div>
-                    <a mat-raised-button color="primary" [routerLink]="'../create-train'" i18n="@@trafficOverview.newTrain"> ＋ New Train </a>
+                    @if (state.isInstanceOwner()) {
+                        <a mat-raised-button color="primary" [routerLink]="'../create-train'" i18n="@@trafficOverview.newTrain"> ＋ New Train </a>
+                    }
                 </div>
                 <app-train-filter-bar />
                 <app-train-table />
@@ -26,4 +28,6 @@ import { TrainTable } from './train-table';
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [TrafficOverviewPageState, TrafficOverviewTableService],
 })
-export class TrafficOverviewPage {}
+export class TrafficOverviewPage {
+    protected readonly state = inject(TrafficOverviewPageState);
+}

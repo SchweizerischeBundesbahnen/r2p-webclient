@@ -179,6 +179,25 @@ describe('BackendApiService', () => {
         });
     });
 
+    describe('getInstanceOwner', () => {
+        it('GET /v1/instance-owner without Token header', () => {
+            service.getInstanceOwner().subscribe();
+            const req = httpController.expectOne((r) =>
+                r.url.endsWith('/v1/instance-owner') && r.method === 'GET',
+            );
+            expect(req.request.headers.has('Token')).toBe(false);
+            req.flush({ name: 'SBB' });
+        });
+
+        it('returns the instance owner name', () => {
+            let result: { name: string } | undefined;
+            service.getInstanceOwner().subscribe((owner) => (result = owner));
+            const req = httpController.expectOne((r) => r.url.endsWith('/v1/instance-owner'));
+            req.flush({ name: 'BLS' });
+            expect(result?.name).toBe('BLS');
+        });
+    });
+
     describe('deleteBranch', () => {
         it('DELETE /v1/trains/{trainId}/branches/{branchId}', () => {
             service.deleteBranch('t-1', 'b-1', 'cleanup').subscribe();
