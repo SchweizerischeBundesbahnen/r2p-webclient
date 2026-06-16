@@ -211,9 +211,11 @@ function createComponent(locale: string, value?: TrainWithDetails, organization 
         providers: [
             provideRouter([]),
             { provide: LOCALE_ID, useValue: locale },
-            { provide: TrafficPageState, useValue: fakeState },
             { provide: SettingsService, useValue: settingsService },
         ],
+    });
+    TestBed.overrideComponent(TrafficPage, {
+        set: { providers: [{ provide: TrafficPageState, useValue: fakeState }] },
     });
     const fixture = TestBed.createComponent(TrafficPage);
     fixture.componentRef.setInput('trainId', 'train-1');
