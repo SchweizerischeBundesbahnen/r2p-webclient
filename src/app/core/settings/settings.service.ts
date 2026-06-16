@@ -20,7 +20,7 @@ export const ORGANIZATION_OPTIONS: OrganizationOption[] = [
     { name: 'TI', label: 'TI - TrenItalia' },
     { name: 'DBF', label: 'DBF - DB Fernverkehr' },
     { name: 'DBC', label: 'DBC - DB Cargo Deutschland' },
-    { name: 'DBCNL', label: 'DBCNL - DB Cargo Netherland' },
+    { name: 'DBCNL', label: 'DBCNL - DB Cargo Nederland' },
     { name: 'SBBC', label: 'SBBC - SBB Cargo CH' },
     { name: 'SBBCI', label: 'SBBCI - SBB Cargo International' },
     { name: 'RCA', label: 'RCA - Rail Cargo Austria' },
