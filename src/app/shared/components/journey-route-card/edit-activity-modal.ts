@@ -100,13 +100,19 @@ export class EditActivityModal {
 
     protected readonly modalTitle = computed(() => {
         const isEdit = this.data.activity !== null;
-        const typeLabel =
-            this.capabilityType === 'rollingStock'
-                ? 'Rolling Stock'
-                : this.capabilityType === 'staff'
-                  ? 'Staff'
-                  : 'Path';
-        return `${isEdit ? 'Edit' : 'Add'} ${typeLabel} Activity`;
+        if (this.capabilityType === 'rollingStock') {
+            return isEdit
+                ? $localize`:@@editActivityModal.title.editRollingStock:Edit Rolling Stock Activity`
+                : $localize`:@@editActivityModal.title.addRollingStock:Add Rolling Stock Activity`;
+        } else if (this.capabilityType === 'staff') {
+            return isEdit
+                ? $localize`:@@editActivityModal.title.editStaff:Edit Staff Activity`
+                : $localize`:@@editActivityModal.title.addStaff:Add Staff Activity`;
+        } else {
+            return isEdit
+                ? $localize`:@@editActivityModal.title.editPath:Edit Path Activity`
+                : $localize`:@@editActivityModal.title.addPath:Add Path Activity`;
+        }
     });
 
     // ── Responsibility + Path (required path fields are validated via this form) ──
