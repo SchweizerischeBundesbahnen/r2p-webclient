@@ -33,7 +33,7 @@ export class JourneyActivityItem {
     });
 
     protected readonly staffRole = computed(() => {
-        return this.activity().capability?.staffs?.[0]?.type;
+        return this.activity().capability?.staff?.type;
     });
 
     protected readonly isPassthrough = computed(() => {

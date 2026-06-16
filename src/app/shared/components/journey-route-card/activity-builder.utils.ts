@@ -93,19 +93,23 @@ export function buildActivity(input: ActivityBuildInput): Activity {
             capabilityFeatures: features,
             rollingStock: {
                 ...(existing?.capability?.rollingStock ?? {}),
+                activityType: existing?.capability?.rollingStock?.activityType ?? 'rollingStock',
                 ...(Number.isFinite(rsLength ?? NaN) ? { length: rsLength } : {}),
                 ...(Number.isFinite(rsWeight ?? NaN) ? { weight: rsWeight } : {}),
                 units: rsUnits,
             },
         };
     } else if (colType === 'staff') {
-        const staffs: Staff[] = input.staffRole
-            ? [{ type: input.staffRole }]
-            : (existing?.capability?.staffs ?? []);
+        const staff: Staff | undefined = input.staffRole
+            ? {
+                  type: input.staffRole,
+                  activityType: existing?.capability?.staff?.activityType ?? 'move',
+              }
+            : existing?.capability?.staff;
         capability = {
             type: colType,
             capabilityFeatures: [],
-            ...(staffs.length ? { staffs } : {}),
+            ...(staff ? { staff } : {}),
         };
     } else if (colType === 'path') {
         const toFiniteOrNaN = (s: string) => (s.trim() !== '' ? Number(s) : NaN);
@@ -119,6 +123,7 @@ export function buildActivity(input: ActivityBuildInput): Activity {
             path: {
                 ...(existing?.capability?.path ?? {}),
                 id: existing?.capability?.path?.id ?? crypto.randomUUID(),
+                activityType: existing?.capability?.path?.activityType ?? 'path.runthrough',
                 ...(Number.isFinite(pathLength) ? { length: pathLength } : {}),
                 ...(Number.isFinite(pathWeight) ? { weight: pathWeight } : {}),
                 ...(Number.isFinite(pathMaxSpeed) ? { maxSpeed: pathMaxSpeed } : {}),
@@ -126,13 +131,9 @@ export function buildActivity(input: ActivityBuildInput): Activity {
         };
     }
 
-    const defaultActivityType =
-        colType === 'rollingStock' ? 'rollingStock' : colType === 'path' ? 'path.runthrough' : 'move';
-
     return {
         ...(existing ?? {}),
         id: existing?.id ?? crypto.randomUUID(),
-        type: existing?.type ?? defaultActivityType,
         responsibility,
         timings,
         relations: existing?.relations ?? [],

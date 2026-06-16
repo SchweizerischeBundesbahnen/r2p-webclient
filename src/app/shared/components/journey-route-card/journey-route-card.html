@@ -8,7 +8,7 @@
         @if (stops().length === 0) {
             <div class="empty-state">
                 @if (required()) {
-                    <p class="text-muted" i18n="@@journeyRouteCard.requiredEmpty">* At least one stop is required.</p>
+                    <p class="text-muted" i18n="@@journeyRouteCard.requiredEmpty">* At least two stops are required.</p>
                 } @else {
                     <p class="text-muted" i18n="@@journeyRouteCard.empty">No journey stops defined.</p>
                 }
@@ -182,6 +182,9 @@
                     </tbody>
                 </table>
             </div>
+            @if (required() && stops().length < 2) {
+                <p class="text-muted" i18n="@@journeyRouteCard.requiredEmpty">* At least two stops are required.</p>
+            }
         }
 
     </div>

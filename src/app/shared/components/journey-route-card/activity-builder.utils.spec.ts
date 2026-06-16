@@ -16,7 +16,6 @@ const BASE_INPUT: ActivityBuildInput = {
 
 const STUB_EXISTING: Activity = {
     id: 'existing-id',
-    type: 'rollingStock',
     timings: [],
     relations: [],
     responsibility: { type: 'rru', id: 'SBB', status: 'proposed' },
@@ -128,6 +127,7 @@ describe('buildActivity — rolling stock unit init', () => {
                 type: 'rollingStock',
                 capabilityFeatures: [],
                 rollingStock: {
+                    activityType: 'rollingStock',
                     units: [
                         {
                             id: 'unit-uuid-1',
@@ -160,6 +160,7 @@ describe('buildActivity — rolling stock unit init', () => {
                 type: 'rollingStock',
                 capabilityFeatures: [],
                 rollingStock: {
+                    activityType: 'rollingStock',
                     units: [{ id: 'unit-uuid-2', name: 'RABe 511', carbodies: [], capabilityFeatures: [], featuresetRefs: [] }],
                 },
             },

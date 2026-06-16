@@ -206,7 +206,7 @@
     "featureType.quietZone1stClass": "Ruhezone 1. Klasse",
     "featureType.lowFloorEntry": "Niederflureinstieg",
     "journeyRouteCard.title": "Fahrtroute",
-    "journeyRouteCard.requiredEmpty": "* Mindestens ein Halt ist erforderlich.",
+    "journeyRouteCard.requiredEmpty": "* Mindestens zwei Halte sind erforderlich.",
     "journeyRouteCard.empty": "Keine Fahrthalte definiert.",
     "journeyRouteCard.addFirstStop": "＋ Ersten Halt hinzufügen",
     "journeyRouteCard.col.stop": "Halt",

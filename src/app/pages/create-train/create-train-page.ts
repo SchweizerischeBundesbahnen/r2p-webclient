@@ -26,7 +26,7 @@ export class CreateTrainPage {
     private readonly notifications = inject(ErrorNotificationService);
     private readonly settingsService = inject(SettingsService);
     protected readonly createTrainForm = this.state.createTrainForm;
-    protected readonly isJourneyEmpty = computed(() => !this.state.journey().journeylocations?.length);
+    protected readonly hasTooFewStops = computed(() => (this.state.journey().journeylocations?.length ?? 0) < 2);
     protected readonly ownOrganization = computed(() => this.settingsService.settings().organization);
 
     protected onJourneyChange(journey: Journey): void {

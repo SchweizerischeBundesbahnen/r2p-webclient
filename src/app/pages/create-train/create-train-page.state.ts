@@ -7,7 +7,7 @@ import { TrainFormModel } from '../../shared/components/train-details-form-card/
 export class CreatePageState {
     createTrainRunning = signal(false);
 
-    readonly journey = signal<Journey>({ featuresets: [] });
+    readonly journey = signal<Journey>({});
 
     private model = signal<TrainFormModel>({
         trainNumber: '',

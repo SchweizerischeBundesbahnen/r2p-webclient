@@ -130,12 +130,6 @@ export interface CapabilityFeature {
     restriction?: Restriction;
 }
 
-export interface Featureset {
-    id: string;
-    name?: string;
-    features?: Feature[];
-}
-
 export enum TimingType {
     EarliestArrival = 'earliestarrival',
     LatestArrival = 'latestarrival',
@@ -179,9 +173,65 @@ export interface Alignment {
     status?: string;
 }
 
+export type PathActivityType =
+    | 'path.halt.1'
+    | 'path.halt.11'
+    | 'path.halt.14'
+    | 'path.halt.15'
+    | 'path.halt.16'
+    | 'path.halt.18'
+    | 'path.halt.19'
+    | 'path.halt.22'
+    | 'path.halt.28'
+    | 'path.halt.32'
+    | 'path.halt.33'
+    | 'path.halt.41'
+    | 'path.halt.44'
+    | 'path.halt.45'
+    | 'path.halt.46'
+    | 'path.halt.51'
+    | 'path.halt.54'
+    | 'path.halt.55'
+    | 'path.halt.56'
+    | 'path.halt.70'
+    | 'path.halt.73'
+    | 'path.halt.74'
+    | 'path.halt.75'
+    | 'path.halt.76'
+    | 'path.halt.77'
+    | 'path.halt.78'
+    | 'path.halt.79'
+    | 'path.halt.80'
+    | 'path.halt.81'
+    | 'path.halt.82'
+    | 'path.halt.83'
+    | 'path.halt.84'
+    | 'path.halt.88'
+    | 'path.halt.90'
+    | 'path.halt.91'
+    | 'path.halt.92'
+    | 'path.halt.93'
+    | 'path.halt.94'
+    | 'path.halt.95'
+    | 'path.runthrough';
+
+export type RollingStockActivityType = 'rollingStock' | 'rollingStock.traction' | 'rollingStock.wagons';
+
+export type StaffActivityType =
+    | 'rc.off'
+    | 'rc.on'
+    | 'inspect.train.technical'
+    | 'inspect.train.technical.rc'
+    | 'inspect.train.operational'
+    | 'inspect.train.operational.rc'
+    | 'shunting'
+    | 'shunting.rc'
+    | 'move'
+    | 'move.rc';
+
 export interface Staff {
     type: string;
-    capabilityfeature?: CapabilityFeature;
+    activityType: StaffActivityType;
 }
 
 export interface Carbody {
@@ -210,6 +260,7 @@ export interface RollingStockUnit {
 }
 
 export interface RollingStock {
+    activityType: RollingStockActivityType;
     length?: number;
     weight?: number;
     maxSpeed?: number;
@@ -221,6 +272,7 @@ export interface RollingStock {
 
 export interface Path {
     id?: string;
+    activityType: PathActivityType;
     length?: number;
     weight?: number;
     maxSpeed?: number;
@@ -236,7 +288,7 @@ export interface Capability {
     type?: string;
     featuresetRefs?: string[];
     capabilityFeatures?: CapabilityFeature[];
-    staffs?: Staff[];
+    staff?: Staff;
     rollingStock?: RollingStock;
     path?: Path;
     stabling?: Stabling;
@@ -266,7 +318,6 @@ export interface ActivityRelation {
 
 export interface Activity {
     id?: string;
-    type?: string;
     timings?: Timing[];
     responsibility?: Responsibility;
     alignment?: Alignment;
@@ -292,7 +343,6 @@ export interface JourneyLocation {
 }
 
 export interface Journey {
-    featuresets?: Featureset[];
     journeylocations?: JourneyLocation[];
 }
 
