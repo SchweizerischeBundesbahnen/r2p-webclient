@@ -13,8 +13,8 @@
 - Avoid importing Modules, import the standalone components instead (e.g. Angular Material provides standalone components)
 
 ## i18n
-- Update **both** `public/locale/messages.de-CH.json` and `messages.en-US.json` whenever you add, change or remove any `i18n="@@key"` or `$localize` string.
-- After changing strings, run `ng extract-i18n --output-path src/locale --out-file messages.json --format json` to update the source file, then run `npm run sync-translations` to sync de-CH.json (it marks missing keys as `TODO:`). Fill in the German translation for any `TODO:` entries and mirror the same change in `en-US.json` manually (en-US is not auto-synced).
+- `en-US` is the **source locale** — its text lives in the `i18n="@@key"` / `$localize` defaults and is never loaded at runtime, so there is **no** `messages.en-US.json` to maintain. Only `public/locale/messages.de-CH.json` is a real translation file.
+- After changing strings, run `ng extract-i18n --output-path src/locale --out-file messages.json --format json` to update the source file, then run `npm run sync-translations` to sync de-CH.json (it marks missing keys as `TODO:`). Fill in the German translation for any `TODO:` entries.
 - Always run `npm run check-translations` before finishing and treat all issues.
 
 ## Testing

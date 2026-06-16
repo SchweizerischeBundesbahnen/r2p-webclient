@@ -12,7 +12,7 @@
  */
 
 import { readFileSync, writeFileSync } from 'fs';
-import { resolve, dirname } from 'path';
+import { resolve, dirname, basename } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dir = dirname(fileURLToPath(import.meta.url));
@@ -35,7 +35,7 @@ for (const localePath of LOCALES) {
   const missing = sourceKeys.filter((k) => !localeKeys.has(k));
   const obsolete = [...localeKeys].filter((k) => !sourceKeys.includes(k));
 
-  const label = localePath.split('/public/locale/')[1];
+  const label = basename(localePath);
 
   if (missing.length === 0 && obsolete.length === 0) {
     console.log(`✅  ${label}  –  all ${sourceKeys.length} keys in sync`);
