@@ -52,9 +52,9 @@
                 <app-detail-grid class="mt-md">
                     <app-detail-item label="Train Number" i18n-label="@@common.field.trainNumber" valueId="detail-train-number">{{ trainHeaderInfo.trainNumber }}</app-detail-item>
                     <app-detail-item label="From" i18n-label="@@traffic.field.from" valueId="detail-from">{{ trainHeaderInfo.from }}</app-detail-item>
-                    <app-detail-item label="Departure" i18n-label="@@traffic.field.departure" valueId="detail-dep-time">{{ trainHeaderInfo.departureTime | date: 'shortTime' }}</app-detail-item>
+                    <app-detail-item label="Departure" i18n-label="@@traffic.field.departure" valueId="detail-dep-time">{{ trainHeaderInfo.departureTime | date: 'HH:mm' : 'UTC' }}</app-detail-item>
                     <app-detail-item label="To" i18n-label="@@traffic.field.to" valueId="detail-to">{{ trainHeaderInfo.to }}</app-detail-item>
-                    <app-detail-item label="Arrival" i18n-label="@@traffic.field.arrival" valueId="detail-arr-time">{{ trainHeaderInfo.arrivalTime | date: 'shortTime' }}</app-detail-item>
+                    <app-detail-item label="Arrival" i18n-label="@@traffic.field.arrival" valueId="detail-arr-time">{{ trainHeaderInfo.arrivalTime | date: 'HH:mm' : 'UTC' }}</app-detail-item>
                     <app-detail-item label="Operational Day" i18n-label="@@common.field.opDay" valueId="detail-op-day">
                         @let opDayDetail = trainHeaderInfo.operationalDay;
                         {{ opDayDetail ? (isoDateToUtc(opDayDetail) | date: 'mediumDate' : 'UTC') : '-' }}
@@ -109,7 +109,7 @@
                                 @for (partner of branch.partners; track partner) {
                                     <app-partner-badge [partner]="partner" />
                                 }
-                                <span>{{ branch.lastChange | date: 'short' }}</span>
+                                <span>{{ (branch.lastChange | date: 'mediumDate') + ', ' + (branch.lastChange | date: 'HH:mm') }}</span>
                                 @if (branch.comment) {
                                     <span>— <em>{{ branch.comment }}</em></span>
                                 }
@@ -175,7 +175,7 @@
                                             @for (partner of branch.partners; track partner) {
                                                 <app-partner-badge [partner]="partner" />
                                             }
-                                            <span>{{ branch.lastChange | date: 'short' }}</span>
+                                            <span>{{ (branch.lastChange | date: 'mediumDate') + ', ' + (branch.lastChange | date: 'HH:mm') }}</span>
                                             @if (branch.comment) {
                                                 <span>— <em>{{ branch.comment }}</em></span>
                                             }

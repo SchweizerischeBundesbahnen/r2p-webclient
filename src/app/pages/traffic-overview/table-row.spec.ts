@@ -10,10 +10,10 @@ const TRAIN_ROW: TrainRow = {
     id: '1',
     trainNumber: 'IC 1234',
     operationalDay: '2026-05-26',
-    // Use a timezone-neutral time string (no Z suffix) so DatePipe interprets
-    // it as local time regardless of the environment's timezone offset.
-    startTime: '2026-05-26T08:30:00',
-    endTime: '2026-05-26T10:00:00',
+    // Schedule times are UTC instants (operationalDay + ISO duration). The 'UTC'
+    // DatePipe arg renders the stored wall-clock unchanged, so both locales show 08:30.
+    startTime: '2026-05-26T08:30:00.000Z',
+    endTime: '2026-05-26T10:00:00.000Z',
     start: 'Zürich HB',
     end: 'Basel SBB',
     partners: ['SBB'],
@@ -53,24 +53,28 @@ describe('TableRow – date formatting', () => {
         expect(el.querySelectorAll('td')[3].textContent?.trim()).toBe('26.05.2026');
     });
 
-    it('formats startTime with shortTime for en-US', () => {
+    it('formats startTime as 24h UTC for en-US', () => {
         const el = createHost('en-US');
-        expect(el.querySelectorAll('td')[1].textContent).toMatch(/8:30\s*AM/);
+        expect(el.querySelectorAll('td')[1].textContent).toMatch(/08:30/);
     });
 
-    it('formats startTime with shortTime for de-CH', () => {
+    it('formats startTime as 24h UTC for de-CH (identical to en-US)', () => {
         const el = createHost('de-CH');
         expect(el.querySelectorAll('td')[1].textContent).toMatch(/08:30/);
     });
 
-    it('formats lastChange with short for en-US', () => {
+    it('formats lastChange as mediumDate + 24h time for en-US', () => {
         const el = createHost('en-US');
-        expect(el.querySelectorAll('td')[5].textContent).toMatch(/5\/26\/26/);
+        const text = el.querySelectorAll('td')[5].textContent ?? '';
+        expect(text).toMatch(/May 26, 2026/);
+        expect(text).toMatch(/10:30/);
     });
 
-    it('formats lastChange with short for de-CH', () => {
+    it('formats lastChange as mediumDate + 24h time for de-CH', () => {
         const el = createHost('de-CH');
-        expect(el.querySelectorAll('td')[5].textContent).toMatch(/26\.05\.26/);
+        const text = el.querySelectorAll('td')[5].textContent ?? '';
+        expect(text).toMatch(/26\.05\.2026/);
+        expect(text).toMatch(/10:30/);
     });
 });
 

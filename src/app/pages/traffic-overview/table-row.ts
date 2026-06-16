@@ -16,14 +16,14 @@ import { PartnerBadge } from '../../shared/components/partner-badge/partner-badg
             <div class="cell-location">{{ train().start ?? '-' }}</div>
             <div class="cell-sub"
                 ><ng-container i18n="@@common.dep">Dep:</ng-container>
-                {{ train().startTime | date: 'shortTime' }}</div
+                {{ train().startTime | date: 'HH:mm' : 'UTC' }}</div
             >
         </td>
         <td>
             <div class="cell-location">{{ train().end ?? '-' }}</div>
             <div class="cell-sub"
                 ><ng-container i18n="@@common.arr">Arr:</ng-container>
-                {{ train().endTime | date: 'shortTime' }}</div
+                {{ train().endTime | date: 'HH:mm' : 'UTC' }}</div
             >
         </td>
         <td class="td-small">{{ isoDateToUtc(train().operationalDay) | date: 'mediumDate' : 'UTC' }}</td>
@@ -35,7 +35,7 @@ import { PartnerBadge } from '../../shared/components/partner-badge/partner-badg
             </div>
         </td>
         <td class="td-small">
-            <div>{{ train().revInfo.lastChange | date: 'short' }}</div>
+            <div>{{ (train().revInfo.lastChange | date: 'mediumDate') + ', ' + (train().revInfo.lastChange | date: 'HH:mm') }}</div>
             <div class="cell-sub">{{ train().revInfo.version }}</div>
         </td>
         <td>

@@ -56,7 +56,7 @@
                     <app-detail-item label="Version" i18n-label="@@readTrain.field.version" valueId="detail-version">{{ branch?.technical?.version ?? '-' }}</app-detail-item>
                     <app-detail-item label="Version Timestamp" i18n-label="@@readTrain.field.versionTimestamp" valueId="detail-timestamp">
                         @let ts = branch?.technical?.timestamp;
-                        {{ ts ? (ts | date: 'short') : '-' }}
+                        {{ ts ? ((ts | date: 'mediumDate') + ', ' + (ts | date: 'HH:mm')) : '-' }}
                     </app-detail-item>
                 </app-detail-grid>
 
