@@ -45,8 +45,10 @@ function createComponent(locale: string, branch?: Branch) {
         providers: [
             provideRouter([]),
             { provide: LOCALE_ID, useValue: locale },
-            { provide: ReadTrainPageState, useValue: fakeState },
         ],
+    });
+    TestBed.overrideComponent(ReadTrainPage, {
+        set: { providers: [{ provide: ReadTrainPageState, useValue: fakeState }] },
     });
     const fixture = TestBed.createComponent(ReadTrainPage);
     fixture.componentRef.setInput('trainId', 'train-1');

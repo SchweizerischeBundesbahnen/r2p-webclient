@@ -15,6 +15,7 @@ import { TrainDetailsFormCard } from '../../shared/components/train-details-form
 @Component({
     selector: 'app-edit-train-page',
     imports: [RouterLink, JourneyRouteCard, Spinner, MatButton, MatAnchor, StickyEditBar, AlertBanner, TrainDetailsFormCard],
+    providers: [EditTrainPageState],
     templateUrl: './edit-train-page.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

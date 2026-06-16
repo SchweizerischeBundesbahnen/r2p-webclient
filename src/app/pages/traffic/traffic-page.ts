@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TrafficPageState, TrainWithDetails } from './traffic-page.state';
 import { Branch, BranchState } from '../../shared/models/api.models';
@@ -34,6 +34,7 @@ import { OverallStatusComponent } from '../../shared/components/overall-status/o
 @Component({
     selector: 'app-traffic-page',
     imports: [RouterLink, DatePipe, JourneyRouteCard, BranchStatusBadgeComponent, Spinner, MatButton, MatAnchor, MatTooltip, DetailGrid, DetailItem, PartnerBadge, AlertBanner, OverallStatusComponent],
+    providers: [TrafficPageState],
     templateUrl: './traffic-page.html',
     styleUrl: './traffic-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -60,13 +61,11 @@ export class TrafficPage {
         return mainBranch?.technical.owner === this.currentOrg();
     });
 
+    // State is component-scoped (see @Component providers), so it is recreated on every
+    // navigation here — no manual reuse/reload needed. Keep route-level providers OFF and avoid a
+    // same-route same-id self-navigation, otherwise the rxResource would serve stale data again.
     private readonly trainIdEffect = effect(() => {
-        const id = this.trainId();
-        const prevId = untracked(() => this.trafficPageStateService.trainId());
-        this.trafficPageStateService.trainId.set(id);
-        if (id && id === prevId) {
-            this.trainMainBranch.reload();
-        }
+        this.trafficPageStateService.trainId.set(this.trainId());
     });
 
     protected readonly trainMainBranch = this.trafficPageStateService.trainMainBranch;
