@@ -243,36 +243,41 @@ describe('TrafficPage – date formatting', () => {
         });
     });
 
-    describe('departureTime and arrivalTime (shortTime)', () => {
-        it('formats departure time for en-US', () => {
+    describe('departureTime and arrivalTime (HH:mm, UTC)', () => {
+        it('formats departure time as 24h UTC for en-US', () => {
             const el = createComponent('en-US', TRAIN_WITH_DETAILS);
-            expect(el.querySelector('#detail-dep-time')!.textContent!.trim()).toMatch(
-                /\d{1,2}:\d{2}\s?(AM|PM)/i,
-            );
+            // earliest departure PT8H12M on operationalDay → 08:12 UTC, unshifted
+            expect(el.querySelector('#detail-dep-time')!.textContent!.trim()).toBe('08:12');
         });
 
-        it('formats arrival time for en-US', () => {
+        it('formats departure time identically for de-CH', () => {
+            const el = createComponent('de-CH', TRAIN_WITH_DETAILS);
+            expect(el.querySelector('#detail-dep-time')!.textContent!.trim()).toBe('08:12');
+        });
+
+        it('formats arrival time as 24h UTC for en-US', () => {
             const el = createComponent('en-US', TRAIN_WITH_DETAILS);
-            expect(el.querySelector('#detail-arr-time')!.textContent!.trim()).toMatch(
-                /\d{1,2}:\d{2}\s?(AM|PM)/i,
-            );
+            // latest arrival PT9H16M → 09:16 UTC
+            expect(el.querySelector('#detail-arr-time')!.textContent!.trim()).toBe('09:16');
         });
     });
 
-    describe('variant lastChange (short)', () => {
+    describe('variant lastChange (mediumDate + 24h time)', () => {
         it('formats variant timestamps correctly for en-US', () => {
             const el = createComponent('en-US', TRAIN_WITH_DETAILS);
             const branchMeta = el.querySelectorAll('.branch-meta');
-            // Two branches – check both contain a formatted date
-            expect(branchMeta[0].textContent).toMatch(/5\/26\/26/);
-            expect(branchMeta[1].textContent).toMatch(/5\/26\/26/);
+            // main branch (SBB, 10:30) first, then BLS variant (14:00)
+            expect(branchMeta[0].textContent).toMatch(/May 26, 2026/);
+            expect(branchMeta[0].textContent).toMatch(/10:30/);
+            expect(branchMeta[1].textContent).toMatch(/14:00/);
         });
 
         it('formats variant timestamps correctly for de-CH', () => {
             const el = createComponent('de-CH', TRAIN_WITH_DETAILS);
             const branchMeta = el.querySelectorAll('.branch-meta');
-            expect(branchMeta[0].textContent).toMatch(/26\.05\.26/);
-            expect(branchMeta[1].textContent).toMatch(/26\.05\.26/);
+            expect(branchMeta[0].textContent).toMatch(/26\.05\.2026/);
+            expect(branchMeta[0].textContent).toMatch(/10:30/);
+            expect(branchMeta[1].textContent).toMatch(/14:00/);
         });
     });
 });

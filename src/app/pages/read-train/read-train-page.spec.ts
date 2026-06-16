@@ -81,13 +81,13 @@ describe('ReadTrainPage – date formatting', () => {
         });
     });
 
-    describe('timestamp with short', () => {
+    describe('timestamp with mediumDate + 24h time', () => {
         it('formats correctly for en-US', () => {
             const fixture = createComponent('en-US', BRANCH);
             const text = fixture.nativeElement
                 .querySelector('#detail-timestamp')
                 .textContent.trim();
-            expect(text).toMatch(/5\/26\/26/);
+            expect(text).toBe('May 26, 2026, 10:30');
         });
 
         it('formats correctly for de-CH', () => {
@@ -95,7 +95,7 @@ describe('ReadTrainPage – date formatting', () => {
             const text = fixture.nativeElement
                 .querySelector('#detail-timestamp')
                 .textContent.trim();
-            expect(text).toMatch(/26\.05\.26/);
+            expect(text).toBe('26.05.2026, 10:30');
         });
 
         it('shows "-" when branch is not loaded', () => {
