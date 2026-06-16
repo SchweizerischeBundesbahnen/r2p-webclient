@@ -85,8 +85,7 @@ describe('ReadTrainPage – date formatting', () => {
             const text = fixture.nativeElement
                 .querySelector('#detail-timestamp')
                 .textContent.trim();
-            expect(text).toMatch(/May 26, 2026/);
-            expect(text).toMatch(/10:30/);
+            expect(text).toBe('May 26, 2026, 10:30');
         });
 
         it('formats correctly for de-CH', () => {
@@ -94,8 +93,7 @@ describe('ReadTrainPage – date formatting', () => {
             const text = fixture.nativeElement
                 .querySelector('#detail-timestamp')
                 .textContent.trim();
-            expect(text).toMatch(/26\.05\.2026/);
-            expect(text).toMatch(/10:30/);
+            expect(text).toBe('26.05.2026, 10:30');
         });
 
         it('shows "-" when branch is not loaded', () => {
