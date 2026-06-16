@@ -109,7 +109,9 @@
                                 @for (partner of branch.partners; track partner) {
                                     <app-partner-badge [partner]="partner" />
                                 }
-                                <span>{{ (branch.lastChange | date: 'mediumDate') + ', ' + (branch.lastChange | date: 'HH:mm') }}</span>
+                                @let lastChangeDate = branch.lastChange | date: 'mediumDate';
+                                @let lastChangeTime = branch.lastChange | date: 'HH:mm';
+                                <span>{{ lastChangeDate && lastChangeTime ? lastChangeDate + ', ' + lastChangeTime : '-' }}</span>
                                 @if (branch.comment) {
                                     <span>— <em>{{ branch.comment }}</em></span>
                                 }
@@ -175,7 +177,9 @@
                                             @for (partner of branch.partners; track partner) {
                                                 <app-partner-badge [partner]="partner" />
                                             }
-                                            <span>{{ (branch.lastChange | date: 'mediumDate') + ', ' + (branch.lastChange | date: 'HH:mm') }}</span>
+                                            @let lastChangeDate = branch.lastChange | date: 'mediumDate';
+                                            @let lastChangeTime = branch.lastChange | date: 'HH:mm';
+                                            <span>{{ lastChangeDate && lastChangeTime ? lastChangeDate + ', ' + lastChangeTime : '-' }}</span>
                                             @if (branch.comment) {
                                                 <span>— <em>{{ branch.comment }}</em></span>
                                             }

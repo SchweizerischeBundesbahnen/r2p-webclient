@@ -35,7 +35,9 @@ import { PartnerBadge } from '../../shared/components/partner-badge/partner-badg
             </div>
         </td>
         <td class="td-small">
-            <div>{{ (train().revInfo.lastChange | date: 'mediumDate') + ', ' + (train().revInfo.lastChange | date: 'HH:mm') }}</div>
+            @let lastChangeDate = train().revInfo.lastChange | date: 'mediumDate';
+            @let lastChangeTime = train().revInfo.lastChange | date: 'HH:mm';
+            <div>{{ lastChangeDate && lastChangeTime ? lastChangeDate + ', ' + lastChangeTime : '-' }}</div>
             <div class="cell-sub">{{ train().revInfo.version }}</div>
         </td>
         <td>
