@@ -35,6 +35,7 @@ import { planStatusLabel } from './activity-display.utils';
 export interface EditActivityDialogData {
     activity: Activity | null;
     capabilityType: CapabilityType;
+    partners?: string[];
 }
 
 export const RESPONSIBILITY_TYPES = [
@@ -46,7 +47,7 @@ export const RESPONSIBILITY_TYPES = [
     { value: 'pru', label: 'pru – Personnel RU' },
 ] as const;
 
-export const PARTNERS = ['SBB', 'BLS', 'SOB'] as const;
+export const PARTNERS = ['SBB', 'BLS', 'SOB', 'TI', 'DBF', 'DBC', 'DBCNL', 'SBBC', 'SBBCI', 'RCA', 'MEV'] as const;
 
 export const PLAN_STATUSES = ['proposed', 'requested', 'confirmed', 'refused', 'dropped'] as const;
 
@@ -91,7 +92,7 @@ export class EditActivityModal {
     private readonly data = inject<EditActivityDialogData>(MAT_DIALOG_DATA);
 
     protected readonly responsibilityTypes = RESPONSIBILITY_TYPES;
-    protected readonly partners = PARTNERS;
+    protected readonly partners = this.data.partners ?? [];
     protected readonly planStatuses = PLAN_STATUSES;
     protected readonly rsFeatureTypes = RS_FEATURE_TYPES;
     protected readonly capabilityType = this.data.capabilityType;
@@ -111,7 +112,7 @@ export class EditActivityModal {
     // ── Responsibility + Path (required path fields are validated via this form) ──
     private readonly responsibilityModel = signal({
         type: this.data.activity?.responsibility?.type ?? 'rru',
-        id: this.data.activity?.responsibility?.id ?? 'SBB',
+        id: this.data.activity?.responsibility?.id ?? (this.partners[0] ?? ''),
         status: this.data.activity?.responsibility?.status ?? 'proposed',
         pathLength:
             this.data.activity?.capability?.path?.length != null

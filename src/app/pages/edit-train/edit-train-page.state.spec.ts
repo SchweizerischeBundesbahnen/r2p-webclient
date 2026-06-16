@@ -36,7 +36,16 @@ describe('EditTrainPageState', () => {
         httpController = TestBed.inject(HttpTestingController);
     });
 
-    afterEach(() => httpController.verify());
+    afterEach(() => {
+        httpController.verify();
+        TestBed.resetTestingModule();
+    });
+
+    function flushTrainListElement(partners: string[] = []): void {
+        httpController
+            .expectOne((r) => r.url.match(/\/v1\/trains\/[^/]+$/) !== null)
+            .flush({ trainId: 'train-1', mainTimestamp: '', partners, branches: [] });
+    }
 
     it('populates the form when the API returns a valid operationalDay', async () => {
         state.trainId.set('train-1');
@@ -45,6 +54,7 @@ describe('EditTrainPageState', () => {
         // and issues the HTTP request, which can then be intercepted below.
         TestBed.tick();
 
+        flushTrainListElement(['BLS']);
         httpController
             .expectOne((r) => r.url.includes('/branches/branch-1'))
             .flush(VALID_BRANCH);
@@ -58,6 +68,21 @@ describe('EditTrainPageState', () => {
         expect(state.editTrainForm.trainNumber().value()).toBe('IC 1234');
     });
 
+    it('exposes partners from trainListElement', async () => {
+        state.trainId.set('train-1');
+        state.branchId.set('branch-1');
+        TestBed.tick();
+
+        flushTrainListElement(['SBB', 'BLS', 'SOB']);
+        httpController.expectOne((r) => r.url.includes('/branches/branch-1')).flush(VALID_BRANCH);
+        httpController.expectOne((r) => r.url.includes('/versions/version-1')).flush({});
+
+        await Promise.resolve();
+        TestBed.tick();
+
+        expect(state.partners()).toEqual(['SBB', 'BLS', 'SOB']);
+    });
+
     it('sets the resource into error state when the API returns an invalid operationalDay', async () => {
         const invalidBranch: Branch = {
             ...VALID_BRANCH,
@@ -69,6 +94,7 @@ describe('EditTrainPageState', () => {
         // First tick: rxResource reacts to the signal changes and issues the HTTP request.
         TestBed.tick();
 
+        flushTrainListElement();
         httpController
             .expectOne((r) => r.url.includes('/branches/branch-1'))
             .flush(invalidBranch);
@@ -93,6 +119,7 @@ describe('EditTrainPageState', () => {
         // First tick: rxResource reacts to the signal changes and issues the HTTP request.
         TestBed.tick();
 
+        flushTrainListElement();
         httpController
             .expectOne((r) => r.url.includes('/branches/branch-1'))
             .flush(invalidBranch);

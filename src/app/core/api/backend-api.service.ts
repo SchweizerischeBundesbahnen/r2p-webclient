@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Branch, Journey, Train, TrainListElement } from '../../shared/models/api.models';
+import { Branch, InstanceOwner, Journey, Train, TrainListElement } from '../../shared/models/api.models';
 import { assertIsoDate } from '../../shared/utils/date.utils';
 import { SettingsService } from '../settings/settings.service';
 import { minimalTrain } from './backend-api.fixtures';
@@ -51,7 +51,7 @@ export class BackendApiService {
         const headers = this.tokenHeaders;
         return this.httpClient.post<Branch>(
             `${this.baseUrl}/v1/trains/${trainId}/branches`,
-            { ...train, id: crypto.randomUUID() },
+            { ...train },
             {
                 params: { branchName, comment },
                 headers,
@@ -114,6 +114,10 @@ export class BackendApiService {
             null,
             { params: { comment }, headers: this.tokenHeaders },
         );
+    }
+
+    getInstanceOwner(): Observable<InstanceOwner> {
+        return this.httpClient.get<InstanceOwner>(`${this.baseUrl}/v1/instance-owner`);
     }
 
     deleteBranch(trainId: string, branchId: string, comment: string): Observable<Branch> {

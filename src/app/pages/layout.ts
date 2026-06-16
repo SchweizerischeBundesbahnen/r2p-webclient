@@ -1,4 +1,5 @@
 ﻿import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { version } from '../../../package.json';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { SettingsModal } from '../core/settings/settings-modal';
@@ -103,7 +104,7 @@ import { PartnerBadge } from '../shared/components/partner-badge/partner-badge';
             <a class="top-nav-brand" routerLink="/traffic-overview">
                 <span class="logo">🚂</span>
                 <span i18n="@@layout.title">R2P Web Client</span>
-                <span class="version-tag">v0.0.12</span>
+                <span class="version-tag">v{{ appVersion }}</span>
             </a>
             <div class="top-nav-right">
                 <div class="top-nav-partner">
@@ -127,6 +128,7 @@ export class Layout {
     private readonly dialog = inject(MatDialog);
     private readonly settingsService = inject(SettingsService);
     protected readonly localeService = inject(LocaleService);
+    protected readonly appVersion = version;
 
     protected readonly currentOrg = computed(() => {
         const name = this.settingsService.settings().organization;

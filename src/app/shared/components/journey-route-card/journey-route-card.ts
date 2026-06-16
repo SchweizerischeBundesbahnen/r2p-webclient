@@ -41,6 +41,7 @@ export class JourneyRouteCard {
     readonly readonly = input<boolean>(false);
     readonly required = input<boolean>(false);
     readonly journey = input<Journey | undefined>(undefined);
+    readonly partners = input<string[]>([]);
     readonly journeyChange = output<Journey>();
 
     private readonly dialog = inject(MatDialog);
@@ -99,7 +100,7 @@ export class JourneyRouteCard {
     protected openAddActivity(stopIndex: number, colType: CapabilityType): void {
         const ref = this.dialog.open<EditActivityModal, EditActivityDialogData, Activity>(
             EditActivityModal,
-            { data: { activity: null, capabilityType: colType }, width: '640px' },
+            { data: { activity: null, capabilityType: colType, partners: this.partners() }, width: '640px' },
         );
         ref.afterClosed().subscribe((result) => {
             if (!result) return;
@@ -111,7 +112,7 @@ export class JourneyRouteCard {
         const dialogRef = this.dialog.open<EditActivityModal, EditActivityDialogData, Activity>(
             EditActivityModal,
             {
-                data: { activity: ref.activity, capabilityType: ref.colType },
+                data: { activity: ref.activity, capabilityType: ref.colType, partners: this.partners() },
                 width: '640px',
             },
         );

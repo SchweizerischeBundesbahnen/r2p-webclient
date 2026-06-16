@@ -11,13 +11,20 @@ export interface Settings {
 export interface OrganizationOption {
     name: string;
     label: string;
-    color: string;
 }
 
 export const ORGANIZATION_OPTIONS: OrganizationOption[] = [
-    { name: 'SBB', label: 'SBB - Schweizerische Bundesbahnen', color: '#d70810' },
-    { name: 'SOB', label: 'SOB - Schweizerische Südostbahn', color: '#009b3a' },
-    { name: 'BLS', label: 'BLS - Bern-Lötschberg-Simplon-Bahn', color: '#00539b' },
+    { name: 'SBB', label: 'SBB - Schweizerische Bundesbahnen' },
+    { name: 'SOB', label: 'SOB - Schweizerische Südostbahn' },
+    { name: 'BLS', label: 'BLS - Bern-Lötschberg-Simplon-Bahn' },
+    { name: 'TI', label: 'TI - TrenItalia' },
+    { name: 'DBF', label: 'DBF - DB Fernverkehr' },
+    { name: 'DBC', label: 'DBC - DB Cargo Deutschland' },
+    { name: 'DBCNL', label: 'DBCNL - DB Cargo Nederland' },
+    { name: 'SBBC', label: 'SBBC - SBB Cargo CH' },
+    { name: 'SBBCI', label: 'SBBCI - SBB Cargo International' },
+    { name: 'RCA', label: 'RCA - Rail Cargo Austria' },
+    { name: 'MEV', label: 'MEV - M-E-V' },
 ];
 
 const SERVER_URL_KEY = 'r2p-serverUrl';

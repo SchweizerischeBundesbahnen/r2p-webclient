@@ -15,7 +15,7 @@ function createComponent(
     activity: Activity | null = null,
     dialogRef = makeDialogRef(),
 ): { fixture: ComponentFixture<EditActivityModal>; dialogRef: ReturnType<typeof makeDialogRef> } {
-    const data: EditActivityDialogData = { activity, capabilityType };
+    const data: EditActivityDialogData = { activity, capabilityType, partners: ['SBB', 'BLS'] };
     TestBed.configureTestingModule({
         imports: [EditActivityModal],
         providers: [
@@ -58,6 +58,93 @@ const STUB_EXISTING: Activity = {
 
 describe('EditActivityModal', () => {
     afterEach(() => TestBed.resetTestingModule());
+
+    describe('partner dropdown', () => {
+        it('uses the partners from dialog data when provided', () => {
+            TestBed.resetTestingModule();
+            const data: EditActivityDialogData = {
+                activity: null,
+                capabilityType: 'rollingStock',
+                partners: ['SBB', 'BLS'],
+            };
+            TestBed.configureTestingModule({
+                imports: [EditActivityModal],
+                providers: [
+                    provideAnimationsAsync(),
+                    { provide: MAT_DIALOG_DATA, useValue: data },
+                    { provide: MatDialogRef, useValue: makeDialogRef() },
+                ],
+            });
+            const fixture = TestBed.createComponent(EditActivityModal);
+            fixture.detectChanges();
+            const component = fixture.componentInstance as unknown as { partners: string[] };
+            expect(component.partners).toEqual(['SBB', 'BLS']);
+        });
+
+        it('uses empty array when dialog data provides no partners', () => {
+            TestBed.resetTestingModule();
+            const data: EditActivityDialogData = {
+                activity: null,
+                capabilityType: 'rollingStock',
+            };
+            TestBed.configureTestingModule({
+                imports: [EditActivityModal],
+                providers: [
+                    provideAnimationsAsync(),
+                    { provide: MAT_DIALOG_DATA, useValue: data },
+                    { provide: MatDialogRef, useValue: makeDialogRef() },
+                ],
+            });
+            const fixture = TestBed.createComponent(EditActivityModal);
+            fixture.detectChanges();
+            const component = fixture.componentInstance as unknown as { partners: string[] };
+            expect(component.partners).toEqual([]);
+        });
+
+        it('defaults responsibility id to the first partner when creating a new activity', () => {
+            TestBed.resetTestingModule();
+            const dr = makeDialogRef();
+            const data: EditActivityDialogData = {
+                activity: null,
+                capabilityType: 'rollingStock',
+                partners: ['BLS', 'SBB'],
+            };
+            TestBed.configureTestingModule({
+                imports: [EditActivityModal],
+                providers: [
+                    provideAnimationsAsync(),
+                    { provide: MAT_DIALOG_DATA, useValue: data },
+                    { provide: MatDialogRef, useValue: dr },
+                ],
+            });
+            const fixture = TestBed.createComponent(EditActivityModal);
+            fixture.detectChanges();
+            clickSave(fixture);
+            const emitted = dr.close.mock.calls[0][0] as Activity;
+            expect(emitted.responsibility?.id).toBe('BLS');
+        });
+
+        it('leaves responsibility id empty when no partners provided, preventing form submission', () => {
+            TestBed.resetTestingModule();
+            const dr = makeDialogRef();
+            const data: EditActivityDialogData = {
+                activity: null,
+                capabilityType: 'rollingStock',
+            };
+            TestBed.configureTestingModule({
+                imports: [EditActivityModal],
+                providers: [
+                    provideAnimationsAsync(),
+                    { provide: MAT_DIALOG_DATA, useValue: data },
+                    { provide: MatDialogRef, useValue: dr },
+                ],
+            });
+            const fixture = TestBed.createComponent(EditActivityModal);
+            fixture.detectChanges();
+            clickSave(fixture);
+            expect(dr.close).not.toHaveBeenCalled();
+        });
+    });
 
     describe('title', () => {
         it('shows "Add <Type> Activity" for each capability type when creating new', () => {
@@ -201,7 +288,12 @@ describe('EditActivityModal', () => {
             fixture.detectChanges();
             clickSave(fixture);
             const emitted = dr.close.mock.calls[0][0] as Activity;
-            expect(emitted.capability?.rollingStock?.units).toEqual([{ name: 'RABe 502' }]);
+            const unit = emitted.capability?.rollingStock?.units?.[0];
+            expect(unit?.name).toBe('RABe 502');
+            expect(typeof unit?.id).toBe('string');
+            expect(unit?.carbodies).toEqual([]);
+            expect(unit?.capabilityFeatures).toEqual([]);
+            expect(unit?.featuresetRefs).toEqual([]);
         });
 
         it('preserves existing units when composition input is left empty', () => {

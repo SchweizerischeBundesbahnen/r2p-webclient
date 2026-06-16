@@ -106,6 +106,71 @@ describe('buildActivity — rolling stock features', () => {
     });
 });
 
+describe('buildActivity — rolling stock unit init', () => {
+    it('initialises required fields when creating a new unit from composition', () => {
+        const result = buildActivity({
+            ...BASE_INPUT,
+            rollingStock: { ...BASE_INPUT.rollingStock, composition: 'RABe 502' },
+        });
+        const unit = result.capability?.rollingStock?.units?.[0];
+        expect(unit?.name).toBe('RABe 502');
+        expect(typeof unit?.id).toBe('string');
+        expect(unit?.id?.length).toBeGreaterThan(0);
+        expect(unit?.carbodies).toEqual([]);
+        expect(unit?.capabilityFeatures).toEqual([]);
+        expect(unit?.featuresetRefs).toEqual([]);
+    });
+
+    it('preserves existing unit fields when editing with a new composition name', () => {
+        const existing: Activity = {
+            ...STUB_EXISTING,
+            capability: {
+                type: 'rollingStock',
+                capabilityFeatures: [],
+                rollingStock: {
+                    units: [
+                        {
+                            id: 'unit-uuid-1',
+                            name: 'ICE',
+                            carbodies: [{ type: 'MC' }],
+                            capabilityFeatures: [{ feature: { type: 'RESTAURANT' } }],
+                            featuresetRefs: ['ref-1'],
+                        },
+                    ],
+                },
+            },
+        };
+        const result = buildActivity({
+            ...BASE_INPUT,
+            existing,
+            rollingStock: { ...BASE_INPUT.rollingStock, composition: 'ICN' },
+        });
+        const unit = result.capability?.rollingStock?.units?.[0];
+        expect(unit?.name).toBe('ICN');
+        expect(unit?.id).toBe('unit-uuid-1');
+        expect(unit?.carbodies).toEqual([{ type: 'MC' }]);
+        expect(unit?.capabilityFeatures).toEqual([{ feature: { type: 'RESTAURANT' } }]);
+        expect(unit?.featuresetRefs).toEqual(['ref-1']);
+    });
+
+    it('falls back to existing units when composition is empty', () => {
+        const existing: Activity = {
+            ...STUB_EXISTING,
+            capability: {
+                type: 'rollingStock',
+                capabilityFeatures: [],
+                rollingStock: {
+                    units: [{ id: 'unit-uuid-2', name: 'RABe 511', carbodies: [], capabilityFeatures: [], featuresetRefs: [] }],
+                },
+            },
+        };
+        const result = buildActivity({ ...BASE_INPUT, existing });
+        expect(result.capability?.rollingStock?.units).toEqual([
+            { id: 'unit-uuid-2', name: 'RABe 511', carbodies: [], capabilityFeatures: [], featuresetRefs: [] },
+        ]);
+    });
+});
+
 describe('buildActivity — rolling stock NaN guard', () => {
     it('omits length and weight when inputs are empty', () => {
         const result = buildActivity(BASE_INPUT);

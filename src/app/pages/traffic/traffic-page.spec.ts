@@ -404,8 +404,8 @@ describe('TrafficPage – Share Train button visibility', () => {
     });
 
     it('hides Share Train button when all other orgs are already shared', () => {
-        // SBB logged in, BLS and SOB both shared → button hidden
-        const el = createComponent('en-US', trainWithPartners(['BLS', 'SOB']), 'SBB');
+        // SBB logged in, all other orgs shared → button hidden
+        const el = createComponent('en-US', trainWithPartners(['BLS', 'SOB', 'TI', 'DBF', 'DBC', 'DBCNL', 'SBBC', 'SBBCI', 'RCA', 'MEV']), 'SBB');
         expect(findShareButton(el)).toBeUndefined();
     });
 
@@ -420,8 +420,8 @@ describe('TrafficPage – Share Train button visibility', () => {
     });
 
     it('does not count own org as an unshared partner', () => {
-        // SBB logged in, only SBB missing from partners — still hidden because SBB is the current org
-        const el = createComponent('en-US', trainWithPartners(['BLS', 'SOB']), 'SBB');
+        // SBB logged in, all other orgs present — button hidden because SBB is the current org
+        const el = createComponent('en-US', trainWithPartners(['BLS', 'SOB', 'TI', 'DBF', 'DBC', 'DBCNL', 'SBBC', 'SBBCI', 'RCA', 'MEV']), 'SBB');
         expect(findShareButton(el)).toBeUndefined();
     });
 });

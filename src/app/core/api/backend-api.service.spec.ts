@@ -58,6 +58,15 @@ describe('BackendApiService', () => {
             req.flush({});
         });
 
+        it('sends the train number as both id and name', () => {
+            service.createTrain('IC 1234', '2026-05-26', 'comment', minimalTrain.journey!).subscribe();
+
+            const req = httpController.expectOne((r) => r.url.endsWith('/v1/trains'));
+            expect(req.request.body.id).toBe('IC 1234');
+            expect(req.request.body.name).toBe('IC 1234');
+            req.flush({});
+        });
+
         it('sets the Token header and base URL from settings', () => {
             service.createTrain('IC 1234', '2026-05-26', 'comment', minimalTrain.journey!).subscribe();
             const req = httpController.expectOne((r) => r.url.endsWith('/v1/trains'));
@@ -170,6 +179,25 @@ describe('BackendApiService', () => {
         });
     });
 
+    describe('getInstanceOwner', () => {
+        it('GET /v1/instance-owner without Token header', () => {
+            service.getInstanceOwner().subscribe();
+            const req = httpController.expectOne((r) =>
+                r.url.endsWith('/v1/instance-owner') && r.method === 'GET',
+            );
+            expect(req.request.headers.has('Token')).toBe(false);
+            req.flush({ name: 'SBB' });
+        });
+
+        it('returns the instance owner name', () => {
+            let result: { name: string } | undefined;
+            service.getInstanceOwner().subscribe((owner) => (result = owner));
+            const req = httpController.expectOne((r) => r.url.endsWith('/v1/instance-owner'));
+            req.flush({ name: 'BLS' });
+            expect(result?.name).toBe('BLS');
+        });
+    });
+
     describe('deleteBranch', () => {
         it('DELETE /v1/trains/{trainId}/branches/{branchId}', () => {
             service.deleteBranch('t-1', 'b-1', 'cleanup').subscribe();
@@ -218,6 +246,19 @@ describe('BackendApiService', () => {
             );
             expect(req.request.method).toBe('PUT');
             expect(req.request.body.startdate).toBe('2026-05-26');
+            req.flush({});
+        });
+
+        it('sends the train number as both id and name', () => {
+            service
+                .updateTrain(trainId, train, branchId, 'IC 1234', 'comment', '2026-05-26')
+                .subscribe();
+
+            const req = httpController.expectOne((r) =>
+                r.url.endsWith(`/v1/trains/${trainId}/branches/${branchId}`),
+            );
+            expect(req.request.body.id).toBe('IC 1234');
+            expect(req.request.body.name).toBe('IC 1234');
             req.flush({});
         });
     });

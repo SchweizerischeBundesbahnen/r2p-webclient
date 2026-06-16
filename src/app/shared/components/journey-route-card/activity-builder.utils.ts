@@ -74,7 +74,17 @@ export function buildActivity(input: ActivityBuildInput): Activity {
         const rsLength = input.rollingStock.length ? Number(input.rollingStock.length) : undefined;
         const rsWeight = input.rollingStock.weight ? Number(input.rollingStock.weight) : undefined;
         const rsUnits = input.rollingStock.composition
-            ? [{ name: input.rollingStock.composition }]
+            ? [
+                  {
+                      ...(existing?.capability?.rollingStock?.units?.[0] ?? {
+                          id: crypto.randomUUID(),
+                          carbodies: [],
+                          capabilityFeatures: [],
+                          featuresetRefs: [],
+                      }),
+                      name: input.rollingStock.composition,
+                  },
+              ]
             : (existing?.capability?.rollingStock?.units ?? []);
 
         capability = {

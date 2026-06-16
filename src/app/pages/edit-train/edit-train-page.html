@@ -78,6 +78,7 @@
             <app-journey-route-card
                 [readonly]="false"
                 [journey]="state.branch.value()?.train?.journey"
+                [partners]="state.partners()"
                 (journeyChange)="onJourneyChange($event)"
             />
         </div>

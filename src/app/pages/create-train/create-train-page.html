@@ -48,6 +48,7 @@
             [readonly]="false"
             [required]="true"
             [journey]="state.journey()"
+            [partners]="[ownOrganization()]"
             (journeyChange)="onJourneyChange($event)"
         />
     </div>
