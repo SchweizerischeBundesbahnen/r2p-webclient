@@ -31,6 +31,7 @@
     "settings.authorityAzureV1Error": "Azure AD v1-Endpoint wird nicht unterstützt. Bitte verwende den v2.0-Endpoint: https://login.microsoftonline.com/<tenant-id>/v2.0",
     "settings.clientId": "Client-ID *",
     "settings.scope": "Scope *",
+    "settings.scopeHint": "offline_access wird automatisch ergänzt, damit die Sitzung im Hintergrund still erneuert werden kann.",
     "settings.save": " Speichern ",
     "createTrain.title": "Neuer Zug",
     "common.cancel": "Abbrechen",

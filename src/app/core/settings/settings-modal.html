@@ -168,6 +168,7 @@
             @if (submitted() && !scope().trim()) {
                 <p class="hint hint--error" i18n="@@validation.required">Required.</p>
             }
+            <p class="hint" i18n="@@settings.scopeHint">offline_access is added automatically so the session can be renewed silently in the background.</p>
         </div>
 
         <button mat-flat-button color="primary" class="save-btn"

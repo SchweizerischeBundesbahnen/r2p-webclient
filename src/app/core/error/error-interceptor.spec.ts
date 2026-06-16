@@ -3,20 +3,24 @@ import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { errorInterceptor } from './error-interceptor';
 import { ErrorNotificationService } from './error-notification.service';
+import { AuthSessionService } from '../auth/auth-session.service';
 import { vi } from 'vitest';
 
 describe('errorInterceptor', () => {
     let http: HttpClient;
     let httpController: HttpTestingController;
     let showSpy: ReturnType<typeof vi.fn>;
+    let redirectInProgress: boolean;
 
     beforeEach(() => {
         showSpy = vi.fn();
+        redirectInProgress = false;
         TestBed.configureTestingModule({
             providers: [
                 provideHttpClient(withInterceptors([errorInterceptor])),
                 provideHttpClientTesting(),
                 { provide: ErrorNotificationService, useValue: { showError: showSpy } },
+                { provide: AuthSessionService, useValue: { redirectInProgress: () => redirectInProgress } },
             ],
         });
         http = TestBed.inject(HttpClient);
@@ -59,6 +63,20 @@ describe('errorInterceptor', () => {
         it('shows an unexpected error message for status 422', () => {
             triggerRequest(422);
             expect(showSpy).toHaveBeenCalledWith(expect.stringContaining('Unexpected error'));
+        });
+    });
+
+    describe('silent re-authentication redirect in progress', () => {
+        it('suppresses the error toast while a re-auth redirect is in progress', () => {
+            redirectInProgress = true;
+            triggerRequest(0);
+            expect(showSpy).not.toHaveBeenCalled();
+        });
+
+        it('suppresses the toast for an auth-related 401 during redirect', () => {
+            redirectInProgress = true;
+            triggerRequest(401);
+            expect(showSpy).not.toHaveBeenCalled();
         });
     });
 

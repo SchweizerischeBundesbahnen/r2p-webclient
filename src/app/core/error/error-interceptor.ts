@@ -2,6 +2,7 @@ import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
 import { ErrorNotificationService } from './error-notification.service';
+import { AuthSessionService } from '../auth/auth-session.service';
 
 /** Shape of the RFC 7807 / Problem Details response the backend returns. */
 interface ApiErrorDetail {
@@ -37,8 +38,15 @@ function extractApiDetail(error: HttpErrorResponse): string | undefined {
  */
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
     const errorService = inject(ErrorNotificationService);
+    const authSession = inject(AuthSessionService);
     return next(req).pipe(
         catchError((error: HttpErrorResponse) => {
+            // A silent re-authentication redirect is in progress; the page is
+            // navigating away. Don't flash misleading error toasts (e.g. the
+            // CORS/Status-0 noise from a dead-token request).
+            if (authSession.redirectInProgress()) {
+                return throwError(() => error);
+            }
             const apiDetail = extractApiDetail(error);
             let message: string;
             if (error.status === 0) {

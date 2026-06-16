@@ -6,6 +6,7 @@ import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { of } from 'rxjs';
 import { oidcGuard } from './oidc.guard';
 import { SettingsService } from '../settings/settings.service';
+import { AuthSessionService } from './auth-session.service';
 
 const CONFIGURED_SETTINGS = {
     authority: 'https://login.example.com/realms/r2p',
@@ -22,6 +23,16 @@ function makeSettingsService(configured = true) {
     } as unknown as SettingsService;
 }
 
+function makeAuthSession(budgetExceeded = false) {
+    return {
+        redirectInProgress: vi.fn().mockReturnValue(false),
+        hasExceededRedirectBudget: vi.fn().mockReturnValue(budgetExceeded),
+        beginReauth: vi.fn(),
+        markAuthenticated: vi.fn(),
+        resetRedirectBudget: vi.fn(),
+    } as unknown as AuthSessionService;
+}
+
 function runGuard(): unknown {
     return TestBed.runInInjectionContext(() =>
         (oidcGuard as (a: ActivatedRouteSnapshot, s: RouterStateSnapshot) => unknown)(
@@ -36,12 +47,14 @@ describe('oidcGuard', () => {
     let checkAuthSpy: ReturnType<typeof vi.fn>;
     let authorizeSpy: ReturnType<typeof vi.fn>;
     let fetchSpy: ReturnType<typeof vi.fn>;
+    let authSession: AuthSessionService;
     let originalFetch: typeof fetch;
 
     beforeEach(() => {
         openSpy = vi.fn().mockReturnValue({ disableClose: false });
         checkAuthSpy = vi.fn().mockReturnValue(of({ isAuthenticated: false }));
         authorizeSpy = vi.fn();
+        authSession = makeAuthSession();
         originalFetch = globalThis.fetch;
 
         // Default: discovery endpoint reachable with a valid OIDC discovery document
@@ -63,6 +76,7 @@ describe('oidcGuard', () => {
                 { provide: SettingsService, useValue: makeSettingsService() },
                 { provide: MatDialog, useValue: { open: openSpy, openDialogs: [] } },
                 { provide: OidcSecurityService, useValue: { checkAuth: checkAuthSpy, authorize: authorizeSpy } },
+                { provide: AuthSessionService, useFactory: () => authSession },
             ],
         });
     });
@@ -114,22 +128,21 @@ describe('oidcGuard', () => {
         );
     });
 
-    describe('broken redirect (pending state, no code)', () => {
-        it('opens settings modal with failedRedirectUri when state is pending but no code returned', () =>
+    describe('stale auth state (expired session, no code)', () => {
+        it('re-authenticates silently without opening the settings dialog', () =>
             new Promise<void>((resolve) => {
                 sessionStorage.setItem('r2p-webclient', JSON.stringify({ authStateControl: 'abc123' }));
                 const result$ = runGuard() as ReturnType<typeof of>;
                 result$.subscribe((v: boolean) => {
                     expect(v).toBe(false);
-                    expect(openSpy).toHaveBeenCalledTimes(1);
-                    const data = openSpy.mock.calls[0][1].data as { failedRedirectUri: string };
-                    expect(data.failedRedirectUri).toBe(window.location.origin);
+                    expect(authSession.beginReauth).toHaveBeenCalledTimes(1);
+                    expect(openSpy).not.toHaveBeenCalled();
                     resolve();
                 });
             }),
         );
 
-        it('clears the pending state from sessionStorage', () =>
+        it('clears the stale auth state from sessionStorage', () =>
             new Promise<void>((resolve) => {
                 sessionStorage.setItem('r2p-webclient', JSON.stringify({ authStateControl: 'abc123', someOtherKey: 'keep' }));
                 const result$ = runGuard() as ReturnType<typeof of>;
@@ -142,7 +155,24 @@ describe('oidcGuard', () => {
             }),
         );
 
-        it('does not trigger the broken-redirect check when code is present in URL', () =>
+        it('opens the settings dialog only once the redirect budget is exceeded', () =>
+            new Promise<void>((resolve) => {
+                authSession = makeAuthSession(true);
+                sessionStorage.setItem('r2p-webclient', JSON.stringify({ authStateControl: 'abc123' }));
+                const result$ = runGuard() as ReturnType<typeof of>;
+                result$.subscribe((v: boolean) => {
+                    expect(v).toBe(false);
+                    expect(authSession.beginReauth).not.toHaveBeenCalled();
+                    expect(authSession.resetRedirectBudget).toHaveBeenCalledTimes(1);
+                    expect(openSpy).toHaveBeenCalledTimes(1);
+                    const data = openSpy.mock.calls[0][1].data as { failedRedirectUri: string };
+                    expect(data.failedRedirectUri).toBe(window.location.origin);
+                    resolve();
+                });
+            }),
+        );
+
+        it('does not re-authenticate when code is present in URL', () =>
             new Promise<void>((resolve) => {
                 sessionStorage.setItem('r2p-webclient', JSON.stringify({ authStateControl: 'abc123' }));
                 window.history.replaceState({}, '', '/?code=somecode&state=abc123');
@@ -150,6 +180,7 @@ describe('oidcGuard', () => {
                 const result$ = runGuard() as ReturnType<typeof of>;
                 result$.subscribe((v: boolean) => {
                     expect(v).toBe(true);
+                    expect(authSession.markAuthenticated).toHaveBeenCalledTimes(1);
                     expect(openSpy).not.toHaveBeenCalled();
                     resolve();
                 });
@@ -186,25 +217,27 @@ describe('oidcGuard', () => {
     });
 
     describe('successful auth flow', () => {
-        it('returns true when already authenticated', () =>
+        it('returns true and marks authenticated when already authenticated', () =>
             new Promise<void>((resolve) => {
                 checkAuthSpy.mockReturnValue(of({ isAuthenticated: true }));
                 const result$ = runGuard() as ReturnType<typeof of>;
                 result$.subscribe((v: boolean) => {
                     expect(v).toBe(true);
+                    expect(authSession.markAuthenticated).toHaveBeenCalledTimes(1);
                     expect(openSpy).not.toHaveBeenCalled();
                     resolve();
                 });
             }),
         );
 
-        it('calls authorize() and returns false when not authenticated', () =>
+        it('re-authenticates silently and returns false when not authenticated', () =>
             new Promise<void>((resolve) => {
                 checkAuthSpy.mockReturnValue(of({ isAuthenticated: false }));
                 const result$ = runGuard() as ReturnType<typeof of>;
                 result$.subscribe((v: boolean) => {
                     expect(v).toBe(false);
-                    expect(authorizeSpy).toHaveBeenCalledTimes(1);
+                    expect(authSession.beginReauth).toHaveBeenCalledTimes(1);
+                    expect(authorizeSpy).not.toHaveBeenCalled();
                     expect(openSpy).not.toHaveBeenCalled();
                     resolve();
                 });
