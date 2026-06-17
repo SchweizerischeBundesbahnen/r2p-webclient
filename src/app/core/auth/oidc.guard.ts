@@ -2,8 +2,8 @@
 import { CanActivateFn } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
-import { SettingsModal } from '../settings/settings-modal';
 import { SettingsService } from '../settings/settings.service';
+import { openSettingsOnOidcError } from '../settings/open-settings-on-oidc-error';
 import { AuthSessionService } from './auth-session.service';
 import { from, of, switchMap, take, catchError } from 'rxjs';
 
@@ -110,12 +110,6 @@ export const oidcGuard: CanActivateFn = () => {
         }),
     );
 };
-
-function openSettingsOnOidcError(dialog: MatDialog, unreachableUrl?: string, oidcError?: string, failedRedirectUri?: string): void {
-    if (dialog.openDialogs.length === 0) {
-        dialog.open(SettingsModal, { disableClose: true, data: { unreachableUrl, oidcError, failedRedirectUri } });
-    }
-}
 
 /** Returns true when the OIDC library has an in-progress auth flow stored (authStateControl set). */
 function getOidcStoredState(configId: string): boolean {

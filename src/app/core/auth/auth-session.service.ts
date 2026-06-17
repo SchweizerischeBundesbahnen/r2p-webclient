@@ -34,12 +34,28 @@ export class AuthSessionService {
      */
     readonly redirectInProgress = signal(false);
 
-    /** Wire background silent-renew failures to a clean full-page re-login. */
-    initialize(): void {
+    /**
+     * Wire background silent-renew failures to a clean full-page re-login.
+     *
+     * `onReauthFailed` is invoked when the redirect cannot even start (a throwing
+     * `authorize()`): the redirect never happened, so no navigation will re-run
+     * the route guard, and the caller should surface the settings dialog
+     * immediately rather than leave the user on a page with a dead session. The
+     * service stays UI-agnostic — the composition root supplies that behaviour.
+     */
+    initialize(onReauthFailed: () => void): void {
         this.events
             .registerForEvents()
             .pipe(filter((notification) => notification.type === EventTypes.SilentRenewFailed))
-            .subscribe(() => this.beginReauth());
+            .subscribe(() => {
+                // Swallow so the error doesn't escape as an unhandled RxJS error
+                // and tear down this subscription.
+                try {
+                    this.beginReauth();
+                } catch {
+                    onReauthFailed();
+                }
+            });
     }
 
     /** True when we have already redirected too often without success (likely misconfig). */
@@ -58,7 +74,15 @@ export class AuthSessionService {
         }
         this.redirectInProgress.set(true);
         this.writeCount(this.readCount() + 1);
-        this.oidc.authorize();
+        try {
+            this.oidc.authorize();
+        } catch (error) {
+            // authorize() failed before any navigation happened. Roll back the
+            // guard flag — otherwise error toasts stay suppressed forever — and
+            // rethrow so the route guard can surface the settings dialog.
+            this.redirectInProgress.set(false);
+            throw error;
+        }
     }
 
     /** Reset the loop guard after a confirmed-authenticated check. */

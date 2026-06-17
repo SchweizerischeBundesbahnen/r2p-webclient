@@ -1,11 +1,13 @@
 import { ApplicationConfig, ErrorHandler, inject, LOCALE_ID, provideAppInitializer, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { routes } from './app.routes';
 import { authInterceptor, provideAuth } from 'angular-auth-oidc-client';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { resolveInitialLocale } from './core/locale/locale.service';
 import { errorInterceptor } from './core/error/error-interceptor';
 import { loadSettingsRaw, isSettingsComplete } from './core/settings/settings.service';
+import { openSettingsOnOidcError } from './core/settings/open-settings-on-oidc-error';
 import { AppErrorHandler } from './core/error/app-error-handler';
 import { AuthSessionService } from './core/auth/auth-session.service';
 
@@ -56,7 +58,10 @@ export const appConfig: ApplicationConfig = {
         provideRouter(routes, withComponentInputBinding()),
         provideAppAuth(),
         provideHttpClient(withInterceptors([authInterceptor(), errorInterceptor])),
-        provideAppInitializer(() => inject(AuthSessionService).initialize()),
+        provideAppInitializer(() => {
+            const dialog = inject(MatDialog);
+            inject(AuthSessionService).initialize(() => openSettingsOnOidcError(dialog));
+        }),
         { provide: LOCALE_ID, useValue: resolveInitialLocale() },
     ],
 };
