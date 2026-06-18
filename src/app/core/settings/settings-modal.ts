@@ -7,6 +7,7 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { ORGANIZATION_OPTIONS, Settings, SettingsService } from './settings.service';
+import { AuthSessionService } from '../auth/auth-session.service';
 
 const AZURE_V1_RE = /^https:\/\/login\.microsoftonline\.com\/[^/]+\/?$/;
 
@@ -27,6 +28,7 @@ export class SettingsModal {
     private readonly dialogRef = inject(MatDialogRef<SettingsModal>);
     private readonly settingsService = inject(SettingsService);
     private readonly oidcSecurityService = inject(OidcSecurityService);
+    private readonly authSession = inject(AuthSessionService);
     private readonly dialogData = inject<SettingsModalData>(MAT_DIALOG_DATA, { optional: true });
 
     readonly unreachableUrl = this.dialogData?.unreachableUrl ?? null;
@@ -80,6 +82,10 @@ export class SettingsModal {
         // Clear the OIDC library's sessionStorage entry so a changed authority
         // or clientId does not cause an issuer-mismatch on the next bootstrap.
         sessionStorage.removeItem('r2p-webclient');
+        // Reset the re-auth loop guard: new settings are a clean slate, so the
+        // next bootstrap must make a fresh redirect attempt instead of seeing a
+        // leftover counter and re-showing the failure dialog (would need a 2nd Save).
+        this.authSession.resetRedirectBudget();
         this.dialogRef.close();
         window.location.reload();
     }

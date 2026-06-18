@@ -4,6 +4,7 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { SettingsModal, SettingsModalData } from './settings-modal';
 import { SettingsService, ORGANIZATION_OPTIONS } from './settings.service';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { AuthSessionService } from '../auth/auth-session.service';
 
 const VALID_SETTINGS = {
     serverUrl: 'https://api.example.com',
@@ -24,13 +25,14 @@ function makeSettingsService(overrides: Partial<typeof VALID_SETTINGS> = {}): Se
     } as unknown as SettingsService;
 }
 
-function createComponent(settingsService: SettingsService, dialogData: SettingsModalData = {}): ComponentFixture<SettingsModal> {
+function createComponent(settingsService: SettingsService, dialogData: SettingsModalData = {}, resetRedirectBudget = vi.fn()): ComponentFixture<SettingsModal> {
     TestBed.configureTestingModule({
         imports: [SettingsModal],
         providers: [
             { provide: SettingsService, useValue: settingsService },
             { provide: MatDialogRef, useValue: { disableClose: false, close: vi.fn() } },
             { provide: OidcSecurityService, useValue: { logoffLocal: vi.fn() } },
+            { provide: AuthSessionService, useValue: { resetRedirectBudget } },
             { provide: MAT_DIALOG_DATA, useValue: dialogData },
         ],
     });
@@ -184,6 +186,16 @@ describe('SettingsModal', () => {
                     clientId: 'new-client',
                 }),
             );
+        });
+
+        it('resets the re-auth redirect budget so the next bootstrap makes a fresh attempt', () => {
+            const resetRedirectBudget = vi.fn();
+            const fixture = createComponent(makeSettingsService(), {}, resetRedirectBudget);
+            fixture.detectChanges();
+
+            (fixture.componentInstance as unknown as { onClose(): void }).onClose();
+
+            expect(resetRedirectBudget).toHaveBeenCalledTimes(1);
         });
     });
 

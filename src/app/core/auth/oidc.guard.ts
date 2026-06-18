@@ -2,8 +2,9 @@
 import { CanActivateFn } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
-import { SettingsModal } from '../settings/settings-modal';
 import { SettingsService } from '../settings/settings.service';
+import { openSettingsOnOidcError } from '../settings/open-settings-on-oidc-error';
+import { AuthSessionService } from './auth-session.service';
 import { from, of, switchMap, take, catchError } from 'rxjs';
 
 /**
@@ -15,13 +16,17 @@ import { from, of, switchMap, take, catchError } from 'rxjs';
  * 1. If settings are incomplete → open settings modal immediately.
  * 2. If the URL contains an OIDC error param (e.g. unauthorized_client returned
  *    by the IdP after a failed redirect) → open settings modal with the error.
- * 3. Probe the OIDC discovery endpoint via fetch. If unreachable → open settings modal.
- * 4. Only if the discovery endpoint responds, delegate to checkAuth / authorize.
+ * 3. Clear any stale auth state left behind by a failed silent renew so a fresh
+ *    flow can start — but do NOT treat that on its own as a broken redirect.
+ * 4. Probe the OIDC discovery endpoint via fetch. If unreachable → open settings modal.
+ * 5. If not authenticated, re-authenticate silently via {@link AuthSessionService}.
+ *    The settings modal is only shown after repeated failed redirects (real misconfig).
  */
 export const oidcGuard: CanActivateFn = () => {
     const oidc = inject(OidcSecurityService);
     const dialog = inject(MatDialog);
     const settings = inject(SettingsService);
+    const authSession = inject(AuthSessionService);
 
     if (!settings.hasConfiguredSettings()) {
         openSettingsOnOidcError(dialog);
@@ -40,16 +45,13 @@ export const oidcGuard: CanActivateFn = () => {
         return of(false);
     }
 
-    // Detect a broken redirect: if an auth flow was started (state stored by the
-    // OIDC library) but neither a code nor an error came back, the IdP likely
-    // rejected the redirect_uri or the client does not exist.
-    // The library stores auth state as JSON under the configId key ("r2p-webclient") in sessionStorage.
+    // A failed silent renew can leave a stale auth state (authStateControl) in
+    // sessionStorage. Clear it so a fresh auth flow can start cleanly — but do
+    // NOT surface a dialog for it: an expired session must re-authenticate
+    // silently. The library stores the state as JSON under the configId key.
     const hasCodeInUrl = urlParams.has('code') || window.location.hash.includes('code=');
-    const pendingState = getOidcStoredState('r2p-webclient');
-    if (pendingState && !hasCodeInUrl) {
+    if (!hasCodeInUrl && getOidcStoredState('r2p-webclient')) {
         clearOidcStoredState('r2p-webclient');
-        openSettingsOnOidcError(dialog, undefined, undefined, window.location.origin);
-        return of(false);
     }
 
     const authority = settings.settings().authority.replace(/\/$/, '');
@@ -81,10 +83,20 @@ export const oidcGuard: CanActivateFn = () => {
                 take(1),
                 switchMap(({ isAuthenticated }) => {
                     if (isAuthenticated) {
+                        authSession.markAuthenticated();
                         return of(true);
                     }
+                    // Session expired / not authenticated. Re-authenticate
+                    // silently via a full redirect. Only after repeated failed
+                    // redirects do we surface the settings dialog (real misconfig:
+                    // wrong client id or unregistered redirect uri).
+                    if (authSession.hasExceededRedirectBudget()) {
+                        authSession.resetRedirectBudget();
+                        openSettingsOnOidcError(dialog, undefined, undefined, window.location.origin);
+                        return of(false);
+                    }
                     try {
-                        oidc.authorize();
+                        authSession.beginReauth();
                     } catch {
                         openSettingsOnOidcError(dialog);
                     }
@@ -98,12 +110,6 @@ export const oidcGuard: CanActivateFn = () => {
         }),
     );
 };
-
-function openSettingsOnOidcError(dialog: MatDialog, unreachableUrl?: string, oidcError?: string, failedRedirectUri?: string): void {
-    if (dialog.openDialogs.length === 0) {
-        dialog.open(SettingsModal, { disableClose: true, data: { unreachableUrl, oidcError, failedRedirectUri } });
-    }
-}
 
 /** Returns true when the OIDC library has an in-progress auth flow stored (authStateControl set). */
 function getOidcStoredState(configId: string): boolean {
