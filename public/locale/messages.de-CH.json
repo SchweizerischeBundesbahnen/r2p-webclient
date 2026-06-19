@@ -48,7 +48,7 @@
     "editTrain.editingInfoSub": "Änderungen werden als neue Version dieser Variante gespeichert.",
     "editTrain.field.comment": "Änderungskommentar",
     "editTrain.field.commentPlaceholder": "Änderungen beschreiben…",
-    "layout.title": "R2P Web Client",
+    "layout.title": "WebClient",
     "layout.organization": "Organisation:",
     "layout.settings.title": "Einstellungen",
     "notFound.code": "404",
