@@ -16,17 +16,26 @@ html {
    CSS Variables
    ======================================== */
 :root {
-    --primary-color: #1565C0;
-    --primary-dark: #0A3D62;
-    --secondary-color: #607D8B;
-    --accent-color: #1565C0;
-    --background-color: #F0F4F8;
+    /* R²P brand palette (Brand Guidelines v1.0, §3) — semantic aliases */
+    --navy: #0D1B2A;
+    --orange: #F47B20;
+    --orange-hover: #E06D14;
+    --steel: #8AAFC8;
+    --teal: #3D6880;
+    --light-grey: #F4F6F8;
+
+    /* Legacy role names → mapped onto the brand palette (used across components) */
+    --primary-color: #F47B20;   /* accent / CTA (was #1565C0) */
+    --primary-dark: #0D1B2A;    /* navy chrome (was #0A3D62) */
+    --secondary-color: #3D6880; /* deep teal (was #607D8B) */
+    --accent-color: #F47B20;
+    --background-color: #F4F6F8; /* light grey page bg */
     --card-background: #ffffff;
-    --border-color: #CFD8DC;
-    --border-subtle: #ECEFF1;
-    --text-primary: #1A2B3C;
-    --text-secondary: #607D8B;
-    --text-muted: #90A4AE;
+    --border-color: #CCCCCC;     /* table/row borders (brand §8.3) */
+    --border-subtle: #E2E8F0;    /* card/input/hairline borders */
+    --text-primary: #0D1B2A;     /* navy */
+    --text-secondary: #3D6880;   /* deep teal */
+    --text-muted: #8AAFC8;       /* steel — large/decorative only (low AA for small text) */
     --text-warn: #BF360C;
 
     /* Partner colors */
@@ -287,7 +296,7 @@ thead .tooltip-anchor {
     line-height: 1.5;
     padding: 8px 12px;
     border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    border: 1px solid var(--border-color);
     z-index: 500;
     pointer-events: none;
     text-transform: none;
