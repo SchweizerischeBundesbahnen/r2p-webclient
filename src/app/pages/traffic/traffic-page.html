@@ -1,18 +1,22 @@
 <!-- ── Main Content ────────────────────────────────────────────── -->
 <div class="main-content">
     <div class="container">
-        <a [routerLink]="'/traffic-overview'" class="back-link" i18n="@@common.breadcrumb.trafficOverview">Traffic Overview</a>
-
         @if (trainMainBranch.value(); as trainData) {
         @let trainHeaderInfo = getTrainHeaderInfo(trainData);
         @let variants = getVariantInfo(trainData);
+
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a [routerLink]="'/traffic-overview'" i18n="@@common.breadcrumb.trafficOverview">Traffic Overview</a>
+            <span class="breadcrumb-sep" aria-hidden="true">›</span>
+            <span class="breadcrumb-current" aria-current="page">{{ trainHeaderInfo.trainNumber }}</span>
+        </nav>
+
         <div class="card" id="train-header-card">
             <div class="card-body">
                 <div class="card-header-row">
                     <div>
-                        <h1 class="page-title" id="train-title">
-                            {{ trainHeaderInfo.trainNumber }}
-                        </h1>
+                        <div class="eyebrow" i18n="@@traffic.eyebrow">Train</div>
+                        <h1 class="page-title" id="train-title">{{ trainHeaderInfo.trainNumber }}</h1>
                         <p class="page-subtitle" id="train-name">
                             @let opDay = trainHeaderInfo.operationalDay;
                             {{ opDay ? (isoDateToUtc(opDay) | date: 'mediumDate' : 'UTC') : '-' }}
@@ -21,7 +25,7 @@
                     <div class="btn-group">
                         @if (canShareTrain()) {
                         <button mat-stroked-button color="primary" (click)="openShareModal()" i18n="@@traffic.shareTrain">
-                            🔗 Share Train
+                            Share train
                         </button>
                         }
                         <button
@@ -34,7 +38,7 @@
                             @if (trainMainBranch.isLoading()) {
                                 <app-spinner variant="inline" [attr.aria-hidden]="true" />
                             }
-                            ⎇ New Variant
+                            ＋ New variant
                         </button>
                         @if (isLeadRu()) {
                         <button
@@ -43,25 +47,26 @@
                             (click)="openDeleteTrainModal()"
                             i18n="@@traffic.deleteTrain"
                         >
-                            🗑 Delete Train
+                            Delete train
                         </button>
                         }
                     </div>
                 </div>
 
-                <app-detail-grid class="mt-md">
-                    <app-detail-item label="Train Number" i18n-label="@@common.field.trainNumber" valueId="detail-train-number">{{ trainHeaderInfo.trainNumber }}</app-detail-item>
-                    <app-detail-item label="From" i18n-label="@@traffic.field.from" valueId="detail-from">{{ trainHeaderInfo.from }}</app-detail-item>
-                    <app-detail-item label="Departure" i18n-label="@@traffic.field.departure" valueId="detail-dep-time">{{ trainHeaderInfo.departureTime | date: 'HH:mm' : 'UTC' }}</app-detail-item>
-                    <app-detail-item label="To" i18n-label="@@traffic.field.to" valueId="detail-to">{{ trainHeaderInfo.to }}</app-detail-item>
-                    <app-detail-item label="Arrival" i18n-label="@@traffic.field.arrival" valueId="detail-arr-time">{{ trainHeaderInfo.arrivalTime | date: 'HH:mm' : 'UTC' }}</app-detail-item>
-                    <app-detail-item label="Operational Day" i18n-label="@@common.field.opDay" valueId="detail-op-day">
-                        @let opDayDetail = trainHeaderInfo.operationalDay;
-                        {{ opDayDetail ? (isoDateToUtc(opDayDetail) | date: 'mediumDate' : 'UTC') : '-' }}
-                    </app-detail-item>
-                    <!-- Overall Status: kept as raw HTML due to inline tooltip -->
-                    <div class="detail-item">
-                        <div class="detail-label">
+                <div class="header-divider"></div>
+
+                <div class="info-band">
+                    <div class="info-item info-item--route">
+                        <div class="info-label" i18n="@@traffic.field.route">Route</div>
+                        <div class="info-route">{{ trainHeaderInfo.from }} <span class="route-arrow">→</span> {{ trainHeaderInfo.to }}</div>
+                        <div class="info-route-times">
+                            <ng-container i18n="@@common.dep">Dep:</ng-container> <span id="detail-dep-time">{{ trainHeaderInfo.departureTime | date: 'HH:mm' : 'UTC' }}</span>
+                            ·
+                            <ng-container i18n="@@common.arr">Arr:</ng-container> <span id="detail-arr-time">{{ trainHeaderInfo.arrivalTime | date: 'HH:mm' : 'UTC' }}</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">
                             <ng-container i18n="@@traffic.field.overallStatus">Overall Status</ng-container>
                             <span class="tooltip-anchor" tabindex="0"
                             >?<span class="tooltip-box"
@@ -69,16 +74,26 @@
                             ></span
                             >
                         </div>
-                        <div class="detail-value" id="detail-status">
+                        <div class="info-value" id="detail-status">
                             <app-overall-status [train]="trainMainBranch.value()?.details" />
                         </div>
                     </div>
-                    <app-detail-item label="Partners" i18n-label="@@common.field.partners" valueId="detail-partners">
-                        @for (partner of trainHeaderInfo.partners; track partner) {
-                            <app-partner-badge [partner]="partner" />
-                        }
-                    </app-detail-item>
-                </app-detail-grid>
+                    <div class="info-item">
+                        <div class="info-label" i18n="@@common.field.partners">Partners</div>
+                        <div class="info-value" id="detail-partners">
+                            @for (partner of trainHeaderInfo.partners; track partner) {
+                                <app-partner-badge [partner]="partner" />
+                            }
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label" i18n="@@traffic.field.lastChange">Last change</div>
+                        <div class="info-value">
+                            @let lc = trainHeaderInfo.lastChange;
+                            {{ lc ? ((lc | date: 'mediumDate') + ', ' + (lc | date: 'HH:mm')) : '-' }}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -88,7 +103,7 @@
         <!-- Variants Section -->
         <div class="card">
             <div class="card-header">
-                <span class="card-title" i18n="@@traffic.variants">⎇ Variants</span>
+                <span class="card-title" i18n="@@traffic.variants">Variants</span>
             </div>
             <div id="branches-list">
                 @let activeVariants = variants.filter(v => !v.isArchived);

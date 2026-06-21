@@ -136,6 +136,83 @@ body {
 }
 
 /* ========================================
+   Breadcrumb (detail / form pages)
+   ======================================== */
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: 0.875rem;
+    margin-bottom: var(--spacing-lg);
+}
+.breadcrumb a {
+    color: var(--teal);
+    text-decoration: none;
+    font-weight: 600;
+}
+.breadcrumb a:hover { color: var(--navy); text-decoration: underline; }
+.breadcrumb-sep     { color: var(--steel); }
+.breadcrumb-current { color: var(--text-muted); }
+
+/* ========================================
+   Eyebrow label + header info band
+   ======================================== */
+.eyebrow {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--teal);
+    margin-bottom: 4px;
+}
+
+.header-divider {
+    height: 1px;
+    background-color: var(--border-subtle);
+    margin: var(--spacing-lg) 0;
+}
+
+.info-band {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xl);
+    align-items: flex-start;
+}
+.info-item { min-width: 120px; }
+.info-item--route { flex: 1 1 280px; min-width: 240px; }
+.info-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--teal);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.info-value {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+.info-route {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.info-route .route-arrow { color: var(--steel); margin: 0 4px; font-weight: 400; }
+.info-route-times {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 4px;
+}
+
+/* ========================================
    Card
    ======================================== */
 .card {

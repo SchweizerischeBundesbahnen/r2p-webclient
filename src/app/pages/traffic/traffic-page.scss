@@ -20,15 +20,15 @@
     color: inherit;
 }
 
-.branch-row:hover { background-color: #F5F9FF; }
+.branch-row:hover { background-color: var(--light-grey); }
 .branch-row:last-child { border-bottom: none; }
 
 .branch-row--main {
-    border-left: 3px solid var(--primary-color);
-    background-color: #F0F7FF;
+    border-left: 3px solid var(--navy);
+    background-color: var(--light-grey);
 }
 
-.branch-row--main:hover { background-color: #E5F0FF; }
+.branch-row--main:hover { background-color: #E9EDF1; }
 
 /* Column 1: branch name + meta */
 .branch-info { min-width: 0; }
@@ -104,8 +104,8 @@
 }
 
 .icon-btn:hover {
-    background-color: rgba(21, 101, 192, 0.08);
-    color: var(--primary-color);
+    background-color: var(--light-grey);
+    color: var(--navy);
 }
 
 /* Column 4: chevron indicator */
@@ -130,7 +130,7 @@
     background-color: var(--background-color);
 }
 
-.branch-row--archived:hover { background-color: #EEF3F8; opacity: 0.85; }
+.branch-row--archived:hover { background-color: #ECEFF3; opacity: 0.85; }
 
 .archive-section {
     border-top: 1px solid var(--border-subtle);
