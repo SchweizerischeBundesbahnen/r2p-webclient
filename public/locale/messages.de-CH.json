@@ -188,7 +188,7 @@
     "editActivityModal.path.weight": "Gewicht (kg)",
     "editActivityModal.path.maxSpeed": "Höchstgeschwindigkeit (km/h)",
     "editActivityModal.path.passthrough": "Ist Durchfahrt",
-    "editActivityModal.save": "✓ Aktivität speichern",
+    "editActivityModal.save": "Aktivität speichern",
     "editStopModal.addTitle": "Halt hinzufügen",
     "editStopModal.title": "Halt bearbeiten",
     "editStopModal.field.name": "Haltname (Betriebspunkt)",

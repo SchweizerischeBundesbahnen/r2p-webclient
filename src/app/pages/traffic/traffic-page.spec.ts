@@ -229,12 +229,12 @@ describe('TrafficPage – date formatting', () => {
     describe('operationalDay (mediumDate)', () => {
         it('formats correctly for en-US', () => {
             const el = createComponent('en-US', TRAIN_WITH_DETAILS);
-            expect(el.querySelector('#train-name')!.textContent!.trim()).toBe('May 26, 2026');
+            expect(el.querySelector('#train-name')!.textContent).toContain('May 26, 2026');
         });
 
         it('formats correctly for de-CH', () => {
             const el = createComponent('de-CH', TRAIN_WITH_DETAILS);
-            expect(el.querySelector('#train-name')!.textContent!.trim()).toBe('26.05.2026');
+            expect(el.querySelector('#train-name')!.textContent).toContain('26.05.2026');
         });
 
         it('shows no train header card when no data is loaded', () => {

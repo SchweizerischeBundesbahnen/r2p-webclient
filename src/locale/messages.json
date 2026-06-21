@@ -186,7 +186,7 @@
     "editActivityModal.path.weight": "Weight (kg)",
     "editActivityModal.path.maxSpeed": "Max Speed (km/h)",
     "editActivityModal.path.passthrough": "Is Passthrough (Durchfahrt)",
-    "editActivityModal.save": "✓ Save Activity",
+    "editActivityModal.save": "Save Activity",
     "editActivityModal.title.editRollingStock": "Edit Rolling Stock Activity",
     "editActivityModal.title.addRollingStock": "Add Rolling Stock Activity",
     "editActivityModal.title.editStaff": "Edit Staff Activity",

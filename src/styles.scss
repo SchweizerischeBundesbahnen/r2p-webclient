@@ -9,6 +9,10 @@
 @include mat.core();
 
 html {
+    /* Reserve the scrollbar gutter so transient overlays (e.g. the status tooltip
+       extending the page) don't toggle a scrollbar and shift the layout. */
+    scrollbar-gutter: stable;
+
     @include mat.theme(theme.$r2p-theme);
 
     /* ------------------------------------------------------------------

@@ -18,6 +18,7 @@
                         <div class="eyebrow" i18n="@@traffic.eyebrow">Train</div>
                         <h1 class="page-title" id="train-title">{{ trainHeaderInfo.trainNumber }}</h1>
                         <p class="page-subtitle" id="train-name">
+                            <span class="subtitle-label" i18n="@@common.field.opDay">Operational Day</span>:
                             @let opDay = trainHeaderInfo.operationalDay;
                             {{ opDay ? (isoDateToUtc(opDay) | date: 'mediumDate' : 'UTC') : '-' }}
                         </p>

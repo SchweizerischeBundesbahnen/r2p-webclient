@@ -7,7 +7,7 @@ import {
     MatDialogRef,
     MatDialogTitle,
 } from '@angular/material/dialog';
-import { MatError, MatFormField, MatLabel, MatPrefix } from '@angular/material/form-field';
+import { MatError, MatFormField, MatPrefix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { form, FormField, maxLength, required, submit } from '@angular/forms/signals';
@@ -31,7 +31,6 @@ export interface NewVariantDialogData {
         MatDialogActions,
         MatDialogClose,
         MatFormField,
-        MatLabel,
         MatError,
         MatPrefix,
         MatInput,
@@ -39,6 +38,17 @@ export interface NewVariantDialogData {
         FormField,
     ],
     templateUrl: './new-variant-modal.html',
+    styles: `
+        .modal-field { margin-bottom: 1rem; }
+        .modal-field:last-child { margin-bottom: 0; }
+        .modal-field-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.35rem;
+        }
+    `,
 })
 export class NewVariantModal {
     private readonly data = inject<NewVariantDialogData>(MAT_DIALOG_DATA);
