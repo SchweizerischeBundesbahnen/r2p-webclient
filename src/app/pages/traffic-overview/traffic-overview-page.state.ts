@@ -23,6 +23,13 @@ export class TrafficOverviewPageState {
     });
 
     isInstanceOwner = computed(() => {
+        // resource.value() rethrows when the resource is in the error state (e.g. the
+        // backend doesn't expose v1/instance-owner → 404). Guard with hasValue() so a
+        // failed lookup degrades to "not owner" instead of throwing on every change
+        // detection pass and freezing the page.
+        if (!this.instanceOwnerResource.hasValue()) {
+            return false;
+        }
         const owner = this.instanceOwnerResource.value();
         return owner !== undefined && owner.name === this.settingsService.settings().organization;
     });
