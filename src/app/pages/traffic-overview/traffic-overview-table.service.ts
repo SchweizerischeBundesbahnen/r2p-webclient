@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, computed, signal } from '@angular/core';
 import { TrainRow } from './table-row';
 
 export type SortColumn = 'trainNumber' | 'start' | 'end' | 'operationalDay' | 'lastChange';
@@ -11,6 +11,15 @@ export class TrafficOverviewTableService {
     readonly operationalDayTo = signal<string>('');
     readonly sortColumn = signal<SortColumn | null>(null);
     readonly sortDirection = signal<SortDirection>('asc');
+
+    /** Number of active filters — drives the collapsed filter toggle's count badge. */
+    readonly activeFilterCount = computed(() => {
+        let count = 0;
+        if (this.trainNumber().trim()) count++;
+        if (this.operationalDayFrom()) count++;
+        if (this.operationalDayTo()) count++;
+        return count;
+    });
 
     toggleSort(column: SortColumn): void {
         if (this.sortColumn() === column) {

@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { DatePipe, SlicePipe } from '@angular/common';
 import { isoDateToUtc } from '../../shared/utils/date.utils';
 import { Train } from '../../shared/models/api.models';
 import { OverallStatusComponent } from '../../shared/components/overall-status/overall-status.component';
@@ -12,17 +12,12 @@ import { PartnerBadge } from '../../shared/components/partner-badge/partner-badg
         <td class="td-train-number">
             <span class="train-number">{{ train().trainNumber }}</span>
         </td>
-        <td>
-            <div class="cell-location">{{ train().start ?? '-' }}</div>
+        <td class="td-route">
+            <div class="cell-route">{{ train().start ?? '-' }} <span class="route-arrow">→</span> {{ train().end ?? '-' }}</div>
             <div class="cell-sub"
                 ><ng-container i18n="@@common.dep">Dep:</ng-container>
-                {{ train().startTime | date: 'HH:mm' : 'UTC' }}</div
-            >
-        </td>
-        <td>
-            <div class="cell-location">{{ train().end ?? '-' }}</div>
-            <div class="cell-sub"
-                ><ng-container i18n="@@common.arr">Arr:</ng-container>
+                {{ train().startTime | date: 'HH:mm' : 'UTC' }} ·
+                <ng-container i18n="@@common.arr">Arr:</ng-container>
                 {{ train().endTime | date: 'HH:mm' : 'UTC' }}</div
             >
         </td>
@@ -38,7 +33,7 @@ import { PartnerBadge } from '../../shared/components/partner-badge/partner-badg
             @let lastChangeDate = train().revInfo.lastChange | date: 'mediumDate';
             @let lastChangeTime = train().revInfo.lastChange | date: 'HH:mm';
             <div>{{ lastChangeDate && lastChangeTime ? lastChangeDate + ', ' + lastChangeTime : '-' }}</div>
-            <div class="cell-sub">{{ train().revInfo.version }}</div>
+            <div class="cell-sub">{{ train().revInfo.version | slice: 0 : 7 }}</div>
         </td>
         <td>
             <app-overall-status [train]="train().trainData" />
@@ -66,8 +61,14 @@ import { PartnerBadge } from '../../shared/components/partner-badge/partner-badg
             .td-small {
                 font-size: 0.75rem;
             }
-            .cell-location {
-                font-size: 0.75rem;
+            .cell-route {
+                font-size: 0.8125rem;
+                color: var(--text-primary);
+                font-weight: 500;
+            }
+            .route-arrow {
+                color: var(--steel);
+                margin: 0 2px;
             }
             .cell-sub {
                 font-size: 0.7rem;
@@ -97,7 +98,7 @@ import { PartnerBadge } from '../../shared/components/partner-badge/partner-badg
             }
         `,
     ],
-    imports: [DatePipe, OverallStatusComponent, PartnerBadge],
+    imports: [DatePipe, SlicePipe, OverallStatusComponent, PartnerBadge],
 })
 export class TableRow {
     readonly train = input.required<TrainRow>();

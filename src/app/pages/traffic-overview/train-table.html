@@ -16,12 +16,8 @@
                             <span class="sort-indicator">{{ sortIndicator('trainNumber') }}</span>
                         </th>
                         <th class="sort-header" (click)="tableService.toggleSort('start')">
-                            <ng-container i18n="@@trafficOverview.table.from">From</ng-container>
+                            <ng-container i18n="@@trafficOverview.table.route">Route</ng-container>
                             <span class="sort-indicator">{{ sortIndicator('start') }}</span>
-                        </th>
-                        <th class="sort-header" (click)="tableService.toggleSort('end')">
-                            <ng-container i18n="@@trafficOverview.table.to">To</ng-container>
-                            <span class="sort-indicator">{{ sortIndicator('end') }}</span>
                         </th>
                         <th class="sort-header" (click)="tableService.toggleSort('operationalDay')">
                             <ng-container i18n="@@trafficOverview.table.opDay">Op. Day</ng-container>

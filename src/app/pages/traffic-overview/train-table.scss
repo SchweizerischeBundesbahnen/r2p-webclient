@@ -15,7 +15,7 @@ table {
 }
 
 thead {
-    background-color: var(--border-subtle, #ECEFF1);
+    background-color: var(--primary-dark);
 }
 
 thead th {
@@ -25,7 +25,7 @@ thead th {
     font-size: 0.6875rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--text-secondary);
+    color: #ffffff;
 }
 
 .sort-header {
@@ -36,17 +36,18 @@ thead th {
     transition: background-color 0.2s;
 }
 
-.sort-header:hover { background-color: rgba(0,0,0,0.04); }
+.sort-header:hover { background-color: rgba(255,255,255,0.12); }
 
 tbody tr {
     border-bottom: 1px solid var(--border-color);
     transition: background-color 0.15s;
 }
 
-tbody tr:last-child      { border-bottom: none; }
-tbody tr:hover           { background-color: #F5F9FF; }
-tbody tr.clickable       { cursor: pointer; }
-tbody tr.clickable:hover { background-color: #EBF3FF; }
+tbody tr:last-child       { border-bottom: none; }
+tbody tr:nth-child(even)  { background-color: var(--light-grey); }
+tbody tr.clickable        { cursor: pointer; }
+tbody tr:hover,
+tbody tr.clickable:hover  { background-color: #E9EDF1; }
 
 tbody td {
     padding: 0.375rem var(--spacing-sm);
