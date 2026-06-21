@@ -6,7 +6,7 @@
         @let variants = getVariantInfo(trainData);
 
         <nav class="breadcrumb" aria-label="Breadcrumb">
-            <a [routerLink]="'/traffic-overview'" i18n="@@common.breadcrumb.trafficOverview">Traffic Overview</a>
+            <a [routerLink]="'/traffic-overview'" i18n="@@common.breadcrumb.trafficOverview">Traffic overview</a>
             <span class="breadcrumb-sep" aria-hidden="true">›</span>
             <span class="breadcrumb-current" aria-current="page">{{ trainHeaderInfo.trainNumber }}</span>
         </nav>
@@ -38,7 +38,7 @@
                             @if (trainMainBranch.isLoading()) {
                                 <app-spinner variant="inline" [attr.aria-hidden]="true" />
                             }
-                            ＋ New variant
+                            + New variant
                         </button>
                         @if (isLeadRu()) {
                         <button

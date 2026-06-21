@@ -15,7 +15,7 @@ import { TrainTable } from './train-table';
             <div class="container">
                 <div class="page-header">
                     <div>
-                        <h1 class="page-title" i18n="@@trafficOverview.heading">Traffic Overview</h1>
+                        <h1 class="page-title" i18n="@@trafficOverview.heading">Traffic overview</h1>
                     </div>
                     <div class="page-header-actions">
                         <button
@@ -33,7 +33,7 @@ import { TrainTable } from './train-table';
                             <mat-icon class="chev">{{ filtersExpanded() ? 'expand_less' : 'expand_more' }}</mat-icon>
                         </button>
                         @if (state.isInstanceOwner()) {
-                            <a mat-raised-button color="primary" [routerLink]="'../create-train'" i18n="@@trafficOverview.newTrain"> ＋ New Train </a>
+                            <a mat-raised-button color="primary" [routerLink]="'../create-train'" i18n="@@trafficOverview.newTrain"> + New train </a>
                         }
                     </div>
                 </div>
