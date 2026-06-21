@@ -1,9 +1,13 @@
 <!-- ── Main Content ────────────────────────────────────────────── -->
 <div class="main-content">
     <div class="container">
-        <a [routerLink]="'/traffic-view/' + trainId()" class="back-link" id="back-link"
-            i18n="@@common.breadcrumb.trafficView">Traffic View</a
-        >
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a [routerLink]="'/traffic-overview'" i18n="@@common.breadcrumb.trafficOverview">Traffic Overview</a>
+            <span class="breadcrumb-sep" aria-hidden="true">›</span>
+            <a [routerLink]="'/traffic-view/' + trainId()" id="back-link" i18n="@@common.breadcrumb.trafficView">Traffic View</a>
+            <span class="breadcrumb-sep" aria-hidden="true">›</span>
+            <span class="breadcrumb-current" aria-current="page" i18n="@@readTrain.breadcrumb.read">Read View</span>
+        </nav>
 
         @if (state.trainAndBranch.isLoading()) {
             <app-spinner />
@@ -28,14 +32,14 @@
 
         <!-- Read-only notice -->
         <app-alert-banner type="info" i18n="@@readTrain.readonlyNotice">
-            👁️ This is a <strong>read-only view</strong> of the variant. No changes can be
+            This is a <strong>read-only view</strong> of the variant. No changes can be
             made here.
         </app-alert-banner>
 
         <!-- ── Train Details Card ────────────────────────────────── -->
         <div class="card">
             <div class="card-header">
-                <span class="card-title" i18n="@@readTrain.section.trainDetails">📋 Train Details</span>
+                <span class="card-title" i18n="@@readTrain.section.trainDetails">Train details</span>
             </div>
             <div class="card-body">
                 @let branch = state.trainAndBranch.value()?.branch;
