@@ -339,4 +339,63 @@ describe('EditActivityModal', () => {
             expect(dr.close).toHaveBeenCalledWith();
         });
     });
+
+    describe('partner reassignment lock', () => {
+        function createWithReassign(
+            canReassignPartner: boolean | undefined,
+            activity: Activity | null,
+        ): { fixture: ComponentFixture<EditActivityModal>; dr: ReturnType<typeof makeDialogRef> } {
+            TestBed.resetTestingModule();
+            const dr = makeDialogRef();
+            const data: EditActivityDialogData = {
+                activity,
+                capabilityType: 'rollingStock',
+                partners: ['SBB', 'BLS'],
+                canReassignPartner,
+            };
+            TestBed.configureTestingModule({
+                imports: [EditActivityModal],
+                providers: [
+                    provideAnimationsAsync(),
+                    { provide: MAT_DIALOG_DATA, useValue: data },
+                    { provide: MatDialogRef, useValue: dr },
+                ],
+            });
+            const fixture = TestBed.createComponent(EditActivityModal);
+            fixture.detectChanges();
+            return { fixture, dr };
+        }
+
+        const partnerDisabled = (fixture: ComponentFixture<EditActivityModal>): boolean =>
+            (
+                fixture.componentInstance as unknown as {
+                    activityForm: { id: () => { disabled: () => boolean } };
+                }
+            ).activityForm.id().disabled();
+
+        const BLS_ACTIVITY: Activity = {
+            ...STUB_EXISTING,
+            responsibility: { type: 'rru', id: 'BLS', status: 'proposed' },
+        };
+
+        it('disables the partner field and reflects it in the DOM when reassignment is not allowed', () => {
+            const { fixture } = createWithReassign(false, BLS_ACTIVITY);
+            expect(partnerDisabled(fixture)).toBe(true);
+            // partner is the 2nd select in the responsibility row (type, partner, status)
+            const partnerSelect = fixture.nativeElement.querySelectorAll('mat-select')[1] as HTMLElement;
+            expect(partnerSelect.getAttribute('aria-disabled')).toBe('true');
+        });
+
+        it('keeps the partner field editable by default (lead RU)', () => {
+            const { fixture } = createWithReassign(undefined, STUB_EXISTING);
+            expect(partnerDisabled(fixture)).toBe(false);
+        });
+
+        it('still emits the unchanged responsible partner when the field is locked', () => {
+            const { fixture, dr } = createWithReassign(false, BLS_ACTIVITY);
+            clickSave(fixture);
+            const emitted = dr.close.mock.calls[0][0] as Activity;
+            expect(emitted.responsibility?.id).toBe('BLS');
+        });
+    });
 });

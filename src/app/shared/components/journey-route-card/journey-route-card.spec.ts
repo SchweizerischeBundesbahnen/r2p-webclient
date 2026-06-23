@@ -345,4 +345,92 @@ describe('JourneyRouteCard', () => {
         expect(stops[0].rollingStockActivities.length).toBe(0);
         expect(stops[0].staffActivities.length).toBe(0);
     });
+
+    const PERMISSION_JOURNEY: Journey = {
+        journeylocations: [
+            {
+                locations: [{ name: 'Bern' }],
+                activities: [
+                    { capability: { type: 'staff' }, responsibility: { type: 'rru', id: 'BLS' } },
+                    { capability: { type: 'path' }, responsibility: { type: 'rru', id: 'SOB' } },
+                ],
+            },
+        ],
+    };
+
+    it('non-lead partner sees the edit pencil only on its own activities and no route affordances', () => {
+        fixture.componentRef.setInput('journey', PERMISSION_JOURNEY);
+        fixture.componentRef.setInput('readonly', false);
+        fixture.componentRef.setInput('canEditRoute', false);
+        fixture.componentRef.setInput('currentOrg', 'BLS');
+        fixture.detectChanges();
+
+        const el: HTMLElement = fixture.nativeElement;
+        // own (BLS) staff activity is editable, foreign (SOB) path activity is not
+        expect(el.querySelector('.activity-staff .btn-icon')).not.toBeNull();
+        expect(el.querySelector('.activity-path .btn-icon')).toBeNull();
+        // non-lead can never delete or change the route
+        expect(el.querySelector('.btn-icon-danger')).toBeNull();
+        expect(el.querySelector('.add-activity-btn')).toBeNull();
+        expect(el.querySelector('.stop-icon-btn')).toBeNull();
+        expect(el.querySelector('.add-stop-btn')).toBeNull();
+    });
+
+    it('lead RU sees edit, delete and route affordances on all activities', () => {
+        fixture.componentRef.setInput('journey', PERMISSION_JOURNEY);
+        fixture.componentRef.setInput('readonly', false);
+        fixture.componentRef.setInput('canEditRoute', true);
+        fixture.componentRef.setInput('currentOrg', 'SBB');
+        fixture.detectChanges();
+
+        const el: HTMLElement = fixture.nativeElement;
+        expect(el.querySelector('.activity-staff .btn-icon')).not.toBeNull();
+        expect(el.querySelector('.activity-path .btn-icon')).not.toBeNull();
+        expect(el.querySelector('.btn-icon-danger')).not.toBeNull();
+        expect(el.querySelector('.add-activity-btn')).not.toBeNull();
+        expect(el.querySelector('.stop-icon-btn')).not.toBeNull();
+    });
+
+    it('non-lead partner with no assigned activities sees no editable affordance', () => {
+        fixture.componentRef.setInput('journey', PERMISSION_JOURNEY);
+        fixture.componentRef.setInput('readonly', false);
+        fixture.componentRef.setInput('canEditRoute', false);
+        fixture.componentRef.setInput('currentOrg', 'SBB'); // owns neither BLS nor SOB activity
+        fixture.detectChanges();
+
+        const el: HTMLElement = fixture.nativeElement;
+        expect(el.querySelector('.activity-actions')).toBeNull();
+        expect(el.querySelector('.btn-icon')).toBeNull();
+        expect(el.querySelector('.add-activity-btn')).toBeNull();
+        expect(el.querySelector('.stop-icon-btn')).toBeNull();
+    });
+
+    it('does not grant edit on an unowned activity when currentOrg is empty', () => {
+        const journey: Journey = {
+            journeylocations: [
+                {
+                    locations: [{ name: 'Bern' }],
+                    activities: [{ capability: { type: 'staff' }, responsibility: { type: 'rru', id: '' } }],
+                },
+            ],
+        };
+        fixture.componentRef.setInput('journey', journey);
+        fixture.componentRef.setInput('readonly', false);
+        fixture.componentRef.setInput('canEditRoute', false);
+        fixture.componentRef.setInput('currentOrg', '');
+        fixture.detectChanges();
+
+        const el: HTMLElement = fixture.nativeElement;
+        expect(el.querySelector('.activity-actions')).toBeNull();
+    });
+
+    it('defaults to full edit (create-train) when canEditRoute is not bound', () => {
+        fixture.componentRef.setInput('journey', PERMISSION_JOURNEY);
+        fixture.componentRef.setInput('readonly', false);
+        fixture.detectChanges();
+
+        const el: HTMLElement = fixture.nativeElement;
+        expect(el.querySelector('.btn-icon-danger')).not.toBeNull();
+        expect(el.querySelector('.add-activity-btn')).not.toBeNull();
+    });
 });
