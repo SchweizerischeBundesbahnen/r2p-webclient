@@ -1,5 +1,61 @@
 # Changelog
 
+## [0.0.17](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.16...r2p-webclient-v0.0.17) (2026-06-23)
+
+
+### Features
+
+* add eight new partner organisations (TI, DBF, DBC, DBCNL, SBBC, SBBCI, RCA, MEV) ([f989477](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/f989477d8340fb32b491e229d1fadca712036981))
+* align data model with train.yaml 1.0.10 and require min two stops ([1c27394](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/1c273943274595e0dd928bb3a8d8f9ba70dc0fce))
+* align data model with train.yaml 1.0.10 and require min two stops ([0535bc6](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/0535bc6f169b13726b0530938ef7c72d1746470e))
+* hide New Train button for non-instance-owner organisations ([1a62ed6](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/1a62ed6f01650e9de3d983f13434e131b0462602))
+
+
+### Bug Fixes
+
+* add German translations for edit activity modal titles ([67bdebe](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/67bdebeb2a0cf562230b876f57cb82c4c0c02172))
+* add German translations for edit activity modal titles ([7e1ecb6](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/7e1ecb6a547d9e834ad452389bba53ae66482360))
+* add missing .form-field-full CSS rule for staff role select ([fe30074](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/fe3007436776162ab4edda62ba84f9126fbbc2b2))
+* default responsibility partner id from first available partner ([5838a1b](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/5838a1b34cc9a2ba0fea2e2facb4b663e36d5146))
+* display app version dynamically from package.json in header ([d1470ea](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/d1470eaaef2cdbf17512d1e699ec6ad4b4502703))
+* filter activity partner dropdown to train-shared organisations ([3d425fe](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/3d425feab9e78af24cac1d9dc6e055d5a430aa77))
+* guard DatePipe concatenation against null rendering ([473b52f](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/473b52fea4ed9dd5b662b3fcdee65ce0184aa9ca))
+* harden background re-auth failure handling ([cea60e5](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/cea60e58bcdad66ca4816db0ba7b548e21c537d9))
+* preserve rolling stock unit fields on save ([785297b](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/785297ba0b0de6182bc5eb957ffe59bd187f5c02))
+* scope page-states to component to avoid stale rxResource on reuse ([2ed6682](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/2ed66824018b76157e13a884b0409bfa386b6403))
+* scope page-states to component to avoid stale rxResource on reuse ([62a08e8](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/62a08e8c69313a7f1e3a96751028021b6d4e15bd))
+* silent re-authentication on idle session expiry ([a556f33](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/a556f3317bfa6a982e20f20190fdb13d90d6c618))
+* silent re-authentication on idle session expiry ([47cc14a](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/47cc14ad31e62de9a8e88050c827cd7eb006beeb))
+* unify date & time formatting across the app (locale-aware De/En) ([592e887](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/592e8872b60ba3ed52ba13e77c8a19bbd9d93c75))
+* unify date & time formatting across the app (locale-aware De/En) ([f71f305](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/f71f305808cb389074b4b1775456cb7245d8f193))
+* update tests for expanded ORGANIZATION_OPTIONS and fix empty-function lint ([8c8340d](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/8c8340dd795bbcfeaeeb96661a360af8cd8fe3a0))
+* use trainNumber as id for all train API calls; remove randomUUID from createBranch ([ec77546](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/ec77546072f4b58ca7b9b18a6c89a949f12ae0c5))
+
+
+### Miscellaneous Chores
+
+* adjust name according to google search ([74cb593](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/74cb593471cf8b463d4650c71b9ab129a8ec9807))
+* **deps-dev:** bump @vitest/coverage-v8 from 4.1.8 to 4.1.9 ([4cf3bbf](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/4cf3bbff99a6bffdbd926554d40c63371f447442))
+* **deps-dev:** bump @vitest/coverage-v8 from 4.1.8 to 4.1.9 ([b6a3561](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/b6a35618eb94af3212bebfcd022db26899aef9b3))
+* **deps-dev:** bump eslint from 10.4.1 to 10.5.0 ([a37a8a2](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/a37a8a2e9be941c465e3ea90a70558032b9f709d))
+* **deps-dev:** bump eslint from 10.4.1 to 10.5.0 ([8776785](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/87767850bdee3d98b0894c0e461917e0c656a956))
+* **deps-dev:** bump typescript-eslint from 8.61.0 to 8.61.1 ([215935d](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/215935dd33b51cc19729c19f33c9026c46a9b8fb))
+* **deps-dev:** bump typescript-eslint from 8.61.0 to 8.61.1 ([9020b7a](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/9020b7a1566bdc8cee63a581a1419f286b9752ed))
+* **deps-dev:** bump vitest from 4.1.8 to 4.1.9 ([6fddc74](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/6fddc74744454e36596fa00a428da556df83f355))
+* **deps-dev:** bump vitest from 4.1.8 to 4.1.9 ([7752f93](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/7752f93b4d8ccaec3fa2647c590ce9c246206185))
+* drop unused en-US locale file and fix sync label ([bcafee1](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/bcafee144eef10ecbc8c844b32c57b304a1e8900))
+
+
+### Code Refactoring
+
+* remove duplicate .form-field-full from edit-activity-modal ([5824a93](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/5824a93a2933e39240bf0d64f6312f1e0f35f42d))
+* simplify partners computed — remove redundant ownOrg prepend ([70dd4c9](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/70dd4c90c3d1e3a21363a7203560723fe5b8c190))
+
+
+### Tests
+
+* assert full timestamp string for date and time together ([7e07ac6](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/7e07ac64e3dc4bb80cf8c0bfd3245d99de08b3e9))
+
 ## [0.0.16](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.15...r2p-webclient-v0.0.16) (2026-06-11)
 
 
