@@ -51,7 +51,6 @@ describe('JourneyRouteCard', () => {
                     locations: [{ name: 'Bern' }],
                     activities: [
                         {
-                            type: 'journey',
                             responsibility: { type: 'rru', id: 'SBB', status: 'confirmed' },
                             timings: [{ type: TimingType.Departure, duration: 'PT8H30M' }],
                         },
@@ -61,7 +60,6 @@ describe('JourneyRouteCard', () => {
                     locations: [{ name: 'Zürich HB' }],
                     activities: [
                         {
-                            type: 'journey',
                             responsibility: { type: 'rru', id: 'SBB', status: 'confirmed' },
                             timings: [{ type: TimingType.Arrival, duration: 'PT9H30M' }],
                         },
@@ -95,7 +93,6 @@ describe('JourneyRouteCard', () => {
                     locations: [{ name: 'Bern' }],
                     activities: [
                         {
-                            type: 'journey',
                             timings: [
                                 { type: TimingType.Arrival, duration: 'PT7H00M' },
                                 { type: TimingType.Departure, duration: 'PT7H05M' },
@@ -122,7 +119,6 @@ describe('JourneyRouteCard', () => {
                     locations: [{ name: 'Bern' }],
                     activities: [
                         {
-                            type: 'journey',
                             timings: [
                                 { type: TimingType.EarliestArrival, duration: 'PT7H00M' },
                                 { type: TimingType.EarliestDeparture, duration: 'PT7H05M' },
@@ -149,7 +145,6 @@ describe('JourneyRouteCard', () => {
                     locations: [{ name: 'Bern' }],
                     activities: [
                         {
-                            type: 'journey',
                             timings: [
                                 { type: TimingType.LatestArrival, duration: 'PT7H00M' },
                                 { type: TimingType.LatestDeparture, duration: 'PT7H05M' },
@@ -176,7 +171,6 @@ describe('JourneyRouteCard', () => {
                     locations: [{ name: 'Bern' }],
                     activities: [
                         {
-                            type: 'journey',
                             timings: [
                                 { type: TimingType.Arrival, duration: 'PT7H00M' },
                                 { type: TimingType.LatestArrival, duration: 'PT7H03M' },
@@ -300,7 +294,7 @@ describe('JourneyRouteCard', () => {
             journeylocations: [
                 {
                     locations: [{ name: 'Bern' }],
-                    activities: [{ type: 'formation', capability: { type: 'rollingStock' } }],
+                    activities: [{ capability: { type: 'rollingStock' } }],
                 },
             ],
         };
@@ -310,7 +304,6 @@ describe('JourneyRouteCard', () => {
 
         const stops = component.stops();
         expect(stops[0].rollingStockActivities.length).toBe(1);
-        expect(stops[0].rollingStockActivities[0].type).toBe('formation');
         expect(stops[0].staffActivities.length).toBe(0);
         expect(stops[0].pathActivities.length).toBe(0);
     });
@@ -320,7 +313,7 @@ describe('JourneyRouteCard', () => {
             journeylocations: [
                 {
                     locations: [{ name: 'Zürich HB' }],
-                    activities: [{ type: 'crewing', capability: { type: 'staff' } }],
+                    activities: [{ capability: { type: 'staff' } }],
                 },
             ],
         };
@@ -330,7 +323,6 @@ describe('JourneyRouteCard', () => {
 
         const stops = component.stops();
         expect(stops[0].staffActivities.length).toBe(1);
-        expect(stops[0].staffActivities[0].type).toBe('crewing');
         expect(stops[0].rollingStockActivities.length).toBe(0);
         expect(stops[0].pathActivities.length).toBe(0);
     });
@@ -340,7 +332,7 @@ describe('JourneyRouteCard', () => {
             journeylocations: [
                 {
                     locations: [{ name: 'Basel SBB' }],
-                    activities: [{ type: 'routing', capability: { type: 'path' } }],
+                    activities: [{ capability: { type: 'path' } }],
                 },
             ],
         };
@@ -350,7 +342,6 @@ describe('JourneyRouteCard', () => {
 
         const stops = component.stops();
         expect(stops[0].pathActivities.length).toBe(1);
-        expect(stops[0].pathActivities[0].type).toBe('routing');
         expect(stops[0].rollingStockActivities.length).toBe(0);
         expect(stops[0].staffActivities.length).toBe(0);
     });

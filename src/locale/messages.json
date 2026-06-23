@@ -207,7 +207,7 @@
     "journeyActivityItem.passthrough": " Passthrough ",
     "journeyActivityItem.features": "Features",
     "journeyRouteCard.title": "Journey Route",
-    "journeyRouteCard.requiredEmpty": "* At least one stop is required.",
+    "journeyRouteCard.requiredEmpty": "* At least two stops are required.",
     "journeyRouteCard.empty": "No journey stops defined.",
     "journeyRouteCard.addFirstStop": "＋ Add First Stop",
     "journeyRouteCard.col.stop": "Stop",

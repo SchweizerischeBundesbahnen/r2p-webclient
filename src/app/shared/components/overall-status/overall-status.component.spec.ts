@@ -31,7 +31,7 @@ describe('computeOverallStatus', () => {
     });
 
     it('returns green when activities have no responsibility', () => {
-        expect(computeOverallStatus({ journey: { journeylocations: [{ activities: [{ type: 'journey' }] }] } })).toBe('green');
+        expect(computeOverallStatus({ journey: { journeylocations: [{ activities: [{}] }] } })).toBe('green');
     });
 
     it('returns yellow when at least one responsibility is proposed', () => {

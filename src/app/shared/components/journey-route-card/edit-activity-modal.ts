@@ -179,7 +179,7 @@ export class EditActivityModal {
 
     // ── Staff ─────────────────────────────────────────────────────────────────
     protected readonly staffRole = signal(
-        this.data.activity?.capability?.staffs?.[0]?.type ?? '',
+        this.data.activity?.capability?.staff?.type ?? '',
     );
 
     // ── Path ──────────────────────────────────────────────────────────────────

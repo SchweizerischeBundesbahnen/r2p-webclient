@@ -13,8 +13,8 @@ describe('CreatePageState', () => {
         state = TestBed.inject(CreatePageState);
     });
 
-    it('initialises journey to { featuresets: [] } and createTrainRunning to false', () => {
-        expect(state.journey()).toEqual({ featuresets: [] });
+    it('initialises journey to an empty object and createTrainRunning to false', () => {
+        expect(state.journey()).toEqual({});
         expect(state.createTrainRunning()).toBe(false);
     });
 
@@ -43,7 +43,7 @@ describe('CreatePageState', () => {
     });
 
     it('updates the journey signal when set', () => {
-        const journey: Journey = { featuresets: [], journeylocations: [{ locations: [] }] };
+        const journey: Journey = { journeylocations: [{ locations: [] }] };
         state.journey.set(journey);
         expect(state.journey()).toEqual(journey);
     });

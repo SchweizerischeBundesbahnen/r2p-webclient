@@ -9,7 +9,7 @@ import { ErrorNotificationService } from '../../core/error/error-notification.se
 import { Journey } from '../../shared/models/api.models';
 
 const VALID_FORM = { trainNumber: 'IC 1', operationalDay: '2026-06-11', creationComment: 'my comment' };
-const NON_EMPTY_JOURNEY: Journey = { featuresets: [], journeylocations: [{ locations: [] }] };
+const NON_EMPTY_JOURNEY: Journey = { journeylocations: [{ locations: [] }, { locations: [] }] };
 
 function makeFormValid(state: CreatePageState): void {
     (state as unknown as { model: { set: (v: typeof VALID_FORM) => void } }).model.set(VALID_FORM);
@@ -33,18 +33,21 @@ describe('CreateTrainPage', () => {
         fixture.detectChanges();
     });
 
-    it('isJourneyEmpty is true initially and false after journeylocations are set', () => {
-        const comp = fixture.componentInstance as unknown as { isJourneyEmpty: () => boolean };
-        expect(comp.isJourneyEmpty()).toBe(true);
+    it('hasTooFewStops is true with fewer than two stops and false with two or more', () => {
+        const comp = fixture.componentInstance as unknown as { hasTooFewStops: () => boolean };
+        expect(comp.hasTooFewStops()).toBe(true);
 
-        state.journey.set({ featuresets: [], journeylocations: [{ locations: [] }] });
+        state.journey.set({ journeylocations: [{ locations: [] }] });
         fixture.detectChanges();
+        expect(comp.hasTooFewStops()).toBe(true);
 
-        expect(comp.isJourneyEmpty()).toBe(false);
+        state.journey.set({ journeylocations: [{ locations: [] }, { locations: [] }] });
+        fixture.detectChanges();
+        expect(comp.hasTooFewStops()).toBe(false);
     });
 
     it('onJourneyChange updates the state journey signal', () => {
-        const journey: Journey = { featuresets: [], journeylocations: [{ locations: [] }] };
+        const journey: Journey = { journeylocations: [{ locations: [] }] };
         (fixture.componentInstance as unknown as { onJourneyChange: (j: Journey) => void }).onJourneyChange(journey);
         expect(state.journey()).toEqual(journey);
     });
