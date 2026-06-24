@@ -42,6 +42,9 @@ export class JourneyRouteCard {
     readonly required = input<boolean>(false);
     readonly journey = input<Journey | undefined>(undefined);
     readonly partners = input<string[]>([]);
+    /** Lead RU may fully edit stops and activities (add/edit/delete/reassign). Defaults to true for create-train. */
+    readonly isLeadRu = input<boolean>(true);
+    readonly currentOrg = input<string>('');
     readonly journeyChange = output<Journey>();
 
     private readonly dialog = inject(MatDialog);
@@ -51,6 +54,20 @@ export class JourneyRouteCard {
     readonly stops = computed<JourneyStop[]>(() =>
         computeJourneyStops(this.localJourney()?.journeylocations ?? []),
     );
+
+    // ── Permissions ───────────────────────────────────────────────────────────
+
+    protected canEditActivity(activity: Activity): boolean {
+        const org = this.currentOrg();
+        return (
+            !this.readonly() &&
+            (this.isLeadRu() || (!!org && activity.responsibility?.id === org))
+        );
+    }
+
+    protected canDeleteActivity(): boolean {
+        return !this.readonly() && this.isLeadRu();
+    }
 
     // ── Stop mutations ────────────────────────────────────────────────────────
 
@@ -100,7 +117,15 @@ export class JourneyRouteCard {
     protected openAddActivity(stopIndex: number, colType: CapabilityType): void {
         const ref = this.dialog.open<EditActivityModal, EditActivityDialogData, Activity>(
             EditActivityModal,
-            { data: { activity: null, capabilityType: colType, partners: this.partners() }, width: '640px' },
+            {
+                data: {
+                    activity: null,
+                    capabilityType: colType,
+                    partners: this.partners(),
+                    canReassignPartner: this.isLeadRu(),
+                },
+                width: '640px',
+            },
         );
         ref.afterClosed().subscribe((result) => {
             if (!result) return;
@@ -112,7 +137,12 @@ export class JourneyRouteCard {
         const dialogRef = this.dialog.open<EditActivityModal, EditActivityDialogData, Activity>(
             EditActivityModal,
             {
-                data: { activity: ref.activity, capabilityType: ref.colType, partners: this.partners() },
+                data: {
+                    activity: ref.activity,
+                    capabilityType: ref.colType,
+                    partners: this.partners(),
+                    canReassignPartner: this.isLeadRu(),
+                },
                 width: '640px',
             },
         );
