@@ -42,8 +42,8 @@ export class JourneyRouteCard {
     readonly required = input<boolean>(false);
     readonly journey = input<Journey | undefined>(undefined);
     readonly partners = input<string[]>([]);
-    /** Lead RU full edit of stops and activities (add/edit/delete). Defaults to true for create-train. */
-    readonly canEditRoute = input<boolean>(true);
+    /** Lead RU may fully edit stops and activities (add/edit/delete/reassign). Defaults to true for create-train. */
+    readonly isLeadRu = input<boolean>(true);
     readonly currentOrg = input<string>('');
     readonly journeyChange = output<Journey>();
 
@@ -61,12 +61,12 @@ export class JourneyRouteCard {
         const org = this.currentOrg();
         return (
             !this.readonly() &&
-            (this.canEditRoute() || (!!org && activity.responsibility?.id === org))
+            (this.isLeadRu() || (!!org && activity.responsibility?.id === org))
         );
     }
 
     protected canDeleteActivity(): boolean {
-        return !this.readonly() && this.canEditRoute();
+        return !this.readonly() && this.isLeadRu();
     }
 
     // ── Stop mutations ────────────────────────────────────────────────────────
@@ -122,7 +122,7 @@ export class JourneyRouteCard {
                     activity: null,
                     capabilityType: colType,
                     partners: this.partners(),
-                    canReassignPartner: this.canEditRoute(),
+                    canReassignPartner: this.isLeadRu(),
                 },
                 width: '640px',
             },
@@ -141,7 +141,7 @@ export class JourneyRouteCard {
                     activity: ref.activity,
                     capabilityType: ref.colType,
                     partners: this.partners(),
-                    canReassignPartner: this.canEditRoute(),
+                    canReassignPartner: this.isLeadRu(),
                 },
                 width: '640px',
             },

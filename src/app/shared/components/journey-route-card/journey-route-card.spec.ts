@@ -361,7 +361,7 @@ describe('JourneyRouteCard', () => {
     it('non-lead partner sees the edit pencil only on its own activities and no route affordances', () => {
         fixture.componentRef.setInput('journey', PERMISSION_JOURNEY);
         fixture.componentRef.setInput('readonly', false);
-        fixture.componentRef.setInput('canEditRoute', false);
+        fixture.componentRef.setInput('isLeadRu', false);
         fixture.componentRef.setInput('currentOrg', 'BLS');
         fixture.detectChanges();
 
@@ -379,7 +379,7 @@ describe('JourneyRouteCard', () => {
     it('lead RU sees edit, delete and route affordances on all activities', () => {
         fixture.componentRef.setInput('journey', PERMISSION_JOURNEY);
         fixture.componentRef.setInput('readonly', false);
-        fixture.componentRef.setInput('canEditRoute', true);
+        fixture.componentRef.setInput('isLeadRu', true);
         fixture.componentRef.setInput('currentOrg', 'SBB');
         fixture.detectChanges();
 
@@ -394,7 +394,7 @@ describe('JourneyRouteCard', () => {
     it('non-lead partner with no assigned activities sees no editable affordance', () => {
         fixture.componentRef.setInput('journey', PERMISSION_JOURNEY);
         fixture.componentRef.setInput('readonly', false);
-        fixture.componentRef.setInput('canEditRoute', false);
+        fixture.componentRef.setInput('isLeadRu', false);
         fixture.componentRef.setInput('currentOrg', 'SBB'); // owns neither BLS nor SOB activity
         fixture.detectChanges();
 
@@ -416,7 +416,7 @@ describe('JourneyRouteCard', () => {
         };
         fixture.componentRef.setInput('journey', journey);
         fixture.componentRef.setInput('readonly', false);
-        fixture.componentRef.setInput('canEditRoute', false);
+        fixture.componentRef.setInput('isLeadRu', false);
         fixture.componentRef.setInput('currentOrg', '');
         fixture.detectChanges();
 
@@ -424,7 +424,7 @@ describe('JourneyRouteCard', () => {
         expect(el.querySelector('.activity-actions')).toBeNull();
     });
 
-    it('defaults to full edit (create-train) when canEditRoute is not bound', () => {
+    it('defaults to full edit (create-train) when isLeadRu is not bound', () => {
         fixture.componentRef.setInput('journey', PERMISSION_JOURNEY);
         fixture.componentRef.setInput('readonly', false);
         fixture.detectChanges();

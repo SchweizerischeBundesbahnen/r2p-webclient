@@ -77,7 +77,7 @@
             <!-- ── Journey Card ─────────────────────────────────────── -->
             <app-journey-route-card
                 [readonly]="false"
-                [canEditRoute]="state.isLeadRu()"
+                [isLeadRu]="state.isLeadRu()"
                 [currentOrg]="state.currentOrg()"
                 [journey]="state.branch.value()?.train?.journey"
                 [partners]="state.partners()"
