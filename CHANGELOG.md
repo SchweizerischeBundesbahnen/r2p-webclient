@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.0.18](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.17...r2p-webclient-v0.0.18) (2026-06-24)
+
+
+### Features
+
+* gate train editing by lead RU and activity ownership ([e49400d](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/e49400d207816651d82156f3c4c1881f35b09c73))
+* gate train editing by lead RU and activity ownership ([fac8145](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/fac81458cc23fa55e103f35901c455f355194274))
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump @commitlint/cli from 21.0.2 to 21.1.0 ([ffa0fc3](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/ffa0fc3b4f5c45aa2e147b66bf06d5e3cdd7765e))
+* **deps-dev:** bump @commitlint/cli from 21.0.2 to 21.1.0 ([728b5c3](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/728b5c33a5e29e871ca109e05d415e30ba780d88))
+* **deps-dev:** bump typescript-eslint from 8.61.1 to 8.62.0 ([0049d81](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/0049d8158a2b50969c5d293873854bfef9a1152a))
+* **deps-dev:** bump typescript-eslint from 8.61.1 to 8.62.0 ([79afb99](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/79afb999f794e53b2c27f592eee2320c277072fc))
+* **deps:** bump actions/checkout from 6 to 7 ([2e6d2fc](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/2e6d2fc1722ef123ecc4b63edc04b8e735d81969))
+* **deps:** bump actions/checkout from 6 to 7 ([e8be1ae](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/e8be1aee63faf03b3c63445b754485f9ed7eed72))
+
+
+### Code Refactoring
+
+* rename JourneyRouteCard canEditRoute input to isLeadRu ([4eddac0](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/4eddac07ca22a6390be920430e34d693c38684a8))
+
 ## [0.0.17](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.16...r2p-webclient-v0.0.17) (2026-06-23)
 
 
