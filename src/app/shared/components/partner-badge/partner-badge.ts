@@ -10,7 +10,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
             border-radius: 4px;
             font-size: 0.7rem;
             font-weight: 700;
-            color: white;
+            color: var(--text-on-dark);
             text-transform: uppercase;
             letter-spacing: 0.05em;
             margin-right: 2px;

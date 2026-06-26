@@ -8,16 +8,20 @@
                         class="btn-icon"
                         matTooltip="Edit"
                         i18n-matTooltip="@@journeyStopRow.editStop"
+                        aria-label="Edit"
+                        i18n-aria-label="@@journeyStopRow.editStop"
                         (click)="editActivity.emit()"
-                    ><span class="material-icons">edit</span></button>
+                    ><span class="material-icons" aria-hidden="true">edit</span></button>
                 }
                 @if (canDelete()) {
                     <button
                         class="btn-icon btn-icon-danger"
                         matTooltip="Delete"
                         i18n-matTooltip="@@journeyStopRow.deleteStop"
+                        aria-label="Delete"
+                        i18n-aria-label="@@journeyStopRow.deleteStop"
                         (click)="deleteActivity.emit()"
-                    ><span class="material-icons">delete</span></button>
+                    ><span class="material-icons" aria-hidden="true">delete</span></button>
                 }
             </div>
         }

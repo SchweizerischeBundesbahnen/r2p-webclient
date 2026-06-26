@@ -17,7 +17,7 @@ import { PartnerBadge } from '../shared/components/partner-badge/partner-badge';
     changeDetection: ChangeDetectionStrategy.OnPush,
     styles: `
         .top-nav {
-            background-color: #ffffff;
+            background-color: var(--card-background);
             color: var(--navy);
             padding: 0 var(--spacing-xl);
             display: flex;
@@ -137,7 +137,7 @@ import { PartnerBadge } from '../shared/components/partner-badge/partner-badge';
                     <button class="lang-btn" [class.active]="localeService.currentLocale() === 'en-US'" (click)="setLocale('en-US')">EN</button>
                     <button class="lang-btn" [class.active]="localeService.currentLocale() === 'de-CH'" (click)="setLocale('de-CH')">DE</button>
                 </div>
-                <button class="top-nav-settings-btn" (click)="openSettingsModal()" i18n-title="@@layout.settings.title" title="Settings">
+                <button class="top-nav-settings-btn" (click)="openSettingsModal()" i18n-title="@@layout.settings.title" title="Settings" i18n-aria-label="@@layout.settings.title" aria-label="Settings">
                     <mat-icon>settings</mat-icon>
                 </button>
             </div>

@@ -40,7 +40,7 @@ import { RouterLink } from '@angular/router';
             .nf-btn {
                 display: inline-block;
                 background: var(--orange);
-                color: #fff;
+                color: var(--text-on-dark);
                 text-decoration: none;
                 font-weight: 600;
                 padding: 10px 20px;

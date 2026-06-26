@@ -42,7 +42,7 @@ import { ErrorNotificationService } from './error-notification.service';
             padding: 0.875rem 1rem;
             border-radius: 8px;
             background: #b91c1c;
-            color: #fff;
+            color: var(--text-on-dark);
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
             animation: slideIn 0.2s ease-out;
         }
@@ -72,7 +72,7 @@ import { ErrorNotificationService } from './error-notification.service';
             flex-shrink: 0;
             background: transparent;
             border: none;
-            color: #fff;
+            color: var(--text-on-dark);
             cursor: pointer;
             font-size: 1rem;
             line-height: 1;

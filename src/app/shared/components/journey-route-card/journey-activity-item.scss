@@ -108,5 +108,5 @@
     .material-icons { font-size: 0.875rem; }
 }
 
-.btn-icon:hover { background: var(--accent-color); color: white; }
-.btn-icon-danger:hover { background: var(--danger-color, #e53e3e); color: white; }
+.btn-icon:hover { background: var(--accent-color); color: var(--text-on-dark); }
+.btn-icon-danger:hover { background: var(--danger-color, #e53e3e); color: var(--text-on-dark); }

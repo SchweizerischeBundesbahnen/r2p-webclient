@@ -72,11 +72,12 @@ html {
     --accent-color: #F47B20;
     --background-color: #F4F6F8; /* light grey page bg */
     --card-background: #ffffff;
+    --text-on-dark: #ffffff;     /* white foreground text on navy/orange/dark surfaces */
     --border-color: #CCCCCC;     /* table/row borders (brand §8.3) */
     --border-subtle: #E2E8F0;    /* card/input/hairline borders */
     --text-primary: #0D1B2A;     /* navy */
     --text-secondary: #3D6880;   /* deep teal */
-    --text-muted: #8AAFC8;       /* steel — large/decorative only (low AA for small text) */
+    --text-muted: var(--teal);   /* accessible muted text (use --steel for decorative only) */
     --text-warn: #BF360C;
 
     /* Partner colors */
@@ -384,7 +385,7 @@ body {
     height: 14px;
     border-radius: 50%;
     background-color: var(--text-muted);
-    color: white;
+    color: var(--text-on-dark);
     font-size: 0.6rem;
     font-weight: 700;
     cursor: default;
@@ -398,7 +399,7 @@ body {
 
 thead .tooltip-anchor {
     background-color: var(--text-muted);
-    color: white;
+    color: var(--text-on-dark);
 }
 
 .tooltip-box {
@@ -408,7 +409,7 @@ thead .tooltip-anchor {
     left: 50%;
     transform: translateX(-50%);
     background-color: var(--text-primary);
-    color: white;
+    color: var(--text-on-dark);
     font-size: 0.75rem;
     font-weight: 400;
     line-height: 1.5;

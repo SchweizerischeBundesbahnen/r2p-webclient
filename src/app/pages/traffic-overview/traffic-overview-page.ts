@@ -54,7 +54,7 @@ import { TrainTable } from './train-table';
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: #ffffff;
+            background: var(--card-background);
             color: var(--navy);
             border: 1px solid var(--navy);
             border-radius: 8px;
@@ -66,7 +66,7 @@ import { TrainTable } from './train-table';
             transition: background-color 0.15s, color 0.15s;
         }
         .filter-toggle:hover { background: var(--light-grey); }
-        .filter-toggle.is-active { background: var(--navy); color: #ffffff; }
+        .filter-toggle.is-active { background: var(--navy); color: var(--text-on-dark); }
         .filter-toggle mat-icon {
             font-size: 18px;
             width: 18px;
@@ -75,7 +75,7 @@ import { TrainTable } from './train-table';
         .filter-toggle .chev { opacity: 0.8; }
         .filter-toggle .filter-count {
             background: var(--orange);
-            color: #ffffff;
+            color: var(--text-on-dark);
             border-radius: 999px;
             min-width: 18px;
             height: 18px;
