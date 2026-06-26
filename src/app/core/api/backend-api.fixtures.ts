@@ -13,7 +13,6 @@ export const minimalTrain: Train = {
     startdate: '2026-04-16',
     timestamp: '2026-03-12T12:00:00+01:00',
     journey: {
-        featuresets: [],
         journeylocations: [
             {
                 locations: [
@@ -26,7 +25,6 @@ export const minimalTrain: Train = {
                 activities: [
                     {
                         id: 'a1-01',
-                        type: 'path.halt.11',
                         timings: [
                             {
                                 type: TimingType.Departure,
@@ -43,6 +41,7 @@ export const minimalTrain: Train = {
                             type: 'path',
                             path: {
                                 id: 'a1-01-002',
+                                activityType: 'path.halt.11',
                                 length: 1500,
                                 weight: 3500,
                                 maxSpeed: 250,
@@ -53,7 +52,6 @@ export const minimalTrain: Train = {
                     },
                     {
                         id: 'a1-02',
-                        type: 'rollingStock',
                         timings: [],
                         responsibility: {
                             type: 'rim',
@@ -65,6 +63,7 @@ export const minimalTrain: Train = {
                             capabilityFeatures: [],
                             featuresetRefs: [],
                             rollingStock: {
+                                activityType: 'rollingStock',
                                 weight: 2868000,
                                 length: 438000,
                                 maxSpeed: 100,
@@ -117,7 +116,6 @@ export const minimalTrain: Train = {
                     },
                     {
                         id: 'a1-03',
-                        type: 'rollingStock.traction',
                         timings: [
                             {
                                 type: TimingType.Departure,
@@ -134,11 +132,10 @@ export const minimalTrain: Train = {
                             type: 'staff',
                             capabilityFeatures: [],
                             featuresetRefs: [],
-                            staffs: [
-                                {
-                                    type: 'driver',
-                                },
-                            ],
+                            staff: {
+                                type: 'driver',
+                                activityType: 'move',
+                            },
                         },
                         relations: [],
                     },
@@ -155,7 +152,6 @@ export const minimalTrain: Train = {
                 activities: [
                     {
                         id: 'a2-01',
-                        type: 'path.halt.11',
                         timings: [
                             {
                                 type: TimingType.Arrival,
@@ -178,6 +174,7 @@ export const minimalTrain: Train = {
                             capabilityFeatures: [],
                             path: {
                                 id: 'a2-01-001',
+                                activityType: 'path.halt.11',
                                 length: 1500,
                                 weight: 3500,
                                 maxSpeed: 250,
@@ -198,7 +195,6 @@ export const minimalTrain: Train = {
                 activities: [
                     {
                         id: 'a3-01',
-                        type: 'path.halt.11',
                         timings: [
                             {
                                 type: TimingType.Arrival,
@@ -221,6 +217,7 @@ export const minimalTrain: Train = {
                             capabilityFeatures: [],
                             path: {
                                 id: 'a3-01-001',
+                                activityType: 'path.halt.11',
                                 length: 1500,
                                 weight: 3500,
                                 maxSpeed: 250,
@@ -230,7 +227,6 @@ export const minimalTrain: Train = {
                     },
                     {
                         id: 'a3-02',
-                        type: 'rollingStock',
                         timings: [],
                         responsibility: {
                             type: 'rim',
@@ -242,6 +238,7 @@ export const minimalTrain: Train = {
                             capabilityFeatures: [],
                             featuresetRefs: [],
                             rollingStock: {
+                                activityType: 'rollingStock',
                                 weight: 1284000,
                                 length: 415400,
                                 maxSpeed: 100,
@@ -291,7 +288,6 @@ export const minimalTrain: Train = {
                 activities: [
                     {
                         id: 'a4-01',
-                        type: 'path.halt.11',
                         timings: [
                             {
                                 type: TimingType.Arrival,
@@ -314,6 +310,7 @@ export const minimalTrain: Train = {
                             capabilityFeatures: [],
                             path: {
                                 id: 'a4-01-001',
+                                activityType: 'path.halt.11',
                                 length: 1500,
                                 weight: 3500,
                                 maxSpeed: 250,
@@ -334,7 +331,6 @@ export const minimalTrain: Train = {
                 activities: [
                     {
                         id: 'a5-01',
-                        type: 'path.halt.11',
                         timings: [
                             {
                                 type: TimingType.Arrival,
@@ -352,6 +348,7 @@ export const minimalTrain: Train = {
                             capabilityFeatures: [],
                             path: {
                                 id: 'a5-01-001',
+                                activityType: 'path.halt.11',
                                 length: 1500,
                                 weight: 3500,
                                 maxSpeed: 250,
@@ -361,7 +358,6 @@ export const minimalTrain: Train = {
                     },
                     {
                         id: 'a5-02',
-                        type: 'rollingStock.traction',
                         timings: [
                             {
                                 type: TimingType.Arrival,
@@ -378,11 +374,10 @@ export const minimalTrain: Train = {
                             type: 'staff',
                             capabilityFeatures: [],
                             featuresetRefs: [],
-                            staffs: [
-                                {
-                                    type: 'driver',
-                                },
-                            ],
+                            staff: {
+                                type: 'driver',
+                                activityType: 'move',
+                            },
                         },
                         relations: [],
                     },

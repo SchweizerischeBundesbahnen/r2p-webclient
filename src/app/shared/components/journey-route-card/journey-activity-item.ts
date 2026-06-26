@@ -17,7 +17,8 @@ export type CapabilityType = 'rollingStock' | 'staff' | 'path';
 export class JourneyActivityItem {
     readonly activity = input.required<Activity>();
     readonly capabilityType = input.required<CapabilityType>();
-    readonly readonly = input<boolean>(false);
+    readonly canEdit = input<boolean>(false);
+    readonly canDelete = input<boolean>(false);
 
     readonly editActivity = output<void>();
     readonly deleteActivity = output<void>();
@@ -33,7 +34,7 @@ export class JourneyActivityItem {
     });
 
     protected readonly staffRole = computed(() => {
-        return this.activity().capability?.staffs?.[0]?.type;
+        return this.activity().capability?.staff?.type;
     });
 
     protected readonly isPassthrough = computed(() => {

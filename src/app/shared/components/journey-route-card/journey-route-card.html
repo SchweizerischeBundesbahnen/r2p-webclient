@@ -8,11 +8,11 @@
         @if (stops().length === 0) {
             <div class="empty-state">
                 @if (required()) {
-                    <p class="text-muted" i18n="@@journeyRouteCard.requiredEmpty">* At least one stop is required.</p>
+                    <p class="text-muted" i18n="@@journeyRouteCard.requiredEmpty">* At least two stops are required.</p>
                 } @else {
                     <p class="text-muted" i18n="@@journeyRouteCard.empty">No journey stops defined.</p>
                 }
-                @if (!readonly()) {
+                @if (!readonly() && isLeadRu()) {
                     <button
                         class="btn btn-primary add-first-stop-btn"
                         (click)="addStop(0)"
@@ -36,7 +36,7 @@
                             @let stopIndex = $index;
 
                             <!-- Add stop button before each stop (edit mode only) -->
-                            @if (!readonly()) {
+                            @if (!readonly() && isLeadRu()) {
                                 <tr class="add-stop-row">
                                     <td colspan="4">
                                         <button
@@ -64,7 +64,7 @@
                                         </div>
                                         <div class="stop-info">
                                             <div class="stop-name">{{ stop.stopName }}</div>
-                                            @if (!readonly()) {
+                                            @if (!readonly() && isLeadRu()) {
                                                 <div class="stop-actions">
                                                     <button
                                                         class="stop-icon-btn"
@@ -96,7 +96,8 @@
                                                     <app-journey-activity-item
                                                         [activity]="activity"
                                                         capabilityType="rollingStock"
-                                                        [readonly]="readonly()"
+                                                        [canEdit]="canEditActivity(activity)"
+                                                        [canDelete]="canDeleteActivity()"
                                                         (editActivity)="openEditActivity(stopIndex, { activity: activity, colType: 'rollingStock' })"
                                                         (deleteActivity)="deleteActivity(stopIndex, { activity: activity, colType: 'rollingStock' })"
                                                     />
@@ -108,7 +109,7 @@
                                                 i18n="@@journeyStopRow.spanEndLabel"
                                             >ends here · started at {{ stop.inheritedOriginName }}</div>
                                         }
-                                        @if (!readonly()) {
+                                        @if (!readonly() && isLeadRu()) {
                                             <div class="rs-add-btn-wrap">
                                                 <button
                                                     class="add-activity-btn"
@@ -127,13 +128,14 @@
                                             <app-journey-activity-item
                                                 [activity]="activity"
                                                 capabilityType="staff"
-                                                [readonly]="readonly()"
+                                                [canEdit]="canEditActivity(activity)"
+                                                [canDelete]="canDeleteActivity()"
                                                 (editActivity)="openEditActivity(stopIndex, { activity: activity, colType: 'staff' })"
                                                 (deleteActivity)="deleteActivity(stopIndex, { activity: activity, colType: 'staff' })"
                                             />
                                         }
                                     </div>
-                                    @if (!readonly()) {
+                                    @if (!readonly() && isLeadRu()) {
                                         <button
                                             class="add-activity-btn"
                                             (click)="openAddActivity($index, 'staff')"
@@ -149,13 +151,14 @@
                                             <app-journey-activity-item
                                                 [activity]="activity"
                                                 capabilityType="path"
-                                                [readonly]="readonly()"
+                                                [canEdit]="canEditActivity(activity)"
+                                                [canDelete]="canDeleteActivity()"
                                                 (editActivity)="openEditActivity(stopIndex, { activity: activity, colType: 'path' })"
                                                 (deleteActivity)="deleteActivity(stopIndex, { activity: activity, colType: 'path' })"
                                             />
                                         }
                                     </div>
-                                    @if (!readonly()) {
+                                    @if (!readonly() && isLeadRu()) {
                                         <button
                                             class="add-activity-btn"
                                             (click)="openAddActivity($index, 'path')"
@@ -168,7 +171,7 @@
                         }
 
                         <!-- Add stop button after the last stop (edit mode only) -->
-                        @if (!readonly()) {
+                        @if (!readonly() && isLeadRu()) {
                             <tr class="add-stop-row">
                                 <td colspan="4">
                                     <button
@@ -182,6 +185,9 @@
                     </tbody>
                 </table>
             </div>
+            @if (required() && stops().length < 2) {
+                <p class="text-muted" i18n="@@journeyRouteCard.requiredEmpty">* At least two stops are required.</p>
+            }
         }
 
     </div>

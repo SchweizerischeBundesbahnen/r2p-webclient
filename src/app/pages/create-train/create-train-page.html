@@ -14,7 +14,7 @@
         mat-raised-button
         color="primary"
         id="sticky-save-btn"
-        [disabled]="createTrainForm().invalid() || state.createTrainRunning() || isJourneyEmpty()"
+        [disabled]="createTrainForm().invalid() || state.createTrainRunning() || hasTooFewStops()"
         (click)="createTrain()"
     >
         @if (state.createTrainRunning()) {

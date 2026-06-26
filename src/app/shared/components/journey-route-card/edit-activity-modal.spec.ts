@@ -49,11 +49,14 @@ function fillPathFields(fixture: ComponentFixture<EditActivityModal>): void {
 
 const STUB_EXISTING: Activity = {
     id: 'existing-id',
-    type: 'rollingStock',
     timings: [],
     relations: [],
     responsibility: { type: 'rru', id: 'SBB', status: 'proposed' },
-    capability: { type: 'rollingStock', capabilityFeatures: [], rollingStock: { units: [] } },
+    capability: {
+        type: 'rollingStock',
+        capabilityFeatures: [],
+        rollingStock: { activityType: 'rollingStock', units: [] },
+    },
 };
 
 describe('EditActivityModal', () => {
@@ -169,30 +172,38 @@ describe('EditActivityModal', () => {
     });
 
     describe('new activity — required backend fields', () => {
-        it('generates a non-empty id and sets correct default type for rollingStock and staff', () => {
-            const cases: [CapabilityType, string][] = [
-                ['rollingStock', 'rollingStock'],
-                ['staff', 'move'],
-            ];
-            for (const [capType, expectedActivityType] of cases) {
-                TestBed.resetTestingModule();
-                const dr = makeDialogRef();
-                const { fixture } = createComponent(capType, null, dr);
-                clickSave(fixture);
-                const emitted = dr.close.mock.calls[0][0] as Activity;
-                expect(emitted.id, `id for ${capType}`).toBeTruthy();
-                expect(emitted.type, `type for ${capType}`).toBe(expectedActivityType);
-            }
+        it('generates a non-empty id and sets rollingStock activityType "rollingStock"', () => {
+            const dr = makeDialogRef();
+            const { fixture } = createComponent('rollingStock', null, dr);
+            clickSave(fixture);
+            const emitted = dr.close.mock.calls[0][0] as Activity;
+            expect(emitted.id).toBeTruthy();
+            expect(emitted.capability?.rollingStock?.activityType).toBe('rollingStock');
         });
 
-        it('generates a non-empty id and sets type "path.runthrough" for new path activity', () => {
+        it('sets staff type and activityType "move" when a role is selected', () => {
+            const dr = makeDialogRef();
+            const { fixture } = createComponent('staff', null, dr);
+            const component = fixture.componentInstance as unknown as {
+                staffRole: { set: (v: string) => void };
+            };
+            component.staffRole.set('driver');
+            fixture.detectChanges();
+            clickSave(fixture);
+            const emitted = dr.close.mock.calls[0][0] as Activity;
+            expect(emitted.id).toBeTruthy();
+            expect(emitted.capability?.staff?.type).toBe('driver');
+            expect(emitted.capability?.staff?.activityType).toBe('move');
+        });
+
+        it('sets path activityType "path.runthrough" for new path activity', () => {
             const dr = makeDialogRef();
             const { fixture } = createComponent('path', null, dr);
             fillPathFields(fixture);
             clickSave(fixture);
             const emitted = dr.close.mock.calls[0][0] as Activity;
             expect(emitted.id).toBeTruthy();
-            expect(emitted.type).toBe('path.runthrough');
+            expect(emitted.capability?.path?.activityType).toBe('path.runthrough');
         });
 
         it('sends timings as empty array when no timing is entered', () => {
@@ -239,18 +250,22 @@ describe('EditActivityModal', () => {
     });
 
     describe('editing existing activity — field preservation', () => {
-        it('preserves id and type from the existing activity', () => {
+        it('preserves id and the resource activityType from the existing activity', () => {
             const existing: Activity = {
                 ...STUB_EXISTING,
                 id: 'my-existing-id',
-                type: 'rollingStock.traction',
+                capability: {
+                    type: 'rollingStock',
+                    capabilityFeatures: [],
+                    rollingStock: { activityType: 'rollingStock.traction', units: [] },
+                },
             };
             const dr = makeDialogRef();
             const { fixture } = createComponent('rollingStock', existing, dr);
             clickSave(fixture);
             const emitted = dr.close.mock.calls[0][0] as Activity;
             expect(emitted.id).toBe('my-existing-id');
-            expect(emitted.type).toBe('rollingStock.traction');
+            expect(emitted.capability?.rollingStock?.activityType).toBe('rollingStock.traction');
         });
 
         it('preserves existing relations', () => {
@@ -302,7 +317,7 @@ describe('EditActivityModal', () => {
                 capability: {
                     type: 'rollingStock',
                     capabilityFeatures: [],
-                    rollingStock: { units: [{ name: 'RABe 511' }] },
+                    rollingStock: { activityType: 'rollingStock', units: [{ name: 'RABe 511' }] },
                 },
             };
             const dr = makeDialogRef();
@@ -322,6 +337,65 @@ describe('EditActivityModal', () => {
             cancelBtn?.click();
             expect(dr.close).toHaveBeenCalledOnce();
             expect(dr.close).toHaveBeenCalledWith();
+        });
+    });
+
+    describe('partner reassignment lock', () => {
+        function createWithReassign(
+            canReassignPartner: boolean | undefined,
+            activity: Activity | null,
+        ): { fixture: ComponentFixture<EditActivityModal>; dr: ReturnType<typeof makeDialogRef> } {
+            TestBed.resetTestingModule();
+            const dr = makeDialogRef();
+            const data: EditActivityDialogData = {
+                activity,
+                capabilityType: 'rollingStock',
+                partners: ['SBB', 'BLS'],
+                canReassignPartner,
+            };
+            TestBed.configureTestingModule({
+                imports: [EditActivityModal],
+                providers: [
+                    provideAnimationsAsync(),
+                    { provide: MAT_DIALOG_DATA, useValue: data },
+                    { provide: MatDialogRef, useValue: dr },
+                ],
+            });
+            const fixture = TestBed.createComponent(EditActivityModal);
+            fixture.detectChanges();
+            return { fixture, dr };
+        }
+
+        const partnerDisabled = (fixture: ComponentFixture<EditActivityModal>): boolean =>
+            (
+                fixture.componentInstance as unknown as {
+                    activityForm: { id: () => { disabled: () => boolean } };
+                }
+            ).activityForm.id().disabled();
+
+        const BLS_ACTIVITY: Activity = {
+            ...STUB_EXISTING,
+            responsibility: { type: 'rru', id: 'BLS', status: 'proposed' },
+        };
+
+        it('disables the partner field and reflects it in the DOM when reassignment is not allowed', () => {
+            const { fixture } = createWithReassign(false, BLS_ACTIVITY);
+            expect(partnerDisabled(fixture)).toBe(true);
+            // partner is the 2nd select in the responsibility row (type, partner, status)
+            const partnerSelect = fixture.nativeElement.querySelectorAll('mat-select')[1] as HTMLElement;
+            expect(partnerSelect.getAttribute('aria-disabled')).toBe('true');
+        });
+
+        it('keeps the partner field editable by default (lead RU)', () => {
+            const { fixture } = createWithReassign(undefined, STUB_EXISTING);
+            expect(partnerDisabled(fixture)).toBe(false);
+        });
+
+        it('still emits the unchanged responsible partner when the field is locked', () => {
+            const { fixture, dr } = createWithReassign(false, BLS_ACTIVITY);
+            clickSave(fixture);
+            const emitted = dr.close.mock.calls[0][0] as Activity;
+            expect(emitted.responsibility?.id).toBe('BLS');
         });
     });
 });

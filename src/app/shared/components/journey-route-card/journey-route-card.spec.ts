@@ -51,7 +51,6 @@ describe('JourneyRouteCard', () => {
                     locations: [{ name: 'Bern' }],
                     activities: [
                         {
-                            type: 'journey',
                             responsibility: { type: 'rru', id: 'SBB', status: 'confirmed' },
                             timings: [{ type: TimingType.Departure, duration: 'PT8H30M' }],
                         },
@@ -61,7 +60,6 @@ describe('JourneyRouteCard', () => {
                     locations: [{ name: 'Zürich HB' }],
                     activities: [
                         {
-                            type: 'journey',
                             responsibility: { type: 'rru', id: 'SBB', status: 'confirmed' },
                             timings: [{ type: TimingType.Arrival, duration: 'PT9H30M' }],
                         },
@@ -95,7 +93,6 @@ describe('JourneyRouteCard', () => {
                     locations: [{ name: 'Bern' }],
                     activities: [
                         {
-                            type: 'journey',
                             timings: [
                                 { type: TimingType.Arrival, duration: 'PT7H00M' },
                                 { type: TimingType.Departure, duration: 'PT7H05M' },
@@ -122,7 +119,6 @@ describe('JourneyRouteCard', () => {
                     locations: [{ name: 'Bern' }],
                     activities: [
                         {
-                            type: 'journey',
                             timings: [
                                 { type: TimingType.EarliestArrival, duration: 'PT7H00M' },
                                 { type: TimingType.EarliestDeparture, duration: 'PT7H05M' },
@@ -149,7 +145,6 @@ describe('JourneyRouteCard', () => {
                     locations: [{ name: 'Bern' }],
                     activities: [
                         {
-                            type: 'journey',
                             timings: [
                                 { type: TimingType.LatestArrival, duration: 'PT7H00M' },
                                 { type: TimingType.LatestDeparture, duration: 'PT7H05M' },
@@ -176,7 +171,6 @@ describe('JourneyRouteCard', () => {
                     locations: [{ name: 'Bern' }],
                     activities: [
                         {
-                            type: 'journey',
                             timings: [
                                 { type: TimingType.Arrival, duration: 'PT7H00M' },
                                 { type: TimingType.LatestArrival, duration: 'PT7H03M' },
@@ -300,7 +294,7 @@ describe('JourneyRouteCard', () => {
             journeylocations: [
                 {
                     locations: [{ name: 'Bern' }],
-                    activities: [{ type: 'formation', capability: { type: 'rollingStock' } }],
+                    activities: [{ capability: { type: 'rollingStock' } }],
                 },
             ],
         };
@@ -310,7 +304,6 @@ describe('JourneyRouteCard', () => {
 
         const stops = component.stops();
         expect(stops[0].rollingStockActivities.length).toBe(1);
-        expect(stops[0].rollingStockActivities[0].type).toBe('formation');
         expect(stops[0].staffActivities.length).toBe(0);
         expect(stops[0].pathActivities.length).toBe(0);
     });
@@ -320,7 +313,7 @@ describe('JourneyRouteCard', () => {
             journeylocations: [
                 {
                     locations: [{ name: 'Zürich HB' }],
-                    activities: [{ type: 'crewing', capability: { type: 'staff' } }],
+                    activities: [{ capability: { type: 'staff' } }],
                 },
             ],
         };
@@ -330,7 +323,6 @@ describe('JourneyRouteCard', () => {
 
         const stops = component.stops();
         expect(stops[0].staffActivities.length).toBe(1);
-        expect(stops[0].staffActivities[0].type).toBe('crewing');
         expect(stops[0].rollingStockActivities.length).toBe(0);
         expect(stops[0].pathActivities.length).toBe(0);
     });
@@ -340,7 +332,7 @@ describe('JourneyRouteCard', () => {
             journeylocations: [
                 {
                     locations: [{ name: 'Basel SBB' }],
-                    activities: [{ type: 'routing', capability: { type: 'path' } }],
+                    activities: [{ capability: { type: 'path' } }],
                 },
             ],
         };
@@ -350,8 +342,95 @@ describe('JourneyRouteCard', () => {
 
         const stops = component.stops();
         expect(stops[0].pathActivities.length).toBe(1);
-        expect(stops[0].pathActivities[0].type).toBe('routing');
         expect(stops[0].rollingStockActivities.length).toBe(0);
         expect(stops[0].staffActivities.length).toBe(0);
+    });
+
+    const PERMISSION_JOURNEY: Journey = {
+        journeylocations: [
+            {
+                locations: [{ name: 'Bern' }],
+                activities: [
+                    { capability: { type: 'staff' }, responsibility: { type: 'rru', id: 'BLS' } },
+                    { capability: { type: 'path' }, responsibility: { type: 'rru', id: 'SOB' } },
+                ],
+            },
+        ],
+    };
+
+    it('non-lead partner sees the edit pencil only on its own activities and no route affordances', () => {
+        fixture.componentRef.setInput('journey', PERMISSION_JOURNEY);
+        fixture.componentRef.setInput('readonly', false);
+        fixture.componentRef.setInput('isLeadRu', false);
+        fixture.componentRef.setInput('currentOrg', 'BLS');
+        fixture.detectChanges();
+
+        const el: HTMLElement = fixture.nativeElement;
+        // own (BLS) staff activity is editable, foreign (SOB) path activity is not
+        expect(el.querySelector('.activity-staff .btn-icon')).not.toBeNull();
+        expect(el.querySelector('.activity-path .btn-icon')).toBeNull();
+        // non-lead can never delete or change the route
+        expect(el.querySelector('.btn-icon-danger')).toBeNull();
+        expect(el.querySelector('.add-activity-btn')).toBeNull();
+        expect(el.querySelector('.stop-icon-btn')).toBeNull();
+        expect(el.querySelector('.add-stop-btn')).toBeNull();
+    });
+
+    it('lead RU sees edit, delete and route affordances on all activities', () => {
+        fixture.componentRef.setInput('journey', PERMISSION_JOURNEY);
+        fixture.componentRef.setInput('readonly', false);
+        fixture.componentRef.setInput('isLeadRu', true);
+        fixture.componentRef.setInput('currentOrg', 'SBB');
+        fixture.detectChanges();
+
+        const el: HTMLElement = fixture.nativeElement;
+        expect(el.querySelector('.activity-staff .btn-icon')).not.toBeNull();
+        expect(el.querySelector('.activity-path .btn-icon')).not.toBeNull();
+        expect(el.querySelector('.btn-icon-danger')).not.toBeNull();
+        expect(el.querySelector('.add-activity-btn')).not.toBeNull();
+        expect(el.querySelector('.stop-icon-btn')).not.toBeNull();
+    });
+
+    it('non-lead partner with no assigned activities sees no editable affordance', () => {
+        fixture.componentRef.setInput('journey', PERMISSION_JOURNEY);
+        fixture.componentRef.setInput('readonly', false);
+        fixture.componentRef.setInput('isLeadRu', false);
+        fixture.componentRef.setInput('currentOrg', 'SBB'); // owns neither BLS nor SOB activity
+        fixture.detectChanges();
+
+        const el: HTMLElement = fixture.nativeElement;
+        expect(el.querySelector('.activity-actions')).toBeNull();
+        expect(el.querySelector('.btn-icon')).toBeNull();
+        expect(el.querySelector('.add-activity-btn')).toBeNull();
+        expect(el.querySelector('.stop-icon-btn')).toBeNull();
+    });
+
+    it('does not grant edit on an unowned activity when currentOrg is empty', () => {
+        const journey: Journey = {
+            journeylocations: [
+                {
+                    locations: [{ name: 'Bern' }],
+                    activities: [{ capability: { type: 'staff' }, responsibility: { type: 'rru', id: '' } }],
+                },
+            ],
+        };
+        fixture.componentRef.setInput('journey', journey);
+        fixture.componentRef.setInput('readonly', false);
+        fixture.componentRef.setInput('isLeadRu', false);
+        fixture.componentRef.setInput('currentOrg', '');
+        fixture.detectChanges();
+
+        const el: HTMLElement = fixture.nativeElement;
+        expect(el.querySelector('.activity-actions')).toBeNull();
+    });
+
+    it('defaults to full edit (create-train) when isLeadRu is not bound', () => {
+        fixture.componentRef.setInput('journey', PERMISSION_JOURNEY);
+        fixture.componentRef.setInput('readonly', false);
+        fixture.detectChanges();
+
+        const el: HTMLElement = fixture.nativeElement;
+        expect(el.querySelector('.btn-icon-danger')).not.toBeNull();
+        expect(el.querySelector('.add-activity-btn')).not.toBeNull();
     });
 });

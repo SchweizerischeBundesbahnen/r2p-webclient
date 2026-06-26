@@ -1,20 +1,24 @@
 <div [class]="'activity-item activity-' + capabilityType()">
     <div class="activity-header">
         <app-partner-badge [partner]="activity().responsibility?.id ?? ''" />
-        @if (!readonly()) {
+        @if (canEdit() || canDelete()) {
             <div class="activity-actions">
-                <button
-                    class="btn-icon"
-                    matTooltip="Edit"
-                    i18n-matTooltip="@@journeyStopRow.editStop"
-                    (click)="editActivity.emit()"
-                ><span class="material-icons">edit</span></button>
-                <button
-                    class="btn-icon btn-icon-danger"
-                    matTooltip="Delete"
-                    i18n-matTooltip="@@journeyStopRow.deleteStop"
-                    (click)="deleteActivity.emit()"
-                ><span class="material-icons">delete</span></button>
+                @if (canEdit()) {
+                    <button
+                        class="btn-icon"
+                        matTooltip="Edit"
+                        i18n-matTooltip="@@journeyStopRow.editStop"
+                        (click)="editActivity.emit()"
+                    ><span class="material-icons">edit</span></button>
+                }
+                @if (canDelete()) {
+                    <button
+                        class="btn-icon btn-icon-danger"
+                        matTooltip="Delete"
+                        i18n-matTooltip="@@journeyStopRow.deleteStop"
+                        (click)="deleteActivity.emit()"
+                    ><span class="material-icons">delete</span></button>
+                }
             </div>
         }
     </div>

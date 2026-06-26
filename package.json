@@ -1,6 +1,6 @@
 {
     "name": "r2p-webclient",
-    "version": "0.0.16",
+    "version": "0.0.18",
     "scripts": {
         "ng": "ng",
         "start": "ng serve",
@@ -35,7 +35,7 @@
         "@angular/cli": "^21.2.12",
         "@angular/compiler-cli": "^21.2.14",
         "@angular/localize": "^21.2.14",
-        "@commitlint/cli": "^21.0.2",
+        "@commitlint/cli": "^21.1.0",
         "@commitlint/config-conventional": "^21.0.2",
         "@eslint/js": "^10.0.1",
         "@vitest/coverage-v8": "^4.1.9",
@@ -46,7 +46,7 @@
         "jsdom": "^29.1.1",
         "prettier": "^3.8.4",
         "typescript": "~5.9.2",
-        "typescript-eslint": "8.61.1",
+        "typescript-eslint": "8.62.0",
         "vitest": "^4.1.9"
     }
 }

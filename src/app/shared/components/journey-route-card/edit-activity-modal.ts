@@ -5,7 +5,7 @@ import {
     inject,
     signal,
 } from '@angular/core';
-import { form, FormField, required, submit } from '@angular/forms/signals';
+import { disabled, form, FormField, required, submit } from '@angular/forms/signals';
 import {
     MAT_DIALOG_DATA,
     MatDialogActions,
@@ -36,6 +36,8 @@ export interface EditActivityDialogData {
     activity: Activity | null;
     capabilityType: CapabilityType;
     partners?: string[];
+    /** When false, the responsible partner cannot be changed (non-lead RU editing their own activity). Defaults to true. */
+    canReassignPartner?: boolean;
 }
 
 export const RESPONSIBILITY_TYPES = [
@@ -93,6 +95,7 @@ export class EditActivityModal {
 
     protected readonly responsibilityTypes = RESPONSIBILITY_TYPES;
     protected readonly partners = this.data.partners ?? [];
+    protected readonly canReassignPartner = this.data.canReassignPartner ?? true;
     protected readonly planStatuses = PLAN_STATUSES;
     protected readonly rsFeatureTypes = RS_FEATURE_TYPES;
     protected readonly capabilityType = this.data.capabilityType;
@@ -138,6 +141,9 @@ export class EditActivityModal {
         required(p.type, { message: $localize`:@@validation.required:Required` });
         required(p.id, { message: $localize`:@@validation.required:Required` });
         required(p.status, { message: $localize`:@@validation.required:Required` });
+        if (!this.canReassignPartner) {
+            disabled(p.id);
+        }
         if (this.data.capabilityType === 'path') {
             required(p.pathLength, { message: $localize`:@@validation.required:Required` });
             required(p.pathWeight, { message: $localize`:@@validation.required:Required` });
@@ -179,7 +185,7 @@ export class EditActivityModal {
 
     // ── Staff ─────────────────────────────────────────────────────────────────
     protected readonly staffRole = signal(
-        this.data.activity?.capability?.staffs?.[0]?.type ?? '',
+        this.data.activity?.capability?.staff?.type ?? '',
     );
 
     // ── Path ──────────────────────────────────────────────────────────────────

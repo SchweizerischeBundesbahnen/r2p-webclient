@@ -61,7 +61,6 @@ const TRAIN_DETAILS: Train = {
                 activities: [
                     {
                         id: 'a1-01',
-                        type: 'path.halt.11',
                         timings: [
                             {
                                 type: TimingType.Departure,
@@ -78,6 +77,7 @@ const TRAIN_DETAILS: Train = {
                             type: 'path',
                             path: {
                                 id: 'a1-01-002',
+                                activityType: 'path.halt.11',
                                 length: 1500,
                                 weight: 3500,
                                 maxSpeed: 250,
@@ -99,7 +99,6 @@ const TRAIN_DETAILS: Train = {
                 activities: [
                     {
                         id: 'a2-01',
-                        type: 'path.halt.11',
                         timings: [
                             {
                                 type: TimingType.Arrival,
@@ -122,6 +121,7 @@ const TRAIN_DETAILS: Train = {
                             capabilityFeatures: [],
                             path: {
                                 id: 'a2-01-001',
+                                activityType: 'path.halt.11',
                                 length: 1500,
                                 weight: 3500,
                                 maxSpeed: 250,
@@ -142,7 +142,6 @@ const TRAIN_DETAILS: Train = {
                 activities: [
                     {
                         id: 'a5-01',
-                        type: 'path.halt.11',
                         timings: [
                             {
                                 type: TimingType.Arrival,
@@ -160,6 +159,7 @@ const TRAIN_DETAILS: Train = {
                             capabilityFeatures: [],
                             path: {
                                 id: 'a5-01-001',
+                                activityType: 'path.halt.11',
                                 length: 1500,
                                 weight: 3500,
                                 maxSpeed: 250,

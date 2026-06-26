@@ -3,6 +3,7 @@ import { form, required } from '@angular/forms/signals';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { map, Observable, switchMap, tap } from 'rxjs';
 import { BackendApiService } from '../../core/api/backend-api.service';
+import { SettingsService } from '../../core/settings/settings.service';
 import { Branch, Train, TrainListElement } from '../../shared/models/api.models';
 import { assertIsoDate } from '../../shared/utils/date.utils';
 import { TrainFormModel } from '../../shared/components/train-details-form-card/train-details-form-card';
@@ -14,6 +15,7 @@ import { TrainFormModel } from '../../shared/components/train-details-form-card/
 export class EditTrainPageState {
     editTrainRunning = signal(false);
     readonly apiService = inject(BackendApiService);
+    private readonly settingsService = inject(SettingsService);
 
     model = signal<TrainFormModel>({
         trainNumber: '',
@@ -40,6 +42,17 @@ export class EditTrainPageState {
     });
 
     readonly partners = computed(() => this.trainListElement.value()?.partners ?? []);
+
+    readonly currentOrg = computed(() => this.settingsService.settings().organization);
+
+    /** Lead RU = owner of the train's main branch. Resolves false while loading (fail closed). */
+    readonly isLeadRu = computed(() => {
+        const org = this.currentOrg();
+        const main = (this.trainListElement.value()?.branches ?? []).find(
+            (b) => b.technical.mainBranch,
+        );
+        return !!org && main?.technical.owner === org;
+    });
 
     readonly branch = rxResource({
         params: () => {
