@@ -11,12 +11,13 @@ import { MatButton, MatAnchor } from '@angular/material/button';
 import { StickyEditBar } from '../../shared/components/sticky-edit-bar/sticky-edit-bar';
 import { TrainDetailsFormCard } from '../../shared/components/train-details-form-card/train-details-form-card';
 import { SettingsService } from '../../core/settings/settings.service';
+import { Breadcrumb, BreadcrumbItem } from '../../shared/components/breadcrumb/breadcrumb';
 
 @Component({
     selector: 'app-create-train-page',
     templateUrl: './create-train-page.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [RouterLink, JourneyRouteCard, Spinner, MatButton, MatAnchor, StickyEditBar, TrainDetailsFormCard],
+    imports: [RouterLink, JourneyRouteCard, Spinner, MatButton, MatAnchor, StickyEditBar, TrainDetailsFormCard, Breadcrumb],
     providers: [CreatePageState],
 })
 export class CreateTrainPage {
@@ -27,6 +28,10 @@ export class CreateTrainPage {
     private readonly settingsService = inject(SettingsService);
     protected readonly createTrainForm = this.state.createTrainForm;
     protected readonly hasTooFewStops = computed(() => (this.state.journey().journeylocations?.length ?? 0) < 2);
+    protected readonly breadcrumbs: BreadcrumbItem[] = [
+        { label: $localize`:@@common.breadcrumb.trafficOverview:Traffic overview`, link: '/traffic-overview' },
+        { label: $localize`:@@createTrain.title:Create new train` },
+    ];
     protected readonly ownOrganization = computed(() => this.settingsService.settings().organization);
 
     protected onJourneyChange(journey: Journey): void {

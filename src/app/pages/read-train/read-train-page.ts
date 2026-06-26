@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, computed, effect, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ReadTrainPageState } from './read-train-page.state';
 import { ViewJsonModal, ViewJsonDialogData } from './view-json-modal';
@@ -11,10 +11,11 @@ import { MatButton, MatAnchor } from '@angular/material/button';
 import { DetailGrid, DetailItem } from '../../shared/components/detail-grid/detail-grid';
 import { PartnerBadge } from '../../shared/components/partner-badge/partner-badge';
 import { AlertBanner } from '../../shared/components/alert-banner/alert-banner';
+import { Breadcrumb, BreadcrumbItem } from '../../shared/components/breadcrumb/breadcrumb';
 
 @Component({
     selector: 'app-read-train-page',
-    imports: [RouterLink, DatePipe, JourneyRouteCard, Spinner, MatButton, MatAnchor, DetailGrid, DetailItem, PartnerBadge, AlertBanner],
+    imports: [RouterLink, DatePipe, JourneyRouteCard, Spinner, MatButton, MatAnchor, DetailGrid, DetailItem, PartnerBadge, AlertBanner, Breadcrumb],
     providers: [ReadTrainPageState],
     templateUrl: './read-train-page.html',
     styleUrl: './read-train-page.scss',
@@ -26,6 +27,12 @@ export class ReadTrainPage {
     readonly branchId = input.required<string>();
     protected readonly isoDateToUtc = isoDateToUtc;
     private readonly dialog = inject(MatDialog);
+
+    protected readonly breadcrumbs = computed<BreadcrumbItem[]>(() => [
+        { label: $localize`:@@common.breadcrumb.trafficOverview:Traffic overview`, link: '/traffic-overview' },
+        { label: $localize`:@@common.breadcrumb.trafficView:Traffic view`, link: '/traffic-view/' + this.trainId() },
+        { label: $localize`:@@readTrain.breadcrumb.read:Read view` },
+    ]);
 
     private readonly updateState = effect(() => {
         this.state.trainId.set(this.trainId());

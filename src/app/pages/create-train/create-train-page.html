@@ -25,11 +25,7 @@
 </app-sticky-edit-bar>
 <div class="main-content">
     <div class="container">
-        <nav class="breadcrumb" aria-label="Breadcrumb">
-            <a [routerLink]="'/traffic-overview'" i18n="@@common.breadcrumb.trafficOverview">Traffic overview</a>
-            <span class="breadcrumb-sep" aria-hidden="true">›</span>
-            <span class="breadcrumb-current" aria-current="page" i18n="@@createTrain.title">Create new train</span>
-        </nav>
+        <app-breadcrumb [items]="breadcrumbs" />
 
         <div class="page-header">
             <div>

@@ -5,11 +5,7 @@
         @let trainHeaderInfo = getTrainHeaderInfo(trainData);
         @let variants = getVariantInfo(trainData);
 
-        <nav class="breadcrumb" aria-label="Breadcrumb">
-            <a [routerLink]="'/traffic-overview'" i18n="@@common.breadcrumb.trafficOverview">Traffic overview</a>
-            <span class="breadcrumb-sep" aria-hidden="true">›</span>
-            <span class="breadcrumb-current" aria-current="page">{{ trainHeaderInfo.trainNumber }}</span>
-        </nav>
+        <app-breadcrumb [items]="breadcrumbs()" />
 
         <div class="card" id="train-header-card">
             <div class="card-body">

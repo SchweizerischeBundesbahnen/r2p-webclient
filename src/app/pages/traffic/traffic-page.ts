@@ -29,10 +29,11 @@ import {
     getLatestJourneyLocationArrival,
 } from '../../shared/utils/journeyLocation.utils';
 import { OverallStatusComponent } from '../../shared/components/overall-status/overall-status.component';
+import { Breadcrumb, BreadcrumbItem } from '../../shared/components/breadcrumb/breadcrumb';
 
 @Component({
     selector: 'app-traffic-page',
-    imports: [RouterLink, DatePipe, JourneyRouteCard, BranchStatusBadgeComponent, Spinner, MatButton, MatAnchor, MatTooltip, PartnerBadge, AlertBanner, OverallStatusComponent],
+    imports: [RouterLink, DatePipe, JourneyRouteCard, BranchStatusBadgeComponent, Spinner, MatButton, MatAnchor, MatTooltip, PartnerBadge, AlertBanner, OverallStatusComponent, Breadcrumb],
     providers: [TrafficPageState],
     templateUrl: './traffic-page.html',
     styleUrl: './traffic-page.scss',
@@ -69,6 +70,11 @@ export class TrafficPage {
 
     protected readonly trainMainBranch = this.trafficPageStateService.trainMainBranch;
     protected readonly archiveExpanded = signal(false);
+
+    protected readonly breadcrumbs = computed<BreadcrumbItem[]>(() => [
+        { label: $localize`:@@common.breadcrumb.trafficOverview:Traffic overview`, link: '/traffic-overview' },
+        { label: this.getTrainHeaderInfo(this.trainMainBranch.value()).trainNumber },
+    ]);
 
     protected toggleArchive(): void {
         this.archiveExpanded.update((v) => !v);
