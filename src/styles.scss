@@ -113,6 +113,10 @@ html {
     --tl-yellow: #F9A825;
     --tl-red: #C62828;
 
+    /* Feedback toast (solid fills, white text — kept AA-accessible) */
+    --toast-error-bg: #B91C1C;
+    --toast-success-bg: #15803D;
+
     /* Spacing */
     --spacing-xs: 0.25rem;
     --spacing-sm: 0.5rem;
