@@ -125,7 +125,7 @@ import { PartnerBadge } from '../shared/components/partner-badge/partner-badge';
         <nav class="top-nav">
             <a class="top-nav-brand" routerLink="/traffic-overview">
                 <img class="top-nav-logo" src="r2p-mark.svg" alt="R²P" />
-                <span class="wordmark" i18n="@@layout.title">WebClient</span>
+                <span class="wordmark" i18n="@@layout.title">ServiceManager</span>
                 <span class="version-tag">v{{ appVersion }}</span>
             </a>
             <div class="top-nav-right">
