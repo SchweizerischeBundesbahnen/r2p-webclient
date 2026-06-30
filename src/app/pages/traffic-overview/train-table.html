@@ -2,7 +2,7 @@
     <app-spinner />
 } @else if (state.trainListResource.error()) {
     <app-alert-banner type="error" i18n="@@trafficOverview.loadError">
-        ⚠️ Failed to load trains. Please check your server URL in the settings.
+        Failed to load trains. Please check your server URL in the settings.
     </app-alert-banner>
 } @else {
     @let filteredTrains = tableService.applyFilterOn(state.trainListResource.value());

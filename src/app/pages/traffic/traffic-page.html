@@ -211,7 +211,7 @@
         </div>
         } @else if (trainMainBranch.error()) {
             <app-alert-banner type="error" i18n="@@common.train.loadError">
-                ⚠️ Failed to load train data. Please go back and try again.
+                Failed to load train data. Please go back and try again.
             </app-alert-banner>
         } @else if (trainMainBranch.isLoading()) {
             <app-spinner />
