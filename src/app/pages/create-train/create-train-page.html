@@ -1,5 +1,5 @@
 ﻿<app-sticky-edit-bar
-    title="Create New Train"
+    title="Create new train"
     i18n-title="@@createTrain.title"
     [isDirty]="createTrainForm().dirty()"
 >
@@ -20,16 +20,16 @@
         @if (state.createTrainRunning()) {
             <app-spinner variant="inline" />
         }
-        <ng-container i18n="@@common.train.save">💾 Save Train</ng-container>
+        <ng-container i18n="@@common.train.save">Save train</ng-container>
     </button>
 </app-sticky-edit-bar>
 <div class="main-content">
     <div class="container">
-        <a [routerLink]="'/traffic-overview'" class="back-link" i18n="@@common.breadcrumb.trafficOverview">Traffic Overview</a>
+        <app-breadcrumb [items]="breadcrumbs" />
 
         <div class="page-header">
             <div>
-                <h1 class="page-title" i18n="@@createTrain.title">Create New Train</h1>
+                <h1 class="page-title" i18n="@@createTrain.title">Create new train</h1>
                 <p class="page-subtitle" i18n="@@createTrain.subtitle">Define the train details and journey route</p>
             </div>
         </div>

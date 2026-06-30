@@ -1,22 +1,20 @@
 <!-- ── Main Content ────────────────────────────────────────────── -->
 <div class="main-content">
     <div class="container">
-        <a [routerLink]="'/traffic-view/' + trainId()" class="back-link" id="back-link"
-            i18n="@@common.breadcrumb.trafficView">Traffic View</a
-        >
+        <app-breadcrumb [items]="breadcrumbs()" />
 
         @if (state.trainAndBranch.isLoading()) {
             <app-spinner />
         } @else if (state.trainAndBranch.error()) {
             <app-alert-banner type="error" i18n="@@common.train.loadError">
-                ⚠️ Failed to load train data. Please go back and try again.
+                Failed to load train data. Please go back and try again.
             </app-alert-banner>
         } @else {
 
         <!-- Page Header -->
         <div class="page-header">
             <div>
-                <h1 class="page-title" id="page-title" i18n="@@readTrain.breadcrumb.read">Read View</h1>
+                <h1 class="page-title" id="page-title" i18n="@@readTrain.breadcrumb.read">Read view</h1>
                 <p class="page-subtitle" id="page-subtitle">
                     Variant: {{ state.trainAndBranch.value()?.branch?.branchName }}
                 </p>
@@ -28,14 +26,14 @@
 
         <!-- Read-only notice -->
         <app-alert-banner type="info" i18n="@@readTrain.readonlyNotice">
-            👁️ This is a <strong>read-only view</strong> of the variant. No changes can be
+            This is a <strong>read-only view</strong> of the variant. No changes can be
             made here.
         </app-alert-banner>
 
         <!-- ── Train Details Card ────────────────────────────────── -->
         <div class="card">
             <div class="card-header">
-                <span class="card-title" i18n="@@readTrain.section.trainDetails">📋 Train Details</span>
+                <span class="card-title" i18n="@@readTrain.section.trainDetails">Train details</span>
             </div>
             <div class="card-body">
                 @let branch = state.trainAndBranch.value()?.branch;
@@ -81,7 +79,7 @@
                 [routerLink]="'/traffic-view/' + trainId()"
                 mat-button
                 id="back-btn"
-                i18n="@@readTrain.backToTraffic">← Back to Traffic View</a
+                i18n="@@readTrain.backToTraffic">← Back to traffic view</a
             >
         </div>
         }

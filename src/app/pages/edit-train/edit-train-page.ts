@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, computed, effect, inject, input } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { EditTrainPageState } from './edit-train-page.state';
 import { Branch, Journey } from '../../shared/models/api.models';
@@ -11,10 +11,11 @@ import { MatButton, MatAnchor } from '@angular/material/button';
 import { StickyEditBar } from '../../shared/components/sticky-edit-bar/sticky-edit-bar';
 import { AlertBanner } from '../../shared/components/alert-banner/alert-banner';
 import { TrainDetailsFormCard } from '../../shared/components/train-details-form-card/train-details-form-card';
+import { Breadcrumb, BreadcrumbItem } from '../../shared/components/breadcrumb/breadcrumb';
 
 @Component({
     selector: 'app-edit-train-page',
-    imports: [RouterLink, JourneyRouteCard, Spinner, MatButton, MatAnchor, StickyEditBar, AlertBanner, TrainDetailsFormCard],
+    imports: [RouterLink, JourneyRouteCard, Spinner, MatButton, MatAnchor, StickyEditBar, AlertBanner, TrainDetailsFormCard, Breadcrumb],
     providers: [EditTrainPageState],
     templateUrl: './edit-train-page.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,6 +28,12 @@ export class EditTrainPage {
     private notifications = inject(ErrorNotificationService);
     protected state = inject(EditTrainPageState);
     protected editTrainForm = this.state.editTrainForm;
+
+    protected readonly breadcrumbs = computed<BreadcrumbItem[]>(() => [
+        { label: $localize`:@@common.breadcrumb.trafficOverview:Traffic overview`, link: '/traffic-overview' },
+        { label: $localize`:@@common.breadcrumb.trafficView:Traffic view`, link: '/traffic-view/' + this.trainId() },
+        { label: $localize`:@@editTrain.breadcrumb:Edit` },
+    ]);
 
     private readonly updateState = effect(() => {
         this.state.trainId.set(this.trainId());

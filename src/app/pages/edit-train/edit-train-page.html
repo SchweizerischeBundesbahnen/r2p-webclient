@@ -6,7 +6,7 @@
     </div>
 } @else if (state.branch.error()) {
     <app-alert-banner type="error" i18n="@@common.train.loadError">
-        ⚠️ Failed to load train data. Please go back and try again.
+        Failed to load train data. Please go back and try again.
     </app-alert-banner>
 } @else {
     @let branchInfos = getBranchInfos(state.branch.value()?.branch);
@@ -31,20 +31,14 @@
             @if (state.editTrainRunning()) {
                 <app-spinner variant="inline" />
             }
-            <ng-container i18n="@@common.train.save">💾 Save Train</ng-container>
+            <ng-container i18n="@@common.train.save">Save train</ng-container>
         </button>
     </app-sticky-edit-bar>
 
     <!-- ── Main Content ────────────────────────────────────────────── -->
     <div class="main-content">
         <div class="container">
-            <a
-                [routerLink]="'/traffic-view/' + this.trainId()"
-                class="back-link"
-                id="back-link"
-                i18n="@@common.breadcrumb.trafficView"
-                >Traffic View</a
-            >
+            <app-breadcrumb [items]="breadcrumbs()" />
 
             <!-- Page Header with variant info -->
             <div class="page-header">
@@ -60,7 +54,7 @@
 
             <!-- Variant context info -->
             <app-alert-banner type="info" id="branch-alert">
-                <ng-container i18n="@@editTrain.editingInfo">✏️ You are editing variant</ng-container>
+                <ng-container i18n="@@editTrain.editingInfo">You are editing variant</ng-container>
                 <strong id="branch-name-display"> {{ branchInfos.branchName }}</strong
                 >. <ng-container i18n="@@editTrain.editingInfoSub">Changes will be saved as a new version of this variant.</ng-container>
             </app-alert-banner>

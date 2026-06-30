@@ -229,12 +229,12 @@ describe('TrafficPage – date formatting', () => {
     describe('operationalDay (mediumDate)', () => {
         it('formats correctly for en-US', () => {
             const el = createComponent('en-US', TRAIN_WITH_DETAILS);
-            expect(el.querySelector('#detail-op-day')!.textContent!.trim()).toBe('May 26, 2026');
+            expect(el.querySelector('#train-name')!.textContent).toContain('May 26, 2026');
         });
 
         it('formats correctly for de-CH', () => {
             const el = createComponent('de-CH', TRAIN_WITH_DETAILS);
-            expect(el.querySelector('#detail-op-day')!.textContent!.trim()).toBe('26.05.2026');
+            expect(el.querySelector('#train-name')!.textContent).toContain('26.05.2026');
         });
 
         it('shows no train header card when no data is loaded', () => {
@@ -400,7 +400,7 @@ describe('TrafficPage – Share Train button visibility', () => {
 
     function findShareButton(el: HTMLElement): HTMLButtonElement | undefined {
         return Array.from(el.querySelectorAll<HTMLButtonElement>('.btn-group button')).find((b) =>
-            b.textContent?.includes('Share Train'),
+            b.textContent?.includes('Share train'),
         );
     }
 
@@ -438,7 +438,7 @@ describe('TrafficPage – Delete Train button visibility', () => {
 
     function findDeleteButton(el: HTMLElement): HTMLButtonElement | undefined {
         return Array.from(el.querySelectorAll<HTMLButtonElement>('.btn-group button')).find((b) =>
-            b.textContent?.includes('Delete Train'),
+            b.textContent?.includes('Delete train'),
         );
     }
 

@@ -9,24 +9,75 @@
 @include mat.core();
 
 html {
+    /* Reserve the scrollbar gutter so transient overlays (e.g. the status tooltip
+       extending the page) don't toggle a scrollbar and shift the layout. */
+    scrollbar-gutter: stable;
+
     @include mat.theme(theme.$r2p-theme);
+
+    /* ------------------------------------------------------------------
+       Pin Angular Material M3 system colours to the R²P brand palette.
+       An orange-seeded M3 palette generates WARM neutrals (brownish text)
+       and a dull primary tone; these overrides force the exact brand
+       values so text reads navy and primary surfaces use #F47B20.
+       (Unknown token names are simply ignored, so this is safe.)
+       ------------------------------------------------------------------ */
+    --mat-sys-primary: #F47B20;
+    --mat-sys-on-primary: #FFFFFF;
+    --mat-sys-primary-container: #FCE3D0;
+    --mat-sys-on-primary-container: #5A2A00;
+
+    --mat-sys-secondary: #3D6880;
+    --mat-sys-on-secondary: #FFFFFF;
+    --mat-sys-secondary-container: #E2E8F0;
+    --mat-sys-on-secondary-container: #0D1B2A;
+
+    --mat-sys-tertiary: #0D1B2A;
+    --mat-sys-on-tertiary: #FFFFFF;
+
+    --mat-sys-background: #F4F6F8;
+    --mat-sys-on-background: #0D1B2A;
+    --mat-sys-surface: #FFFFFF;
+    --mat-sys-surface-dim: #E9EDF1;
+    --mat-sys-surface-bright: #FFFFFF;
+    --mat-sys-surface-container-lowest: #FFFFFF;
+    --mat-sys-surface-container-low: #FAFBFC;
+    --mat-sys-surface-container: #F4F6F8;
+    --mat-sys-surface-container-high: #EEF1F4;
+    --mat-sys-surface-container-highest: #E9EDF1;
+    --mat-sys-surface-variant: #E2E8F0;
+
+    --mat-sys-on-surface: #0D1B2A;
+    --mat-sys-on-surface-variant: #3D6880;
+    --mat-sys-outline: #8AAFC8;
+    --mat-sys-outline-variant: #E2E8F0;
 }
 
 /* ========================================
    CSS Variables
    ======================================== */
 :root {
-    --primary-color: #1565C0;
-    --primary-dark: #0A3D62;
-    --secondary-color: #607D8B;
-    --accent-color: #1565C0;
-    --background-color: #F0F4F8;
+    /* R²P brand palette (Brand Guidelines v1.0, §3) — semantic aliases */
+    --navy: #0D1B2A;
+    --orange: #F47B20;
+    --orange-hover: #E06D14;
+    --steel: #8AAFC8;
+    --teal: #3D6880;
+    --light-grey: #F4F6F8;
+
+    /* Legacy role names → mapped onto the brand palette (used across components) */
+    --primary-color: #F47B20;   /* accent / CTA (was #1565C0) */
+    --primary-dark: #0D1B2A;    /* navy chrome (was #0A3D62) */
+    --secondary-color: #3D6880; /* deep teal (was #607D8B) */
+    --accent-color: #F47B20;
+    --background-color: #F4F6F8; /* light grey page bg */
     --card-background: #ffffff;
-    --border-color: #CFD8DC;
-    --border-subtle: #ECEFF1;
-    --text-primary: #1A2B3C;
-    --text-secondary: #607D8B;
-    --text-muted: #90A4AE;
+    --text-on-dark: #ffffff;     /* white foreground text on navy/orange/dark surfaces */
+    --border-color: #CCCCCC;     /* table/row borders (brand §8.3) */
+    --border-subtle: #E2E8F0;    /* card/input/hairline borders */
+    --text-primary: #0D1B2A;     /* navy */
+    --text-secondary: #3D6880;   /* deep teal */
+    --text-muted: var(--teal);   /* accessible muted text (use --steel for decorative only) */
     --text-warn: #BF360C;
 
     /* Partner colors */
@@ -61,6 +112,10 @@ html {
     --tl-green: #388E3C;
     --tl-yellow: #F9A825;
     --tl-red: #C62828;
+
+    /* Feedback toast (solid fills, white text — kept AA-accessible) */
+    --toast-error-bg: #B91C1C;
+    --toast-success-bg: #15803D;
 
     /* Spacing */
     --spacing-xs: 0.25rem;
@@ -124,6 +179,64 @@ body {
     font-size: 0.9rem;
     color: var(--text-muted);
     margin-top: var(--spacing-xs);
+}
+
+/* ========================================
+   Eyebrow label + header info band
+   ======================================== */
+.eyebrow {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--teal);
+    margin-bottom: 4px;
+}
+
+.header-divider {
+    height: 1px;
+    background-color: var(--border-subtle);
+    margin: var(--spacing-lg) 0;
+}
+
+.info-band {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xl);
+    align-items: flex-start;
+}
+.info-item { min-width: 120px; }
+.info-item--route { flex: 1 1 280px; min-width: 240px; }
+.info-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--teal);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.info-value {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+.info-route {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.info-route .route-arrow { color: var(--steel); margin: 0 4px; font-weight: 400; }
+.info-route-times {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 4px;
 }
 
 /* ========================================
@@ -257,7 +370,7 @@ body {
     height: 14px;
     border-radius: 50%;
     background-color: var(--text-muted);
-    color: white;
+    color: var(--text-on-dark);
     font-size: 0.6rem;
     font-weight: 700;
     cursor: default;
@@ -271,7 +384,7 @@ body {
 
 thead .tooltip-anchor {
     background-color: var(--text-muted);
-    color: white;
+    color: var(--text-on-dark);
 }
 
 .tooltip-box {
@@ -281,13 +394,13 @@ thead .tooltip-anchor {
     left: 50%;
     transform: translateX(-50%);
     background-color: var(--text-primary);
-    color: white;
+    color: var(--text-on-dark);
     font-size: 0.75rem;
     font-weight: 400;
     line-height: 1.5;
     padding: 8px 12px;
     border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    border: 1px solid var(--border-color);
     z-index: 500;
     pointer-events: none;
     text-transform: none;

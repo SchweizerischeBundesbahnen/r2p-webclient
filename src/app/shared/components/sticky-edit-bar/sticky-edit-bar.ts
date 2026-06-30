@@ -29,12 +29,10 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
             z-index: 99;
             background: var(--card-background);
             border-bottom: 2px solid var(--border-color);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-            transition: border-color 0.3s, box-shadow 0.3s;
+            transition: border-color 0.3s;
         }
         .sticky-edit-bar.dirty {
             border-bottom-color: var(--tl-yellow);
-            box-shadow: 0 2px 10px rgba(214,158,46,0.28);
         }
         .sticky-edit-bar-inner {
             max-width: 1400px;

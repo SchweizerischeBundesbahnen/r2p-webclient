@@ -224,5 +224,36 @@ describe('TrafficOverviewTableFilterService', () => {
             expect(result.map((t) => t.trainNumber)).toEqual(['S 2050', 'RE 3000']);
         });
     });
+
+    describe('activeFilterCount', () => {
+        it('is 0 when no filter is set', () => {
+            const service = createService();
+            expect(service.activeFilterCount()).toBe(0);
+        });
+
+        it('counts train number, op-day from and op-day to independently', () => {
+            const service = createService();
+            service.trainNumber.set('IC');
+            expect(service.activeFilterCount()).toBe(1);
+            service.operationalDayFrom.set('2026-05-01');
+            service.operationalDayTo.set('2026-05-31');
+            expect(service.activeFilterCount()).toBe(3);
+        });
+
+        it('ignores whitespace-only and empty values', () => {
+            const service = createService();
+            service.trainNumber.set('   ');
+            service.operationalDayFrom.set('');
+            expect(service.activeFilterCount()).toBe(0);
+        });
+
+        it('drops back to 0 after clearFilters', () => {
+            const service = createService();
+            service.trainNumber.set('IC');
+            service.operationalDayFrom.set('2026-05-01');
+            service.clearFilters();
+            expect(service.activeFilterCount()).toBe(0);
+        });
+    });
 });
 

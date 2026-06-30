@@ -1,7 +1,8 @@
-﻿import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { version } from '../../../package.json';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
 import { SettingsModal } from '../core/settings/settings-modal';
 import { LocaleService } from '../core/locale/locale.service';
 import { ErrorToastComponent } from '../core/error/error-toast';
@@ -12,45 +13,63 @@ import { PartnerBadge } from '../shared/components/partner-badge/partner-badge';
 @Component({
     selector: 'app-layout',
     standalone: true,
-    imports: [RouterOutlet, RouterLink, ErrorToastComponent, PrototypeBannerComponent, PartnerBadge],
+    imports: [RouterOutlet, RouterLink, MatIcon, ErrorToastComponent, PrototypeBannerComponent, PartnerBadge],
     changeDetection: ChangeDetectionStrategy.OnPush,
     styles: `
         .top-nav {
-            background-color: var(--primary-dark);
-            color: white;
+            background-color: var(--card-background);
+            color: var(--navy);
             padding: 0 var(--spacing-xl);
             display: flex;
             align-items: center;
             justify-content: space-between;
             height: 64px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            border-bottom: 1px solid var(--border-subtle);
             position: sticky;
             top: 0;
             z-index: 100;
+        }
+        /* 2px orange brand hairline beneath the bar (Brand Guidelines §8.1) */
+        .top-nav::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -2px;
+            height: 2px;
+            background-color: var(--orange);
         }
         .top-nav-brand {
             display: flex;
             align-items: center;
             gap: var(--spacing-sm);
+            text-decoration: none;
+            color: var(--navy);
+        }
+        .top-nav-logo {
+            width: 34px;
+            height: 34px;
+            display: block;
+            border-radius: 8px;
+        }
+        .wordmark {
             font-weight: 700;
             font-size: 1.2rem;
-            text-decoration: none;
-            color: white;
+            color: var(--navy);
+            letter-spacing: -0.01em;
         }
-        .top-nav-brand .logo { font-size: 1.5rem; }
         .top-nav-partner {
             display: flex;
             align-items: center;
             gap: var(--spacing-sm);
             font-size: 0.875rem;
         }
-        .top-nav-partner-label { opacity: 0.75; }
+        .top-nav-partner-label { color: var(--teal); }
         .top-nav-settings-btn {
             background: none;
             border: none;
             cursor: pointer;
-            color: rgba(255,255,255,0.85);
-            font-size: 1.25rem;
+            color: var(--teal);
             line-height: 1;
             padding: 6px 8px;
             border-radius: 6px;
@@ -59,15 +78,21 @@ import { PartnerBadge } from '../shared/components/partner-badge/partner-badge';
             align-items: center;
             justify-content: center;
         }
-        .top-nav-settings-btn:hover { background-color: rgba(255,255,255,0.15); color: white; }
+        .top-nav-settings-btn mat-icon {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+        }
+        .top-nav-settings-btn:hover { background-color: var(--light-grey); color: var(--navy); }
         .top-nav-right {
             display: flex;
             align-items: center;
             gap: var(--spacing-xl);
         }
         .version-tag {
-            background-color: rgba(255,255,255,0.15);
-            color: rgba(255,255,255,0.9);
+            background-color: var(--light-grey);
+            color: var(--teal);
+            border: 1px solid var(--border-subtle);
             padding: 2px 8px;
             border-radius: 10px;
             font-size: 0.7rem;
@@ -79,31 +104,28 @@ import { PartnerBadge } from '../shared/components/partner-badge/partner-badge';
             display: flex;
             align-items: center;
             gap: 2px;
-            background-color: rgba(255,255,255,0.1);
-            border-radius: 6px;
-            padding: 2px;
         }
         .lang-btn {
             background: none;
             border: none;
-            color: rgba(255,255,255,0.7);
+            color: var(--teal);
             font-size: 0.75rem;
             font-weight: 600;
-            padding: 3px 8px;
-            border-radius: 4px;
+            padding: 4px 8px;
+            border-bottom: 2px solid transparent;
             cursor: pointer;
             letter-spacing: 0.04em;
-            transition: background-color 0.15s, color 0.15s;
+            transition: color 0.15s, border-color 0.15s;
         }
-        .lang-btn:hover  { background-color: rgba(255,255,255,0.15); color: white; }
-        .lang-btn.active { background-color: rgba(255,255,255,0.25); color: white; }
+        .lang-btn:hover  { color: var(--navy); }
+        .lang-btn.active { color: var(--navy); border-bottom-color: var(--orange); }
     `,
     template: `
         <app-prototype-banner />
         <nav class="top-nav">
             <a class="top-nav-brand" routerLink="/traffic-overview">
-                <span class="logo">🚂</span>
-                <span i18n="@@layout.title">R2P Web Client</span>
+                <img class="top-nav-logo" src="r2p-mark.svg" alt="R²P" />
+                <span class="wordmark" i18n="@@layout.title">ServiceManager</span>
                 <span class="version-tag">v{{ appVersion }}</span>
             </a>
             <div class="top-nav-right">
@@ -115,8 +137,8 @@ import { PartnerBadge } from '../shared/components/partner-badge/partner-badge';
                     <button class="lang-btn" [class.active]="localeService.currentLocale() === 'en-US'" (click)="setLocale('en-US')">EN</button>
                     <button class="lang-btn" [class.active]="localeService.currentLocale() === 'de-CH'" (click)="setLocale('de-CH')">DE</button>
                 </div>
-                <button class="top-nav-settings-btn" (click)="openSettingsModal()" i18n-title="@@layout.settings.title" title="Settings">
-                    ⚙️
+                <button class="top-nav-settings-btn" (click)="openSettingsModal()" i18n-title="@@layout.settings.title" title="Settings" i18n-aria-label="@@layout.settings.title" aria-label="Settings">
+                    <mat-icon>settings</mat-icon>
                 </button>
             </div>
         </nav>

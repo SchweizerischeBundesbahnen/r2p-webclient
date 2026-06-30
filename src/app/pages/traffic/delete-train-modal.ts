@@ -45,7 +45,7 @@ export interface DeleteTrainDialogData {
         <mat-dialog-content>
             <p class="dialog-warning">
                 <ng-container i18n="@@deleteTrainModal.warning">
-                    ⚠ Deleting train <strong>{{ data.trainNumber }}</strong> will permanently remove
+                    Deleting train <strong>{{ data.trainNumber }}</strong> will permanently remove
                     the main branch and all its variants. This action cannot be undone.
                 </ng-container>
             </p>

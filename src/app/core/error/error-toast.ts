@@ -41,14 +41,14 @@ import { ErrorNotificationService } from './error-notification.service';
             gap: 0.75rem;
             padding: 0.875rem 1rem;
             border-radius: 8px;
-            background: #b91c1c;
-            color: #fff;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+            background: var(--toast-error-bg);
+            color: var(--text-on-dark);
+            border: 1px solid var(--border-color);
             animation: slideIn 0.2s ease-out;
         }
 
         .error-toast--success {
-            background: #15803d;
+            background: var(--toast-success-bg);
         }
 
         @keyframes slideIn {
@@ -72,7 +72,7 @@ import { ErrorNotificationService } from './error-notification.service';
             flex-shrink: 0;
             background: transparent;
             border: none;
-            color: #fff;
+            color: var(--text-on-dark);
             cursor: pointer;
             font-size: 1rem;
             line-height: 1;

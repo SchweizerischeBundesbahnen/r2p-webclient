@@ -1,5 +1,9 @@
 # Agent Instructions
 
+## Design & Brand
+- Before adding or changing any UI, styling, chrome, or accent, read `docs/design-reference.md`. It is the authoritative brand + interaction contract (vendor-neutral navy + signal-orange + white, flat/no-shadows, the hard colour rules, component and interaction patterns). It must be followed for every UI extension.
+- Implemented design tokens are CSS variables in `src/styles.scss` (`:root`) and the Material M3 theme in `src/styles/` — use `var(--navy)`, `var(--orange)`, etc., never hard-coded hex.
+
 ## Ready to commit
 - If the user asks if this is ready to commit, please execute the tests , the lint and the translation check. Fix any issues (also preexisting ones) and create a brief git-commit-message.txt file that can be taken as git commit message. Base the file on all work that has been done during the session but be brief and don't mention obvious details e.g added translation keys. Also include the most important decisions or design choices especially new concepts
 
