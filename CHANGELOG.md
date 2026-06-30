@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.0.19](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.18...r2p-webclient-v0.0.19) (2026-06-30)
+
+
+### Features
+
+* rename web client to R²P ServiceManager and add design reference ([4aa79d0](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/4aa79d02c3a2e7bddf57221c4a4ebe6a45f161cd))
+
+
+### Bug Fixes
+
+* **error-toast:** tokenize colours and drop shadow for flat brand ([a02a27b](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/a02a27b49f376fa96ecbe49831bd655c28002514))
+* **ui:** address review — a11y labels and tokenized colours ([37b3ff0](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/37b3ff07238ac3ec651649c180e106b0359786f2))
+* **ui:** drop decorative emoji and Angular favicon per review ([a39da0c](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/a39da0cd81d884381ca4b079b4a8ca67ac57a850))
+
+
+### Miscellaneous Chores
+
+* remove design source assets (live copies live in public/) ([0e1d8fa](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/0e1d8faa622c96e89cc7ccc087964a3c06214c30))
+* remove unused public/r2p-logo.svg ([f8bdf05](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/f8bdf0540dcfd65b65c94c880ac057fd7eb0b975))
+
+
+### Code Refactoring
+
+* **breadcrumb:** colocate styles in component ([a8d8488](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/a8d8488f573033d949621b93c14cc96821cff053))
+* **breadcrumb:** extract reusable Breadcrumb component ([b13d59e](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/b13d59e4e6426a61b8a0b10199549e3089b8fc47))
+
 ## [0.0.18](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.17...r2p-webclient-v0.0.18) (2026-06-24)
 
 
