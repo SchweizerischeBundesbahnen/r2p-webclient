@@ -35,7 +35,7 @@
         "@angular/cli": "^21.2.12",
         "@angular/compiler-cli": "^21.2.14",
         "@angular/localize": "^21.2.14",
-        "@commitlint/cli": "^21.1.0",
+        "@commitlint/cli": "^21.2.1",
         "@commitlint/config-conventional": "^21.0.2",
         "@eslint/js": "^10.0.1",
         "@vitest/coverage-v8": "^4.1.9",
