@@ -12,8 +12,10 @@
 - Always use `git --no-pager` to prevent interactive pager output,
   e.g. `git --no-pager diff --name-only`, `git --no-pager log --oneline -10`
 
-## Angular 21
-- Be aware that you have limited knowledge about Angular 21. Use the docs/forms-reference.md, docs/signal-reference.md and docs/testing-reference.md to get up to date information when working with signals, forms or testing.
+## Angular 22
+- Be aware that you have limited knowledge about Angular 22. Use the docs/forms-reference.md, docs/signal-reference.md and docs/testing-reference.md (written for v21, still valid) to get up to date information when working with signals, forms or testing.
+- The app is zoneless and every component is OnPush (the v22 default) — no `changeDetection` property is set anywhere; template-bound state must be signal-based.
+- Requires Node `^22.22.3 || ^24.15.0 || >=26` (Angular 22 CLI) and TypeScript 6.
 - Avoid importing Modules, import the standalone components instead (e.g. Angular Material provides standalone components)
 
 ## i18n

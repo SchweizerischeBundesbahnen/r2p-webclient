@@ -17,7 +17,7 @@
 
 **R²P ServiceManager** is the operational surface of **R²P (RU·RU·Partner) — Digital Railway
 Communication**: a neutral platform for structured communication between railway undertakings
-(EVU). It is a **desktop browser** app built on **Angular 21 + Angular Material 21 (M3, light
+(EVU). It is a **desktop browser** app built on **Angular 22 + Angular Material 22 (M3, light
 theme)**, Roboto, signals-first standalone components.
 
 **The defining constraint — vendor neutrality.** The app serves *all* EVU equally and must
