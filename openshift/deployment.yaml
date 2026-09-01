@@ -10,7 +10,7 @@ spec:
     - name: latest
       from:
         kind: DockerImage
-        name: ghcr-private.docker.bin.sbb.ch/schweizerischebundesbahnen/r2p-webclient:latest
+        name: ghcr.io/schweizerischebundesbahnen/r2p-webclient:latest
       importPolicy:
         scheduled: true # by default every 15 minutes clusterwide
 ---
@@ -45,7 +45,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: r2p-webclient
-          image: ghcr-private.docker.bin.sbb.ch/schweizerischebundesbahnen/r2p-webclient:latest
+          image: ghcr.io/schweizerischebundesbahnen/r2p-webclient:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
