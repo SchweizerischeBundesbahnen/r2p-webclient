@@ -1,79 +1,80 @@
-# Contributing
+# Contributing to R2P
 
-Thank you for contributing to {{PROJECT_NAME}}.
+Welcome to R2P. All contributions, bug reports, documentation improvements, ideas, and questions are welcome.
 
-This document describes how to propose changes, report issues, and work with the maintainers. Replace any remaining `{{TOKEN_NAME}}` placeholders before making a repository public.
+## Primary contact
 
-## Code of Conduct
+For now, please contact the single responsible address for R2P:
 
-Participation in this repository is governed by the [Code of Conduct](CODE_OF_CONDUCT.md).
+- <mailto:r2p@rail.ch>
 
-## Before You Start
+This is the central point for questions, contribution coordination, issue triage, and launch planning.
 
-- Read the [README.md](README.md) for project setup, support channels, and scope.
-- Review the [CODING_STANDARDS.md](CODING_STANDARDS.md) file before submitting code changes.
-- If the repository contains architecture or design documentation, read that before proposing larger changes.
+## Projects
 
-## Questions and Support
+R2P is currently organized around two GitHub projects that will be launched in the next weeks:
 
-- Use the support channel documented in [README.md](README.md).
-- Use GitHub Discussions if the repository has Discussions enabled.
-- Do not use public issues for private security reports. Follow the repository security reporting instructions.
+1. `r2p-server` - the backend service for R2P.
+2. `r2p-webclient` - the web client for R2P.
 
-## Reporting Bugs
+The repositories are being prepared for launch. Until they are published, use the contact email for coordination and planning. Once the repos are available, open issues and pull requests in the appropriate project.
 
-When reporting a bug, include the following:
+## What to expect
 
-- a concise summary of the problem
-- exact steps to reproduce it
-- expected behavior and actual behavior
-- environment details such as OS, runtime, browser, and version
-- logs, screenshots, or a minimal reproduction when available
+R2P is under active development. We aim for a clear review process and coordinated launch.
+If you are unsure where to contribute or how to start, contact <mailto:r2p@rail.ch> and we will guide you.
 
-## Requesting Features
+We want contributions to be:
 
-- Explain the problem you want to solve, not only the proposed solution.
-- For large changes, open an issue or discussion before implementing code.
-- For small and well-scoped improvements, a pull request may be acceptable directly.
+- useful and focused on the project goals,
+- clearly described with the problem and the proposed solution,
+- accompanied by tests or examples when relevant,
+- reviewed with respect and constructive feedback.
 
-## Pull Request Expectations
+## AI-assisted contributions
 
-- Keep pull requests focused and easy to review.
-- Add or update tests when the change affects behavior.
-- Update documentation when setup, behavior, or public APIs change.
-- Call out breaking changes explicitly.
-- Make sure all relevant checks pass before requesting review.
+We welcome contributions developed with AI assistance. To ensure quality and maintain community trust, AI-assisted work must be:
 
-## Commit Messages
+- clearly declared as such in the pull request description,
+- thoroughly tested by the contributor with test results provided,
+- verified to include both automated and manual testing where appropriate,
+- separated into distinct commits for implementation and testing phases,
+- reviewed by maintainers with the understanding that AI-generated code requires careful validation.
 
-This template recommends [Conventional Commits](https://www.conventionalcommits.org/). If the repository uses automated release notes, follow the configured convention consistently.
+## Contribution process
 
-## Review Process
+Before opening a pull request, verify whether the change belongs to `r2p-server` or `r2p-webclient`.
 
-- Maintainers may request changes, clarification, tests, or documentation updates before merge.
-- Approval does not guarantee merge if new risks are discovered later in review.
-- Rebase or merge from the default branch when requested by maintainers.
+Large or architectural changes should be discussed first through the central contact email at <mailto:r2p@rail.ch> or by opening an issue.
 
-## Translations (i18n)
+Contributions follow the code contribution process defined in [GOVERNANCE.md](GOVERNANCE.md#24-code-contribution-process), which requires:
+- At least one Core Maintainer approval for all changes
+- Sign-off on every commit via DCO (`git commit -s`)
+- Changes touching the specification interface also require a Specification Maintainer review
 
-All user-facing strings are externalised via Angular's built-in i18n.
+When the repositories are live:
 
-| File | Purpose |
-|---|---|
-| `src/locale/messages.json` | Auto-generated source of truth (English, `en-US`) – **do not edit manually** |
-| `public/locale/messages.de-CH.json` | German (Switzerland) translations – edit here |
+- open issues for bug reports, feature requests, or questions,
+- use the repository issue templates if available,
+- submit pull requests against the appropriate repository,
+- provide a concise description of the change and how to test it,
+- include tests for behavior-critical changes where practical.
 
-### Workflow: adding or changing a string
+## Communication and conduct
 
-1. Use `$localize` / `i18n` attribute in the template as usual.
-2. Run `npm run extract-i18n` – this re-generates `src/locale/messages.json` **and** automatically merges new keys into every locale file, marking them as `TODO: <English source>`.
-3. Search for `TODO:` in `public/locale/messages.de-CH.json`, translate the marked strings, and remove the `TODO:` prefix.
-4. Commit both `messages.json` and the updated locale file(s) together.
+Please keep communication professional and respectful.
+If you need help, contact <mailto:r2p@rail.ch>.
 
-### CI check
+For details on expected community standards, see our [Code of Conduct](CODE_OF_CONDUCT.md).
 
-`npm run check-translations` exits with code 1 if any locale file is missing keys or contains obsolete ones. This is intended for use in CI pipelines.
+## Governance
 
-## Maintainer Notes
+R2P is governed by a transparent community model. See [GOVERNANCE.md](GOVERNANCE.md) for details on decision-making bodies, roles, processes, and community participation.
 
-Replace this section with repository-specific contribution details if the project needs additional guidance, such as development commands, local tooling, CLA requirements, or architecture review expectations.
+Currently, the contact address <mailto:r2p@rail.ch> is the authoritative point of contact for governance matters.
+
+## Notes
+
+- If you are not sure whether a contribution is appropriate, ask first at <mailto:r2p@rail.ch>.
+- If the GitHub projects are not yet available, use the contact email for coordination and issue triage.
+- This document will be updated as the R2P project evolves.
