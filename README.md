@@ -1,6 +1,6 @@
 # R2P Web Client
 
-![CI]([https://github.com/SchweizerischeBundesbahnen/r2p-webclient/actions/workflows/build.yml/badge.svg](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/actions/workflows/build.yml/badge.svg))
+[![CI](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/actions/workflows/build.yml/badge.svg)](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/actions/workflows/build.yml)
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)
 
 Webclient for the R2P Server that you find here: https://github.com/SchweizerischeBundesbahnen/r2p
