@@ -86,4 +86,4 @@ Community leaders will follow these Community Impact Guidelines in determining t
 
 This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org/), version 2.1, and from the [OSRD Code of Conduct](https://github.com/OpenRailAssociation/osrd/blob/dev/CODE_OF_CONDUCT.md) published by the OpenRailAssociation.
 
-Community Impact Guidelines were inspired by [Mozilla's code of conduct enforcement ladder](https://github.com/mozilla/diversity).](https://confluence.sbb.ch/spaces/EVUARCH/pages/3732598376/CODE_OF_CONDUCT.md)
+Community Impact Guidelines were inspired by [Mozilla's code of conduct enforcement ladder](https://github.com/mozilla/diversity).
