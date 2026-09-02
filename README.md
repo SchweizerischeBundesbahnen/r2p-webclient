@@ -20,7 +20,7 @@ This is a PoC implementation not suitable to run in production.
 
 ### Prerequisites
 
-* Node v24 or later
+* Node ^22.22.3 || ^24.15.0 || >=26
 * Running instance of an R2P server
 * optional: Docker
 
