@@ -14,7 +14,7 @@ This is a PoC implementation not suitable to run in production.
 - Status: PoC
 - Primary maintainers: R2P Projectteam
 - Support channel: mailto:r2p@rail.ch
-- License: Apache 2.0
+- License: Apache 2.0 for the Code, CC BY-ND 4.0 for the OpenAPI specification
 
 ## Getting Started
 
