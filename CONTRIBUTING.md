@@ -12,7 +12,7 @@ This is the central point for questions, contribution coordination, issue triage
 
 ## Projects
 
-R2P is currently organized around two GitHub projects that will be launched in the next weeks:
+R2P is currently organized around two GitHub projects that will be launched in the next few weeks:
 
 1. `r2p-server` - the backend service for R2P.
 2. `r2p-webclient` - the web client for R2P.
