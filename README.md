@@ -5,6 +5,10 @@
 
 Webclient for the R2P Server that you find here: https://github.com/SchweizerischeBundesbahnen/r2p
 
+## Disclaimer
+
+This is a PoC implementation not suitable to run in production.
+
 ## Overview
 
 - Status: PoC
