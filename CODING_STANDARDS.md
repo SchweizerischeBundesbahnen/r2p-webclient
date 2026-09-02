@@ -1,7 +1,5 @@
 # Repository Coding Standards
 
-This document defines the minimum engineering baseline for this repository. Add repository-specific rules when needed, but do not weaken the expectations defined here.
-
 ## General Principles
 
 - Prefer simple, maintainable solutions over clever ones.
@@ -47,7 +45,3 @@ This document defines the minimum engineering baseline for this repository. Add 
 - Do not hardcode secrets, credentials, or tokens.
 - Apply the principle of least privilege to workflows, bots, and integrations.
 - Review third-party GitHub Actions and pin them to trusted versions or SHAs where organizational policy requires it.
-
-## Repository-specific Additions
-
-Add language-specific or tool-specific rules below this section when the repository is created.
