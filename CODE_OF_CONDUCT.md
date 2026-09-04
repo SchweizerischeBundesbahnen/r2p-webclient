@@ -2,11 +2,11 @@
 
 ## Our Pledge
 
-We as members, contributors, and leaders of the R2P community pledge to make participation in our project a harassment-free experience for everyone, regardless of age, body size, visible or invisible disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, caste, colour, religion, or sexual identity and orientation.
+We as members, contributors, and leaders of the R<sup>2</sup>P community pledge to make participation in our project a harassment-free experience for everyone, regardless of age, body size, visible or invisible disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, caste, colour, religion, or sexual identity and orientation.
 
 We pledge to act and interact in ways that contribute to an open, welcoming, diverse, inclusive, and healthy community.
 
-R2P brings together railway undertakings, infrastructure managers, technology partners, and individual contributors from across Europe and beyond. We value this diversity as a strength and expect all participants to uphold it.
+R<sup>2</sup>P brings together railway undertakings, infrastructure managers, technology partners, and individual contributors from across Europe and beyond. We value this diversity as a strength and expect all participants to uphold it.
 
 ## Our Standards
 
@@ -24,7 +24,7 @@ Examples of unacceptable behaviour include:
 - Trolling, insulting or derogatory comments, and personal or political attacks
 - Public or private harassment
 - Publishing others' private information, such as a physical or email address, without their explicit permission
-- Using community spaces for commercial solicitation unrelated to R2P
+- Using community spaces for commercial solicitation unrelated to R<sup>2</sup>P
 - Other conduct which could reasonably be considered inappropriate in a professional setting
 
 ## Enforcement Responsibilities
@@ -37,10 +37,10 @@ Community leaders have the right and responsibility to remove, edit, or reject c
 
 This Code of Conduct applies within all community spaces, including:
 
-- R2P repositories (issues, pull requests, code reviews, discussions)
-- Community calls, TSC meetings, and the Annual R2P Day
-- Official mailing lists and the contact address `r2p@sbb.ch`
-- Any other space where an individual is officially representing the R2P community
+- R<sup>2</sup>P repositories (issues, pull requests, code reviews, discussions)
+- Community calls, TSC meetings, and the Annual R<sup>2</sup>P Day
+- Official mailing lists and the contact address `r2p@rail.ch`
+- Any other space where an individual is officially representing the R<sup>2</sup>P community
 
 It also applies when an individual is officially representing the community in public spaces, such as using an official email address, posting via an official social media account, or acting as an appointed representative at an online or offline event.
 
@@ -48,11 +48,11 @@ It also applies when an individual is officially representing the community in p
 
 Instances of abusive, harassing, or otherwise unacceptable behaviour may be reported to the community leaders responsible for enforcement at:
 
-**<r2p@sbb.ch>**
+**<r2p@rail.ch>**
 
 All complaints will be reviewed and investigated promptly and fairly. All community leaders are obligated to respect the privacy and security of the reporter of any incident.
 
-Reporters may also contact the TSC Chair directly (listed in [MAINTAINERS.md](MAINTAINERS.md)) if they believe the matter involves a community leader.
+Reporters may also contact the TSC Chair directly if they believe the matter involves a community leader.
 
 ## Enforcement Guidelines
 
