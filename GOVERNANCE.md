@@ -88,10 +88,10 @@ A Contributor is anyone who submits an issue, pull request, documentation improv
 
 The Implementer role is a voluntary designation for organisations that wish to engage with the R<sup>2</sup>P community and benefit from the implementer forum and advisory seat.
 Organisations that adopt the Implementer role are encouraged to:
-•	Register their implementation in the R<sup>2</sup>P adopter registry to improve ecosystem visibility.
-•	Participate in the R<sup>2</sup>P certification or conformance testing programme when available.
-•	Report interoperability issues through the standard issue tracker.
-•	Provide feedback on the specification from operational experience.
+- Register their implementation in the R<sup>2</sup>P adopter registry to improve ecosystem visibility.
+- Participate in the R<sup>2</sup>P certification or conformance testing programme when available.
+- Report interoperability issues through the standard issue tracker.
+- Provide feedback on the specification from operational experience.
 
 **Benefit**
 
