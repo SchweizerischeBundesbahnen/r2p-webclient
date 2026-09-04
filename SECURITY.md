@@ -18,7 +18,7 @@ The R<sup>2</sup>P team takes security issues seriously. We appreciate responsib
 
 To report a security issue, use one of the following channels:
 
-1. **Preferred**: Use the GitLab Security Advisory feature in the relevant repository (Security → Advisories → Report a vulnerability).
+1. **Preferred**: Use the GitHub Security Advisory feature in the relevant repository (Security → Advisories → Report a vulnerability).
 2. **Alternative**: Send an encrypted email to <r2p@rail.ch> with the subject line `[SECURITY] <brief description>`.
 
 Please include in your report:
