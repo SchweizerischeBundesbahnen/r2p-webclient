@@ -201,7 +201,7 @@ Meetings are held in English. TSC meeting minutes are published in the repositor
 
 **New contributor**
 
-1. Read [CONTRIBUTION.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+1. Read [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 2. Set up DCO signing (`git config user.email` and `git commit -s`).
 3. Pick a `good-first-issue` labelled issue or propose your contribution in a discussion.
 4. Contact `r2p@rail.ch` if you need guidance.
