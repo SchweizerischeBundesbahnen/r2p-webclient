@@ -12,7 +12,7 @@ This is the central point for questions, contribution coordination, issue triage
 
 ## Projects
 
-R<sup>2</sup>P is currently organized around two GitHub projects that will be launched in the next weeks:
+R<sup>2</sup>P is currently organized around two GitHub projects that will be launched in the next few weeks:
 
 1. `r2p-server` - the backend service for R<sup>2</sup>P.
 2. `r2p-webclient` - the web client for R<sup>2</sup>P.
