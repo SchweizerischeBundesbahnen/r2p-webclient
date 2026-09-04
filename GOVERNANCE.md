@@ -55,7 +55,7 @@ Nominated by any TSC member and approved by TSC majority vote. Minimum one, reco
 
 ### 1.3 Core Maintainer
 
-Core Maintainers are trusted contributors with merge rights on one or more R<sup>2</sup>P repositories (`r2p-server`, `R<sup>2</sup>P-webclient`, tooling repositories).
+Core Maintainers are trusted contributors with merge rights on one or more R<sup>2</sup>P repositories (`r2p-server`, `r2p-webclient`, tooling repositories).
 
 **Responsibilities**
 
