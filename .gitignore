@@ -25,3 +25,6 @@ dist/
 _bmad
 _bmad-output
 coverage/
+
+# AI
+AGENTS.local.md
