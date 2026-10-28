@@ -20,6 +20,15 @@ updates:
           - "major"
           - "minor"
           - "patch"
+      vitest:
+        applies-to: version-updates
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+        update-types:
+          - "major"
+          - "minor"
+          - "patch"
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
