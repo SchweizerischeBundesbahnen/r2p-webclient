@@ -1,0 +1,50 @@
+﻿<div class="filter-bar">
+    <div class="filter-group">
+        <mat-form-field appearance="outline">
+            <mat-label i18n="@@common.field.trainNumber">Train Number</mat-label>
+            <input
+                matInput
+                type="text"
+                placeholder="e.g., IC 1234"
+                i18n-placeholder="@@common.field.trainNumber.placeholder"
+                [value]="tableService.trainNumber()"
+                (input)="tableService.trainNumber.set($any($event.target).value)"
+            />
+        </mat-form-field>
+    </div>
+    <div class="filter-group">
+        <mat-form-field appearance="outline">
+            <mat-label i18n="@@trafficOverview.filter.opDayFrom">Op. Day From</mat-label>
+            <input
+                #fromInput
+                matInput
+                type="date"
+                [value]="tableService.operationalDayFrom()"
+                (click)="fromInput.showPicker()"
+                (change)="tableService.operationalDayFrom.set($any($event.target).value)"
+            />
+        </mat-form-field>
+    </div>
+    <div class="filter-group">
+        <mat-form-field appearance="outline">
+            <mat-label i18n="@@trafficOverview.filter.opDayTo">Op. Day To</mat-label>
+            <input
+                #toInput
+                matInput
+                type="date"
+                [value]="tableService.operationalDayTo()"
+                (click)="toInput.showPicker()"
+                (change)="tableService.operationalDayTo.set($any($event.target).value)"
+            />
+        </mat-form-field>
+    </div>
+    <div class="filter-group filter-group--shrink">
+        <button
+            mat-button
+            (click)="tableService.clearFilters()"
+            i18n="@@trafficOverview.filter.clear"
+        >
+            Clear
+        </button>
+    </div>
+</div>

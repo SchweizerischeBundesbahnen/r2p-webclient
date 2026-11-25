@@ -1,0 +1,63 @@
+@if (state.trainListResource.isLoading()) {
+    <app-spinner />
+} @else if (state.trainListResource.error()) {
+    <app-alert-banner type="error" i18n="@@trafficOverview.loadError">
+        Failed to load trains. Please check your server URL in the settings.
+    </app-alert-banner>
+} @else {
+    @let filteredTrains = tableService.applyFilterOn(state.trainListResource.value());
+    @if (filteredTrains.length > 0) {
+        <div class="table-container">
+            <table id="trains-table">
+                <thead>
+                    <tr>
+                        <th class="sort-header" (click)="tableService.toggleSort('trainNumber')">
+                            <ng-container i18n="@@trafficOverview.table.trainNo">Train No.</ng-container>
+                            <span class="sort-indicator">{{ sortIndicator('trainNumber') }}</span>
+                        </th>
+                        <th class="sort-header" (click)="tableService.toggleSort('start')">
+                            <ng-container i18n="@@trafficOverview.table.route">Route</ng-container>
+                            <span class="sort-indicator">{{ sortIndicator('start') }}</span>
+                        </th>
+                        <th class="sort-header" (click)="tableService.toggleSort('operationalDay')">
+                            <ng-container i18n="@@trafficOverview.table.opDay">Op. Day</ng-container>
+                            <span class="sort-indicator">{{ sortIndicator('operationalDay') }}</span>
+                        </th>
+                        <th i18n="@@common.field.partners">Partners</th>
+                        <th class="sort-header" (click)="tableService.toggleSort('lastChange')">
+                            <ng-container i18n="@@trafficOverview.table.lastChange">Last Change / Version</ng-container>
+                            <span class="sort-indicator">{{ sortIndicator('lastChange') }}</span>
+                        </th>
+                        <th>
+                            <ng-container i18n="@@trafficOverview.table.status">Status</ng-container>
+                            <span class="tooltip-anchor" tabindex="0"
+                                >?<span class="tooltip-box"
+                                    ><ng-container i18n="@@common.status.allConfirmed">🟢 Circle: All activities are <em>confirmed</em>.</ng-container><br /><ng-container i18n="@@common.status.someProposed">🟧 Square: At least one activity is <em>proposed</em> or <em>requested</em>, none refused.</ng-container><br /><ng-container i18n="@@common.status.someRefused">🔺 Triangle: At least one activity is <em>refused</em> or <em>dropped</em>.</ng-container></span
+                                ></span
+                            >
+                        </th>
+                        <th class="th-chevron"></th>
+                    </tr>
+                </thead>
+                <tbody id="trains-tbody">
+                    @for (train of filteredTrains; track train.id) {
+                        <tr
+                            appTrainRow
+                            class="clickable"
+                            [train]="train"
+                            [routerLink]="'../traffic-view/' + train.id"
+                        ></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    } @else {
+        <div id="empty-state" class="empty-state">
+            <mat-icon class="empty-state-icon" aria-hidden="true">train</mat-icon>
+            <p class="empty-state-text" i18n="@@trafficOverview.empty.noTrains">No trains found</p>
+            <p class="text-muted text-sm" i18n="@@trafficOverview.empty.hint">
+                Try adjusting your filters or create a new train.
+            </p>
+        </div>
+    }
+}

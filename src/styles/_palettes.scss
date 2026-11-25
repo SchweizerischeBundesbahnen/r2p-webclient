@@ -1,0 +1,14 @@
+// Palette references for the R²P theme (Brand Guidelines v1.0).
+// Primary source: Orange #F47B20 (brand accent / CTA) → built-in: $orange-palette
+// Tertiary source: Amber #FBBF24 (brand secondary highlight) → built-in: $yellow-palette
+//
+// `color="primary"` (mat-raised/flat-button) therefore renders in the brand orange
+// family; `color="warn"` stays red for destructive actions. The exact brand orange
+// (#F47B20) is applied to hand-styled elements via the --orange CSS variable in
+// styles.scss. For pixel-perfect M3 tones, regenerate with
+// https://material-foundation.github.io/material-theme-builder/ and plug in here.
+
+@use '@angular/material' as mat;
+
+$r2p-primary: mat.$orange-palette;
+$r2p-tertiary: mat.$yellow-palette;

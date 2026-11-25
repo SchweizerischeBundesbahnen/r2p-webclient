@@ -1,0 +1,88 @@
+<div [class]="'activity-item activity-' + capabilityType()">
+    <div class="activity-header">
+        <app-partner-badge [partner]="activity().responsibility?.id ?? ''" />
+        @if (canEdit() || canDelete()) {
+            <div class="activity-actions">
+                @if (canEdit()) {
+                    <button
+                        class="btn-icon"
+                        matTooltip="Edit"
+                        i18n-matTooltip="@@journeyStopRow.editStop"
+                        aria-label="Edit"
+                        i18n-aria-label="@@journeyStopRow.editStop"
+                        (click)="editActivity.emit()"
+                    ><span class="material-icons" aria-hidden="true">edit</span></button>
+                }
+                @if (canDelete()) {
+                    <button
+                        class="btn-icon btn-icon-danger"
+                        matTooltip="Delete"
+                        i18n-matTooltip="@@journeyStopRow.deleteStop"
+                        aria-label="Delete"
+                        i18n-aria-label="@@journeyStopRow.deleteStop"
+                        (click)="deleteActivity.emit()"
+                    ><span class="material-icons" aria-hidden="true">delete</span></button>
+                }
+            </div>
+        }
+    </div>
+
+    <div class="activity-responsibility">
+        {{ responsibilityTypeLabel(activity().responsibility?.type ?? '') }}
+        @if (activity().responsibility?.status) {
+            · <span class="status-badge status-badge-{{ activity().responsibility!.status!.toLowerCase() }}">
+                {{ planStatusLabel(activity().responsibility!.status!.toLowerCase()) }}
+            </span>
+        }
+    </div>
+
+    @if (arrival() || departure()) {
+        <div class="activity-times">
+            @if (arrival()) {
+                <span i18n="@@common.arr">Arr:</span> {{ arrival() }}
+            }
+            @if (arrival() && departure()) { / }
+            @if (departure()) {
+                <span i18n="@@common.dep">Dep:</span> {{ departure() }}
+            }
+        </div>
+    }
+
+    @if (capabilityType() === 'staff' && staffRole()) {
+        <div class="activity-detail">
+            <span i18n="@@journeyActivityItem.staffRole">Role:</span>
+            @switch (staffRole()) {
+                @case ('driver') {<span i18n="@@staffType.driver">Driver</span>}
+                @case ('shunter') {<span i18n="@@staffType.shunter">Shunter</span>}
+                @case ('technicalInspector') {<span i18n="@@staffType.technicalInspector">Technical Inspector</span>}
+                @case ('conductor') {<span i18n="@@staffType.conductor">Conductor</span>}
+                @case ('cleaner') {<span i18n="@@staffType.cleaner">Cleaner</span>}
+                @case ('catering') {<span i18n="@@staffType.catering">Catering</span>}
+                @default {<span>{{ staffRole() }}</span>}
+            }
+        </div>
+    }
+
+    @if (capabilityType() === 'path' && isPassthrough()) {
+        <div class="activity-detail" i18n="@@journeyActivityItem.passthrough">
+            Passthrough
+        </div>
+    }
+
+    @if (activity().capability?.capabilityFeatures?.length) {
+        <div class="activity-features">
+            <span class="activity-detail-label" i18n="@@journeyActivityItem.features">Features</span>
+            @for (cf of activity().capability!.capabilityFeatures!; track $index) {
+                <span class="feature-tag" [title]="cf.feature.offeredservice ?? ''">
+                    @switch (cf.feature.type) {
+                        @case ('WLAN_HOTSPOT') {<span i18n="@@featureType.wlanHotspot">WLAN Hotspot</span>}
+                        @case ('RESTAURANT') {<span i18n="@@featureType.restaurant">Restaurant</span>}
+                        @case ('QUIET_ZONE_1ST_CLASS') {<span i18n="@@featureType.quietZone1stClass">Quiet zone 1st class</span>}
+                        @case ('LOW_FLOOR_ENTRY') {<span i18n="@@featureType.lowFloorEntry">Low-floor entry</span>}
+                        @default {<span>{{ cf.feature.type }}</span>}
+                    }{{ cf.feature.offeredservice ? ': ' + cf.feature.offeredservice : '' }}
+                </span>
+            }
+        </div>
+    }
+</div>

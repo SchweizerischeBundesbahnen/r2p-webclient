@@ -1,0 +1,103 @@
+# ImageStream for automatic image updates
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: r2p-webclient
+  labels:
+    app: r2p-webclient
+spec:
+  tags:
+    - name: latest
+      from:
+        kind: DockerImage
+        name: ghcr.io/schweizerischebundesbahnen/r2p-webclient:latest
+      importPolicy:
+        scheduled: true # by default every 15 minutes clusterwide
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: r2p-webclient
+  labels:
+    app: r2p-webclient
+    app.kubernetes.io/name: r2p-webclient
+    app.kubernetes.io/component: webclient
+  annotations:
+    # This annotation enables automatic deployment when ImageStream is updated
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"r2p-webclient:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"r2p-webclient\")].image"}]'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: r2p-webclient
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: r2p-webclient
+    spec:
+      serviceAccountName: r2p-sa
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: r2p-webclient
+          image: ghcr.io/schweizerischebundesbahnen/r2p-webclient:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+              name: http
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 2Gi
+            requests:
+              cpu: 500m
+              memory: 1Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: r2p-webclient
+  labels:
+    app: r2p-webclient
+spec:
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: r2p-webclient
+  type: ClusterIP
+
+---
+# Route
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: r2p-webclient
+  labels:
+    app: r2p-webclient
+spec:
+  to:
+    kind: Service
+    name: r2p-webclient
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
+

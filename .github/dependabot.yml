@@ -1,0 +1,43 @@
+---
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      time: "14:00"
+    open-pull-requests-limit: 10
+    groups:
+      angular:
+        applies-to: version-updates
+        patterns:
+          - "@angular/*"
+          - "@angular-devkit/*"
+          - "zone.js"
+          - "rxjs"
+          - "tslib"
+        update-types:
+          - "major"
+          - "minor"
+          - "patch"
+      vitest:
+        applies-to: version-updates
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+        update-types:
+          - "major"
+          - "minor"
+          - "patch"
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      time: "14:00"
+    open-pull-requests-limit: 10
+  - package-ecosystem: docker
+    directory: "/"
+    schedule:
+      interval: weekly
+      time: "14:00"
+    open-pull-requests-limit: 10

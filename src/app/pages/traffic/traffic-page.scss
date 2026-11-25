@@ -1,0 +1,165 @@
+.card-header-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+/* Variant row — 4-column grid: name | workflow-actions | status+edit | chevron */
+.branch-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto 20px;
+    align-items: center;
+    column-gap: 16px;
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--border-color);
+    min-height: 52px;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+}
+
+.branch-row:hover { background-color: var(--light-grey); }
+.branch-row:last-child { border-bottom: none; }
+
+.branch-row--main {
+    border-left: 3px solid var(--navy);
+    background-color: var(--light-grey);
+}
+
+.branch-row--main:hover { background-color: #E9EDF1; }
+
+/* Column 1: branch name + meta */
+.branch-info { min-width: 0; }
+
+.branch-name-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.branch-name {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.main-tag {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: var(--primary-color);
+    color: var(--text-on-dark);
+    font-size: 0.625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    flex-shrink: 0;
+}
+
+.branch-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+/* Column 2: workflow action buttons (Propose / Accept / Reject) */
+.branch-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+/* Column 3: edit icon + status chip, right-aligned pair */
+.branch-status-area {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: background-color 0.15s, color 0.15s;
+    flex-shrink: 0;
+    font-size: 1rem;
+
+    .material-icons { font-size: 1rem; }
+}
+
+.icon-btn:hover {
+    background-color: var(--light-grey);
+    color: var(--navy);
+}
+
+/* Column 4: chevron indicator */
+.row-chevron {
+    color: var(--text-muted);
+    font-size: 1.125rem;
+    width: 1.125rem;
+    height: 1.125rem;
+    opacity: 0.35;
+    transition: opacity 0.15s, transform 0.15s;
+    user-select: none;
+}
+
+.branch-row:hover .row-chevron {
+    opacity: 0.8;
+    transform: translateX(2px);
+}
+
+/* Archive section */
+.branch-row--archived {
+    opacity: 0.65;
+    background-color: var(--background-color);
+}
+
+.branch-row--archived:hover { background-color: #ECEFF3; opacity: 0.85; }
+
+.archive-section {
+    border-top: 1px solid var(--border-subtle);
+}
+
+.archive-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 20px;
+    background: var(--border-subtle);
+    border: none;
+    cursor: pointer;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    transition: background-color 0.15s;
+}
+
+.archive-toggle:hover { background-color: var(--border-color); }
+
+.archive-count { font-weight: 400; }
+
+.archive-chevron {
+    margin-left: auto;
+    font-size: 1.1rem;
+    width: 1.1rem;
+    height: 1.1rem;
+}

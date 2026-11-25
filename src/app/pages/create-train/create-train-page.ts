@@ -1,0 +1,58 @@
+﻿import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { BackendApiService } from '../../core/api/backend-api.service';
+import { CreatePageState } from './create-train-page.state';
+import { finalize } from 'rxjs';
+import { Journey } from '../../shared/models/api.models';
+import { JourneyRouteCard } from '../../shared/components/journey-route-card/journey-route-card';
+import { ErrorNotificationService } from '../../core/error/error-notification.service';
+import { Spinner } from '../../shared/components/spinner/spinner';
+import { MatButton, MatAnchor } from '@angular/material/button';
+import { StickyEditBar } from '../../shared/components/sticky-edit-bar/sticky-edit-bar';
+import { TrainDetailsFormCard } from '../../shared/components/train-details-form-card/train-details-form-card';
+import { SettingsService } from '../../core/settings/settings.service';
+import { Breadcrumb, BreadcrumbItem } from '../../shared/components/breadcrumb/breadcrumb';
+
+@Component({
+    selector: 'app-create-train-page',
+    templateUrl: './create-train-page.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [RouterLink, JourneyRouteCard, Spinner, MatButton, MatAnchor, StickyEditBar, TrainDetailsFormCard, Breadcrumb],
+    providers: [CreatePageState],
+})
+export class CreateTrainPage {
+    private readonly apiService = inject(BackendApiService);
+    private readonly router = inject(Router);
+    protected readonly state = inject(CreatePageState);
+    private readonly notifications = inject(ErrorNotificationService);
+    private readonly settingsService = inject(SettingsService);
+    protected readonly createTrainForm = this.state.createTrainForm;
+    protected readonly hasTooFewStops = computed(() => (this.state.journey().journeylocations?.length ?? 0) < 2);
+    protected readonly breadcrumbs: BreadcrumbItem[] = [
+        { label: $localize`:@@common.breadcrumb.trafficOverview:Traffic overview`, link: '/traffic-overview' },
+        { label: $localize`:@@createTrain.title:Create new train` },
+    ];
+    protected readonly ownOrganization = computed(() => this.settingsService.settings().organization);
+
+    protected onJourneyChange(journey: Journey): void {
+        this.state.journey.set(journey);
+    }
+
+    protected createTrain() {
+        if (this.state.createTrainRunning()) return;
+        this.state.createTrainRunning.set(true);
+        const { trainNumber, creationComment, operationalDay } = this.state.createTrainForm().value();
+        this.apiService
+            .createTrain(trainNumber, operationalDay, creationComment, this.state.journey())
+            .pipe(finalize(() => this.state.createTrainRunning.set(false)))
+            .subscribe({
+                next: () => {
+                    this.notifications.showSuccess($localize`:@@common.train.saveSuccess:Train saved successfully.`);
+                    this.router.navigate(['/traffic-overview']);
+                },
+                error: () => {
+                    // Error already handled by errorInterceptor (toast shown)
+                },
+            });
+    }
+}

@@ -1,0 +1,61 @@
+<h2 mat-dialog-title i18n="@@newVariantModal.title">Create New Variant</h2>
+<mat-dialog-content>
+    <div class="modal-field">
+        <label class="modal-field-label" for="variant-name-input" i18n="@@newVariantModal.field.name">Variant Name</label>
+        <mat-form-field appearance="outline" class="form-field-full">
+            <span matTextPrefix>{{ orgPrefix() }}</span>
+            <input
+                id="variant-name-input"
+                matInput
+                [formField]="createTrainVariant.variantName"
+                placeholder="my variant"
+                i18n-placeholder="@@newVariantModal.field.namePlaceholder"
+            />
+            @if (
+                createTrainVariant.variantName().touched() &&
+                createTrainVariant.variantName().invalid()
+            ) {
+                @for (error of createTrainVariant.variantName().errors(); track error) {
+                    <mat-error>{{ error.message }}</mat-error>
+                }
+            }
+        </mat-form-field>
+    </div>
+
+    <div class="modal-field">
+        <label class="modal-field-label" for="variant-comment-input" i18n="@@common.field.comment">Comment</label>
+        <mat-form-field appearance="outline" class="form-field-full">
+            <textarea
+                id="variant-comment-input"
+                matInput
+                [formField]="createTrainVariant.comment"
+                rows="3"
+                placeholder="Describe the purpose of this variant…"
+                i18n-placeholder="@@newVariantModal.field.commentPlaceholder"
+            ></textarea>
+            @if (
+                createTrainVariant.comment().touched() &&
+                createTrainVariant.comment().invalid()
+            ) {
+                @for (error of createTrainVariant.comment().errors(); track error) {
+                    <mat-error>{{ error.message }}</mat-error>
+                }
+            }
+        </mat-form-field>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close i18n="@@common.cancel">Cancel</button>
+    <button
+        mat-raised-button
+        color="primary"
+        [disabled]="createTrainVariant().submitting()"
+        (click)="createNewVariant()"
+    >
+        @if (createTrainVariant().submitting()) {
+            <ng-container i18n="@@newVariantModal.creating">Creating…</ng-container>
+        } @else {
+            <ng-container i18n="@@newVariantModal.create">Create</ng-container>
+        }
+    </button>
+</mat-dialog-actions>
