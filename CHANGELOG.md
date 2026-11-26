@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.21](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.20...r2p-webclient-v0.0.21) (2026-11-26)
+
+
+### Build System
+
+* bump ([4d4f722](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/commit/4d4f722cd536a294564f6af1fb4e795f274a66df))
+
 ## [0.0.20](https://github.com/SchweizerischeBundesbahnen/r2p-webclient/compare/r2p-webclient-v0.0.19...r2p-webclient-v0.0.20) (2026-11-25)
 
 
